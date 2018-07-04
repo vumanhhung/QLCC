@@ -1,0 +1,88 @@
+﻿<div class="EditForm">
+    <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-vertical" name="LoaiXeInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
+          (!tenLoaiXe.valid && showErrorAlert('Tên loại xe không được để trống', 'Vui lòng nhập tên loại xe!'));
+(!kyHieu.valid && showErrorAlert('Ký hiệu không được để trống', 'Vui lòng nhập ký hiệu!'));
+">
+        <div class="col-sm-4">
+            <div class="has-feedback">
+                <label class="control-label" for="TenLoaiXe-{{uniqueId}}">Tên loại xe</label>
+                <div class="control" [ngClass]="{'has-success': f.submitted && TenLoaiXe.valid, 'has-error' : f.submitted && !TenLoaiXe.valid}">
+                    <input autofocus type="text" class="form-control" name="TenLoaiXe" [(ngModel)]="loaixeEdit.TenLoaiXe" #tenLoaiXe="ngModel" required />
+                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': TenLoaiXe.valid, 'glyphicon-remove' : !TenLoaiXe.valid}"></span>
+                    <span *ngIf="showValidationErrors && f.submitted && !TenLoaiXe.valid" class="errorMessage">
+                        Vui lòng nhập tên loại tiền!
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="has-feedback">
+                <label class="control-label" for="KyHieu-{{uniqueId}}">Ký hiệu</label>
+                <div class="control" [ngClass]="{'has-success': f.submitted && KyHieu.valid, 'has-error' : f.submitted && !KyHieu.valid}">
+                    <input autofocus type="text" class="form-control" name="KyHieu" [(ngModel)]="loaixeEdit.KyHieu" #kyHieu="ngModel" required />
+                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': KyHieu.valid, 'glyphicon-remove' : !KyHieu.valid}"></span>
+                    <span *ngIf="showValidationErrors && f.submitted && !KyHieu.valid" class="errorMessage">
+                        Vui lòng nhập ký hiệu!
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="has-feedback">
+                <label class="control-label" for="NguoiNhap-{{uniqueId}}">Người Nhập</label>
+                <div class="control" [ngClass]="{'has-success': f.submitted && NguoiNhap.valid, 'has-error' : f.submitted && !NguoiNhap.valid}">
+                    <input autofocus type="text" class="form-control" name="NguoiNhap" [(ngModel)]="loaixeEdit.NguoiNhap" #kyHieu="ngModel" required />
+                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': NguoiNhap.valid, 'glyphicon-remove' : !NguoiNhap.valid}"></span>
+                    <span *ngIf="showValidationErrors && f.submitted && !NguoiNhap.valid" class="errorMessage">
+                        Vui lòng nhập người nhập!
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="has-feedback col-sm-4">
+            <label class="control-label" for="NgayNhap-{{uniqueId}}">Ngày sinh</label>
+            <kendo-datepicker [(value)]="valueNgayNhap" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
+            <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': NgayNhap.valid, 'glyphicon-remove' : !NgayNhap.valid}"></span>
+            <span *ngIf="showValidationErrors && f.submitted && !NgayNhap.valid" class="errorMessage">
+                Vui lòng nhập ngày nhập!
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="has-feedback">
+                <label class="control-label" for="NguoiSua-{{uniqueId}}">Người Nhập</label>
+                <div class="control" [ngClass]="{'has-success': f.submitted && NguoiSua.valid, 'has-error' : f.submitted && !NguoiSua.valid}">
+                    <input autofocus type="text" class="form-control" name="NguoiSua" [(ngModel)]="loaixeEdit.NguoiSua" #kyHieu="ngModel" required />
+                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': NguoiSua.valid, 'glyphicon-remove' : !NguoiSua.valid}"></span>
+                    <span *ngIf="showValidationErrors && f.submitted && !NguoiSua.valid" class="errorMessage">
+                        Vui lòng nhập người sửa!
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="has-feedback col-sm-4">
+            <label class="control-label" for="NgaySua-{{uniqueId}}">Ngày sinh</label>
+            <kendo-datepicker [(value)]="valueNgaySua" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
+            <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': NgaySua.valid, 'glyphicon-remove' : !NgaySua.valid}"></span>
+            <span *ngIf="showValidationErrors && f.submitted && !NgaySua.valid" class="errorMessage">
+                Vui lòng nhập ngày sửa!
+            </span>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12">
+            <hr class="edit-last-separator-hr" />
+        </div>
+        <div class="form-group actionBtn-form-group">
+            <div class="col-sm-7">
+                <div class="pull-right">
+                    <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                    <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                    <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
+                        <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
+                    </button>
+                    <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>

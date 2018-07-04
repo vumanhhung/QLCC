@@ -1,0 +1,95 @@
+﻿
+<section class="content-header">
+    <h1>Quản lý trạng thái cư dân</h1>
+    <commonroad></commonroad>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div style="margin-bottom:1%" class="col-sm-6">
+                <div class="row">
+                    <search-box (searchChange)="onSearchChanged($event)" placeholder="Tìm kiếm">></search-box>
+                </div>
+            </div>
+            <div style="margin-bottom:1%;" align="right" class="col-sm-6">
+                <div class="row">
+                    <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newTrangThaiCuDan()"><i class="fa fa-plus"></i></a>
+                    <a class="btn btn-primary menubar" href="javascript:;" tooltip="Danh mục">
+                        <i class="fa fa-bars"></i>
+                        <ul class="nav navbar-nav child-menu">
+                            <li><a href="javascript:;" routerLink="/nhomkhachhang">QL Nhóm khách hàng</a></li>
+                            <li><a href="javascript:;" routerLink="/trangthaicudan">QL Trạng thái cư dân</a></li>
+                            <li><a href="javascript:;" routerLink="/trangthaiyeucau">QL Trạng thái yêu cầu</a></li>
+                            <li><a href="javascript:;" routerLink="/loaiyeucau">QL loại yêu cầu</a></li>
+                            <li><a href="javascript:;" routerLink="/mucdouutien">QL Mức độ ưu tiên</a></li>
+                            <li><a href="javascript:;" routerLink="/nguontiepnhan">QL Nguồn tiếp nhận</a></li>
+                            <li><a href="javascript:;" routerLink="/quanhechuho">QL Quan hệ chủ hộ</a></li>
+                        </ul>
+                    </a>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+            <div class="box box-info">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div>
+                        <div class="DTTT_container">
+                            <label>
+                                Hiển thị
+                                <select class="form-control input-sm" #drSelected (change)="SelectedValue(drSelected.value)">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> bản ghi
+                            </label>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div style="overflow-x:auto">
+                            <div style="min-width:768px">
+                                <ngx-datatable class="material colored-header sm table table-striped table-hover "
+                                               [loadingIndicator]="loadingIndicator"
+                                               [rows]="rows"
+                                               [rowHeight]="45"
+                                               [headerHeight]="45"
+                                               [footerHeight]="45"
+                                               [columns]="columns"
+                                               [limit]="limit"
+                                               [columnMode]="'force'">
+                                </ngx-datatable>
+                            </div>
+                        </div>
+                        <ng-template #BackGroundTemplate let-row="row" let-value="value" let-i="index" style="text-align:center;">
+                            <div [ngStyle]="SetBackground(row)">{{row.mauNen}}</div>
+                        </ng-template>
+                        <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <a class="btn btn-func btn-success" href="javascript:;" title="Chi tiết"><i class="fa fa-eye"></i></a>
+                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editTrangThaiCuDan(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                            <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteTrangThaiCuDan(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        </ng-template>
+                        <div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title pull-left">
+                                            <i class="glyphicon glyphicon-plus-sign"></i>
+                                            {{editingRowName ? ('Sửa - ' + editingRowName.name) : 'Thêm mới'}}
+                                        </h4>
+                                        <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <trangthaicudan-info #trangthaicudanEditor [isGeneralEditor]="true"></trangthaicudan-info>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

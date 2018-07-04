@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{22993969-4930-4319-85AD-7C3909F76BE1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "QLCC\DAL\DAL.csproj", "{13910013-5159-4C73-A069-B569363844A3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QLCC", "QLCC\QLCC\QLCC.csproj", "{07A3FEAA-2362-4733-9DC3-12B736E26A00}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{13910013-5159-4C73-A069-B569363844A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13910013-5159-4C73-A069-B569363844A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13910013-5159-4C73-A069-B569363844A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13910013-5159-4C73-A069-B569363844A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07A3FEAA-2362-4733-9DC3-12B736E26A00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07A3FEAA-2362-4733-9DC3-12B736E26A00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07A3FEAA-2362-4733-9DC3-12B736E26A00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07A3FEAA-2362-4733-9DC3-12B736E26A00}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{13910013-5159-4C73-A069-B569363844A3} = {22993969-4930-4319-85AD-7C3909F76BE1}
+		{07A3FEAA-2362-4733-9DC3-12B736E26A00} = {22993969-4930-4319-85AD-7C3909F76BE1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {89342AC8-1CFA-41D6-81B3-6D1DFA1F95E4}
+	EndGlobalSection
+EndGlobal

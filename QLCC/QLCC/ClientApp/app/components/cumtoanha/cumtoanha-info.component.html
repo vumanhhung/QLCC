@@ -1,0 +1,269 @@
+﻿<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div *ngIf="!isViewDetails" class="EditForm">
+                <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="CumToaNhaInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
+          (!tenCumToaNha.valid && showErrorAlert('TenCumToaNha không được để trống', 'Vui lòng nhập tên cụm tòa nhà!'));
+(!tenVietTat.valid && showErrorAlert('TenVietTat không được để trống', 'Vui lòng nhập tên viết tắt!'));
+(!mst.valid && showErrorAlert('MST không được để trống', 'Vui lòng nhập mã số thuế!'));
+(!sdt.valid && showErrorAlert('SDT không được để trống', 'Vui lòng nhập số điện thoại!'));
+(!fax.valid && showErrorAlert('Fax không được để trống', 'Vui lòng nhập Fax!'));
+(!isValidateEmail && showErrorAlert('Email không được để trống', 'Vui lòng nhập Email đúng định dạng abc@xyz!'));
+(!diaChi.valid && showErrorAlert('DiaChi không được để trống', 'Vui lòng nhập địa chỉ!'));
+(!nguoiQuanLy.valid && showErrorAlert('NguoiQuanLy không được để trống', 'Vui lòng nhập tên người quản lý!'));
+(!stk.valid && showErrorAlert('STK không được để trống', 'Vui lòng nhập số tài khoản!'));
+(!nganHang.valid && showErrorAlert('NganHang không được để trống', 'Vui lòng nhập tên ngân hàng!'));
+(!tenNguoiNhan.valid && showErrorAlert('TenNguoiNhan không được để trống', 'Vui lòng nhập tên người nhận!'));
+">
+                    <div class="modal-header">
+                        <p *ngIf="isNew" class="modal-title pull-left"><i class="fa fa-plus"></i> Thêm mới cụm <span>{{tencumtoanha}}</span></p>
+                        <p *ngIf="isEdit" class="modal-title pull-left"><i class="fa fa-pencil-square-o"></i> Chỉnh sửa cụm <span>{{tencumtoanha}}</span></p>
+                        <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <div class="col-sm-4">
+                                <div class="has-feedback">
+                                    <label class="control-label " for="tenCumToaNha-{{uniqueId}}">Tên cụm tòa nhà</label>
+                                    <div class="control" [ngClass]="{'has-success': f.submitted && tenCumToaNha.valid, 'has-error' : f.submitted && !tenCumToaNha.valid}">
+                                        <input autofocus type="text" class="form-control" name="tenCumToaNha" [(ngModel)]="CumToaNhaEdit.tenCumToaNha" #tenCumToaNha="ngModel" required />
+                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tenCumToaNha.valid, 'glyphicon-remove' : !tenCumToaNha.valid}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted && !tenCumToaNha.valid" class="errorMessage">
+                                            Vui lòng nhập tên Cụm tòa nhà!
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="has-feedback">
+                                    <label class="control-label " for="tenVietTat-{{uniqueId}}">Tên viết tắt</label>
+                                    <div class="control" [ngClass]="{'has-success': f.submitted && tenVietTat.valid, 'has-error' : f.submitted && !tenVietTat.valid}">
+                                        <input autofocus type="text" class="form-control" name="tenVietTat" [(ngModel)]="CumToaNhaEdit.tenVietTat" #tenVietTat="ngModel" required />
+                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tenVietTat.valid, 'glyphicon-remove' : !tenVietTat.valid}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted && !tenVietTat.valid" class="errorMessage">
+                                            Vui lòng nhập tên viết tắt!
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="has-feedback">
+                                    <label class="control-label " for="nguoiQuanLy-{{uniqueId}}">Người quản lý</label>
+                                    <div class="control" [ngClass]="{'has-success': f.submitted && nguoiQuanLy.valid, 'has-error' : f.submitted && !nguoiQuanLy.valid}">
+                                        <input autofocus type="text" class="form-control" name="nguoiQuanLy" [(ngModel)]="CumToaNhaEdit.nguoiQuanLy" #nguoiQuanLy="ngModel" required />
+                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': nguoiQuanLy.valid, 'glyphicon-remove' : !nguoiQuanLy.valid}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted && !nguoiQuanLy.valid" class="errorMessage">
+                                            Vui lòng nhập tên người quản lý!
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-sm-4">
+                                <div class="has-feedback">
+                                    <label class="control-label " for="diaChi-{{uniqueId}}">Địa chỉ</label>
+                                    <div class="control" [ngClass]="{'has-success': f.submitted && diaChi.valid, 'has-error' : f.submitted && !diaChi.valid}">
+                                        <input autofocus type="text" class="form-control" name="diaChi" [(ngModel)]="CumToaNhaEdit.diaChi" #diaChi="ngModel" required />
+                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': diaChi.valid, 'glyphicon-remove' : !diaChi.valid}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted && !diaChi.valid" class="errorMessage">
+                                            Vui lòng nhập địa chỉ!
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="has-feedback">
+                                    <label class="control-label " for="sdt-{{uniqueId}}">Điện thoại</label>
+                                    <div class="control" [ngClass]="{'has-success': f.submitted && sdt.valid, 'has-error' : f.submitted && !sdt.valid}">
+                                        <input autofocus type="text" class="form-control" name="sdt" [(ngModel)]="CumToaNhaEdit.sdt" #sdt="ngModel" required />
+                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': sdt.valid, 'glyphicon-remove' : !sdt.valid}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted && !sdt.valid" class="errorMessage">
+                                            Vui lòng nhập số điện thoại!
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="has-feedback">
+                                    <label class="control-label " for="email-{{uniqueId}}">Email</label>
+                                    <div class="control" [ngClass]="{'has-success': f.submitted && isValidateEmail, 'has-error' : f.submitted && !isValidateEmail}">
+                                        <input autofocus type="text" class="form-control" name="email" [(ngModel)]="CumToaNhaEdit.email" #email="ngModel" required (ngModelChange)="onValidateEmail($event)" />
+                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': isValidateEmail, 'glyphicon-remove' : !isValidateEmail}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted && !isValidateEmail" class="errorMessage">
+                                            Vui lòng nhập email đúng định dạng abc@xyz!
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-sm-4">
+                                <div class="has-feedback">
+                                    <label class="control-label " for="stk-{{uniqueId}}">Số tài khoản</label>
+                                    <div class="control" [ngClass]="{'has-success': f.submitted && stk.valid, 'has-error' : f.submitted && !stk.valid}">
+                                        <input autofocus type="text" class="form-control" name="stk" [(ngModel)]="CumToaNhaEdit.stk" #stk="ngModel" required />
+                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': stk.valid, 'glyphicon-remove' : !stk.valid}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted && !stk.valid" class="errorMessage">
+                                            Vui lòng nhập số tài khoản!
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="has-feedback">
+                                    <label class="control-label " for="nganHang-{{uniqueId}}">Ngân hàng</label>
+                                    <div class="control" [ngClass]="{'has-success': f.submitted && nganHang.valid, 'has-error' : f.submitted && !nganHang.valid}">
+                                        <input autofocus type="text" class="form-control" name="nganHang" [(ngModel)]="CumToaNhaEdit.nganHang" #nganHang="ngModel" required />
+                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': nganHang.valid, 'glyphicon-remove' : !nganHang.valid}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted && !nganHang.valid" class="errorMessage">
+                                            Vui lòng nhập tên ngân hàng!
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="has-feedback">
+                                    <label class="control-label " for="tenNguoiNhan-{{uniqueId}}">Tên người nhận</label>
+                                    <div class="control" [ngClass]="{'has-success': f.submitted && tenNguoiNhan.valid, 'has-error' : f.submitted && !tenNguoiNhan.valid}">
+                                        <input autofocus type="text" class="form-control" name="tenNguoiNhan" [(ngModel)]="CumToaNhaEdit.tenNguoiNhan" #tenNguoiNhan="ngModel" required />
+                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tenNguoiNhan.valid, 'glyphicon-remove' : !tenNguoiNhan.valid}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted && !tenNguoiNhan.valid" class="errorMessage">
+                                            Vui lòng nhập tên người nhận!
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-sm-4">
+                                <div class="has-feedback">
+                                    <label class="control-label " for="fax-{{uniqueId}}">Fax</label>
+                                    <div class="control" [ngClass]="{'has-success': f.submitted && fax.valid, 'has-error' : f.submitted && !fax.valid}">
+                                        <input autofocus type="text" class="form-control" name="fax" [(ngModel)]="CumToaNhaEdit.fax" #fax="ngModel" required />
+                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': fax.valid, 'glyphicon-remove' : !fax.valid}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted && !fax.valid" class="errorMessage">
+                                            Vui lòng nhập fax!
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="has-feedback">
+                                    <label class="control-label " for="mst-{{uniqueId}}">Mã số thuế</label>
+                                    <div class="control" [ngClass]="{'has-success': f.submitted && mst.valid, 'has-error' : f.submitted && !mst.valid}">
+                                        <input autofocus type="text" class="form-control" name="mst" [(ngModel)]="CumToaNhaEdit.mst" #mst="ngModel" required />
+                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': mst.valid, 'glyphicon-remove' : !mst.valid}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted && !mst.valid" class="errorMessage">
+                                            Vui lòng nhập mã số thuế!
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="has-feedback">
+                                    <label class="control-label " for="logo-{{uniqueId}}">Logo</label>
+                                    <div class="control">
+                                        <kendo-upload [autoUpload]="false" (upload)="uploadEventHandler($event,'/logo_cumtoanha')" (select)="selectEventHandler($event)" [multiple]="false" [saveUrl]='"api/FileUploads/UploadFile"' [removeUrl]='"api/FileUploads/Remove"' [restrictions]="uploadRestrictions" [disabled]="false"></kendo-upload>
+                                        <div class="clearfix"></div>
+                                        <div *ngIf="isdisplayImage" class="description-form-group box-image" style="position:relative;z-index:1;width:100px;margin-top:5px">
+                                            <img id="imgData" class="img-responsive" [alt]="altImageItem" [src]="imageData" style="width:80px;border: 1px solid #ccc;border-radius: 100%;height:75px;object-fit:contain;overflow:hidden" />
+                                            <span id="{{cumtoanhaId}}" (click)="clearImageData($event)" tooltip="Xóa" class="glyphicon glyphicon-remove glyphicon-remove-image"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-md-12">
+                                <hr class="edit-last-separator-hr" />
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="actionBtn-form-group">
+                            <div class="col-sm-7">
+                                <div class="pull-right">
+                                    <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                                    <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                                    <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
+                                        <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
+                                    </button>
+                                    <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+            <div *ngIf="isViewDetails" class="ViewForm">
+                <div class="modal-header">
+                    <p class="modal-title pull-left"><i class="fa fa-eye"></i> Chi tiết cụm tòa nhà <span>{{tencumtoanha}}</span> </p>
+                    <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <form #f="ngForm">
+                            <div>
+                                <div *ngIf="isdisplayImage" class="col-sm-12 logoView" tooltip="Logo tòa nhà">
+                                    <img id="imgData" class="img-responsive" [alt]="altImageItem" [src]="imageData" />
+                                </div>
+                                <div class="clearfix h4"></div>
+                                <div class="col-sm-2 rowCustom title">Tên cụm tòa nhà: </div>
+                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.tenCumToaNha}}</div>
+                                <div class="clearfix h4"></div>
+                                <div class="col-sm-2 rowCustom title">Tên viết tắt: </div>
+                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.tenVietTat}}</div>
+                                <div class="clearfix h4"></div>
+                                <div class="col-sm-2 rowCustom title">Địa chỉ: </div>
+                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.diaChi}}</div>
+                                <div class="clearfix h4"></div>
+                                <div class="col-sm-2  rowCustom title">Điện thoại: </div>
+                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.sdt}}</div>
+                                <div class="clearfix h4"></div>
+                                <div class="col-sm-2 rowCustom title">Email: </div>
+                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.email}}</div>
+                                <div class="clearfix h4"></div>
+                                <div class="col-sm-2 rowCustom title">Fax: </div>
+                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.fax}}</div>
+                                <div class="clearfix h4"></div>
+                                <div class="col-sm-2  rowCustom title">Mã số thuế: </div>
+                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.mst}}</div>
+                                <div class="clearfix h4"></div>
+                                <div class="col-sm-2 rowCustom title">Người quản lý: </div>
+                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.nguoiQuanLy}}</div>
+                                <div class="clearfix h4"></div>
+                                <div class="col-sm-2 rowCustom title">Số tài khoản: </div>
+                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.stk}}</div>
+                                <div class="clearfix h4"></div>
+                                <div class="col-sm-2 rowCustom title">Ngân hàng: </div>
+                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.nganHang}}</div>
+                                <div class="clearfix h4"></div>
+                                <div class="col-sm-2 rowCustom title">Tên người nhận: </div>
+                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.tenNguoiNhan}}</div>
+                                <div class="clearfix h4"></div>
+                                <div class="col-md-12">
+                                    <hr class="edit-last-separator-hr" />
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="actionBtn-form-group">
+                        <div class="col-sm-7">
+                            <div class="pull-right">
+                                <button type="button" (click)="moveToEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                                <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

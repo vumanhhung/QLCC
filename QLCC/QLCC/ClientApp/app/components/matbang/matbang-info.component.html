@@ -1,0 +1,467 @@
+﻿<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1" [class.fullScreenModal]="isFullScreenModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div *ngIf="!isViewDetails" class="EditForm">
+                <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="MatBangInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
+          (!chkCumToaNhaId && showErrorAlert('Cụm tòa nhà không được để trống', 'Vui lòng chọn Cụm tòa nhà!'));
+(!chkToaNhaId && showErrorAlert('Tòa nhà không được để trống', 'Vui lòng chọn tòa nhà!'));
+(!chktangLauId && showErrorAlert('Tầng lầu không được để trống', 'Vui lòng chọn tầng lầu!'));
+(!chkTrangThaiId && showErrorAlert('Trạng thái không được để trống', 'Vui lòng chọn trạng thái!'));
+(!chkloaiMatBangId && showErrorAlert('Loại mặt bằng không được để trống', 'Vui lòng chọn loại mặt bằng!'));
+(!maMatBang.valid && showErrorAlert('Mã mặt bằng không được để trống', 'Vui lòng nhập Mã mặt bằng!'));
+(!tenMatBang.valid && showErrorAlert('Tên mặt bằng không được để trống', 'Vui lòng nhập Tên mặt bằng!'));
+(!dienTich.valid && showErrorAlert('Diện tích không được để trống', 'Vui lòng nhập Diện tích!'));
+(!giaThue.valid && showErrorAlert('Giá thuê không được để trống', 'Vui lòng nhập Giá thuê!'));
+(!chkloaiTien && showErrorAlert('Loại tiền không được để trống', 'Vui lòng chọn loại tiền!'));
+(!chkcaNhan && showErrorAlert('Hình thức không được để trống', 'Vui lòng chọn hình thức!'));
+(!chkgiaoChiaKhoa && showErrorAlert('Trạng thái chìa khóa không được để trống', 'Vui lòng chọn trạng thái chìa khóa!'));
+(!chkchuSoHuu && showErrorAlert('Chủ sở hữu không được để trống', 'Vui lòng nhập Chủ sở hữu!'));
+(!chkkhachThue && showErrorAlert('Khách thuê không được để trống', 'Vui lòng nhập Khách thuê!'));
+">
+                    <div class="modal-header">
+                        <p *ngIf="isNew" class="modal-title pull-left"><i class="fa fa-plus"></i> Thêm mới mặt bằng <span>{{tenmatbang}}</span></p>
+                        <p *ngIf="isEdit" class="modal-title pull-left"><i class="fa fa-pencil-square-o"></i> Chỉnh sửa mặt bằng <span>{{tenmatbang}}</span></p>
+                        <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <div class="has-feedback col-sm-4">
+                                <label class="control-label" for="cumToaNhaId-{{uniqueId}}">Chọn cụm tòa nhà</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && chkCumToaNhaId, 'has-error' : f.submitted && !chkCumToaNhaId}">
+                                    <select name="cumToaNhaId" [(ngModel)]="MatBangEdit.cumToaNhaId" #cumToaNhaId="ngModel" class="form-control" (change)="cumToaNhaIdChange(cumToaNhaId.value)">
+                                        <option value="0">--- Chọn cụm tòa nhà ---</option>
+                                        <option *ngFor="let o of cums" value="{{o.cumToaNhaId}}">
+                                            {{o.tenCumToaNha}}
+                                        </option>
+                                    </select>
+
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkCumToaNhaId, 'glyphicon-remove' : !chkCumToaNhaId}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !chkCumToaNhaId" class="errorMessage">
+                                        Vui lòng chọn cụm tòa nhà!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="has-feedback col-sm-4">
+                                <label class="control-label" for="toaNhaId-{{uniqueId}}">Chọn tòa nhà</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && chkToaNhaId, 'has-error' : f.submitted && !chkToaNhaId}">
+                                    <select name="toaNhaId" [(ngModel)]="MatBangEdit.toaNhaId" #toaNhaId="ngModel" class="form-control" (change)="ToaNhaIdChange(toaNhaId.value,cumToaNhaId.value)">
+                                        <option value="0">--- Chọn tòa nhà ---</option>
+                                        <option *ngFor="let o of toas" value="{{o.toaNhaId}}">
+                                            {{o.tenKhoiNha}}
+                                        </option>
+                                    </select>
+
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkToaNhaId, 'glyphicon-remove' : !chkToaNhaId}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !chkToaNhaId" class="errorMessage">
+                                        Vui lòng chọn tòa nhà!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="has-feedback col-sm-4">
+                                <label class="control-label" for="tangLauId-{{uniqueId}}">Chọn tầng lầu</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && chkTangLauId, 'has-error' : f.submitted && !chkTangLauId}">
+                                    <select name="tangLauId" [(ngModel)]="MatBangEdit.tangLauId" #tangLauId="ngModel" class="form-control" (change)="TangLauIdChange(tangLauId.value)">
+                                        <option value="0">--- Chọn tầng lầu ---</option>
+                                        <option *ngFor="let o of tangs" value="{{o.tangLauId}}">
+                                            {{o.tenTangLau}}
+                                        </option>
+                                    </select>
+
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkTangLauId, 'glyphicon-remove' : !chkTangLauId}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !chkTangLauId" class="errorMessage">
+                                        Vui lòng chọn tầng lầu!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="has-feedback col-sm-4">
+                                <label class="control-label" for="loaiMatBangId-{{uniqueId}}">Chọn loại mặt bằng</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && chkloaiMatBangId, 'has-error' : f.submitted && !chkloaiMatBangId}">
+                                    <select name="loaiMatBangId" [(ngModel)]="MatBangEdit.loaiMatBangId" #loaiMatBangId="ngModel" class="form-control" (change)="loaiMatBangChange(loaiMatBangId.value)">
+                                        <option value="0">--- Chọn loại mặt bằng ---</option>
+                                        <option *ngFor="let o of loaimatbangs" value="{{o.loaiMatBangId}}">
+                                            {{o.tenLoaiMatBang}}
+                                        </option>
+                                    </select>
+
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkloaiMatBangId, 'glyphicon-remove' : !chkloaiMatBangId}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !chkloaiMatBangId" class="errorMessage">
+                                        Vui lòng chọn loại mặt bằng!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="has-feedback col-sm-4">
+                                <label class="control-label" for="loaiTien-{{uniqueId}}">Chọn loại tiền</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && chkloaiTien, 'has-error' : f.submitted && !chkloaiTien}">
+                                    <select name="loaiTien" [(ngModel)]="MatBangEdit.loaiTien" #loaiTien="ngModel" class="form-control" (change)="loaiTienChange(loaiTien.value)">
+                                        <option value="0">--- Chọn loại tiền ---</option>
+                                        <option *ngFor="let o of loaitien" value="{{o.kyHieu}}">
+                                            {{o.kyHieu}}-{{o.tenLoaiTien}}
+                                        </option>
+                                    </select>
+
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkloaiTien, 'glyphicon-remove' : !chkloaiTien}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !chkloaiTien" class="errorMessage">
+                                        Vui lòng chọn loại tiền!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="has-feedback col-sm-4">
+                                <label class="control-label" for="trangThaiId-{{uniqueId}}">Chọn trạng thái</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && chkTrangThaiId, 'has-error' : f.submitted && !chkTrangThaiId}" style="position:relative;z-index:1">
+                                    <!--<span class="bgStatus" style="position:absolute;width:30px;height:32px;display:block;top:1px;right:18px" [ngStyle]="{'background-color':bgcolorStautus}"></span>-->
+                                    <select name="trangThaiId" [(ngModel)]="MatBangEdit.trangThaiId" #trangThaiId="ngModel" [ngStyle]="{'background-color':bgcolorStautus}" class="form-control" (change)="trangThaiIdChange(trangThaiId.value)">
+                                        <option value="0" style="background:#fff">--- Chọn trạng thái ---</option>
+                                        <option *ngFor="let o of trangthais" value="{{o.trangThaiId}}" style="background:#fff">
+                                            {{o.tenTrangThai}}
+                                        </option>
+                                    </select>
+
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkTrangThaiId, 'glyphicon-remove' : !chkTrangThaiId}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !chkTrangThaiId" class="errorMessage">
+                                        Vui lòng chọn trạng thái!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="has-feedback col-sm-6">
+                                <label class="control-label" for="maMatBang-{{uniqueId}}">Mã mặt bằng</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && maMatBang.valid, 'has-error' : f.submitted && !maMatBang.valid}">
+                                    <input autofocus type="text" class="form-control" name="maMatBang" [(ngModel)]="MatBangEdit.maMatBang" #maMatBang="ngModel" required />
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': maMatBang.valid, 'glyphicon-remove' : !maMatBang.valid}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !maMatBang.valid" class="errorMessage">
+                                        Vui lòng nhập mã mặt bằng!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="has-feedback col-sm-6">
+                                <label class="control-label" for="tenMatBang-{{uniqueId}}">Tên mặt bằng</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && tenMatBang.valid, 'has-error' : f.submitted && !tenMatBang.valid}">
+                                    <input autofocus type="text" class="form-control" name="tenMatBang" [(ngModel)]="MatBangEdit.tenMatBang" #tenMatBang="ngModel" required />
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tenMatBang.valid, 'glyphicon-remove' : !tenMatBang.valid}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !tenMatBang.valid" class="errorMessage">
+                                        Vui lòng nhập tên mặt bằng!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="has-feedback col-sm-6">
+                                <label class="control-label" for="dienTich-{{uniqueId}}">Diện tích(m2)</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && dienTich.valid, 'has-error' : f.submitted && !dienTich.valid}" style="position:relative;z-index:1">
+                                    <span class="formatnumber">{{valuedienTich}}</span>
+                                    <input autofocus type="text" class="form-control" name="dienTich" [(ngModel)]="MatBangEdit.dienTich" #dienTich="ngModel" required OnlyNumber="true" (ngModelChange)="ondienTichChange($event)" />
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': dienTich.valid, 'glyphicon-remove' : !dienTich.valid}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !dienTich.valid" class="errorMessage">
+                                        Vui lòng nhập diện tích mặt bằng!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="has-feedback col-sm-6">
+                                <label class="control-label" for="giaThue-{{uniqueId}}">Giá cho thuê (triệu đồng)</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && giaThue.valid, 'has-error' : f.submitted && !giaThue.valid}" style="position:relative;z-index:1">
+                                    <span class="formatnumber">{{valuegiaThue}}</span>
+                                    <input autofocus type="text" class="form-control" name="giaThue" [(ngModel)]="MatBangEdit.giaThue" #giaThue="ngModel" required OnlyNumber="true" (ngModelChange)="ongiaThueChange($event)" />
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': giaThue.valid, 'glyphicon-remove' : !giaThue.valid}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !giaThue.valid" class="errorMessage">
+                                        Vui lòng nhập giá cho thuê!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="has-feedback col-sm-6">
+                                <label class="control-label" for="caNhan-{{uniqueId}}">Chọn hình thức</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && chkcaNhan, 'has-error' : f.submitted && !chkcaNhan}">
+                                    <select name="caNhan" [(ngModel)]="MatBangEdit.caNhan" #caNhan="ngModel" class="form-control" (change)="caNhanChange(caNhan.value)">
+                                        <option value="0">--- Chọn hình thức ---</option>
+                                        <option value="1">Cá nhân</option>
+                                        <option value="2">Doanh nghiệp</option>
+                                    </select>
+
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkcaNhan, 'glyphicon-remove' : !chkcaNhan}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !chkcaNhan" class="errorMessage">
+                                        Vui lòng chọn hình thức!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="has-feedback col-sm-6">
+                                <label class="control-label" for="giaoChiaKhoa-{{uniqueId}}">Giao chìa khóa</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && chkgiaoChiaKhoa, 'has-error' : f.submitted && !chkgiaoChiaKhoa}">
+                                    <select name="giaoChiaKhoa" [(ngModel)]="MatBangEdit.giaoChiaKhoa" #giaoChiaKhoa="ngModel" class="form-control" (change)="giaoChiaKhoaChange(giaoChiaKhoa.value)">
+                                        <option value="0">--- Chọn trang thái ---</option>
+                                        <option value="1">Đã bàn giao</option>
+                                        <option value="2">Chưa bàn giao</option>
+                                    </select>
+
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkgiaoChiaKhoa, 'glyphicon-remove' : !chkgiaoChiaKhoa}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !chkgiaoChiaKhoa" class="errorMessage">
+                                        Vui lòng chọn trạng thái chìa khóa!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="has-feedback col-sm-6" [ngClass]="{'col-sm-6 spe-text':trangthaichiakhoa,'col-sm-12':!trangthaichiakhoa}">
+                                <label class="control-label" for="dienGiai-{{uniqueId}}">Mô tả</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && dienGiai.valid, 'has-error' : f.submitted && !dienGiai.valid}">
+                                    <textarea class="form-control" name="dienGiai" [(ngModel)]="MatBangEdit.dienGiai" #dienGiai="ngModel"></textarea>
+                                </div>
+                            </div>
+                            <div *ngIf="trangthaichiakhoa" class="has-feedback col-sm-6">
+                                <label class="control-label" for="ngaybanGiao-{{uniqueId}}">Ngày bàn giao</label>
+                                <div class="control">
+                                    <kendo-datepicker [(value)]="value" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
+                                    <!--<input autofocus type="text" class="form-control" name="ngaybanGiao" [(ngModel)]="MatBangEdit.ngaybanGiao" #ngaybanGiao="ngModel" required />-->
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="has-feedback col-sm-6">
+                                <label class="control-label" for="chuSoHuu-{{uniqueId}}">Chủ sở hữu</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && chkchuSoHuu, 'has-error' : f.submitted && !chkchuSoHuu}">
+                                    <select name="chuSoHuu" [(ngModel)]="MatBangEdit.chuSoHuu" #chuSoHuu="ngModel" class="form-control" (change)="chuSoHuuChange(chuSoHuu.value)">
+                                        <option value="0">--- Chọn chủ sở hữu ---</option>
+                                        <option value="1">Ông A</option>
+                                        <option value="2">Ông B</option>
+                                    </select>
+
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkchuSoHuu, 'glyphicon-remove' : !chkchuSoHuu}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !chkchuSoHuu" class="errorMessage">
+                                        Vui lòng chọn chủ sở hữu!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="has-feedback col-sm-6">
+                                <label class="control-label" for="khachThue-{{uniqueId}}">Khách thuê</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && chkkhachThue, 'has-error' : f.submitted && !chkkhachThue}">
+                                    <select name="khachThue" [(ngModel)]="MatBangEdit.khachThue" #khachThue="ngModel" class="form-control" (change)="khachThueChange(khachThue.value)">
+                                        <option value="0">--- Chọn khách thuê ---</option>
+                                        <option value="1">Khách A</option>
+                                        <option value="2">Khách B</option>
+                                    </select>
+
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkkhachThue, 'glyphicon-remove' : !chkkhachThue}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !chkkhachThue" class="errorMessage">
+                                        Vui lòng chọn khách thuê!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-md-12">
+                                <hr class="edit-last-separator-hr" />
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="actionBtn-form-group">
+                            <div class="col-sm-7">
+                                <div class="pull-right">
+                                    <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                                    <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                                    <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
+                                        <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
+                                    </button>
+                                    <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </form>
+            </div>
+
+            <div *ngIf="isViewDetails" class="ViewForm">
+                <div class="modal-header">
+                    <p class="modal-title pull-left"><i class="fa fa-eye"></i> Chi tiết mặt bằng <span>{{tenmatbang}}</span> </p>
+                    <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <a href="javascript:;" *ngIf="isFullScreenModal" class="close pull-right" title="Resize" (click)="ResizeFullScreen()">
+                        <i class="glyphicon glyphicon-resize-small" style="font-size:16px">&nbsp;</i>
+                    </a>
+                    <a href="javascript:;" *ngIf="!isFullScreenModal" class="close pull-right" title="FullScreen" (click)="FullScreen()">
+                        <i class="glyphicon glyphicon-fullscreen" style="font-size:16px">&nbsp;</i>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <form #f="ngForm">
+                            <ul bootstrapTab #tab="bootstrap-tab" class="nav nav-tabs" (showBSTab)="onShowTab($event)">
+                                <li class="active">
+                                    <a id="thongtinTab" [routerLink]="[]" fragment="thongtin" href="#thongtin" data-toggle="tab"><i class="fa fa-home fa-fw" aria-hidden="true"></i>Thông tin</a>
+                                </li>
+                                <li>
+                                    <a id="cudanTab" [routerLink]="[]" fragment="cudan" href="#cudan" data-toggle="tab"><i class="fa fa-male fa-fw" aria-hidden="true"></i>Cư dân</a>
+                                </li>
+                                <li>
+                                    <a id="thexeTab" [routerLink]="[]" fragment="thexe" href="#thexe" data-toggle="tab"><i class="fa fa-drivers-license-o fa-fw" aria-hidden="true"></i>Thẻ xe</a>
+                                </li>
+                                <li>
+                                    <a id="lichsusudungTab" [routerLink]="[]" fragment="lichsusudung" href="#lichsusudung" data-toggle="tab"><i class="fa fa-history fa-fw" aria-hidden="true"></i>Lịch sử sử dụng</a>
+                                </li>
+                                <li>
+                                    <a id="taisanTab" [routerLink]="[]" fragment="taisan" href="#taisan" data-toggle="tab"><i class="fa fa-shopping-bag fa-fw" aria-hidden="true"></i>Tài sản</a>
+                                </li>
+                                <li>
+                                    <a id="lichsuthuphiTab" [routerLink]="[]" fragment="lichsuthuphi" href="#lichsuthuphi" data-toggle="tab"><i class="fa fa-history fa-fw" aria-hidden="true"></i>Lịch sử thu phí</a>
+                                </li>
+                                <li>
+                                    <a id="congnoTab" [routerLink]="[]" fragment="congno" href="#congno" data-toggle="tab"><i class="fa fa-calculator fa-fw" aria-hidden="true"></i>Công nợ</a>
+                                </li>
+                                <li>
+                                    <a id="danhsachyeucauTab" [routerLink]="[]" fragment="danhsachyeucau" href="#danhsachyeucau" data-toggle="tab"><i class="fa  fa-newspaper-o fa-fw" aria-hidden="true"></i>Danh sách yêu cầu</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" style="padding:0">
+                                <div class="tab-pane active" id="thongtin">
+                                    <div [@fadeInOut] class="noidung-tab" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="boldText">Loại mặt bằng:</td>
+                                                    <td>2423423</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Giới thiệu:</td>
+                                                    <td>W3Schools is optimized for learning, testing, and training. Examples might be simplified to improve reading and basic understanding. Tutorials, references, and examples are constantly reviewed to avoid errors</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Loại mặt bằng:</td>
+                                                    <td>2423423</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Giới thiệu:</td>
+                                                    <td>W3Schools is optimized for learning, testing, and training. Examples might be simplified to improve reading and basic understanding. Tutorials, references, and examples are constantly reviewed to avoid errors</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Loại mặt bằng:</td>
+                                                    <td>2423423</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Giới thiệu:</td>
+                                                    <td>W3Schools is optimized for learning, testing, and training. Examples might be simplified to improve reading and basic understanding. Tutorials, references, and examples are constantly reviewed to avoid errors</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Loại mặt bằng:</td>
+                                                    <td>2423423</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Giới thiệu:</td>
+                                                    <td>W3Schools is optimized for learning, testing, and training. Examples might be simplified to improve reading and basic understanding. Tutorials, references, and examples are constantly reviewed to avoid errors</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Loại mặt bằng:</td>
+                                                    <td>2423423</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Giới thiệu:</td>
+                                                    <td>W3Schools is optimized for learning, testing, and training. Examples might be simplified to improve reading and basic understanding. Tutorials, references, and examples are constantly reviewed to avoid errors</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Loại mặt bằng:</td>
+                                                    <td>2423423</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Giới thiệu:</td>
+                                                    <td>W3Schools is optimized for learning, testing, and training. Examples might be simplified to improve reading and basic understanding. Tutorials, references, and examples are constantly reviewed to avoid errors</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Loại mặt bằng:</td>
+                                                    <td>2423423</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Giới thiệu:</td>
+                                                    <td>W3Schools is optimized for learning, testing, and training. Examples might be simplified to improve reading and basic understanding. Tutorials, references, and examples are constantly reviewed to avoid errors</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Loại mặt bằng:</td>
+                                                    <td>2423423</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Giới thiệu:</td>
+                                                    <td>W3Schools is optimized for learning, testing, and training. Examples might be simplified to improve reading and basic understanding. Tutorials, references, and examples are constantly reviewed to avoid errors</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Loại mặt bằng:</td>
+                                                    <td>2423423</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Giới thiệu:</td>
+                                                    <td>W3Schools is optimized for learning, testing, and training. Examples might be simplified to improve reading and basic understanding. Tutorials, references, and examples are constantly reviewed to avoid errors</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Loại mặt bằng:</td>
+                                                    <td>2423423</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Giới thiệu:</td>
+                                                    <td>W3Schools is optimized for learning, testing, and training. Examples might be simplified to improve reading and basic understanding. Tutorials, references, and examples are constantly reviewed to avoid errors</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Loại mặt bằng:</td>
+                                                    <td>2423423</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="boldText">Giới thiệu:</td>
+                                                    <td>W3Schools is optimized for learning, testing, and training. Examples might be simplified to improve reading and basic understanding. Tutorials, references, and examples are constantly reviewed to avoid errors</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="cudan">
+                                    <div [@fadeInOut] class="noidung-tab" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
+                                        <cudanmatbang></cudanmatbang>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="thexe">
+                                    <div [@fadeInOut] class="noidung-tab" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
+                                        <thexe></thexe>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="lichsusudung">
+                                    <div [@fadeInOut] class="noidung-tab" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
+                                        <lichsusudung></lichsusudung>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="taisan">
+                                    <div [@fadeInOut] class="noidung-tab" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
+                                        <taisan></taisan>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="lichsuthuphi">
+                                    <div [@fadeInOut] class="noidung-tab" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
+                                        <lichsuthuphi></lichsuthuphi>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="congno">
+                                    <div [@fadeInOut] class="noidung-tab" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
+                                        <congno></congno>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="danhsachyeucau">
+                                    <div [@fadeInOut] class="noidung-tab" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
+                                        <danhsachyeucau></danhsachyeucau>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="actionBtn-form-group">
+                        <div class="col-sm-7">
+                            <div class="pull-right">
+                                <button type="button" (click)="moveToEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                                <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

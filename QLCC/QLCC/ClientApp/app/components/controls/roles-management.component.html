@@ -1,0 +1,64 @@
+﻿<div>
+    <div class="row control-box">
+        <div class="col-sm-8">
+            <div class="form-group search-box">
+                <search-box (searchChange)="onSearchChanged($event)" placeholder="{{'roles.management.Search' | translate}}">></search-box>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="navbar action-box" style="margin-right:0">
+                <ul class="nav navbar-nav navbar-right">
+                    <li *ngIf="canManageRoles" class="toolbaritem">
+                        <a style="min-width:0" class="btn btn-primary" href="javascript:;" (click)="newRole(row)" tooltip="{{'roles.management.NewRole' | translate}}">
+                            <i class="fa fa-plus"></i> 
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div style="overflow-x:auto">
+        <div style="min-width:768px">
+            <ngx-datatable class="material colored-header sm table table-striped table-hover"
+                           [loadingIndicator]="loadingIndicator"
+                           [rows]="rows"
+                           [rowHeight]="45"
+                           [headerHeight]="45"
+                           [footerHeight]="45"
+                           [columns]="columns"
+                           [scrollbarV]="false"
+                           [limit]="limit"
+                           [columnMode]="'force'">
+            </ngx-datatable>
+        </div>
+    </div>
+
+    <ng-template #indexTemplate let-value="value">
+        <strong>{{value}}</strong>
+    </ng-template>
+
+
+    <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index">
+        <a *ngIf="canManageRoles" class="btn btn-func btn-primary" href="javascript:;" (click)="editRole(row)" tooltip="{{'roles.management.Edit' | translate}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+        <a *ngIf="!canManageRoles" class="btn btn-func btn-danger" href="javascript:;" (click)="editRole(row)" tooltip="{{'roles.management.Details' | translate}}"><i class="fa fa-eye" aria-hidden="true"></i></a>
+        <a *ngIf="canManageRoles" class="btn btn-func btn-danger" href="javascript:;" (click)="deleteRole(row)" tooltip="{{'roles.management.Delete' | translate}}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+    </ng-template>
+
+
+    <div class="modal fade" [class.fullScreenModal]="isFullScreen" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 *ngIf="!canManageRoles" class="modal-title pull-left"><i class="fa fa-shield"></i> {{'roles.management.RoleDetails' | translate}} "{{editingRoleName}}"</h4>
+                    <h4 *ngIf="canManageRoles" class="modal-title pull-left"><i class="fa fa-shield"></i> {{editingRoleName ? ('roles.management.EditRole' | translate:editingRoleName) : ('roles.management.NewRole' | translate)}}</h4>
+                    <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <role-editor #roleEditor></role-editor>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

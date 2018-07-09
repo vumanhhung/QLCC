@@ -1,5 +1,6 @@
-﻿<section class="content-header">
-    <h1>Quản lý loại xe</h1>
+﻿
+<section class="content-header">
+    <h1>Quản lý Loại Xe</h1>
     <commonroad></commonroad>
 </section>
 <section class="content">
@@ -12,7 +13,7 @@
             </div>
             <div style="margin-bottom:1%;" align="right" class="col-sm-6">
                 <div class="row">
-                    <a class="btn btn-primary" href="javascript://" tooltip="{{'Thêm mới' | translate}}" (click)="newLoaiXe()"><i class="fa fa-plus"></i></a>
+                    <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newLoaiXe()"><i class="fa fa-plus"></i></a>
                 </div>
             </div>
 
@@ -21,7 +22,7 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div>
-                        <div class="DTTT_container">
+                        <div class="dataTables_length">
                             <label>
                                 Hiển thị
                                 <select class="form-control input-sm" #drSelected (change)="SelectedValue(drSelected.value)">
@@ -34,46 +35,25 @@
                             </label>
                         </div>
                         <div class="clearfix"></div>
-                        <div style="overflow-x:auto">
-                            <div style="min-width:640px">
-                                <ngx-datatable class="material colored-header sm table table-striped table-hover "
-                                               [loadingIndicator]="loadingIndicator"
-                                               [rows]="rows"
-                                               [rowHeight]="45"
-                                               [headerHeight]="45"
-                                               [footerHeight]="45"
-                                               [columns]="columns"
-                                               [limit]="limit"
-                                               [columnMode]="'force'">
-                                </ngx-datatable>
-                            </div>
-                        </div>
-                        <ng-template #datetimeTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <p>{{row.NgayNhap | date: 'dd/MM/yyyy'}}</p>
-                        </ng-template>
-                        <ng-template #datetimeTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <p>{{row.NgaySua | date: 'dd/MM/yyyy'}}</p>
+                        <ngx-datatable class="material colored-header sm table table-striped table-hover "
+                                       [loadingIndicator]="loadingIndicator"
+                                       [rows]="rows"
+                                       [rowHeight]="45"
+                                       [headerHeight]="45"
+                                       [footerHeight]="45"
+                                       [columns]="columns"
+                                       [limit]="limit"
+                                       [columnMode]="'force'">
+                        </ngx-datatable>
+                        <ng-template #datetimeTemplate let-row="row" let-value="value" let-i="index" style="text-align: center">
+                            {{row.ngayNhap | date: 'dd/MM/yyyy'}}
                         </ng-template>
                         <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <a class="btn btn-func btn-success" href="javascript:;" tooltip="Chi tiết"><i class="fa fa-eye"></i></a>
-                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editLoaiTien(row)" tooltip="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                            <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteLoaiTien(row)" tooltip="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                            <a class="btn btn-func btn-success" href="javascript:;" (click)="viewDetailLoaiXe(row)" title="Chi tiết"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editLoaiXe(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                            <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteLoaiXe(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </ng-template>
-                        <div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title pull-left"><i class="glyphicon glyphicon-plus-sign"></i> Thêm mới </h4>
-                                        <button type="button" class="close pull-right" tooltip="Close" (click)="editorModal.hide()">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <loaixe-info #loaixeEditor [isGeneralEditor]="true"></loaixe-info>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <loaixe-info #loaixeEditor [isGeneralEditor]="true"></loaixe-info>
                     </div>
                 </div>
             </div>

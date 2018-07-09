@@ -9,42 +9,47 @@ import 'rxjs/add/operator/map';
 import { LoaiXeEndpoint } from "./loaixe-endpoint.service";
 import { LoaiXe } from "../models/loaixe.model";
 import { AuthService } from './auth.service';
-import { Route } from '@angular/compiler/src/core';
 
 
 
 @Injectable()
 export class LoaiXeService {
-    constructor(private http: HttpClient, private router: Router, private endpointService: LoaiXeEndpoint, private authService: AuthService) {
+    constructor(private router: Router, private http: HttpClient, private loaixeEndpoint: LoaiXeEndpoint, private authService: AuthService) {
+
     }
 
-    getItem(start: number, count: number, whereClause: string, orderBy: string) {
-        return this.endpointService.getItem<LoaiXe[]>(start, count, whereClause, orderBy);
+    getItems(start: number, count: number, whereClause: string, orderBy: string) {
+        return this.loaixeEndpoint.getItems<LoaiXe[]>(start, count, whereClause, orderBy);
     }
 
     getAllLoaiXe() {
-        return this.endpointService.getAllLoaixe<LoaiXe[]>();
+        return this.loaixeEndpoint.getAllLoaiXe<LoaiXe[]>();
     }
 
-    getLoaixeByID(id?: number) {
-        return this.endpointService.getLoaiXeByID<LoaiXe>(id);
+    getLoaiXeByID(id?: number) {
+        return this.loaixeEndpoint.getLoaiXeByID<LoaiXe>(id);
     }
 
-    addnewLoaixe(loaixe?: LoaiXe) {
-        return this.endpointService.addnewLoaiXe<LoaiXe>(loaixe);
-    }
-
-    updateLoaixe(id?: number, loaixe?: LoaiXe) {
+    updateLoaiXe(id?: number, loaixe?: LoaiXe) {
         if (loaixe.loaiXeId) {
-            return this.endpointService.updateLoaiXe<LoaiXe>(loaixe.loaiXeId, loaixe);
+            return this.loaixeEndpoint.updateLoaiXe(loaixe.loaiXeId, loaixe);
         }
     }
 
-    deleteLoaixe(id?: number) {
-        return this.endpointService.deleteLoaiXe<LoaiXe>(id);
+    addnewLoaiXe(loaixe?: LoaiXe) {
+        return this.loaixeEndpoint.addnewLoaiXe<LoaiXe>(loaixe);
     }
 
     refreshLoggedInUser() {
         return this.authService.refreshLogin();
     }
+
+    deleteLoaiXe(id: number) {
+        return this.loaixeEndpoint.deleteLoaiXe(id);
+    }
+
+    getName(tenloaixe?: LoaiXe) {
+        return this.loaixeEndpoint.getName<LoaiXe>(tenloaixe);
+    }
+
 }

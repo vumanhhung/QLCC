@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using DAL.Models;
+using QLCC.Helpers;
 
 namespace QLCC.Controllers
 {
@@ -70,6 +71,10 @@ namespace QLCC.Controllers
                 return BadRequest();
             }
 
+            var user = this.User.Identity.Name;
+            var userId = Utilities.GetUserId(this.User);
+            loaixe.NgaySua = DateTime.Now;
+            loaixe.NguoiSua = user;
             _context.Entry(loaixe).State = EntityState.Modified;
 
             try
@@ -100,6 +105,10 @@ namespace QLCC.Controllers
                 return BadRequest(ModelState);
             }
 
+            var user = this.User.Identity.Name;
+            var userId = Utilities.GetUserId(this.User);
+            loaixe.NgayNhap = DateTime.Now;
+            loaixe.NguoiNhap = user;
             _context.LoaiXes.Add(loaixe);
             await _context.SaveChangesAsync();
 
@@ -127,6 +136,13 @@ namespace QLCC.Controllers
             return Ok(loaixe);
         }
         
+
+        [HttpGet("GetName")]
+        public async Task<ActionResult> getLoaiXeItem([FromBody] string tenloaixe)
+        {
+            var loaixe = await _context.LoaiXes.SingleOrDefaultAsync(m => m.TenLoaiXe == tenloaixe);
+            return Ok(loaixe);
+        }
         private bool LoaiXeExists(int id)
         {                        
             return _context.LoaiXes.Any(e => e.LoaiXeId == id);

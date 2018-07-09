@@ -7,6 +7,7 @@ import { Utilities } from "../../services/utilities";
 import { LoaiDichVuService } from "../../services/loaidichvu.service";
 import { LoaiDichVu } from "../../models/loaidichvu.model";
 import { LoaiDichVuInfoComponent } from "./loaidichvu-info.component";
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
     selector: "loaidichvu",
@@ -25,6 +26,7 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
     sourceloaidichvu: LoaiDichVu;
     editingRowName: { name: string };
 
+
     @ViewChild('f')
     private form;
 
@@ -36,6 +38,9 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
 
     @ViewChild('descriptionTemplate')
     descriptionTemplate: TemplateRef<any>;
+
+    @ViewChild('statusTemplate')
+    statusTemplate: TemplateRef<any>;
 
     @ViewChild('actionsTemplate')
     actionsTemplate: TemplateRef<any>;
@@ -53,20 +58,16 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
 
         this.columns = [
             { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },              
-			{ prop: 'tenLoaiDichVu', name: gT('TenLoaiDichVu')},
-			{ prop: 'moTa', name: gT('MoTa')},
-			{ prop: 'viTri', name: gT('ViTri')},
+            { prop: 'tenLoaiDichVu', name: gT('Tên loại dịch vụ')},
+            { prop: 'moTa', name: gT('Mô tả')},
+            { prop: 'viTri', name: gT('Vị trí')},
 			{ prop: 'maLoaiDichVuCha', name: gT('MaLoaiDichVuCha')},
-			{ prop: 'dichVuCoBan', name: gT('DichVuCoBan')},
-			{ prop: 'trangThai', name: gT('TrangThai')},
-			{ prop: 'nguoiNhap', name: gT('NguoiNhap')},
-			{ prop: 'ngayNhap', name: gT('NgayNhap')},
-			{ prop: 'nguoiSua', name: gT('NguoiSua')},
-			{ prop: 'ngaySua', name: gT('NgaySua')},
+            { prop: 'trangThai', name: gT('TrangThai'), cellTemplate: this.statusTemplate },
             { name: '', width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
 
         this.loadData();
+        this.getParentValue();
     }
     
     ngAfterViewInit() {
@@ -111,7 +112,7 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = true;
         this.loaidichvuService.getAllLoaiDichVu().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
     }
-    
+
     onDataLoadSuccessful(obj: LoaiDichVu[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
@@ -182,4 +183,16 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         this.loaidichvuEdit = this.LoaiDichVuEditor.editLoaiDichVu(row);
         this.editorModal.show();
     }    
+
+    getParentValue() {
+        var name = this.loaidichvuEdit.tenLoaiDichVu;
+        var id = this.loaidichvuEdit.loaiDichVuId.toString();
+        var macha = this.loaidichvuEdit.maLoaiDichVuCha;
+        var parent_id = 0;
+        for (let data of this.rowsCache) {
+            if (parent_id == macha) {
+                console.log(name);
+            }
+        }
+    }
 }

@@ -1,28 +1,31 @@
-﻿import { Component, OnInit, ViewChild, Input, Renderer } from '@angular/core';
+﻿import { Component, OnInit, ViewChild, Input } from '@angular/core';
 
 import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { Utilities } from '../../services/utilities';
-import { isGeneratedFile } from '@angular/compiler/src/aot/util';
-import { LoaiXeService } from '../../services/loaixe.service';
-import { LoaiXe } from '../../models/loaixe.model';
+import { LoaiXe } from "../../models/loaixe.model";
+import { LoaiXeService } from "./../../services/loaixe.service";
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
-    selector: 'loaixe-info',
-    templateUrl: './loaixe-info.component.html',
-    styleUrls: ['./loaixe-info.component.css']
+    selector: "loaixe-info",
+    templateUrl: "./loaixe-info.component.html",
+    styleUrls: ["./loaixe-info.component.css"]
 })
 
 export class LoaiXeInfoComponent implements OnInit {
     private isNew = false;
     private isSaving = false;
-    private showValidationError: boolean = false;
+    private isEdit = false;
+    private showValidationErrors: boolean = false;
     private uniqueId: string = Utilities.uniqueId();
-    private loaixeEdit: LoaiXe = new LoaiXe();
-    public valueNgayNhap: Date = new Date();
-    public valueNgaySua: Date = new Date();
+    private LoaiXeEdit: LoaiXe = new LoaiXe();
     public formResetToggle = true;
     private isEditMode = false;
+    isViewDetails = false;
     private editingRowName: string;
+    public valueTenloaixe: string;
+    public valueNgayNhap: Date = new Date();
+    public valueNgaySua: Date = new Date();
     public changesSavedCallback: () => void;
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
@@ -33,11 +36,14 @@ export class LoaiXeInfoComponent implements OnInit {
     @Input()
     isGeneralEditor = false;
 
-    @ViewChild("f")
+    @ViewChild('f')
     private form;
 
-    constructor(private alertService: AlertService, private loaixeservice: LoaiXeService) {
 
+    @ViewChild('editorModal')
+    editorModal: ModalDirective;
+
+    constructor(private alertService: AlertService, private gvService: LoaiXeService) {
     }
 
     ngOnInit() {
@@ -48,14 +54,14 @@ export class LoaiXeInfoComponent implements OnInit {
 
     loadData() {
         this.alertService.startLoadingMessage();
-        this.loaixeservice.getLoaixeByID().subscribe(result => this.onDataSuccessful(result), error => this.onLoadDataFailed(error));
+        this.gvService.getLoaiXeByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
     }
 
-    public onDataSuccessful(obj: LoaiXe) {
-        return this.alertService.stopLoadingMessage();
+    private onDataLoadSuccessful(obj: LoaiXe) {
+        this.alertService.stopLoadingMessage();
     }
 
-    public onLoadDataFailed(error: any) {
+    private onCurrentUserDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
         this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất dữ liệu người dùng từ máy chủ.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
             MessageSeverity.error, error);
@@ -76,8 +82,8 @@ export class LoaiXeInfoComponent implements OnInit {
     }
 
     private cancel() {
-        this.loaixeEdit = new LoaiXe();
-        this.showValidationError = false;
+        this.LoaiXeEdit = new LoaiXe();
+        this.showValidationErrors = false;
         this.resetForm();
         this.alertService.showMessage("Hủy thao tác", "Thao tác bị hủy bởi người dùng", MessageSeverity.default);
         this.alertService.resetStickyMessage();
@@ -88,93 +94,110 @@ export class LoaiXeInfoComponent implements OnInit {
             this.changesCancelledCallback();
     }
 
-    private save() {
+    private save(obj?: LoaiXe) {
         this.isSaving = true;
-        this.alertService.showMessage("Đang thực hiện thao tác");
-        this.loaixeEdit.ngayNhap = this.valueNgayNhap;
-        this.loaixeEdit.ngaySua = this.valueNgaySua;
+        this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
         if (this.isNew) {
-            this.loaixeservice.addnewLoaixe(this.loaixeEdit).subcribe(result => this.onSavingSuccess(result), error => this.onSavingFailed(error));
-        } else {
-            this.loaixeservice.updateLoaixe(this.loaixeEdit.loaiXeId, this.loaixeEdit).subcribe(result => this.onSavingSuccess(result), error => this.onSavingFailed(error));
+            this.LoaiXeEdit.ngayNhap = this.valueNgayNhap;
+            this.gvService.addnewLoaiXe(this.LoaiXeEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
+        }
+        else {
+            this.LoaiXeEdit.ngaySua = this.valueNgaySua;
+            this.gvService.updateLoaiXe(this.LoaiXeEdit.loaiXeId, this.LoaiXeEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
         }
     }
 
-    private onSavingSuccess(obj?: LoaiXe) {
-        if (obj) {
-            Object.assign(this.loaixeEdit, obj);
-        }
+    newLoaiXe() {
+        this.isGeneralEditor = true;
+        this.isNew = true;
+        this.isEdit = false;
+        this.showValidationErrors = true;
+        this.editingRowName = null;
+        this.LoaiXeEdit = new LoaiXe();
+        this.edit();
+        return this.LoaiXeEdit;
+    }
+
+    private saveSuccessHelper(obj?: LoaiXe) {
+        if (obj)
+            Object.assign(this.LoaiXeEdit, obj);
+
         this.isSaving = false;
         this.alertService.stopLoadingMessage();
-        this.showValidationError = false;
+        this.showValidationErrors = false;
         if (this.isGeneralEditor) {
             if (this.isNew) {
-                this.alertService.showMessage("Thành Công", "Tạo mới thành công", MessageSeverity.success);
-            } else {
-                this.alertService.showMessage("Thành Công", "Thay đổi thành công", MessageSeverity.success);
+                this.alertService.showMessage("Thành công", `Thực hiện thêm mới thành công`, MessageSeverity.success);
             }
+            else
+                this.alertService.showMessage("Thành công", `Thực hiện thay đổi thông tin thành công`, MessageSeverity.success);
         }
-        this.loaixeEdit = new LoaiXe();
+        this.LoaiXeEdit = new LoaiXe();
         this.resetForm();
-        this.isEditMode = false;        
-        if (this.changesCancelledCallback) {
-            this.changesCancelledCallback();
-        }
+        this.isEditMode = false;
+
+        if (this.changesSavedCallback)
+            this.changesSavedCallback();
     }
 
-    private onSavingFailed(error: any) {
+    private saveFailedHelper(error: any) {
         this.isSaving = false;
         this.alertService.stopLoadingMessage();
-        this.alertService.showMessage("Lỗi", "Gặp lỗi trong khi thực thi thao tác", MessageSeverity.error);
-        if (this.changesCancelledCallback) {
-            this.changesCancelledCallback();
-        }
+        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+
+        if (this.changesFailedCallback)
+            this.changesFailedCallback();
     }
 
     private showErrorAlert(caption: string, message: string) {
         this.alertService.showMessage(caption, message, MessageSeverity.error);
     }
 
-    newLoaiXe() {
-        this.isGeneralEditor = true;
-        this.isNew = true;
-        this.showValidationError = true;
-        this.editingRowName = null;
-        this.loaixeEdit = new LoaiXe();
-        this.edit();
-        return this.loaixeEdit;
-    }
-
-    private edit() {
-        if (!this.isGeneralEditor || !this.loaixeEdit) {
-            this.loaixeEdit = new LoaiXe();
-        }
-        this.isEditMode = true;
-        this.showValidationError = true;
-    }
-
     editLoaiXe(obj: LoaiXe) {
         if (obj) {
             this.isGeneralEditor = true;
             this.isNew = false;
+            this.isEdit = true;
             this.editingRowName = obj.tenLoaiXe;
-            this.loaixeEdit = new LoaiXe();
-            Object.assign(this.loaixeEdit, obj);
+            this.LoaiXeEdit = new LoaiXe();
+            Object.assign(this.LoaiXeEdit, obj);
+            Object.assign(this.LoaiXeEdit, obj);
             this.edit();
 
-            return this.loaixeEdit;
-        } else {
+            return this.LoaiXeEdit;
+        }
+        else {
             return this.newLoaiXe();
         }
     }
 
-    private close() {
-        this.loaixeEdit = new LoaiXe();
-        this.showValidationError = false;
-        this.resetForm();
-        this.isEditMode = true;
-        if (this.changesCancelledCallback) {
-            this.changesCancelledCallback();
+    private edit() {
+        if (!this.isGeneralEditor || !this.LoaiXeEdit) {
+            this.LoaiXeEdit = new LoaiXe();
         }
+        this.isEditMode = true;
+        this.showValidationErrors = true;
+    }
+
+    private close() {
+        this.LoaiXeEdit = new LoaiXe();
+        this.showValidationErrors = false;
+        this.resetForm();
+        this.isEditMode = false;
+
+        if (this.changesSavedCallback)
+            this.changesSavedCallback();
+    }
+
+     movetoEditForm() {
+        this.isNew = false;
+        this.isViewDetails = false;
+        this.isEdit = true;
+    }
+
+    private onEditorModalHidden() {
+        this.editingRowName = null;
+        this.resetForm(true);
     }
 }

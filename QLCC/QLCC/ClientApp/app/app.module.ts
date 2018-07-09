@@ -222,6 +222,10 @@ import { YeuCauInfoComponent } from "./components/yeucau/yeucau-info.component";
 import { NguoiDungToaNhaInfoComponent } from "./components/nguoidungtoanha/nguoidungtoanha-info.component";
 import { LoaiXeComponent } from "./components/loaixe/loaixe.component";
 import { LoaiXeInfoComponent } from "./components/loaixe/loaixe-info.component";
+import { LoaiDichVuComponent } from "./components/loaidichvu/loaidichvu.component";
+import { LoaiDichVuInfoComponent } from "./components/loaidichvu/loaidichvu-info.component";
+import { LoaiDichVuService } from "./services/loaidichvu.service";
+import { LoaiDichVuEndpoint } from "./services/loaidichvu-endpoint.service";
 
 @NgModule({
     imports: [
@@ -355,6 +359,8 @@ import { LoaiXeInfoComponent } from "./components/loaixe/loaixe-info.component";
         YeuCauInfoComponent,
         LoaiXeComponent,
         LoaiXeInfoComponent,
+        LoaiDichVuComponent,
+        LoaiDichVuInfoComponent,
         //NguoiDungToaNhaComponent,
         NguoiDungToaNhaInfoComponent,
         DanhMucComponent
@@ -427,7 +433,9 @@ import { LoaiXeInfoComponent } from "./components/loaixe/loaixe-info.component";
         YeuCauService,
         YeuCauEndpoint,
         LoaiXeService,
-        LoaiXeEndpoint
+        LoaiXeEndpoint,
+        LoaiDichVuService,
+        LoaiDichVuEndpoint
         //FooterComponent,
         //commonroadComponent,
         //FloursComponent

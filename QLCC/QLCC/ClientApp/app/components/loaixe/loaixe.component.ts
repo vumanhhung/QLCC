@@ -4,11 +4,9 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { AlertService, DialogType, MessageSeverity } from '../../services/alert.service';
 import { AppTranslationService } from "../../services/app-translation.service";
 import { Utilities } from "../../services/utilities";
-import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { LoaiXeService } from '../../services/loaixe.service';
-import { LoaiXeInfoComponent } from './loaixe-info.component';
-import { LoaiXe } from '../../models/loaixe.model';
+import { LoaiXeService } from "../../services/loaixe.service";
+import { LoaiXe } from "../../models/loaixe.model";
+import { LoaiXeInfoComponent } from "./loaixe-info.component";
 
 @Component({
     selector: "loaixe",
@@ -18,14 +16,14 @@ import { LoaiXe } from '../../models/loaixe.model';
 
 export class LoaiXeComponent implements OnInit, AfterViewInit {
     public limit: number = 10;
-    column: any[] = [];
+    columns: any[] = [];
     rows: LoaiXe[] = [];
     rowsCache: LoaiXe[] = [];
     loadingIndicator: boolean;
     public formResetToggle = true;
-    LoaiXeEdit: LoaiXe;
-    sourceLoaiXe: LoaiXe;
-    edittingRowName: { name: string };
+    loaixeEdit: LoaiXe;
+    sourceloaixe: LoaiXe;
+    editingRowName: { name: string };
 
     @ViewChild('f')
     private form;
@@ -42,137 +40,152 @@ export class LoaiXeComponent implements OnInit, AfterViewInit {
     @ViewChild('actionsTemplate')
     actionsTemplate: TemplateRef<any>;
 
-    @ViewChild('editorModal')
-    editorModal: ModalDirective;
-
-    @ViewChild('loaixeEditor')
-    LoaiXeEditor: LoaiXeInfoComponent;
-
     @ViewChild('datetimeTemplate')
     datetimeTemplate: TemplateRef<any>;
 
-    constructor(private alertservice: AlertService, private translationservice: AppTranslationService, private loaixeservice: LoaiXeService) {
-
+    @ViewChild('loaixeEditor')
+    LoaiXeEditor: LoaiXeInfoComponent;
+    constructor(private alertService: AlertService, private translationService: AppTranslationService, private loaixeService: LoaiXeService) {
     }
 
     ngOnInit() {
-        let gT = (key: string) => this.translationservice.getTranslation(key);
-        this.column = [
+        let gT = (key: string) => this.translationService.getTranslation(key);
+        
+        this.columns = [
             { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
-            { prop: "TenLoaiXe", name: gT('Tên Loại Xe') },
-            { prop: "KyHieu", name: gT('Ký Hiệu') },
-            { prop: "NguoiNhap", name: gT('Người Nhập') },
+            { prop: 'tenLoaiXe', name: gT('Tên Loại Xe') },
+            { prop: 'kyHieu', name: gT('Ký Hiệu') },
+            //{ prop: 'nguoiNhap', name: gT('Người Nhập') },
             { name: gT('Ngày Nhập'), cellTemplate: this.datetimeTemplate },
-            { prop: "NguoiSua", name: gT('Người Sửa') },
-            { name: gT('Ngày Sửa'), cellTemplate: this.datetimeTemplate },
-            { name: gT('matbang.qlmb_chucnang'), width: 100, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false, cellClass: "overflow" }
+            //{ prop: 'nguoiSua', name: gT('Người Sửa') },
+            //{ name: gT('Ngày Sửa'), cellTemplate: this.datetimeTemplate },
+            { name: gT('matbang.qlmb_chucnang'), width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
+
         this.loadData();
     }
 
     ngAfterViewInit() {
         this.LoaiXeEditor.changesSavedCallback = () => {
-            this.addtoList();
-            this.editorModal.hide();
+            this.addNewToList();
+            this.LoaiXeEditor.editorModal.hide();
         };
+
         this.LoaiXeEditor.changesCancelledCallback = () => {
-            this.sourceLoaiXe = null;
-            this.LoaiXeEdit = null;
-            this.editorModal.hide();
+            this.loaixeEdit = null;
+            this.sourceloaixe = null;
+            this.LoaiXeEditor.editorModal.hide();
         };
     }
 
-    addtoList() {
-        if (this.sourceLoaiXe) {
-            Object.assign(this.sourceLoaiXe, this.LoaiXeEdit);
-            this.LoaiXeEdit = null;
-            this.sourceLoaiXe = null;
-        } else {
-            let objloaixe = new LoaiXe();
-            Object.assign(objloaixe, this.LoaiXeEdit);
-            this.LoaiXeEdit = null;
+    addNewToList() {
+        if (this.sourceloaixe) {
+            Object.assign(this.sourceloaixe, this.loaixeEdit);
+            this.loaixeEdit = null;
+            this.sourceloaixe = null;
+        }
+        else {
+            let objLoaiXe = new LoaiXe();
+            Object.assign(objLoaiXe, this.loaixeEdit);
+            this.loaixeEdit = null;
 
-            let maxindex = 0;
+            let maxIndex = 0;
             for (let u of this.rowsCache) {
-                if (<any>u > maxindex) {
-                    maxindex = (<any>u).index;
-                } 
+                if ((<any>u).index > maxIndex)
+                    maxIndex = (<any>u).index;
             }
-            (<any>objloaixe).index = maxindex + 1;
-            this.rowsCache.splice(0, 0, objloaixe);
-            this.rows.splice(0, 0, objloaixe);
+
+            (<any>objLoaiXe).index = maxIndex + 1;
+
+            this.rowsCache.splice(0, 0, objLoaiXe);
+            this.rows.splice(0, 0, objLoaiXe);
         }
     }
 
     loadData() {
-        this.alertservice.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.loaixeservice.getAllLoaiXe().subscribe(result => this.onSuccessfully(result), error => this.onFailed(error));
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.loaixeService.getAllLoaiXe().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        this.loaixeService.getName().subscribe(results => { console.log(results); }, error => this.onDataLoadFailed(error));
     }
 
-    onSuccessfully(obj: LoaiXe[]) {
-        this.alertservice.stopLoadingMessage();
+    onDataLoadSuccessful(obj: LoaiXe[]) {
+        this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+
         obj.forEach((item, index, obj) => {
             (<any>item).index = index + 1;
-        })
+        });
+
         this.rowsCache = [...obj];
         this.rows = obj;
     }
 
-    onFailed(error: any) {
-        this.alertservice.stopLoadingMessage();
+    onDataLoadFailed(error: any) {
+        this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.alertservice.showStickyMessage("Tải lỗi", `Không thể truy xuất người dùng từ máy chủ.\r\nErrors: "${Utilities.getHttpResponseMessage(error)}"`,
+
+        this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất người dùng từ máy chủ.\r\nErrors: "${Utilities.getHttpResponseMessage(error)}"`,
             MessageSeverity.error, error);
     }
 
-    onEditFormHidden() {
-        this.edittingRowName = null;
-        this.LoaiXeEditor.resetForm(true);
-    }
-
     newLoaiXe() {
-        this.edittingRowName = null;
-        this.sourceLoaiXe = null;
-        this.LoaiXeEdit = this.LoaiXeEditor.newLoaiXe();
-        this.editorModal.show();
+        this.editingRowName = null;
+        this.sourceloaixe = null;
+        this.loaixeEdit = this.LoaiXeEditor.newLoaiXe();
+        this.LoaiXeEditor.isViewDetails = false;
+        this.LoaiXeEditor.editorModal.show();
     }
 
-    selectedValue(value: number) {
+    SelectedValue(value: number) {
         this.limit = value;
     }
 
     onSearchChanged(value: string) {
-        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.kyHieu, r.nguoiNhap, r.nguoiSua));
+        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.tenLoaiXe, r.kyHieu));
     }
 
     deleteLoaiXe(row: LoaiXe) {
-        this.alertservice.showDialog("Bạn muốn xóa thông tin về loại xe này", DialogType.confirm, () => this.deleteHelper(row));
+        this.alertService.showDialog('Bạn có chắc chắn muốn xóa bản ghi này?', DialogType.confirm, () => this.deleteHelper(row));
     }
 
     deleteHelper(row: LoaiXe) {
-        this.alertservice.startLoadingMessage("Đang thực hiện thao tác ...");
+        this.alertService.startLoadingMessage("Đang thực hiện xóa...");
         this.loadingIndicator = true;
-        this.loaixeservice.deleteLoaixe(row.loaiXeId)
-            .subcribe(result => {
-                this.alertservice.stopLoadingMessage();
+
+        this.loaixeService.deleteLoaiXe(row.loaiXeId)
+            .subscribe(results => {
+                this.alertService.stopLoadingMessage();
                 this.loadingIndicator = false;
-                this.rowsCache = this.rowsCache.filter(item => item != row);
-                this.rows = this.rows.filter(item => item != row);
-                this.alertservice.showMessage("Thành công", "Xóa thành công !", MessageSeverity.success);
-            }, error => {
-                this.alertservice.stopLoadingMessage();
-                this.loadingIndicator = false;
-                this.alertservice.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
-                    MessageSeverity.error, error);
-            });
+                this.rowsCache = this.rowsCache.filter(item => item !== row)
+                this.rows = this.rows.filter(item => item !== row)
+                this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
+            },
+                error => {
+                    this.alertService.stopLoadingMessage();
+                    this.loadingIndicator = false;
+                    this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
+                        MessageSeverity.error, error);
+                });
     }
 
     editLoaiXe(row: LoaiXe) {
-        this.edittingRowName = { name: row.tenLoaiXe };
-        this.sourceLoaiXe = row;
-        this.LoaiXeEdit = this.LoaiXeEditor.editLoaiXe(row);
-        this.editorModal.show();
+        this.editingRowName = { name: row.tenLoaiXe };
+        this.sourceloaixe = row;
+        this.loaixeEdit = this.LoaiXeEditor.editLoaiXe(row);
+        this.LoaiXeEditor.isViewDetails = false;
+        this.LoaiXeEditor.editorModal.show();
+    }
+
+    viewDetailLoaiXe(row: LoaiXe) {
+        this.editingRowName = { name: row.tenLoaiXe };
+        this.sourceloaixe = row;
+        this.loaixeEdit = this.LoaiXeEditor.editLoaiXe(row);
+        this.LoaiXeEditor.isViewDetails = true;
+        this.LoaiXeEditor.editorModal.show();
+    }
+
+    viewname() {
+        console.log(this.loaixeService.getName());
     }
 }

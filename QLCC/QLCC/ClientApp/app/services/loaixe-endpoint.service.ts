@@ -8,62 +8,66 @@ import { ConfigurationService } from './configuration.service';
 
 @Injectable()
 export class LoaiXeEndpoint extends EndpointFactory {
-    private readonly _loadxeURl = "api/LoaiXes";
-    get loadxeURL() {
-        return this.configurations.baseUrl + this._loadxeURl;
+    private readonly _loaixeUrl = "/api/LoaiXes";
+    get loaixeUrl() { return this.configurations.baseUrl + this._loaixeUrl; }
+
+    constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
+        super(http, configurations, injector);
     }
 
-    constructor(http: HttpClient, configuration: ConfigurationService, injector: Injector) {
-        super(http, configuration, injector);
-    }
-
-    getItem<T>(start: number, count: number, whereClause: string, orderBy: string): Observable<T> {
-        let url = `${this.loadxeURL}/${start}/${count}/${orderBy}`;
+    getItems<T>(start: number, count: number, whereClause: string, orderBy: string): Observable<T> {
+        let url = `${this.loaixeUrl}/getItems/${start}/${count}/${orderBy}`;
         let body = JSON.stringify(whereClause);
         return this.http.put(url, body, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getItem(start, count, whereClause, orderBy));
-            })
+                return this.handleError(error, () => this.getItems(start, count, whereClause, orderBy));
+            });
     }
 
-    getAllLoaixe<T>(): Observable<T> {
-        return this.http.get(this.loadxeURL, this.getRequestHeaders())
+    getAllLoaiXe<T>(): Observable<T> {
+        return this.http.get(this.loaixeUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getAllLoaixe());
-            })
+                return this.handleError(error, () => this.getAllLoaiXe());
+            });
     }
 
-    getLoaiXeByID<T>(Id?: number) {
-        let urlGet = Id ? `${this.loadxeURL}/${Id}` : this.loadxeURL;
-        return this.http.get(urlGet, this.getRequestHeaders())
+    getLoaiXeByID<T>(Id?: number): Observable<T> {
+        let endpointUrl = Id ? `${this.loaixeUrl}/${Id}` : this.loaixeUrl;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getLoaiXeByID(Id));
-            })
+            });
     }
 
-    addnewLoaiXe<T>(loaixeObject?: any) {
+    addnewLoaiXe<T>(loaixeObject?: any): Observable<T> {
         let body = JSON.stringify(loaixeObject);
-        return this.http.post(this.loadxeURL, body, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.addnewLoaiXe(loaixeObject));
-            })
+        return this.http.post(this.loaixeUrl, body, this.getRequestHeaders()).catch(error => {
+            return this.handleError(error, () => this.addnewLoaiXe(loaixeObject));
+        });
     }
 
-    updateLoaiXe<T>(Id?: number, loaixeObject?: any) {
-        let urlPut = Id ? `${this.loadxeURL}/${Id}` : this.loadxeURL;
+    updateLoaiXe<T>(id?: number, loaixeObject?: any): Observable<T> {
+        let endpointUrl = `${this.loaixeUrl}/${id}`;
         let body = JSON.stringify(loaixeObject);
-        return this.http.put(urlPut, body, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.updateLoaiXe(Id, loaixeObject));
-            })
+        return this.http.put(endpointUrl, body, this.getRequestHeaders()).catch(error => {
+            return this.handleError(error, () => this.updateLoaiXe(id, loaixeObject));
+        });
     }
 
-    deleteLoaiXe<T>(Id?: number) {
-        let urlDel = Id ? `${this.loadxeURL}/${Id}` : this.loadxeURL;
-        return this.http.delete(urlDel, this.getRequestHeaders())
+    deleteLoaiXe<T>(id: number): Observable<T> {
+        let endpointUrl = `${this.loaixeUrl}/${id}`;
+        return this.http.delete(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.deleteLoaiXe(Id));
+                return this.handleError(error, () => this.deleteLoaiXe(id));
+            });
+    }
 
-            })
+    getName<T>(loaixeObject?: any): Observable<T> {
+        let url = `${this.loaixeUrl}/GetName`
+        return this.http.get(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getName(loaixeObject));
+            });
     }
 }

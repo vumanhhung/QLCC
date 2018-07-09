@@ -51,10 +51,14 @@
                                        [limit]="limit"
                                        [columnMode]="'force'">
                         </ngx-datatable>
+                        <ng-template #statusTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <span *ngIf="row.trangThai == 1" class="status">Đang hoạt động</span>
+                            <span *ngIf="row.trangThai == 0" class="status">Dừng hoạt động</span>
+                        </ng-template>
                         <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <a class="btn btn-func btn-success"  href="javascript:;" title="Chi tiết"><i class="fa fa-eye"></i></a>
+                            <a class="btn btn-func btn-success" href="javascript:;" title="Chi tiết"><i class="fa fa-eye"></i></a>
                             <a class="btn btn-func btn-primary" href="javascript:;" (click)="editLoaiDichVu(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                            <a class="btn btn-func btn-danger"  href="javascript:;" (click)="deleteLoaiDichVu(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                            <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteLoaiDichVu(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </ng-template>
                         <div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
                             <div class="modal-dialog modal-lg">

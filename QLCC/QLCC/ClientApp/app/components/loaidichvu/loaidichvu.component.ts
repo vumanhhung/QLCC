@@ -8,6 +8,10 @@ import { LoaiDichVuService } from "../../services/loaidichvu.service";
 import { LoaiDichVu } from "../../models/loaidichvu.model";
 import { LoaiDichVuInfoComponent } from "./loaidichvu-info.component";
 import { forEach } from '@angular/router/src/utils/collection';
+import { from } from 'rxjs/observable/from';
+import { of } from 'rxjs/observable/of';
+import { id } from '@swimlane/ngx-datatable/release/utils';
+import { ListComponent } from '@progress/kendo-angular-dropdowns';
 
 @Component({
     selector: "loaidichvu",
@@ -25,7 +29,6 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
     loaidichvuEdit: LoaiDichVu;
     sourceloaidichvu: LoaiDichVu;
     editingRowName: { name: string };
-
 
     @ViewChild('f')
     private form;
@@ -57,17 +60,16 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         let gT = (key: string) => this.translationService.getTranslation(key);
 
         this.columns = [
-            { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },              
-            { prop: 'tenLoaiDichVu', name: gT('Tên loại dịch vụ')},
+            { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
+            { prop: 'tenLoaiDichVu', name: gT('Tên loại dịch vụ'), cellTemplate: this.nameTemplate },
             { prop: 'moTa', name: gT('Mô tả')},
             { prop: 'viTri', name: gT('Vị trí')},
-			{ prop: 'maLoaiDichVuCha', name: gT('MaLoaiDichVuCha')},
+            { prop: 'maLoaiDichVuCha', name: gT('Mã Loại Dịch Vu')},
             { prop: 'trangThai', name: gT('TrangThai'), cellTemplate: this.statusTemplate },
             { name: '', width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
 
         this.loadData();
-        this.getParentValue();
     }
     
     ngAfterViewInit() {
@@ -111,16 +113,17 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.loaidichvuService.getAllLoaiDichVu().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        //this.loaidichvuService.getMenu(this.loaidichvuEdit.loaiDichVuId).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        //this.getStringSubMenu();
     }
 
     onDataLoadSuccessful(obj: LoaiDichVu[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-
         obj.forEach((item, index, obj) => {
             (<any>item).index = index + 1;
         });
-
+        
         this.rowsCache = [...obj];
         this.rows = obj;
     }
@@ -184,15 +187,16 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         this.editorModal.show();
     }    
 
-    getParentValue() {
-        var name = this.loaidichvuEdit.tenLoaiDichVu;
-        var id = this.loaidichvuEdit.loaiDichVuId.toString();
-        var macha = this.loaidichvuEdit.maLoaiDichVuCha;
-        var parent_id = 0;
-        for (let data of this.rowsCache) {
-            if (parent_id == macha) {
-                console.log(name);
+    getSubmenu(row: LoaiDichVu, parent_id) {
+        for (parent_id = 0; list.count() >= parent_id; parent_id ++) {
+            var id = this.loaidichvuEdit.loaiDichVuId;
+            var name = this.loaidichvuEdit.tenLoaiDichVu;
+            if (parent_id == this.loaidichvuEdit.maLoaiDichVuCha) {
+                return this.loaidichvuEdit.tenLoaiDichVu.toString();
+            } else {
+                this.loaidichvuEdit.tenLoaiDichVu = "-->" + name;
             }
-        }
+            this.getSubmenu(row, id);
+        };
     }
 }

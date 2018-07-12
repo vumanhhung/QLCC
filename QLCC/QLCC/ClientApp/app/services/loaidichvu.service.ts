@@ -47,5 +47,12 @@ export class LoaiDichVuService {
     deleteLoaiDichVu(id: number) {
         return this.loaidichvuEndpoint.deleteLoaiDichVu(id);
     }
-    
+
+    getMenu(parent_id: number) {
+        return this.loaidichvuEndpoint.getMenu<LoaiDichVu[]>(parent_id);
+    }
+
+    getList() {
+        return this.loaidichvuEndpoint.getList<LoaiDichVu[]>();
+    }
 }

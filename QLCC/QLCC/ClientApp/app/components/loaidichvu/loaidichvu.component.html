@@ -51,6 +51,10 @@
                                        [limit]="limit"
                                        [columnMode]="'force'">
                         </ngx-datatable>
+                        <ng-template #nameTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <span *ngIf="row.maLoaiDichVuCha == 0"> {{row.tenLoaiDichVu}}</span>
+                            <span *ngIf="row.maLoaiDichVuCha != 0"> --> {{row.tenLoaiDichVu}}</span>
+                        </ng-template>
                         <ng-template #statusTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
                             <span *ngIf="row.trangThai == 1" class="status">Đang hoạt động</span>
                             <span *ngIf="row.trangThai == 0" class="status">Dừng hoạt động</span>

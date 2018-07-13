@@ -79,4 +79,12 @@ export class LoaiDichVuEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getList());
             })
     }
+
+    getMax(){
+        let enpointUrl = `${this.loaidichvuUrl}/Max`;
+        return this.http.get(enpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getMax());
+            })
+    }
 }

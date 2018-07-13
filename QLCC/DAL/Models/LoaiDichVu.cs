@@ -17,5 +17,6 @@ namespace DAL.Models
 		public DateTime? NgayNhap { get; set; }
 		public string NguoiSua { get; set; }
 		public DateTime? NgaySua { get; set; }
+        public int SubLevel { get; set; }
     }
 }

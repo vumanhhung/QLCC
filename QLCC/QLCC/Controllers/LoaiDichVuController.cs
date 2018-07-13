@@ -17,7 +17,7 @@ namespace QLCC.Controllers
     {
         private readonly ApplicationDbContext _context;
         private List<LoaiDichVu> listdichvu = new List<LoaiDichVu>();
-        
+
         public LoaiDichVusController(ApplicationDbContext context)
         {
             _context = context;
@@ -164,6 +164,13 @@ namespace QLCC.Controllers
                 getMenuLoaiDichVu(id);
             }
             return loaidichvu;
+        }
+
+        [HttpGet("Max")]
+        public async Task<ActionResult> getMaxSub()
+        {
+            var max = await _context.LoaiDichVus.MaxAsync(m => m.SubLevel);
+            return Ok(max);
         }
     }
 }

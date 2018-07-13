@@ -12,6 +12,7 @@ import { from } from 'rxjs/observable/from';
 import { of } from 'rxjs/observable/of';
 import { id } from '@swimlane/ngx-datatable/release/utils';
 import { ListComponent } from '@progress/kendo-angular-dropdowns';
+import { max } from 'rxjs/operator/max';
 
 @Component({
     selector: "loaidichvu",
@@ -29,6 +30,7 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
     loaidichvuEdit: LoaiDichVu;
     sourceloaidichvu: LoaiDichVu;
     editingRowName: { name: string };
+    maxSub: number;
 
     @ViewChild('f')
     private form;
@@ -64,11 +66,10 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
             { prop: 'tenLoaiDichVu', name: gT('Tên loại dịch vụ'), cellTemplate: this.nameTemplate },
             { prop: 'moTa', name: gT('Mô tả')},
             { prop: 'viTri', name: gT('Vị trí')},
-            { prop: 'maLoaiDichVuCha', name: gT('Mã Loại Dịch Vu')},
+            { prop: 'maLoaiDichVuCha', name: gT('Mã Loại Dịch Vụ Cha')},
             { prop: 'trangThai', name: gT('TrangThai'), cellTemplate: this.statusTemplate },
             { name: '', width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
-
         this.loadData();
     }
     
@@ -113,8 +114,8 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.loaidichvuService.getAllLoaiDichVu().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
-        //this.loaidichvuService.getMenu(this.loaidichvuEdit.loaiDichVuId).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
-        //this.getStringSubMenu();
+        this.loaidichvuService.getMax().subscribe(results => {this.maxSub = results});
+        //this.getSubmenu();
     }
 
     onDataLoadSuccessful(obj: LoaiDichVu[]) {
@@ -123,7 +124,6 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         obj.forEach((item, index, obj) => {
             (<any>item).index = index + 1;
         });
-        
         this.rowsCache = [...obj];
         this.rows = obj;
     }
@@ -187,16 +187,11 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         this.editorModal.show();
     }    
 
-    getSubmenu(row: LoaiDichVu, parent_id) {
-        for (parent_id = 0; list.count() >= parent_id; parent_id ++) {
-            var id = this.loaidichvuEdit.loaiDichVuId;
-            var name = this.loaidichvuEdit.tenLoaiDichVu;
-            if (parent_id == this.loaidichvuEdit.maLoaiDichVuCha) {
-                return this.loaidichvuEdit.tenLoaiDichVu.toString();
-            } else {
-                this.loaidichvuEdit.tenLoaiDichVu = "-->" + name;
-            }
-            this.getSubmenu(row, id);
-        };
-    }
+    //getSubmenu() {
+    //    var sub = "=>";
+    //    for (var i = 1; i <= this.maxSub; i++) {
+    //        sub; 
+    //    }
+    //    return sub;
+    //}
 }

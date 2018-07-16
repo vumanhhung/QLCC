@@ -32,5 +32,3 @@ order by t1.TenLoaiDichVu,t2.TenLoaiDichVu,t3.TenLoaiDichVu,t4.TenLoaiDichVu
 select * from tbl_LoaiDichVu
 
 select SubLevel from tbl_LoaiDichVu
-
-select COUNT(tbl_LoaiDichVu) 

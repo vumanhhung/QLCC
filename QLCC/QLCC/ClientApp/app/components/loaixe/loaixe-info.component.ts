@@ -38,8 +38,7 @@ export class LoaiXeInfoComponent implements OnInit {
 
     @ViewChild('f')
     private form;
-
-
+    
     @ViewChild('editorModal')
     editorModal: ModalDirective;
 

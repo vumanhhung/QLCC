@@ -87,4 +87,12 @@ export class LoaiDichVuEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getMax());
             })
     }
+
+    dequy<T>() {
+        let enpointUrl = `${this.loaidichvuUrl}/GetDeQuy`;
+        return this.http.get(enpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.dequy());
+            })
+    }
 }

@@ -50,9 +50,6 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
     @ViewChild('actionsTemplate')
     actionsTemplate: TemplateRef<any>;
 
-    @ViewChild('editorModal')
-    editorModal: ModalDirective;
-
     @ViewChild('loaidichvuEditor')
     LoaiDichVuEditor: LoaiDichVuInfoComponent;
     constructor(private alertService: AlertService, private translationService: AppTranslationService, private loaidichvuService: LoaiDichVuService) {
@@ -63,10 +60,9 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
 
         this.columns = [
             { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
-            { prop: 'tenLoaiDichVu', name: gT('Tên loại dịch vụ'), cellTemplate: this.nameTemplate },
+            { prop: 'tenLoaiDichVu', name: gT('Tên loại dịch vụ')},
             { prop: 'moTa', name: gT('Mô tả')},
             { prop: 'viTri', name: gT('Vị trí')},
-            { prop: 'maLoaiDichVuCha', name: gT('Mã Loại Dịch Vụ Cha')},
             { prop: 'trangThai', name: gT('TrangThai'), cellTemplate: this.statusTemplate },
             { name: '', width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
@@ -76,13 +72,13 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.LoaiDichVuEditor.changesSavedCallback = () => {
             this.addNewToList();
-            this.editorModal.hide();
+            this.LoaiDichVuEditor.editorModal.hide();
         };
 
         this.LoaiDichVuEditor.changesCancelledCallback = () => {
             this.loaidichvuEdit = null;
             this.sourceloaidichvu = null;
-            this.editorModal.hide();
+            this.LoaiDichVuEditor.editorModal.hide();
         };
     }
     
@@ -113,8 +109,8 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
     loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.loaidichvuService.getAllLoaiDichVu().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
-        this.loaidichvuService.getMax().subscribe(results => {this.maxSub = results});
+        //this.loaidichvuService.getAllLoaiDichVu().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        this.loaidichvuService.dequy().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
         //this.getSubmenu();
     }
 
@@ -135,17 +131,14 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất người dùng từ máy chủ.\r\nErrors: "${Utilities.getHttpResponseMessage(error)}"`,
             MessageSeverity.error, error);
     }
-    
-    onEditorModalHidden() {
-        this.editingRowName = null;
-        this.LoaiDichVuEditor.resetForm(true);
-    }
+
 
     newLoaiDichVu() {
         this.editingRowName = null;
         this.sourceloaidichvu = null;
         this.loaidichvuEdit = this.LoaiDichVuEditor.newLoaiDichVu();
-        this.editorModal.show();
+        this.LoaiDichVuEditor.isViewDetails = false;
+        this.LoaiDichVuEditor.editorModal.show();
     }
     
     SelectedValue(value: number) {
@@ -184,14 +177,15 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         this.editingRowName = { name: row.tenLoaiDichVu };
         this.sourceloaidichvu = row;
         this.loaidichvuEdit = this.LoaiDichVuEditor.editLoaiDichVu(row);
-        this.editorModal.show();
+        this.LoaiDichVuEditor.isViewDetails = false;
+        this.LoaiDichVuEditor.editorModal.show();
     }    
 
-    //getSubmenu() {
-    //    var sub = "=>";
-    //    for (var i = 1; i <= this.maxSub; i++) {
-    //        sub; 
-    //    }
-    //    return sub;
-    //}
+    viewDetailLoaiDichVu(row: LoaiDichVu) {
+        this.editingRowName = { name: row.tenLoaiDichVu };
+        this.sourceloaidichvu = row;
+        this.loaidichvuEdit = this.LoaiDichVuEditor.editLoaiDichVu(row);
+        this.LoaiDichVuEditor.isViewDetails = true;
+        this.LoaiDichVuEditor.editorModal.show();
+    }
 }

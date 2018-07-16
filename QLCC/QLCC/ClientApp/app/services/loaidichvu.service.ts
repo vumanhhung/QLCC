@@ -52,7 +52,7 @@ export class LoaiDichVuService {
         return this.loaidichvuEndpoint.getMenu<LoaiDichVu[]>(parent_id);
     }
 
-    getMax() {
-        return this.loaidichvuEndpoint.getMax();
+    dequy() {
+        return this.loaidichvuEndpoint.dequy<LoaiDichVu[]>();
     }
 }

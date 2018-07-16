@@ -41,7 +41,7 @@ namespace QLCC.Controllers
                 obj.NguonTiepNhan = _context.NguonTiepNhans.SingleOrDefault(m => m.NguonTiepNhanId == lyc[i].NguonTiepNhanId);
                 yc.Add(obj);
             }
-            return lyc;
+            return yc;
         }
 
         // GET: api/YeuCaus

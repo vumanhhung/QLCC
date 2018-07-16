@@ -4,6 +4,7 @@ import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { Utilities } from '../../services/utilities';
 import { LoaiDichVu } from "../../models/loaidichvu.model";
 import { LoaiDichVuService } from "./../../services/loaidichvu.service";
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
     selector: "loaidichvu-info",
@@ -14,17 +15,21 @@ import { LoaiDichVuService } from "./../../services/loaidichvu.service";
 export class LoaiDichVuInfoComponent implements OnInit {
     private isNew = false;
     private isSaving = false;
+    isViewDetails = false;
+    private isEdit = false;
     private showValidationErrors: boolean = false;
     private uniqueId: string = Utilities.uniqueId();
     private LoaiDichVuEdit: LoaiDichVu = new LoaiDichVu();
+    private listDichVu: LoaiDichVu[] = [];
     public value: Date = new Date();
     public formResetToggle = true;
     private isEditMode = false;
     private editingRowName: string;
+    private chDichVu: boolean;
     public changesSavedCallback: () => void;
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
-    
+
     @Input()
     isViewOnly: boolean;
 
@@ -33,12 +38,15 @@ export class LoaiDichVuInfoComponent implements OnInit {
 
     @ViewChild('f')
     private form;
-    
+
+    @ViewChild('editorModal')
+    editorModal: ModalDirective;
+
     constructor(private alertService: AlertService, private gvService: LoaiDichVuService) {
     }
-    
+
     ngOnInit() {
-        if (!this.isGeneralEditor) {
+        if (this.isGeneralEditor) {
             this.loadData();
         }
     }
@@ -46,8 +54,9 @@ export class LoaiDichVuInfoComponent implements OnInit {
     loadData() {
         this.alertService.startLoadingMessage();
         this.gvService.getLoaiDichVuByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
+        this.gvService.dequy().subscribe(result => { this.listDichVu = result, console.log(this.listDichVu) }, error => this.onCurrentUserDataLoadFailed(error));        
     }
-    
+
     private onDataLoadSuccessful(obj: LoaiDichVu) {
         this.alertService.stopLoadingMessage();
     }
@@ -71,7 +80,7 @@ export class LoaiDichVuInfoComponent implements OnInit {
             });
         }
     }
-    
+
     private cancel() {
         this.LoaiDichVuEdit = new LoaiDichVu();
         this.showValidationErrors = false;
@@ -87,7 +96,7 @@ export class LoaiDichVuInfoComponent implements OnInit {
 
     private save() {
         this.isSaving = true;
-        this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");        
+        this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
         if (this.isNew) {
             this.gvService.addnewLoaiDichVu(this.LoaiDichVuEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
         }
@@ -95,13 +104,18 @@ export class LoaiDichVuInfoComponent implements OnInit {
             this.gvService.updateLoaiDichVu(this.LoaiDichVuEdit.loaiDichVuId, this.LoaiDichVuEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
         }
     }
-    
-    newLoaiDichVu() {
+
+    newLoaiDichVu() {        
         this.isGeneralEditor = true;
         this.isNew = true;
+        this.isEdit = false;
+        this.chDichVu = false;
         this.showValidationErrors = true;
         this.editingRowName = null;
+        this.chDichVu = false;
         this.LoaiDichVuEdit = new LoaiDichVu();
+        this.LoaiDichVuEdit.loaiDichVuId = 0;
+        this.LoaiDichVuEdit.trangThai = 0;
         this.edit();
         return this.LoaiDichVuEdit;
     }
@@ -112,11 +126,11 @@ export class LoaiDichVuInfoComponent implements OnInit {
 
         this.isSaving = false;
         this.alertService.stopLoadingMessage();
-        this.showValidationErrors = false;        
+        this.showValidationErrors = false;
         if (this.isGeneralEditor) {
             if (this.isNew) {
                 this.alertService.showMessage("Thành công", `Thực hiện thêm mới thành công`, MessageSeverity.success);
-            }                
+            }
             else
                 this.alertService.showMessage("Thành công", `Thực hiện thay đổi thông tin thành công`, MessageSeverity.success);
         }
@@ -137,7 +151,7 @@ export class LoaiDichVuInfoComponent implements OnInit {
         if (this.changesFailedCallback)
             this.changesFailedCallback();
     }
-    
+
     private showErrorAlert(caption: string, message: string) {
         this.alertService.showMessage(caption, message, MessageSeverity.error);
     }
@@ -146,7 +160,9 @@ export class LoaiDichVuInfoComponent implements OnInit {
         if (obj) {
             this.isGeneralEditor = true;
             this.isNew = false;
+            this.isEdit = true;
             this.editingRowName = obj.tenLoaiDichVu;
+            this.chDichVu = true;
             this.LoaiDichVuEdit = new LoaiDichVu();
             Object.assign(this.LoaiDichVuEdit, obj);
             Object.assign(this.LoaiDichVuEdit, obj);
@@ -175,5 +191,24 @@ export class LoaiDichVuInfoComponent implements OnInit {
 
         if (this.changesSavedCallback)
             this.changesSavedCallback();
-    }    
+    }
+
+    changeDanhMuc(id: number) {
+        if (id > 0) {
+            this.chDichVu = true;
+        } else {
+            this.chDichVu = false;
+        }
+    }
+
+    movetoEditForm() {
+        this.isNew = false;
+        this.isViewDetails = false;
+        this.isEdit = true;
+    }
+
+    onEditorModalHidden() {
+        this.editingRowName = null;
+        this.resetForm(true);
+    }
 }

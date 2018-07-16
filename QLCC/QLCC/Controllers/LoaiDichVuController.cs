@@ -148,29 +148,26 @@ namespace QLCC.Controllers
             return _context.LoaiDichVus.Any(e => e.LoaiDichVuId == id);
         }
 
-        [HttpGet("GetMenu")]
-        private IEnumerable<LoaiDichVu> getMenuLoaiDichVu(int parent_id)
+        [HttpGet("GetDeQuy")]
+        public IEnumerable<LoaiDichVu> getLoaiDVCha()
         {
-            List<LoaiDichVu> loaidichvu = new List<LoaiDichVu>();
-            parent_id = 0;
-            foreach (var u in loaidichvu)
-            {
-                var id = u.LoaiDichVuId;
-                var macha = u.MaLoaiDichVuCha;
-                if (parent_id == u.MaLoaiDichVuCha)
-                {
-                    return loaidichvu.Where(r => r.MaLoaiDichVuCha == parent_id).OrderBy(x => x.LoaiDichVuId).ToList();
-                }
-                getMenuLoaiDichVu(id);
-            }
-            return loaidichvu;
+            List<LoaiDichVu> list = new List<LoaiDichVu>();
+            DeQuy(list, 0, "");
+            return list;
         }
 
-        [HttpGet("Max")]
-        public async Task<ActionResult> getMaxSub()
+        void DeQuy(List<LoaiDichVu> list, int parentid, string st)
         {
-            var max = await _context.LoaiDichVus.MaxAsync(m => m.SubLevel);
-            return Ok(max);
+            List<LoaiDichVu> ldv = new List<LoaiDichVu>();
+            ldv = _context.LoaiDichVus.Where(r => r.MaLoaiDichVuCha == parentid).OrderBy(m => m.TenLoaiDichVu).ToList<LoaiDichVu>();
+            for (int i = 0; i < ldv.Count; i++)
+            {
+                LoaiDichVu obj = new LoaiDichVu();
+                obj = ldv[i];
+                obj.TenLoaiDichVu = st + obj.TenLoaiDichVu;
+                list.Add(obj);
+                DeQuy(list, obj.LoaiDichVuId, st + "|=> ");
+            }
         }
     }
 }

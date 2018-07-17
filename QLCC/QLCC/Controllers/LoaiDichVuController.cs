@@ -98,7 +98,7 @@ namespace QLCC.Controllers
 
         // POST: api/LoaiDichVus
         [HttpPost]
-        public async Task<IActionResult> PostLoaiDichVu([FromBody] LoaiDichVu loaidichvu)
+        public async Task<IActionResult> PostLoaiDichVu([FromBody] LoaiDichVu loaidichvu, bool check)
         {
             if (!ModelState.IsValid)
             {
@@ -109,7 +109,16 @@ namespace QLCC.Controllers
             var userId = Utilities.GetUserId(this.User);
             loaidichvu.NgayNhap = DateTime.Now;
             loaidichvu.NguoiNhap = user;
-            _context.LoaiDichVus.Add(loaidichvu);
+            var checkten = _context.LoaiDichVus.Where(r => r.TenLoaiDichVu == loaidichvu.TenLoaiDichVu);
+            if (checkten == null)
+            {
+                check = true;
+                _context.LoaiDichVus.Add(loaidichvu);
+            }
+            else
+            {
+                check = false;
+            }            
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetLoaiDichVu", new { id = loaidichvu.LoaiDichVuId }, loaidichvu);
@@ -168,6 +177,13 @@ namespace QLCC.Controllers
                 list.Add(obj);
                 DeQuy(list, obj.LoaiDichVuId, st + "|=> ");
             }
+        }
+
+        [HttpGet("GetName")]
+        public async Task<ActionResult> getLoaiXeItem([FromBody] string tenloaixe)
+        {
+            var loaixe = await _context.LoaiXes.SingleOrDefaultAsync(m => m.TenLoaiXe == tenloaixe);
+            return Ok(loaixe);
         }
     }
 }

@@ -29,6 +29,7 @@ export class LoaiDichVuInfoComponent implements OnInit {
     public changesSavedCallback: () => void;
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
+    check: boolean;
 
     @Input()
     isViewOnly: boolean;
@@ -98,7 +99,7 @@ export class LoaiDichVuInfoComponent implements OnInit {
         this.isSaving = true;
         this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
         if (this.isNew) {
-            this.gvService.addnewLoaiDichVu(this.LoaiDichVuEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
+            this.gvService.addnewLoaiDichVu(this.LoaiDichVuEdit, this.check).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
         }
         else {
             this.gvService.updateLoaiDichVu(this.LoaiDichVuEdit.loaiDichVuId, this.LoaiDichVuEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
@@ -114,7 +115,9 @@ export class LoaiDichVuInfoComponent implements OnInit {
         this.editingRowName = null;
         this.chDichVu = false;
         this.LoaiDichVuEdit = new LoaiDichVu();
-        this.LoaiDichVuEdit.loaiDichVuId = 0;
+        this.LoaiDichVuEdit.dichVuCoBan = true;
+        this.LoaiDichVuEdit.trangThai = 1;
+        this.LoaiDichVuEdit.maLoaiDichVuCha = 0;
         this.LoaiDichVuEdit.trangThai = 0;
         this.edit();
         return this.LoaiDichVuEdit;
@@ -123,18 +126,23 @@ export class LoaiDichVuInfoComponent implements OnInit {
     private saveSuccessHelper(obj?: LoaiDichVu) {
         if (obj)
             Object.assign(this.LoaiDichVuEdit, obj);
-
         this.isSaving = false;
         this.alertService.stopLoadingMessage();
         this.showValidationErrors = false;
+        
         if (this.isGeneralEditor) {
-            if (this.isNew) {
+            if (this.isNew && this.check == true) {
                 this.alertService.showMessage("Thành công", `Thực hiện thêm mới thành công`, MessageSeverity.success);
             }
             else
                 this.alertService.showMessage("Thành công", `Thực hiện thay đổi thông tin thành công`, MessageSeverity.success);
         }
         this.LoaiDichVuEdit = new LoaiDichVu();
+        //if (this.LoaiDichVuEdit.maLoaiDichVuCha == 0) {
+        //    obj.maLoaiDichVuCha = 0;
+        //} else {
+        //    obj.maLoaiDichVuCha = this.LoaiDichVuEdit.loaiDichVuId;
+        //} 
         this.resetForm();
         this.isEditMode = false;
 
@@ -145,6 +153,9 @@ export class LoaiDichVuInfoComponent implements OnInit {
     private saveFailedHelper(error: any) {
         this.isSaving = false;
         this.alertService.stopLoadingMessage();
+        if (this.check == false) {
+            this.alertService.showMessage("Lỗi", 'Tên danh mục đã trùng, vui lòng nhập lại!', MessageSeverity.warn);
+        }
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
 
@@ -158,6 +169,7 @@ export class LoaiDichVuInfoComponent implements OnInit {
 
     editLoaiDichVu(obj: LoaiDichVu) {
         if (obj) {
+            //this.LoaiDichVuEdit.loaiDichVuId = 0;
             this.isGeneralEditor = true;
             this.isNew = false;
             this.isEdit = true;
@@ -167,7 +179,11 @@ export class LoaiDichVuInfoComponent implements OnInit {
             Object.assign(this.LoaiDichVuEdit, obj);
             Object.assign(this.LoaiDichVuEdit, obj);
             this.edit();
-
+            if (this.LoaiDichVuEdit.maLoaiDichVuCha == 0) {
+                this.LoaiDichVuEdit.loaiDichVuId = obj.loaiDichVuId;
+            } else {
+                this.LoaiDichVuEdit.loaiDichVuId = obj.maLoaiDichVuCha;
+            }
             return this.LoaiDichVuEdit;
         }
         else {
@@ -191,14 +207,6 @@ export class LoaiDichVuInfoComponent implements OnInit {
 
         if (this.changesSavedCallback)
             this.changesSavedCallback();
-    }
-
-    changeDanhMuc(id: number) {
-        if (id > 0) {
-            this.chDichVu = true;
-        } else {
-            this.chDichVu = false;
-        }
     }
 
     movetoEditForm() {

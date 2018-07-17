@@ -36,8 +36,8 @@ export class LoaiDichVuService {
         }
     }
 
-    addnewLoaiDichVu(loaidichvu?: LoaiDichVu) {
-        return this.loaidichvuEndpoint.addnewLoaiDichVu<LoaiDichVu>(loaidichvu);
+    addnewLoaiDichVu(loaidichvu?: LoaiDichVu, check?: boolean) {
+        return this.loaidichvuEndpoint.addnewLoaiDichVu<LoaiDichVu>(loaidichvu, check);
     }    
 
     refreshLoggedInUser() {

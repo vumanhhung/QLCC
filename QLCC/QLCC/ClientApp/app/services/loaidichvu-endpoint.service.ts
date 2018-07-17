@@ -40,11 +40,11 @@ export class LoaiDichVuEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getLoaiDichVuByID(Id));
             });
     }
-    
-    addnewLoaiDichVu<T>(loaidichvuObject?: any): Observable<T> {
+
+    addnewLoaiDichVu<T>(loaidichvuObject?: any, check?: boolean): Observable<T> {
         let body = JSON.stringify(loaidichvuObject);
         return this.http.post(this.loaidichvuUrl, body, this.getRequestHeaders()).catch(error => {
-            return this.handleError(error, () => this.addnewLoaiDichVu(loaidichvuObject));
+            return this.handleError(error, () => this.addnewLoaiDichVu(loaidichvuObject, check));
         });
     }
     

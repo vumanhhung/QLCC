@@ -47,5 +47,8 @@ export class DinhMucNuocService {
     deleteDinhMucNuoc(id: number) {
         return this.dinhmucnuocEndpoint.deleteDinhMucNuoc(id);
     }
-    
+
+    getMax() {
+        return this.dinhmucnuocEndpoint.getMax<number>();
+    }
 }

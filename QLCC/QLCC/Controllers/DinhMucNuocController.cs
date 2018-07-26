@@ -33,8 +33,7 @@ namespace QLCC.Controllers
         [HttpGet("List/{id}")]
         public IEnumerable<DinhMucNuoc> GetDinhMucNuocs([FromRoute] int id)
         {
-            var list = _context.CongThucNuocs.SingleOrDefault(m => m.CongThucNuocId == id);
-            return _context.DinhMucNuocs.Where(m => m.CongThucNuocId == list.CongThucNuocId);
+            return _context.DinhMucNuocs.Where(m => m.CongThucNuocId == id);
         }
         
         // GET: api/DinhMucNuocs/5
@@ -125,6 +124,22 @@ namespace QLCC.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(dinhmucnuoc);
+        }
+
+        [HttpGet("Max")]
+        public async Task<int?> checkMax()
+        {
+            return await _context.DinhMucNuocs.MaxAsync(m => m.SoCuoi);
+            //var check = "";
+            //if(max == 0)
+            //{
+            //    check = "0";
+            //}
+            //else
+            //{
+            //    check = "1";
+            //}
+            //return Ok(check);
         }
         
         private bool DinhMucNuocExists(int id)

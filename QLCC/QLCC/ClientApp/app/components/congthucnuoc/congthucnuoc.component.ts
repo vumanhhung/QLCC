@@ -206,6 +206,5 @@ export class CongThucNuocComponent implements OnInit, AfterViewInit {
     configDinhMucNuoc(row: CongThucNuoc) {
         this.dinhmucnuocEdit = this.DinhMucNuocEditor.loadCongthucNuoc(row);
         this.DinhMucNuocEditor.dinhmucModal.show();
-
     }  
 }

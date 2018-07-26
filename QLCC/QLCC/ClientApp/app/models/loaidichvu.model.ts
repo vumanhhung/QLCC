@@ -9,9 +9,9 @@
 		public nguoiNhap: string;
 		public ngayNhap: Date;
 		public nguoiSua: string;
-        public ngaySua: Date;
+		public ngaySua: Date;
 
-    constructor(loaiDichVuId?: number, tenLoaiDichVu?: string, moTa?: string, viTri?: number, maLoaiDichVuCha?: number, dichVuCoBan?: boolean, trangThai?: number, nguoiNhap?: string, ngayNhap?: Date, nguoiSua?: string, ngaySua?: Date, subLevel?: number)
+        constructor(loaiDichVuId?: number, tenLoaiDichVu?: string, moTa?: string, viTri?: number, maLoaiDichVuCha?: number, dichVuCoBan?: boolean, trangThai?: number, nguoiNhap?: string, ngayNhap?: Date, nguoiSua?: string, ngaySua?: Date)
     {
 				this.loaiDichVuId = loaiDichVuId;
 				this.tenLoaiDichVu = tenLoaiDichVu;
@@ -23,6 +23,6 @@
 				this.nguoiNhap = nguoiNhap;
 				this.ngayNhap = ngayNhap;
 				this.nguoiSua = nguoiSua;
-                this.ngaySua = ngaySua;
+				this.ngaySua = ngaySua;
     }
 }

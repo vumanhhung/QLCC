@@ -156,8 +156,6 @@ import { YeuCauService } from './services/yeucau.service';
 import { YeuCauEndpoint } from './services/yeucau-endpoint.service';
 import { NguoiDungToaNhaService } from './services/nguoidungtoanha.service';
 import { NguoiDungToaNhaEndpoint } from './services/nguoidungtoanha-endpoint.service';
-import { LoaiXeService } from "./services/loaixe.service";
-import { LoaiXeEndpoint } from "./services/loaixe-endpoint.service";
 
 //khai bao mat bang component
 import { CumToaNhaComponent } from "./components/cumtoanha/cumtoanha.component";
@@ -220,12 +218,13 @@ import { YeuCauComponent } from "./components/yeucau/yeucau.component";
 import { YeuCauInfoComponent } from "./components/yeucau/yeucau-info.component";
 //import { NguoiDungToaNhaComponent } from "./components/nguoidungtoanha/nguoidungtoanha.component";
 import { NguoiDungToaNhaInfoComponent } from "./components/nguoidungtoanha/nguoidungtoanha-info.component";
-import { LoaiXeComponent } from "./components/loaixe/loaixe.component";
-import { LoaiXeInfoComponent } from "./components/loaixe/loaixe-info.component";
-import { LoaiDichVuComponent } from "./components/loaidichvu/loaidichvu.component";
-import { LoaiDichVuInfoComponent } from "./components/loaidichvu/loaidichvu-info.component";
-import { LoaiDichVuService } from "./services/loaidichvu.service";
-import { LoaiDichVuEndpoint } from "./services/loaidichvu-endpoint.service";
+import { CongThucNuocComponent } from "./components/congthucnuoc/congthucnuoc.component";
+import { CongThucNuocInfoComponent } from "./components/congthucnuoc/congthucnuoc-info.component";
+import { CongThucNuocService } from "./services/congthucnuoc.service";
+import { CongThucNuocEndpoint } from "./services/congthucnuoc-endpoint.service";
+import { DinhMucNuocService } from "./services/dinhmucnuoc.service";
+import { DinhMucNuocEndpoint } from "./services/dinhmucnuoc-endpoint.service";
+import { DinhMucNuocComponent } from "./components/congthucnuoc/dinhmucnuoc.component";
 
 @NgModule({
     imports: [
@@ -357,12 +356,11 @@ import { LoaiDichVuEndpoint } from "./services/loaidichvu-endpoint.service";
         NhomKhachHangInfoComponent,
         YeuCauComponent,
         YeuCauInfoComponent,
-        LoaiXeComponent,
-        LoaiXeInfoComponent,
-        LoaiDichVuComponent,
-        LoaiDichVuInfoComponent,
         //NguoiDungToaNhaComponent,
         NguoiDungToaNhaInfoComponent,
+        CongThucNuocComponent,
+        CongThucNuocInfoComponent,
+        DinhMucNuocComponent,
         DanhMucComponent
     ],
     providers: [        
@@ -432,10 +430,11 @@ import { LoaiDichVuEndpoint } from "./services/loaidichvu-endpoint.service";
         NguoiDungToaNhaEndpoint,
         YeuCauService,
         YeuCauEndpoint,
-        LoaiXeService,
-        LoaiXeEndpoint,
-        LoaiDichVuService,
-        LoaiDichVuEndpoint
+        CongThucNuocService,
+        CongThucNuocEndpoint,
+        DinhMucNuocService,
+        DinhMucNuocEndpoint
+        //MenuLeftComponent,
         //FooterComponent,
         //commonroadComponent,
         //FloursComponent

@@ -25,6 +25,7 @@ import { CustomersComponent } from "../components/customers/customers.component"
 import { MenuLeftComponent } from "../components/commoncontrol/menuleft/menuleft.component";
 import { NguoiDungToaNha } from '../models/nguoidungtoanha.model';
 import { NguoiDungToaNhaService } from "../services/nguoidungtoanha.service";
+//import { NguoiDungToaNhaComponent } from "../components/nguoidungtoanha/nguoidungtoanha.component";
 
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpProgressEvent, HttpEventType, HttpResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
@@ -62,10 +63,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     newNotificationCount = 0;
     appTitle = "QUẢN LÝ CHUNG CƯ";
     appLogo = require("../../../wwwroot/icon/logo.png");
-    userId: string = "";
-    tenToaNha: string = "";;
-    objNDTN: NguoiDungToaNha = new NguoiDungToaNha();
-
+    //userId: string = "";
+    //tenToaNha: string = "";;
+    //objNDTN: NguoiDungToaNha = new NguoiDungToaNha();
+    
     stickyToasties: number[] = [];
 
     dataLoadingConsecutiveFailurs = 0;
@@ -74,6 +75,9 @@ export class AppComponent implements OnInit, AfterViewInit {
         // here you can hide your menu
         this.isClickUserConfig == false;
     }
+
+    //@ViewChild('nguoidungtoanha')
+    //nguoidungtoanhaView: NguoiDungToaNhaComponent;
 
     @ViewChild('menuLeft')
     menuLeft: ElementRef;
@@ -135,7 +139,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     }
                 }
             });
-        });
+        });        
     }
 
 
@@ -196,32 +200,19 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     //onScroll(event) {
     //    this.heightMain = this.mainContent.nativeElement.offsetHeight + 50;
-    //}
+    //}   
 
-    private getNguoiDungToaNha(obj: NguoiDungToaNha[]) {
-        if (obj.length > 0) {
-            this.objNDTN = obj[0];
-            this.tenToaNha = this.objNDTN.toaNha.tenKhoiNha;
-        }
-    }
-
-    ngOnInit() {
+    ngOnInit() {        
         this.heightMenu = this.menuLeft.nativeElement.offsetHeight;
         this.menuLeftComponent.heightMenu = this.heightMenu - 130;
-        this.isUserLoggedIn = this.authService.isLoggedIn;
-        //this.userId = this.authService.currentUser.id;
-        //var where = "NguoiDungId = '" + this.userId + "'";
-        //this.nguoidungtoanhaService.getItems(0, 1, where, "x").subscribe(result => this.getNguoiDungToaNha(result), error => {
-        //    this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất dữ liệu người dùng tòa nhà từ máy chủ.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
-        //        MessageSeverity.error, error);
-        //});
+        this.isUserLoggedIn = this.authService.isLoggedIn;               
 
         // 1 sec to ensure all the effort to get the css animation working is appreciated :|, Preboot screen is removed .5 sec later
         setTimeout(() => this.isAppLoaded = true, 1000);
         setTimeout(() => this.removePrebootScreen = true, 1500);
 
         setTimeout(() => {
-            if (this.isUserLoggedIn) {
+            if (this.isUserLoggedIn) {                
                 this.alertService.resetStickyMessage();
 
                 //if (!this.authService.isSessionExpired)

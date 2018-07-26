@@ -42,11 +42,12 @@
             <li class=""><a href="javascript:;" (click)="building()"><i class="fa fa-arrow-circle-right"></i>Nhật ký xử lý yêu cầu</a></li>-->
                 </ul>
             </li>
+            <li class="" (click)="toggleNavigationSub('ctn',$event)" [class.active]="isActiveMenu == 'ctn'"><a href="javascript://" routerLink="/congthucnuoc"> <i class="fa fa-cogs"></i> <span>Công thức nước</span></a></li>
+            <!--<li class="" (click)="toggleNavigationSub('dmn',$event)" [class.active]="isActiveMenu == 'dmn'"><a href="javascript://" routerLink="/dinhmucnuoc"> <i class="fa fa-cogs"></i> <span>Định mức nước</span></a></li>-->
             <li class=""><a href="javascript://" (click)="building()"> <i class="fa fa-cogs"></i> <span>Dịch vụ</span></a></li>
             <li class=""><a href="javascript://" (click)="building()"> <i class="fa fa-fa fa-bath"></i> <span>Vật tư</span></a></li>
             <li class=""><a href="javascript://" (click)="building()"> <i class="fa fa-bar-chart"></i> <span>Thống kê - báo cáo</span></a></li>
             <li class=""><a href="javascript://" (click)="building()"> <i class="fa fa-question-circle"></i> <span>Trợ giúp</span></a></li>
-            <li class=""><a href="javascript://" routerLink="/loaidichvu"> <i class="fa fa-building"></i> <span>Loại dịch vụ</span></a></li>
         </ul>
     </div>
 </section>

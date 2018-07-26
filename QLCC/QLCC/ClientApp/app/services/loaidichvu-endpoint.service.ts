@@ -5,7 +5,6 @@ import 'rxjs/add/operator/map';
 
 import { EndpointFactory } from './endpoint-factory.service';
 import { ConfigurationService } from './configuration.service';
-import { errors } from '@telerik/kendo-intl';
 
 @Injectable()
 export class LoaiDichVuEndpoint extends EndpointFactory {
@@ -40,11 +39,11 @@ export class LoaiDichVuEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getLoaiDichVuByID(Id));
             });
     }
-
-    addnewLoaiDichVu<T>(loaidichvuObject?: any, check?: boolean): Observable<T> {
+    
+    addnewLoaiDichVu<T>(loaidichvuObject?: any): Observable<T> {
         let body = JSON.stringify(loaidichvuObject);
         return this.http.post(this.loaidichvuUrl, body, this.getRequestHeaders()).catch(error => {
-            return this.handleError(error, () => this.addnewLoaiDichVu(loaidichvuObject, check));
+            return this.handleError(error, () => this.addnewLoaiDichVu(loaidichvuObject));
         });
     }
     
@@ -62,37 +61,5 @@ export class LoaiDichVuEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.deleteLoaiDichVu(id));
             });
-    }
-
-    getMenu<T>(parent_id: number): Observable<T> {
-        let endpointUrl = `${this.loaidichvuUrl}/GetMenu`;
-        return this.http.get(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getMenu(parent_id));
-            })
-    }
-
-    getList<T>(): Observable<T> {
-        let enpointUrl = `${this.loaidichvuUrl}/List`;
-        return this.http.get(enpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getList());
-            })
-    }
-
-    getMax(){
-        let enpointUrl = `${this.loaidichvuUrl}/Max`;
-        return this.http.get(enpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getMax());
-            })
-    }
-
-    dequy<T>() {
-        let enpointUrl = `${this.loaidichvuUrl}/GetDeQuy`;
-        return this.http.get(enpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.dequy());
-            })
     }
 }

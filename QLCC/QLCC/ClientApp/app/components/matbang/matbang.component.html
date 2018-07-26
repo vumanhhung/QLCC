@@ -122,8 +122,8 @@
                         <div *ngIf="hidden == 1" class="DTTT_container" style="position:relative;z-index:1">
                             <i (click)="openBox()" class="fa fa-question-circle" aria-hidden="true" style="font-size:18px;cursor:pointer;padding:0 30px;color:#337ab7" tooltip="Click để xem danh sách trạng thái"></i>
                             <div class="box-status-list" *ngIf="isCloseBox">
-                                <div class="itemStatus" *ngFor="let r of trangthai" (click)="setDisibleBox(r.maunen)" [class.active]="maunenThayDoi == r.mauNen">
-                                    <div class="colorStatus" [ngStyle]="{'background-color':r.maunen}"></div>
+                                <div class="itemStatus" *ngFor="let r of trangthai" (click)="setDisibleBox(r.mauNen)" [class.active]="maunenThayDoi == r.mauNen">
+                                    <div class="colorStatus" [ngStyle]="{'background-color':r.mauNen}"></div>
                                     <div class="textStatus">{{r.tenTrangThai}}</div>
                                     <div class="clearfix"></div>
                                 </div>

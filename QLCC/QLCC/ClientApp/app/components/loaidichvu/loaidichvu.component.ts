@@ -7,12 +7,6 @@ import { Utilities } from "../../services/utilities";
 import { LoaiDichVuService } from "../../services/loaidichvu.service";
 import { LoaiDichVu } from "../../models/loaidichvu.model";
 import { LoaiDichVuInfoComponent } from "./loaidichvu-info.component";
-import { forEach } from '@angular/router/src/utils/collection';
-import { from } from 'rxjs/observable/from';
-import { of } from 'rxjs/observable/of';
-import { id } from '@swimlane/ngx-datatable/release/utils';
-import { ListComponent } from '@progress/kendo-angular-dropdowns';
-import { max } from 'rxjs/operator/max';
 
 @Component({
     selector: "loaidichvu",
@@ -30,7 +24,6 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
     loaidichvuEdit: LoaiDichVu;
     sourceloaidichvu: LoaiDichVu;
     editingRowName: { name: string };
-    maxSub: number;
 
     @ViewChild('f')
     private form;
@@ -44,11 +37,11 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
     @ViewChild('descriptionTemplate')
     descriptionTemplate: TemplateRef<any>;
 
-    @ViewChild('statusTemplate')
-    statusTemplate: TemplateRef<any>;
-
     @ViewChild('actionsTemplate')
     actionsTemplate: TemplateRef<any>;
+
+    @ViewChild('editorModal')
+    editorModal: ModalDirective;
 
     @ViewChild('loaidichvuEditor')
     LoaiDichVuEditor: LoaiDichVuInfoComponent;
@@ -59,26 +52,33 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         let gT = (key: string) => this.translationService.getTranslation(key);
 
         this.columns = [
-            { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
-            { prop: 'tenLoaiDichVu', name: gT('Tên loại dịch vụ')},
-            { prop: 'moTa', name: gT('Mô tả')},
-            { prop: 'viTri', name: gT('Vị trí')},
-            { prop: 'trangThai', name: gT('TrangThai'), cellTemplate: this.statusTemplate },
+            { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },              
+			{ prop: 'tenLoaiDichVu', name: gT('TenLoaiDichVu')},
+			{ prop: 'moTa', name: gT('MoTa')},
+			{ prop: 'viTri', name: gT('ViTri')},
+			{ prop: 'maLoaiDichVuCha', name: gT('MaLoaiDichVuCha')},
+			{ prop: 'dichVuCoBan', name: gT('DichVuCoBan')},
+			{ prop: 'trangThai', name: gT('TrangThai')},
+			{ prop: 'nguoiNhap', name: gT('NguoiNhap')},
+			{ prop: 'ngayNhap', name: gT('NgayNhap')},
+			{ prop: 'nguoiSua', name: gT('NguoiSua')},
+			{ prop: 'ngaySua', name: gT('NgaySua')},
             { name: '', width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
+
         this.loadData();
     }
     
     ngAfterViewInit() {
         this.LoaiDichVuEditor.changesSavedCallback = () => {
             this.addNewToList();
-            this.LoaiDichVuEditor.editorModal.hide();
+            this.editorModal.hide();
         };
 
         this.LoaiDichVuEditor.changesCancelledCallback = () => {
             this.loaidichvuEdit = null;
             this.sourceloaidichvu = null;
-            this.LoaiDichVuEditor.editorModal.hide();
+            this.editorModal.hide();
         };
     }
     
@@ -109,17 +109,17 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
     loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        //this.loaidichvuService.getAllLoaiDichVu().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
-        this.loaidichvuService.dequy().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
-        //this.getSubmenu();
+        this.loaidichvuService.getAllLoaiDichVu().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
     }
-
+    
     onDataLoadSuccessful(obj: LoaiDichVu[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+
         obj.forEach((item, index, obj) => {
             (<any>item).index = index + 1;
         });
+
         this.rowsCache = [...obj];
         this.rows = obj;
     }
@@ -131,14 +131,17 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất người dùng từ máy chủ.\r\nErrors: "${Utilities.getHttpResponseMessage(error)}"`,
             MessageSeverity.error, error);
     }
-
+    
+    onEditorModalHidden() {
+        this.editingRowName = null;
+        this.LoaiDichVuEditor.resetForm(true);
+    }
 
     newLoaiDichVu() {
         this.editingRowName = null;
         this.sourceloaidichvu = null;
         this.loaidichvuEdit = this.LoaiDichVuEditor.newLoaiDichVu();
-        this.LoaiDichVuEditor.isViewDetails = false;
-        this.LoaiDichVuEditor.editorModal.show();
+        this.editorModal.show();
     }
     
     SelectedValue(value: number) {
@@ -177,15 +180,6 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         this.editingRowName = { name: row.tenLoaiDichVu };
         this.sourceloaidichvu = row;
         this.loaidichvuEdit = this.LoaiDichVuEditor.editLoaiDichVu(row);
-        this.LoaiDichVuEditor.isViewDetails = false;
-        this.LoaiDichVuEditor.editorModal.show();
+        this.editorModal.show();
     }    
-
-    viewDetailLoaiDichVu(row: LoaiDichVu) {
-        this.editingRowName = { name: row.tenLoaiDichVu };
-        this.sourceloaidichvu = row;
-        this.loaidichvuEdit = this.LoaiDichVuEditor.editLoaiDichVu(row);
-        this.LoaiDichVuEditor.isViewDetails = true;
-        this.LoaiDichVuEditor.editorModal.show();
-    }
 }

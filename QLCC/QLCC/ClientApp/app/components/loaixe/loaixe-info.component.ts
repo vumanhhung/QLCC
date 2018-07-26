@@ -4,7 +4,6 @@ import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { Utilities } from '../../services/utilities';
 import { LoaiXe } from "../../models/loaixe.model";
 import { LoaiXeService } from "./../../services/loaixe.service";
-import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
     selector: "loaixe-info",
@@ -15,21 +14,17 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 export class LoaiXeInfoComponent implements OnInit {
     private isNew = false;
     private isSaving = false;
-    private isEdit = false;
     private showValidationErrors: boolean = false;
     private uniqueId: string = Utilities.uniqueId();
     private LoaiXeEdit: LoaiXe = new LoaiXe();
+    public value: Date = new Date();
     public formResetToggle = true;
     private isEditMode = false;
-    isViewDetails = false;
     private editingRowName: string;
-    public valueTenloaixe: string;
-    public valueNgayNhap: Date = new Date();
-    public valueNgaySua: Date = new Date();
     public changesSavedCallback: () => void;
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
-
+    
     @Input()
     isViewOnly: boolean;
 
@@ -39,12 +34,9 @@ export class LoaiXeInfoComponent implements OnInit {
     @ViewChild('f')
     private form;
     
-    @ViewChild('editorModal')
-    editorModal: ModalDirective;
-
     constructor(private alertService: AlertService, private gvService: LoaiXeService) {
     }
-
+    
     ngOnInit() {
         if (!this.isGeneralEditor) {
             this.loadData();
@@ -55,7 +47,7 @@ export class LoaiXeInfoComponent implements OnInit {
         this.alertService.startLoadingMessage();
         this.gvService.getLoaiXeByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
     }
-
+    
     private onDataLoadSuccessful(obj: LoaiXe) {
         this.alertService.stopLoadingMessage();
     }
@@ -79,7 +71,7 @@ export class LoaiXeInfoComponent implements OnInit {
             });
         }
     }
-
+    
     private cancel() {
         this.LoaiXeEdit = new LoaiXe();
         this.showValidationErrors = false;
@@ -93,23 +85,20 @@ export class LoaiXeInfoComponent implements OnInit {
             this.changesCancelledCallback();
     }
 
-    private save(obj?: LoaiXe) {
+    private save() {
         this.isSaving = true;
-        this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
+        this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");        
         if (this.isNew) {
-            this.LoaiXeEdit.ngayNhap = this.valueNgayNhap;
             this.gvService.addnewLoaiXe(this.LoaiXeEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
         }
         else {
-            this.LoaiXeEdit.ngaySua = this.valueNgaySua;
             this.gvService.updateLoaiXe(this.LoaiXeEdit.loaiXeId, this.LoaiXeEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
         }
     }
-
+    
     newLoaiXe() {
         this.isGeneralEditor = true;
         this.isNew = true;
-        this.isEdit = false;
         this.showValidationErrors = true;
         this.editingRowName = null;
         this.LoaiXeEdit = new LoaiXe();
@@ -123,11 +112,11 @@ export class LoaiXeInfoComponent implements OnInit {
 
         this.isSaving = false;
         this.alertService.stopLoadingMessage();
-        this.showValidationErrors = false;
+        this.showValidationErrors = false;        
         if (this.isGeneralEditor) {
             if (this.isNew) {
                 this.alertService.showMessage("Thành công", `Thực hiện thêm mới thành công`, MessageSeverity.success);
-            }
+            }                
             else
                 this.alertService.showMessage("Thành công", `Thực hiện thay đổi thông tin thành công`, MessageSeverity.success);
         }
@@ -148,7 +137,7 @@ export class LoaiXeInfoComponent implements OnInit {
         if (this.changesFailedCallback)
             this.changesFailedCallback();
     }
-
+    
     private showErrorAlert(caption: string, message: string) {
         this.alertService.showMessage(caption, message, MessageSeverity.error);
     }
@@ -157,7 +146,6 @@ export class LoaiXeInfoComponent implements OnInit {
         if (obj) {
             this.isGeneralEditor = true;
             this.isNew = false;
-            this.isEdit = true;
             this.editingRowName = obj.tenLoaiXe;
             this.LoaiXeEdit = new LoaiXe();
             Object.assign(this.LoaiXeEdit, obj);
@@ -187,16 +175,5 @@ export class LoaiXeInfoComponent implements OnInit {
 
         if (this.changesSavedCallback)
             this.changesSavedCallback();
-    }
-
-     movetoEditForm() {
-        this.isNew = false;
-        this.isViewDetails = false;
-        this.isEdit = true;
-    }
-
-    private onEditorModalHidden() {
-        this.editingRowName = null;
-        this.resetForm(true);
-    }
+    }    
 }

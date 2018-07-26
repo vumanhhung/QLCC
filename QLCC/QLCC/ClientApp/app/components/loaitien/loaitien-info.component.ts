@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit, ViewChild, Input } from '@angular/core';
+
 import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { Utilities } from '../../services/utilities';
-import { isGeneratedFile } from '@angular/compiler/src/aot/util';
 import { LoaiTien } from "../../models/loaitien.model";
 import { LoaiTienService } from "./../../services/loaitien.service";
 

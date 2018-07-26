@@ -36,8 +36,8 @@ export class LoaiDichVuService {
         }
     }
 
-    addnewLoaiDichVu(loaidichvu?: LoaiDichVu, check?: boolean) {
-        return this.loaidichvuEndpoint.addnewLoaiDichVu<LoaiDichVu>(loaidichvu, check);
+    addnewLoaiDichVu(loaidichvu?: LoaiDichVu) {
+        return this.loaidichvuEndpoint.addnewLoaiDichVu<LoaiDichVu>(loaidichvu);
     }    
 
     refreshLoggedInUser() {
@@ -47,12 +47,5 @@ export class LoaiDichVuService {
     deleteLoaiDichVu(id: number) {
         return this.loaidichvuEndpoint.deleteLoaiDichVu(id);
     }
-
-    getMenu(parent_id: number) {
-        return this.loaidichvuEndpoint.getMenu<LoaiDichVu[]>(parent_id);
-    }
-
-    dequy() {
-        return this.loaidichvuEndpoint.dequy<LoaiDichVu[]>();
-    }
+    
 }

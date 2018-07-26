@@ -59,6 +59,8 @@ namespace DAL
         public DbSet<BangGiaXe> BangGiaXes { get; set; }
         public DbSet<LoaiDichVu> LoaiDichVus { get; set; }
         public DbSet<LoaiXe> LoaiXes { get; set; }
+        public DbSet<CongThucNuoc> CongThucNuocs { get; set; }
+        public DbSet<DinhMucNuoc> DinhMucNuocs { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         { }
@@ -129,6 +131,8 @@ namespace DAL
             builder.Entity<BangGiaXe>().ToTable($"tbl_BangGiaXe");
             builder.Entity<LoaiDichVu>().ToTable($"tbl_LoaiDichVu");
             builder.Entity<LoaiXe>().ToTable($"tbl_LoaiXe");
+            builder.Entity<CongThucNuoc>().ToTable($"tbl_CongThucNuoc");
+            builder.Entity<DinhMucNuoc>().ToTable($"tbl_DinhMucNuoc");
         }
 
         public override int SaveChanges()

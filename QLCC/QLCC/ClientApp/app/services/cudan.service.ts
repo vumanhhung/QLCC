@@ -52,4 +52,5 @@ export class CuDanService {
     deleteCuDan(id: number) {
         return this.cudanEndpoint.deleteCuDan(id);
     }
+    
 }

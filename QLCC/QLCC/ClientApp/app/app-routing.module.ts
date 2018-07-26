@@ -57,8 +57,8 @@ import { LoaiYeuCauComponent } from "./components/loaiyeucau/loaiyeucau.componen
 import { LoaiYeuCauInfoComponent } from "./components/loaiyeucau/loaiyeucau-info.component";
 import { YeuCauComponent } from "./components/yeucau/yeucau.component";
 import { YeuCauInfoComponent } from "./components/yeucau/yeucau-info.component";
-import { LoaiXeComponent } from './components/loaixe/loaixe.component';
-import { LoaiDichVuComponent } from './components/loaidichvu/loaidichvu.component';
+import { CongNoComponent } from './components/matbang/xemmatbang/congno/congno.component';
+import { CongThucNuocComponent } from './components/congthucnuoc/congthucnuoc.component';
 
 
 @NgModule({
@@ -96,8 +96,7 @@ import { LoaiDichVuComponent } from './components/loaidichvu/loaidichvu.componen
             { path: "nguontiepnhan", component: NguonTiepNhanComponent, canActivate: [AuthGuard], data: { title: "Nguồn tiếp nhận" } },
             { path: "nhomkhachhang", component: NhomKhachHangComponent, canActivate: [AuthGuard], data: { title: "Nhóm khách hàng" } },
             { path: "yeucau", component: YeuCauComponent, canActivate: [AuthGuard], data: { title: "Yêu cầu" } },
-            { path: "loaixe", component: LoaiXeComponent, canActivate: [AuthGuard], data: { title: "Loại xe" } },
-            { path: "loaidichvu", component: LoaiDichVuComponent, canActivate: [AuthGuard], data: { title: "Loại dịch vụ" } },
+            { path: "congthucnuoc", component: CongThucNuocComponent, canActivate: [AuthGuard], data: { title: "Công thức nước" } },
             //{ path: "role/:id", component: RoleEditorComponent},
             { path: "settings", component: SettingsComponent, canActivate: [AuthGuard], data: { title: "Cấu hình" } },
             { path: "about", component: AboutComponent, data: { title: "Giới thiệu" } },

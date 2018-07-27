@@ -64,11 +64,11 @@ export class DinhMucNuocEndpoint extends EndpointFactory {
             });
     }
 
-    getMax<T>(): Observable<T> {
-        let endpointUrl = `${this.dinhmucnuocUrl}/Max`;
+    getMax<T>(id: number): Observable<T> {
+        let endpointUrl = `${this.dinhmucnuocUrl}/Max/${id}`;
         return this.http.get(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getMax());
+                return this.handleError(error, () => this.getMax(id));
             })
     }
 }

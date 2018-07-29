@@ -96,23 +96,47 @@
                 <div class="box box-info">
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <ngx-datatable class="material colored-header sm table table-striped table-hover "
-                                       [loadingIndicator]="loadingIndicator"
-                                       [rows]="rows"
-                                       [rowHeight]="45"
-                                       [headerHeight]="45"
-                                       [footerHeight]="45"
-                                       [columns]="columns"
-                                       [limit]="limit"
-                                       [columnMode]="'force'">
-                        </ngx-datatable>
-                        <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editDinhMucNuoc(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                            <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDinhMucNuoc(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                        </ng-template>
-                        <ng-template #giaTemplate let-row="row" let-value="value" let-i="index">
-                            <p>{{formatPrice(row.gia)}}</p>
-                        </ng-template>
+                        <!--<ngx-datatable class="material colored-header sm table table-striped table-hover "
+                   [loadingIndicator]="loadingIndicator"
+                   [rows]="rows"
+                   [rowHeight]="45"
+                   [headerHeight]="45"
+                   [footerHeight]="45"
+                   [columns]="columns"
+                   [limit]="limit"
+                   [columnMode]="'force'">
+    </ngx-datatable>
+    <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+        <a class="btn btn-func btn-primary" href="javascript:;" (click)="editDinhMucNuoc(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+        <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDinhMucNuoc(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+    </ng-template>
+    <ng-template #giaTemplate let-row="row" let-value="value" let-i="index">
+        <p>{{formatPrice(row.gia)}}</p>
+    </ng-template>-->
+                        <table class='table' *ngIf="list">
+                            <thead>
+                                <tr>
+                                    <th>Tên định mức nước</th>
+                                    <th>Số đầu</th>
+                                    <th>Số cuối</th>
+                                    <th>Giá</th>
+                                    <th>Diễn giải</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of list">
+                                    <td>{{ row.tenDinhMucNuoc }}</td>
+                                    <td>{{ row.soDau }}</td>
+                                    <td>{{ row.soCuoi }}</td>
+                                    <td>{{formatPrice(row.gia)}}</td>
+                                    <td><span>{{ row.dienGiai }}</span></td>
+                                    <td>
+                                        <a class="btn btn-func btn-primary" href="javascript:;" (click)="editDinhMucNuoc(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                        <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDinhMucNuoc(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

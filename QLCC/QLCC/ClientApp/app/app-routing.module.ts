@@ -59,6 +59,8 @@ import { YeuCauComponent } from "./components/yeucau/yeucau.component";
 import { YeuCauInfoComponent } from "./components/yeucau/yeucau-info.component";
 import { CongNoComponent } from './components/matbang/xemmatbang/congno/congno.component';
 import { CongThucNuocComponent } from './components/congthucnuoc/congthucnuoc.component';
+import { BangGiaXeComponent } from './components/banggiaxe/banggiaxe.component';
+
 
 
 @NgModule({
@@ -97,6 +99,7 @@ import { CongThucNuocComponent } from './components/congthucnuoc/congthucnuoc.co
             { path: "nhomkhachhang", component: NhomKhachHangComponent, canActivate: [AuthGuard], data: { title: "Nhóm khách hàng" } },
             { path: "yeucau", component: YeuCauComponent, canActivate: [AuthGuard], data: { title: "Yêu cầu" } },
             { path: "congthucnuoc", component: CongThucNuocComponent, canActivate: [AuthGuard], data: { title: "Công thức nước" } },
+            { path: "banggiaxe", component: BangGiaXeComponent, canActivate: [AuthGuard], data: { title: "Bảng giá xe" } },
             //{ path: "role/:id", component: RoleEditorComponent},
             { path: "settings", component: SettingsComponent, canActivate: [AuthGuard], data: { title: "Cấu hình" } },
             { path: "about", component: AboutComponent, data: { title: "Giới thiệu" } },

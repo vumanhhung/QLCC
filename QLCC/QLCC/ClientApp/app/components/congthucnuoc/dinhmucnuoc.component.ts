@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit, ViewChild, Input, TemplateRef } from '@angular/core';
 
-import { AlertService, MessageSeverity } from '../../services/alert.service';
+import { AlertService, MessageSeverity, DialogType } from '../../services/alert.service';
 import { Utilities } from '../../services/utilities';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { DinhMucNuoc } from '../../models/dinhmucnuoc.model';
@@ -15,9 +15,8 @@ import { AppTranslationService } from '../../services/app-translation.service';
 })
 
 export class DinhMucNuocComponent implements OnInit {
-    private isNew = false;
+    public isNew = false;
     private isSaving = false;
-    private isEdit = false;
     private checkbox: boolean = false;
     columns: any[] = [];
     private showValidationErrors: boolean = false;
@@ -26,6 +25,7 @@ export class DinhMucNuocComponent implements OnInit {
     private loadingIndicator: boolean;
     rows: DinhMucNuoc[] = [];
     rowsCache: DinhMucNuoc[] = [];
+    rowCongthucnuoc: CongThucNuoc = new CongThucNuoc();
     tenCongThucNuoc: string = "";
     public formResetToggle = true;
     private isEditMode = false;
@@ -33,6 +33,7 @@ export class DinhMucNuocComponent implements OnInit {
     public changesSavedCallback: () => void;
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
+    gia: string = "0";
 
     @Input()
     isViewOnly: boolean;
@@ -48,6 +49,9 @@ export class DinhMucNuocComponent implements OnInit {
 
     @ViewChild('statusTemplate')
     statusTemplate: TemplateRef<any>;
+
+    @ViewChild('giaTemplate')
+    giaTemplate: TemplateRef<any>;
 
     @ViewChild('actionsTemplate')
     actionsTemplate: TemplateRef<any>;
@@ -66,25 +70,26 @@ export class DinhMucNuocComponent implements OnInit {
             let gT = (key: string) => this.translationService.getTranslation(key);
             this.columns = [
                 { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
-                { prop: 'tenDinhMucNuoc', name: gT('Tên định mức nước') },
+                { prop: 'tenDinhMucNuoc', name: gT('Tên định mức nước'), canAutoResize: true },
                 { prop: 'soDau', name: gT('Số đầu') },
                 { prop: 'soCuoi', name: gT('Số cuối') },
-                { prop: 'gia', name: gT('Giá') },
+                { prop: 'gia', name: gT('Giá'), cellTemplate: this.giaTemplate },
                 { prop: 'dienGiai', name: gT('Diễn giải') },
-                { name: '', width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
+                { name: '', width: 70, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
             ];
-            //this.loadData();
         }
     }
 
     loadData() {
-        this.alertService.startLoadingMessage();
+        this.gvService.getAllDinhMucNuoc(this.rowCongthucnuoc.congThucNuocId).subscribe(result => this.onDataLoadSuccessful(result), error => this.onDataLoadFailed(error));
     }
 
     loadCongthucNuoc(row: CongThucNuoc) {
+        this.rowCongthucnuoc = row;
         this.tenCongThucNuoc = row.tenCongThucNuoc;
         this.DinhMucNuocEdit.congThucNuocId = row.congThucNuocId;
-        this.gvService.getAllDinhMucNuoc(this.DinhMucNuocEdit.congThucNuocId).subscribe(result => this.onDataLoadSuccessful(result), error => this.onDataLoadFailed(error));
+        this.loadData();
+        this.newDinhMucNuoc();
         return this.DinhMucNuocEdit;
     }
 
@@ -108,23 +113,23 @@ export class DinhMucNuocComponent implements OnInit {
             MessageSeverity.error, error);
     }
 
-    //resetForm(replace = false) {
+    resetForm(replace = false) {
 
-    //    if (!replace) {
-    //        this.form.reset();
-    //    }
-    //    else {
-    //        this.formResetToggle = false;
+        if (!replace) {
+            this.form.reset();
+        }
+        else {
+            this.formResetToggle = false;
 
-    //        setTimeout(() => {
-    //            this.formResetToggle = true;
-    //        });
-    //    }
-    //}
+            setTimeout(() => {
+                this.formResetToggle = true;
+            });
+        }
+    }
 
     onEditorModalHidden() {
         this.editingRowName = null;
-        //this.resetForm(true);
+        this.resetForm(true);
     }
 
     private cancel() {
@@ -141,13 +146,13 @@ export class DinhMucNuocComponent implements OnInit {
     }
 
     newDinhMucNuoc() {
+
         this.isGeneralEditor = true;
         this.isNew = true;
-        this.isEdit = false;
         this.showValidationErrors = true;
-        this.editingRowName = null;
-        this.DinhMucNuocEdit = new DinhMucNuoc();
-        this.gvService.getMax().subscribe(result => {
+        //console.log(this.DinhMucNuocEdit.congThucNuocId);
+        this.formatPrice(this.gia);
+        this.gvService.getMax(this.rowCongthucnuoc.congThucNuocId).subscribe(result => {
             if (result == 0) {
                 this.DinhMucNuocEdit.soDau = 0;
             } else {
@@ -155,6 +160,8 @@ export class DinhMucNuocComponent implements OnInit {
             }
         })
         this.edit();
+        //this.DinhMucNuocEdit.congThucNuocId = 
+
         return this.DinhMucNuocEdit;
     }
 
@@ -162,11 +169,11 @@ export class DinhMucNuocComponent implements OnInit {
         if (obj) {
             this.isGeneralEditor = true;
             this.isNew = false;
-            this.isEdit = true;
-            this.editingRowName = obj.tenDinhMucNuoc;
+            //this.isEdit = true;
+            this.editingRowName = obj.tenDinhMucNuoc;            
             this.DinhMucNuocEdit = new DinhMucNuoc();
             Object.assign(this.DinhMucNuocEdit, obj);
-            Object.assign(this.DinhMucNuocEdit, obj);
+            this.gia = this.formatPrice(this.DinhMucNuocEdit.gia.toString());
             this.edit();
             return this.DinhMucNuocEdit;
         } else {
@@ -180,16 +187,20 @@ export class DinhMucNuocComponent implements OnInit {
     }
 
     private save() {
-        this.isSaving = true;
-        this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
-        alert(1);
-        if (this.isNew) {
-            alert(2);
-            this.gvService.addnewDinhMucNuoc(this.DinhMucNuocEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
-        }
-        else {
-            alert(3);
-            this.gvService.updateDinhMucNuoc(this.DinhMucNuocEdit.congThucNuocId, this.DinhMucNuocEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
+        if (this.gia == "0") {
+            this.showErrorAlert("Lỗi nhập liệu", "Vui lòng nhập giá > 0!");
+            return false;
+        } else {
+            this.isSaving = true;
+            this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
+            this.DinhMucNuocEdit.gia = Number(this.gia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
+            if (this.isNew == true) {
+                this.DinhMucNuocEdit.congThucNuocId = this.rowCongthucnuoc.congThucNuocId;
+                this.gvService.addnewDinhMucNuoc(this.DinhMucNuocEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
+            }
+            else {
+                this.gvService.updateDinhMucNuoc(this.DinhMucNuocEdit.congThucNuocId, this.DinhMucNuocEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
+            }
         }
     }
 
@@ -208,10 +219,11 @@ export class DinhMucNuocComponent implements OnInit {
                 this.alertService.showMessage("Thành công", `Thực hiện thay đổi thông tin thành công`, MessageSeverity.success);
         }
         this.DinhMucNuocEdit = new DinhMucNuoc();
-        this.isEditMode = false;
-
-        if (this.changesSavedCallback)
-            this.changesSavedCallback();
+        this.isEditMode = true;
+        this.loadData();
+        this.resetForm();
+        //if (this.changesSavedCallback)
+        //    this.changesSavedCallback();
     }
 
     private saveFailedHelper(error: any) {
@@ -226,5 +238,48 @@ export class DinhMucNuocComponent implements OnInit {
 
     private showErrorAlert(caption: string, message: string) {
         this.alertService.showMessage(caption, message, MessageSeverity.error);
+    }
+
+    giaChange(price: string) {
+        if (price) {
+            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+            var pN = Number(pS);
+            this.gia = Utilities.formatNumber(pN);
+        }
+    }
+
+    formatPrice(price: string): string {
+        if (price) {
+            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+            var pN = Number(pS);
+            var fm = Utilities.formatNumber(pN);
+            return fm;
+
+        }
+    }
+
+    deleteDinhMucNuoc(row: DinhMucNuoc) {
+        this.alertService.showDialog('Bạn có chắc chắn muốn xóa bản ghi này?', DialogType.confirm, () => this.deleteHelper(row));
+    }
+
+    deleteHelper(row: DinhMucNuoc) {
+        this.alertService.startLoadingMessage("Đang thực hiện xóa...");
+        this.loadingIndicator = true;
+
+        this.gvService.deleteDinhMucNuoc(row.dinhMucNuocId)
+            .subscribe(results => {
+                this.alertService.stopLoadingMessage();
+                this.loadingIndicator = false;
+                this.rowsCache = this.rowsCache.filter(item => item !== row)
+                this.rows = this.rows.filter(item => item !== row)
+                this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
+                this.newDinhMucNuoc();
+            },
+                error => {
+                    this.alertService.stopLoadingMessage();
+                    this.loadingIndicator = false;
+                    this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
+                        MessageSeverity.error, error);
+                });
     }
 }

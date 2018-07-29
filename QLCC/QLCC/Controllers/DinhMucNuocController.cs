@@ -126,10 +126,10 @@ namespace QLCC.Controllers
             return Ok(dinhmucnuoc);
         }
 
-        [HttpGet("Max")]
-        public async Task<int?> checkMax()
+        [HttpGet("Max/{id}")]
+        public async Task<int?> checkMax(int id)
         {
-            return await _context.DinhMucNuocs.MaxAsync(m => m.SoCuoi);
+            return await _context.DinhMucNuocs.Where(r => r.CongThucNuocId == id).MaxAsync(r => r.SoCuoi);
             //var check = "";
             //if(max == 0)
             //{

@@ -6,7 +6,6 @@
 (!tenDinhMucNuoc.valid && showErrorAlert('Tên định mức nước không được để trống', 'Vui lòng nhập Tên định mức nước!'));
 (!soDau.valid && showErrorAlert('Số Đầu không được để trống', 'Vui lòng nhập Số Đầu!'));
 (!soCuoi.valid && showErrorAlert('Số Cuối không được để trống', 'Vui lòng nhập Số Cuối!'));
-(!gia.valid && showErrorAlert('Giá không được để trống', 'Vui lòng nhập Giá!'));
 (!dienGiai.valid && showErrorAlert('Diễn Giải không được để trống', 'Vui lòng nhập Diễn Giải!'));
 ">
                     <div class="modal-header">
@@ -41,7 +40,7 @@
                                 <div class="col-md-6">
                                     <label class="control-label col-md-5" for="soDau-{{uniqueId}}">Số Đầu</label>
                                     <div class="col-md-7" [ngClass]="{'has-success': f.submitted && soDau.valid, 'has-error' : f.submitted && !soDau.valid}">
-                                        <input autofocus type="text" class="form-control" name="soDau" [(ngModel)]="DinhMucNuocEdit.soDau" #soDau="ngModel" required />
+                                        <input autofocus type="number" class="form-control" name="soDau" [(ngModel)]="DinhMucNuocEdit.soDau" #soDau="ngModel" required />
                                         <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': soDau.valid, 'glyphicon-remove' : !soDau.valid}"></span>
                                         <span *ngIf="showValidationErrors && f.submitted && !soDau.valid" class="errorMessage">
                                             Vui lòng nhập Số Đầu!
@@ -51,7 +50,7 @@
                                 <div class="col-md-6">
                                     <label class="control-label col-md-5" for="soCuoi-{{uniqueId}}">Số Cuối</label>
                                     <div class="col-md-7" [ngClass]="{'has-success': f.submitted && soCuoi.valid, 'has-error' : f.submitted && !soCuoi.valid}">
-                                        <input autofocus type="text" class="form-control" name="soCuoi" [(ngModel)]="DinhMucNuocEdit.soCuoi" #soCuoi="ngModel" required />
+                                        <input autofocus type="number" class="form-control" name="soCuoi" [(ngModel)]="DinhMucNuocEdit.soCuoi" #soCuoi="ngModel" required />
                                         <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': soCuoi.valid, 'glyphicon-remove' : !soCuoi.valid}"></span>
                                         <span *ngIf="showValidationErrors && f.submitted && !soCuoi.valid" class="errorMessage">
                                             Vui lòng nhập Số Cuối!
@@ -62,12 +61,8 @@
                             <div class="col-md-12">
                                 <div class="col-md-6">
                                     <label class="control-label col-md-5" for="gia-{{uniqueId}}">Giá</label>
-                                    <div class="col-md-7" [ngClass]="{'has-success': f.submitted && gia.valid, 'has-error' : f.submitted && !gia.valid}">
-                                        <input autofocus type="text" class="form-control" name="gia" [(ngModel)]="DinhMucNuocEdit.gia" #gia="ngModel" required />
-                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': gia.valid, 'glyphicon-remove' : !gia.valid}"></span>
-                                        <span *ngIf="showValidationErrors && f.submitted && !gia.valid" class="errorMessage">
-                                            Vui lòng nhập Giá!
-                                        </span>
+                                    <div class="col-md-7">
+                                        <input OnlyNumber="true" autofocus type="text" class="form-control" name="gia" [(ngModel)]="gia" (ngModelChange)="giaChange($event)" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -112,8 +107,11 @@
                                        [columnMode]="'force'">
                         </ngx-datatable>
                         <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <a class="btn btn-func btn-primary" href="javascript:;" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                            <a class="btn btn-func btn-danger" href="javascript:;" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editDinhMucNuoc(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                            <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDinhMucNuoc(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        </ng-template>
+                        <ng-template #giaTemplate let-row="row" let-value="value" let-i="index">
+                            <p>{{formatPrice(row.gia)}}</p>
                         </ng-template>
                     </div>
                 </div>

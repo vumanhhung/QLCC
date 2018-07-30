@@ -15,7 +15,6 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 export class CongThucNuocInfoComponent implements OnInit {
     private isNew = false;
     private isSaving = false;
-    isViewDetails = false;
     private isEdit = false;
     private checkbox: boolean = false;
     private showValidationErrors: boolean = false;
@@ -102,10 +101,12 @@ export class CongThucNuocInfoComponent implements OnInit {
                     this.alertService.stopLoadingMessage();
                     this.isSaving = false;
                 } else {
-                    if (this.CongThucNuocEdit.status == true) {
-                        this.gvService.changeStatus(this.CongThucNuocEdit.congThucNuocId).subscribe(result => this.saveSuccessHelper(), error => { });
+                    if (results.status == true) {
+                        this.gvService.changeStatus(results.congThucNuocId).subscribe(result => this.saveSuccessHelper(), error => { });
+                    } else {
+                        this.saveSuccessHelper();
                     }
-                }
+                }                
             }, error => this.saveFailedHelper(error));
         }
         else {
@@ -134,7 +135,6 @@ export class CongThucNuocInfoComponent implements OnInit {
         this.CongThucNuocEdit = new CongThucNuoc();
         this.edit();
         this.gvService.checkStatus().subscribe(result => {
-            console.log(result);
             if (result == "none") {
                 this.CongThucNuocEdit.status = true;
             } else if (result == "exist") {
@@ -147,7 +147,6 @@ export class CongThucNuocInfoComponent implements OnInit {
     private saveSuccessHelper(obj?: CongThucNuoc) {
         if (obj)
             Object.assign(this.CongThucNuocEdit, obj);
-
         this.isSaving = false;
         this.alertService.stopLoadingMessage();
         this.showValidationErrors = false;
@@ -218,7 +217,6 @@ export class CongThucNuocInfoComponent implements OnInit {
 
     movetoEditForm() {
         this.isNew = false;
-        this.isViewDetails = false;
         this.isEdit = true;
     }
 

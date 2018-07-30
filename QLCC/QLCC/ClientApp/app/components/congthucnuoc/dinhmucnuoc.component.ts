@@ -34,6 +34,7 @@ export class DinhMucNuocComponent implements OnInit {
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
     gia: string = "0";
+    list: DinhMucNuoc[] = [];
 
     @Input()
     isViewOnly: boolean;
@@ -103,6 +104,7 @@ export class DinhMucNuocComponent implements OnInit {
 
         this.rowsCache = [...obj];
         this.rows = obj;
+        this.list = obj;
     }
 
     onDataLoadFailed(error: any) {
@@ -130,6 +132,7 @@ export class DinhMucNuocComponent implements OnInit {
     onEditorModalHidden() {
         this.editingRowName = null;
         this.resetForm(true);
+        //this.newDinhMucNuoc();
     }
 
     private cancel() {
@@ -150,18 +153,16 @@ export class DinhMucNuocComponent implements OnInit {
         this.isGeneralEditor = true;
         this.isNew = true;
         this.showValidationErrors = true;
-        //console.log(this.DinhMucNuocEdit.congThucNuocId);
-        this.formatPrice(this.gia);
-        this.gvService.getMax(this.rowCongthucnuoc.congThucNuocId).subscribe(result => {
-            if (result == 0) {
+        this.gvService.getMax(this.rowCongthucnuoc.congThucNuocId).subscribe(result => 
+        {
+            if (result == null) {
                 this.DinhMucNuocEdit.soDau = 0;
             } else {
                 this.DinhMucNuocEdit.soDau = result;
             }
         })
+        this.gia = this.formatPrice("0");
         this.edit();
-        //this.DinhMucNuocEdit.congThucNuocId = 
-
         return this.DinhMucNuocEdit;
     }
 
@@ -171,7 +172,7 @@ export class DinhMucNuocComponent implements OnInit {
             this.isNew = false;
             //this.isEdit = true;
             this.editingRowName = obj.tenDinhMucNuoc;            
-            this.DinhMucNuocEdit = new DinhMucNuoc();
+            //this.DinhMucNuocEdit =  obj;
             Object.assign(this.DinhMucNuocEdit, obj);
             this.gia = this.formatPrice(this.DinhMucNuocEdit.gia.toString());
             this.edit();
@@ -187,7 +188,13 @@ export class DinhMucNuocComponent implements OnInit {
     }
 
     private save() {
-        if (this.gia == "0") {
+        if (this.DinhMucNuocEdit.soCuoi < 0) {
+            this.showErrorAlert("Lỗi nhập liệu", "Vui lòng nhập số cuối > 0!");
+            return false;
+        } else if (this.DinhMucNuocEdit.soCuoi <= this.DinhMucNuocEdit.soDau) {
+            this.showErrorAlert("Lỗi nhập liệu", "Vui lòng nhập số cuối > số đầu!");
+            return false;
+        } else if (this.gia == "0" || this.gia == "") {
             this.showErrorAlert("Lỗi nhập liệu", "Vui lòng nhập giá > 0!");
             return false;
         } else {
@@ -219,9 +226,11 @@ export class DinhMucNuocComponent implements OnInit {
                 this.alertService.showMessage("Thành công", `Thực hiện thay đổi thông tin thành công`, MessageSeverity.success);
         }
         this.DinhMucNuocEdit = new DinhMucNuoc();
+        this.DinhMucNuocEdit = this.newDinhMucNuoc();
         this.isEditMode = true;
-        this.loadData();
-        this.resetForm();
+        this.showValidationErrors = false;
+        this.gia = this.formatPrice("0");
+        this.loadData();    
         //if (this.changesSavedCallback)
         //    this.changesSavedCallback();
     }
@@ -250,11 +259,11 @@ export class DinhMucNuocComponent implements OnInit {
 
     formatPrice(price: string): string {
         if (price) {
-            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
-            var pN = Number(pS);
+            var pN = Number(price);
             var fm = Utilities.formatNumber(pN);
             return fm;
-
+        } else {
+            return "";
         }
     }
 
@@ -274,6 +283,8 @@ export class DinhMucNuocComponent implements OnInit {
                 this.rows = this.rows.filter(item => item !== row)
                 this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
                 this.newDinhMucNuoc();
+                this.showValidationErrors = false;
+                this.loadData();
             },
                 error => {
                     this.alertService.stopLoadingMessage();

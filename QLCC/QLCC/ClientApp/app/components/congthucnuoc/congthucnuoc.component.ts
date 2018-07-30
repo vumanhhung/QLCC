@@ -151,7 +151,6 @@ export class CongThucNuocComponent implements OnInit, AfterViewInit {
         this.editingRowName = null;
         this.sourcecongthucnuoc = null;
         this.congthucnuocEdit = this.CongThucNuocEditor.newCongThucNuoc();
-        this.CongThucNuocEditor.isViewDetails = false;
         this.CongThucNuocEditor.editorModal.show();
     }
     
@@ -160,11 +159,15 @@ export class CongThucNuocComponent implements OnInit, AfterViewInit {
     }
     
     onSearchChanged(value: string) {
-        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false,r.tenCongThucNuoc,r.dienGiai,r.status));
+        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.tenCongThucNuoc, r.dienGiai, r.status));
     }
 
     deleteCongThucNuoc(row: CongThucNuoc) {
-        this.alertService.showDialog('Bạn có chắc chắn muốn xóa bản ghi này?', DialogType.confirm, () => this.deleteHelper(row));
+        if (row.status == true) {
+            this.alertService.showMessage("Lỗi thao tác",'Không thể xóa bản ghi hiện tại đang hoạt động!', MessageSeverity.error);
+        } else {
+            this.alertService.showDialog('Bạn có chắc chắn muốn xóa bản ghi này?', DialogType.confirm, () => this.deleteHelper(row));
+        }
     }
     
     deleteHelper(row: CongThucNuoc) {
@@ -191,17 +194,8 @@ export class CongThucNuocComponent implements OnInit, AfterViewInit {
         this.editingRowName = { name: row.tenCongThucNuoc };
         this.sourcecongthucnuoc = row;
         this.congthucnuocEdit = this.CongThucNuocEditor.editCongThucNuoc(row);
-        this.CongThucNuocEditor.isViewDetails = false;
         this.CongThucNuocEditor.editorModal.show();
     }
-
-    viewDetailCongThucNuoc(row: CongThucNuoc) {
-        this.editingRowName = { name: row.tenCongThucNuoc };
-        this.sourcecongthucnuoc = row;
-        this.congthucnuocEdit = this.CongThucNuocEditor.editCongThucNuoc(row);
-        this.CongThucNuocEditor.isViewDetails = true;
-        this.CongThucNuocEditor.editorModal.show();
-    }   
 
     configDinhMucNuoc(row: CongThucNuoc) {
         this.dinhmucnuocEdit = this.DinhMucNuocEditor.loadCongthucNuoc(row);

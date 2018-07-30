@@ -229,6 +229,10 @@ import { BangGiaXeComponent } from "./components/banggiaxe/banggiaxe.component";
 import { BangGiaXeInfoComponent } from "./components/banggiaxe/banggiaxe-info.component";
 import { BangGiaXeEndpoint } from "./services/banggiaxe-endpoint.service";
 import { BangGiaXeService } from "./services/banggiaxe.service";
+import { DichVuCoBanComponent } from "./components/dichvucoban/dichvucoban.component";
+import { DichVuCoBanInfoComponent } from "./components/dichvucoban/dichvucoban-info.component";
+import { DichVuCoBanService } from "./services/dichvucoban.service";
+import { DichVuCoBanEndpoint } from "./services/dichvucoban-endpoint.service";
 
 @NgModule({
     imports: [
@@ -367,6 +371,8 @@ import { BangGiaXeService } from "./services/banggiaxe.service";
         DinhMucNuocComponent,
         BangGiaXeComponent,
         BangGiaXeInfoComponent,
+        DichVuCoBanComponent,
+        DichVuCoBanInfoComponent,
         DanhMucComponent
     ],
     providers: [        
@@ -441,7 +447,9 @@ import { BangGiaXeService } from "./services/banggiaxe.service";
         DinhMucNuocService,
         DinhMucNuocEndpoint,
         BangGiaXeEndpoint,
-        BangGiaXeService
+        BangGiaXeService,
+        DichVuCoBanService,
+        DichVuCoBanEndpoint
         //MenuLeftComponent,
         //FooterComponent,
         //commonroadComponent,

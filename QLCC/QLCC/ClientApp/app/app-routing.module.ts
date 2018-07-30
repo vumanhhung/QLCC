@@ -60,6 +60,8 @@ import { YeuCauInfoComponent } from "./components/yeucau/yeucau-info.component";
 import { CongNoComponent } from './components/matbang/xemmatbang/congno/congno.component';
 import { CongThucNuocComponent } from './components/congthucnuoc/congthucnuoc.component';
 import { BangGiaXeComponent } from './components/banggiaxe/banggiaxe.component';
+import { DichVuCoBan } from './models/dichvucoban.model';
+import { DichVuCoBanComponent } from './components/dichvucoban/dichvucoban.component';
 
 
 
@@ -99,7 +101,7 @@ import { BangGiaXeComponent } from './components/banggiaxe/banggiaxe.component';
             { path: "nhomkhachhang", component: NhomKhachHangComponent, canActivate: [AuthGuard], data: { title: "Nhóm khách hàng" } },
             { path: "yeucau", component: YeuCauComponent, canActivate: [AuthGuard], data: { title: "Yêu cầu" } },
             { path: "congthucnuoc", component: CongThucNuocComponent, canActivate: [AuthGuard], data: { title: "Công thức nước" } },
-            { path: "banggiaxe", component: BangGiaXeComponent, canActivate: [AuthGuard], data: { title: "Bảng giá xe" } },
+            { path: "dichvucoban", component: DichVuCoBanComponent, canActivate: [AuthGuard], data: { title: "Dịch vụ cơ bản" } },
             //{ path: "role/:id", component: RoleEditorComponent},
             { path: "settings", component: SettingsComponent, canActivate: [AuthGuard], data: { title: "Cấu hình" } },
             { path: "about", component: AboutComponent, data: { title: "Giới thiệu" } },

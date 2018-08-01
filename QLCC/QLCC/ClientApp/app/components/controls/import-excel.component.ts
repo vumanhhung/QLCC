@@ -23,21 +23,23 @@ import { TangLauService } from '../../services/tanglau.service';
     styleUrls: ['./import-excel.component.css']
 })
 export class ImportExcelComponent implements OnInit, AfterViewInit {
+    public changesSavedCallback: () => void;
     isUploadClick: boolean = false;
     isDisplayUploadButton: boolean = false;
     valueProgress: number = 0;
     arrayBuffer: any;
     isSelectedTangLau: boolean = false;
 
-
-    cumtoanha: CumToaNha;
-    toanha: ToaNha;
+    //cumtoanha: CumToaNha;
+    //toanha: ToaNha;
     tanglau: TangLau;
-
 
     cumtoanhas: CumToaNha[] = [];
     toanhas: ToaNha[] = [];
     tanglaus: TangLau[] = [];
+
+    cumToaNhaId: number;
+    toaNhaId: number;
 
     public scrollbarOptions = { axis: 'y', theme: 'minimal-dark' };
     ArrLog: string[] = [];
@@ -58,7 +60,7 @@ export class ImportExcelComponent implements OnInit, AfterViewInit {
         }
     }
 
-    Upload(cumtoanha: number, toanha: number, tanglau: number) {
+    Upload(tanglau: number) {
         if (this.isSelectedTangLau == true) {
             this.isUploadClick = true;
             this.ArrLog.push("Bắt đầu");
@@ -75,9 +77,11 @@ export class ImportExcelComponent implements OnInit, AfterViewInit {
                 var first_sheet_name = workbook.SheetNames[0];
                 var worksheet = workbook.Sheets[first_sheet_name];
                 var arr1 = XLSX.utils.sheet_to_json(worksheet, { raw: true });
-                this.SetData(arr1, cumtoanha, toanha, tanglau);
+                this.SetData(arr1, this.cumToaNhaId, this.toaNhaId, tanglau);
             }
             fileReader.readAsArrayBuffer(this.file);
+            if (this.changesSavedCallback)
+            this.changesSavedCallback();
         }
         else {
             alert("Vui lòng chọn tầng để import mặt bằng");
@@ -181,5 +185,7 @@ export class ImportExcelComponent implements OnInit, AfterViewInit {
         this.isDisplayUploadButton = false;
         this.myFileUpload.nativeElement.value = "";
         this.ArrLog.length = 0;
+        if (this.changesSavedCallback)
+            this.changesSavedCallback();
     }
 }

@@ -48,15 +48,15 @@ export class OnlyNumber implements PipeTransform{
     }
     @HostListener("focus", ["$event.target.value"])
     onFocus(value) {
-        if (value > 0) {
-            this.el.value = this.parse(value);
-        }
+        //if (value > 0) {
+        //    this.el.value = this.parse(value);
+        //}
     }
     @HostListener("blur", ["$event.target.value"])
     onBlur(value) {
-        if (value > 0) {
-            this.el.value = this.transform(value);
-        }
+        //if (value > 0) {
+        //    this.el.value = this.transform(value);
+        //}
     }
 
     transform(value: number | string, fractionSize: number = 2): string {

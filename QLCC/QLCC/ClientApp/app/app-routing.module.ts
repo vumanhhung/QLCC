@@ -42,27 +42,19 @@ import { KhachHangCaNhanComponent } from './components/khachhang/canhan/khachhan
 import { KhachHangDoanhNghiepComponent } from './components/khachhang/doanhnghiep/khachhang-doanhnghiep.component';
 import { CuDanComponent } from './components/cudan/cudan.component';
 import { TrangThaiCuDanComponent } from "./components/trangthaicudan/trangthaicudan.component";
-import { TrangThaiCuDanInfoComponent } from "./components/trangthaicudan/trangthaicudan-info.component";
 import { QuanHeChuHoComponent } from "./components/quanhechuho/quanhechuho.component";
-import { QuanHeChuHoInfoComponent } from "./components/quanhechuho/quanhechuho-info.component";
 import { TrangThaiYeuCauComponent } from "./components/trangthaiyeucau/trangthaiyeucau.component";
-import { TrangThaiYeuCauInfoComponent } from "./components/trangthaiyeucau/trangthaiyeucau-info.component";
 import { MucDoUuTienComponent } from "./components/mucdouutien/mucdouutien.component";
-import { MucDoUuTienInfoComponent } from "./components/mucdouutien/mucdouutien-info.component";
 import { NguonTiepNhanComponent } from "./components/nguontiepnhan/nguontiepnhan.component";
-import { NguonTiepNhanInfoComponent } from "./components/nguontiepnhan/nguontiepnhan-info.component";
 import { NhomKhachHangComponent } from "./components/nhomkhachhang/nhomkhachhang.component";
-import { NhomKhachHangInfoComponent } from "./components/nhomkhachhang/nhomkhachhang-info.component";
 import { LoaiYeuCauComponent } from "./components/loaiyeucau/loaiyeucau.component";
-import { LoaiYeuCauInfoComponent } from "./components/loaiyeucau/loaiyeucau-info.component";
 import { YeuCauComponent } from "./components/yeucau/yeucau.component";
-import { YeuCauInfoComponent } from "./components/yeucau/yeucau-info.component";
-import { CongNoComponent } from './components/matbang/xemmatbang/congno/congno.component';
+import { LoaiXeComponent } from "./components/loaixe/loaixe.component";
+import { BangGiaXeComponent } from "./components/banggiaxe/banggiaxe.component";
+import { BangGiaDichVuCoBanComponent } from "./components/banggiadichvucoban/banggiadichvucoban.component";
+import { LoaiDichVuComponent } from './components/loaidichvu/loaidichvu.component';
 import { CongThucNuocComponent } from './components/congthucnuoc/congthucnuoc.component';
-import { BangGiaXeComponent } from './components/banggiaxe/banggiaxe.component';
-import { DichVuCoBan } from './models/dichvucoban.model';
 import { DichVuCoBanComponent } from './components/dichvucoban/dichvucoban.component';
-
 
 
 @NgModule({
@@ -100,6 +92,10 @@ import { DichVuCoBanComponent } from './components/dichvucoban/dichvucoban.compo
             { path: "nguontiepnhan", component: NguonTiepNhanComponent, canActivate: [AuthGuard], data: { title: "Nguồn tiếp nhận" } },
             { path: "nhomkhachhang", component: NhomKhachHangComponent, canActivate: [AuthGuard], data: { title: "Nhóm khách hàng" } },
             { path: "yeucau", component: YeuCauComponent, canActivate: [AuthGuard], data: { title: "Yêu cầu" } },
+            { path: "loaixe", component: LoaiXeComponent, canActivate: [AuthGuard], data: { title: "Loại xe" } },
+            { path: "banggiaxe", component: BangGiaXeComponent, canActivate: [AuthGuard], data: { title: "Bảng giá xe" } },
+            { path: "banggiadichvucoban", component: BangGiaDichVuCoBanComponent, canActivate: [AuthGuard], data: { title: "Bảng giá dịch vụ cơ bản" } },
+            { path: "loaidichvu", component: LoaiDichVuComponent, canActivate: [AuthGuard], data: { title: "Loại dịch vụ" } },
             { path: "congthucnuoc", component: CongThucNuocComponent, canActivate: [AuthGuard], data: { title: "Công thức nước" } },
             { path: "dichvucoban", component: DichVuCoBanComponent, canActivate: [AuthGuard], data: { title: "Dịch vụ cơ bản" } },
             //{ path: "role/:id", component: RoleEditorComponent},

@@ -35,6 +35,7 @@ export class KhachHang {
     public nganHang: string;
     public nhomKhachHangId: number;
     public nhomKhachHang: NhomKhachHang;
+    public tenDayDu;
 
     constructor(khachHangId?: number, hoDem?: string, ten?: string, gioiTinh?: number, ngaySinh?: Date, dienThoai?: string, email?: string, mst?: string, cmt?: string, ngayCap?: Date, noiCap?: string, thuongTru?: string, diaChi?: string, tkNganHang?: string, quocTich?: string, khDoanhNghiep?: boolean, tenVietTat?: string, tenCongTy?: string, diaChiCongTy?: string, dienThoaiCongTy?: string, fax?: string, nguoiDaiDien?: string, chucVu?: string, mstCongTy?: string, soDkKinhDoanh?: string, ngayDkKinhDoanh?: Date, noiDkKinhDoanh?: string, tkNganHangCongTy?: string, nganHang?: string, nhomKhachHangId?: number) {
         this.khachHangId = khachHangId;

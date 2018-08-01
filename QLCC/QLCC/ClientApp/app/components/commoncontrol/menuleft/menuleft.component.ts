@@ -10,6 +10,8 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { AlertService } from '../../../services/alert.service';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { AppComponent } from '../../app.component';
+import { AccountService, RolesChangedEventArg } from "../../../services/account.service";
+import { Permission } from '../../../models/permission.model';
 
 
 
@@ -23,10 +25,10 @@ export class MenuLeftComponent implements OnInit {
     public scrollbarOptions = { axis: 'y', theme: 'minimal-dark' };
     public heightMenu: any;
 
-    constructor(private alertService: AlertService, public configurations: ConfigurationService) {
+    constructor(private alertService: AlertService, public configurations: ConfigurationService, private accountService: AccountService) {
     }
     ngOnInit() {
-
+        console.log(this.xemMatBang);
     }
 
 
@@ -37,5 +39,21 @@ export class MenuLeftComponent implements OnInit {
 
     building() {
         alert("Module đang được xây dựng");
+    }
+
+    get xemCum() {
+        return this.accountService.userHasPermission(Permission.xemCumToaNhaPermission);
+    }
+
+    get xemToaNha() {
+        return this.accountService.userHasPermission(Permission.xemToaNhaPermission);
+    }
+
+    get xemTangLau() {
+        return this.accountService.userHasPermission(Permission.xemTangLauPermission);
+    }
+
+    get xemMatBang() {
+        return this.accountService.userHasPermission(Permission.xemMatBangPermission);
     }
 }

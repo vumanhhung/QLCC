@@ -17,11 +17,11 @@ export class LoaiDichVuService {
     constructor(private router: Router, private http: HttpClient, private loaidichvuEndpoint: LoaiDichVuEndpoint, private authService: AuthService) {
 
     }
-    
+
     getItems(start: number, count: number, whereClause: string, orderBy: string) {
         return this.loaidichvuEndpoint.getItems<LoaiDichVu[]>(start, count, whereClause, orderBy);
     }
-    
+
     getAllLoaiDichVu() {
         return this.loaidichvuEndpoint.getAllLoaiDichVu<LoaiDichVu[]>();
     }
@@ -38,7 +38,7 @@ export class LoaiDichVuService {
 
     addnewLoaiDichVu(loaidichvu?: LoaiDichVu) {
         return this.loaidichvuEndpoint.addnewLoaiDichVu<LoaiDichVu>(loaidichvu);
-    }    
+    }
 
     refreshLoggedInUser() {
         return this.authService.refreshLogin();
@@ -47,5 +47,8 @@ export class LoaiDichVuService {
     deleteLoaiDichVu(id: number) {
         return this.loaidichvuEndpoint.deleteLoaiDichVu(id);
     }
-    
+
+    dequy() {
+        return this.loaidichvuEndpoint.dequy<LoaiDichVu[]>();
+    }
 }

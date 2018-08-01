@@ -1,6 +1,6 @@
 ﻿
 <section class="content-header">
-    <h1>Quản lý LoaiXe</h1>
+    <h1>Quản lý Loại Xe</h1>
     <commonroad></commonroad>
 </section>
 <section class="content">
@@ -14,7 +14,6 @@
             <div style="margin-bottom:1%;" align="right" class="col-sm-6">
                 <div class="row">
                     <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newLoaiXe()"><i class="fa fa-plus"></i></a>
-                    <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.Settings' | translate}}" (click)="configLoaiXe"><i class="fa fa-cog"></i></a>
                 </div>
             </div>
 
@@ -35,11 +34,6 @@
                                 </select> bản ghi
                             </label>
                         </div>
-                        <div class="DTTT_container">
-                            <a class="DTTT_button DTTT_button_print" title="{{'preferences.Print' | translate}}" tabindex="0">
-                                <span>{{'preferences.Print' | translate}}</span>
-                            </a>
-                        </div>
                         <div class="clearfix"></div>
                         <ngx-datatable class="material colored-header sm table table-striped table-hover "
                                        [loadingIndicator]="loadingIndicator"
@@ -51,26 +45,15 @@
                                        [limit]="limit"
                                        [columnMode]="'force'">
                         </ngx-datatable>
-                        <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <a class="btn btn-func btn-success"  href="javascript:;" title="Chi tiết"><i class="fa fa-eye"></i></a>
-                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editLoaiXe(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                            <a class="btn btn-func btn-danger"  href="javascript:;" (click)="deleteLoaiXe(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        <ng-template #datetimeTemplate let-row="row" let-value="value" let-i="index" style="text-align: center">
+                            {{row.ngayNhap | date: 'dd/MM/yyyy'}}
                         </ng-template>
-                        <div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title pull-left"><i class="glyphicon glyphicon-plus-sign"></i> Thêm mới </h4>
-                                        <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <loaixe-info #loaixeEditor [isGeneralEditor]="true"></loaixe-info>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <a class="btn btn-func btn-success" href="javascript:;" (click)="viewDetailLoaiXe(row)" title="Chi tiết"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editLoaiXe(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                            <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteLoaiXe(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        </ng-template>
+                        <loaixe-info #loaixeEditor [isGeneralEditor]="true"></loaixe-info>
                     </div>
                 </div>
             </div>

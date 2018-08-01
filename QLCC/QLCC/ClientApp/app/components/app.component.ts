@@ -25,7 +25,7 @@ import { CustomersComponent } from "../components/customers/customers.component"
 import { MenuLeftComponent } from "../components/commoncontrol/menuleft/menuleft.component";
 import { NguoiDungToaNha } from '../models/nguoidungtoanha.model';
 import { NguoiDungToaNhaService } from "../services/nguoidungtoanha.service";
-//import { NguoiDungToaNhaComponent } from "../components/nguoidungtoanha/nguoidungtoanha.component";
+import { NguoiDungToaNhaComponent } from "../components/nguoidungtoanha/nguoidungtoanha.component";
 
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpProgressEvent, HttpEventType, HttpResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
@@ -76,8 +76,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.isClickUserConfig == false;
     }
 
-    //@ViewChild('nguoidungtoanha')
-    //nguoidungtoanhaView: NguoiDungToaNhaComponent;
+    @ViewChild('nguoidungtoanha')
+    nguoidungtoanhaView: NguoiDungToaNhaComponent;
 
     @ViewChild('menuLeft')
     menuLeft: ElementRef;

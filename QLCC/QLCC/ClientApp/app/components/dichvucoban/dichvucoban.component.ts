@@ -1,5 +1,4 @@
 ﻿import { Component, OnInit, AfterViewInit, TemplateRef, ViewChild, Input } from '@angular/core';
-import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { AlertService, DialogType, MessageSeverity } from '../../services/alert.service';
 import { AppTranslationService } from "../../services/app-translation.service";
@@ -55,11 +54,9 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     @ViewChild('actionsTemplate')
     actionsTemplate: TemplateRef<any>;
 
-    @ViewChild('editorModal')
-    editorModal: ModalDirective;
-
     @ViewChild('dichvucobanEditor')
     DichVuCoBanEditor: DichVuCoBanInfoComponent;
+
     constructor(private alertService: AlertService, private translationService: AppTranslationService,
         private dichvucobanService: DichVuCoBanService,
         private khachHangService: KhachHangService,
@@ -74,30 +71,21 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
 
         this.columns = [
             { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },              
-			{ prop: 'soChungTu', name: gT('SoChungTu')},
-			{ prop: 'ngayChungTu', name: gT('NgayChungTu')},
-			{ prop: 'matBangId', name: gT('MatBangId')},
-			{ prop: 'khachHangId', name: gT('KhachHangId')},
-			{ prop: 'loaiDichVuId', name: gT('LoaiDichVuId')},
-			{ prop: 'donViTinhId', name: gT('DonViTinhId')},
-			{ prop: 'donGia', name: gT('DonGia')},
-			{ prop: 'soLuong', name: gT('SoLuong')},
-			{ prop: 'thanhTien', name: gT('ThanhTien')},
-			{ prop: 'ngayThanhToan', name: gT('NgayThanhToan')},
-			{ prop: 'kyThanhToan', name: gT('KyThanhToan')},
-			{ prop: 'tienThanhToan', name: gT('TienThanhToan')},
-			{ prop: 'tienTTQuyDoi', name: gT('TienTTQuyDoi')},
-			{ prop: 'loaiTienId', name: gT('LoaiTienId')},
-			{ prop: 'tyGia', name: gT('TyGia')},
-			{ prop: 'tuNgay', name: gT('TuNgay')},
-			{ prop: 'denNgay', name: gT('DenNgay')},
-			{ prop: 'dienGiai', name: gT('DienGiai')},
-			{ prop: 'lapLai', name: gT('LapLai')},
-			{ prop: 'trangThai', name: gT('TrangThai')},
-            { name: '', width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
+            { prop: 'soChungTu', name: gT('Số chứng từ')},
+            { prop: 'matBang.tenMatBang', name: gT('Tên mặt bằng')},
+            { prop: 'khachHang.ten', name: gT('Tên khách hàng')},
+            { prop: 'loaidichvu.tenLoaiDichVu', name: gT('Loại dịch vụ')},
+            { prop: 'dienGiai', name: gT('Diễn giải')},
+            { prop: 'trangThai', name: gT('Trạng thái')},
+            { name: gT('matbang.qlmb_chucnang'), width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
 
         this.loadData();
+        this.loadAllKhachHang();
+        this.loadAllLoaiDichVu();
+        this.loadAllLoaiTien();
+        this.loadAllDonViTinh();
+        this.loadAllMatBang();
     }
 
     loadAllKhachHang() {
@@ -106,17 +94,45 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     onDataLoadKhachHangSuccessful(obj: KhachHang[]) {
         this.khachHang = obj;
     }
+
+    loadAllMatBang() {
+        this.matbangService.getAllMatBang().subscribe(results => this.onDataLoadMatBangSuccessful(results), error => this.onDataLoadFailed(error))
+    }
+    onDataLoadMatBangSuccessful(obj: MatBang[]) {
+        this.matBang = obj;
+    }
+
+    loadAllLoaiDichVu() {
+        this.loaidichvuService.dequy().subscribe(results => this.onDataLoadLoaiDichVuSuccessful(results), error => this.onDataLoadFailed(error))
+    }
+    onDataLoadLoaiDichVuSuccessful(obj: LoaiDichVu[]) {
+        this.loaiDichVu = obj;
+    }
+
+    loadAllDonViTinh() {
+        this.donvitinhService.getAllDonViTinh().subscribe(results => this.onDataLoadDonViTinhSuccessful(results), error => this.onDataLoadFailed(error))
+    }
+    onDataLoadDonViTinhSuccessful(obj: DonViTinh[]) {
+        this.donViTinh = obj;
+    }
+
+    loadAllLoaiTien() {
+        this.loaitienService.getAllLoaiTien().subscribe(results => this.onDataLoadLoaiTienSuccessful(results), error => this.onDataLoadFailed(error))
+    }
+    onDataLoadLoaiTienSuccessful(obj: LoaiTien[]) {
+        this.loaiTien = obj;
+    }
     
     ngAfterViewInit() {
         this.DichVuCoBanEditor.changesSavedCallback = () => {
             this.addNewToList();
-            this.editorModal.hide();
+            this.DichVuCoBanEditor.editorModal.hide();
         };
 
         this.DichVuCoBanEditor.changesCancelledCallback = () => {
             this.dichvucobanEdit = null;
             this.sourcedichvucoban = null;
-            this.editorModal.hide();
+            this.DichVuCoBanEditor.editorModal.hide();
         };
     }
     
@@ -169,17 +185,18 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất người dùng từ máy chủ.\r\nErrors: "${Utilities.getHttpResponseMessage(error)}"`,
             MessageSeverity.error, error);
     }
-    
-    onEditorModalHidden() {
-        this.editingRowName = null;
-        this.DichVuCoBanEditor.resetForm(true);
-    }
 
     newDichVuCoBan() {
         this.editingRowName = null;
         this.sourcedichvucoban = null;
-        this.dichvucobanEdit = this.DichVuCoBanEditor.newDichVuCoBan();
-        this.editorModal.show();
+        this.DichVuCoBanEditor.khachHang = this.khachHang;
+        this.DichVuCoBanEditor.matBang = this.matBang;
+        this.DichVuCoBanEditor.loaiDichVu = this.loaiDichVu;
+        this.DichVuCoBanEditor.loaiTien = this.loaiTien;
+        this.DichVuCoBanEditor.donViTinh = this.donViTinh;
+        this.DichVuCoBanEditor.isViewDetail = false;
+        this.dichvucobanEdit = this.DichVuCoBanEditor.newDichVuCoBan();        
+        this.DichVuCoBanEditor.editorModal.show();
     }
     
     SelectedValue(value: number) {
@@ -218,6 +235,12 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         //this.editingRowName = { name: row.tenichVuCoBan };
         this.sourcedichvucoban = row;
         this.dichvucobanEdit = this.DichVuCoBanEditor.editDichVuCoBan(row);
-        this.editorModal.show();
+        this.DichVuCoBanEditor.khachHang = this.khachHang;
+        this.DichVuCoBanEditor.matBang = this.matBang;
+        this.DichVuCoBanEditor.loaiDichVu = this.loaiDichVu;
+        this.DichVuCoBanEditor.loaiTien = this.loaiTien;
+        this.DichVuCoBanEditor.donViTinh = this.donViTinh;
+        this.DichVuCoBanEditor.isViewDetail = false;
+        this.DichVuCoBanEditor.editorModal.show();
     }    
 }

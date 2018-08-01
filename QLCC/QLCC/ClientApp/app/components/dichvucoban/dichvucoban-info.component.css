@@ -1,2 +1,6 @@
-﻿body{
+﻿.modal-body {
+    max-height: 600px;
+}
+.form-control[disabled]{
+    background-color: #fff;
 }

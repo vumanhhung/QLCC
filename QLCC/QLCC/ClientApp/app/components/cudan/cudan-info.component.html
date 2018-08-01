@@ -10,7 +10,6 @@
 (!cmt.valid && showErrorAlert('Chứng minh nhân dân không được để trống', 'Vui lòng nhập chứng minh nhân dân!'));
 (!tonGiao.valid && showErrorAlert('Tôn giáo không được để trống', 'Vui lòng nhập tôn giáo!'));
 (!ngheNghiep.valid && showErrorAlert('Nghề nghiệp không được để trống', 'Vui lòng nhập nghề nghiệp!'));
-(!chkChuHoId && showErrorAlert('Chủ hộ không được để trống', 'Vui lòng chọn chủ hộ!'));
 (!chkquanHeChuHo && showErrorAlert('Quan hệ chủ hộ không được để trống', 'Vui lòng nhập quan hệ chủ hộ!'));
 (!soHoKhau.valid && showErrorAlert('Số hộ khẩu không được để trống', 'Vui lòng nhập số hộ khẩu!'));
 (!noiCapHoKhau.valid && showErrorAlert('Nơi cấp hộ khẩu không được để trống', 'Vui lòng nhập Nơi cấp hộ khẩu!'));
@@ -19,7 +18,7 @@
 (!chktrangThaiCuDanId && showErrorAlert('Trạng thái cư dân không được để trống', 'Vui lòng nhập trạng thái cư dân!'));
 ">
                     <div class="modal-header">
-                        <p *ngIf="isNew" class="modal-title pull-left"><i class="fa fa-plus"></i> Thêm mới cá nhân</p>
+                        <p *ngIf="isNew" class="modal-title pull-left"><i class="fa fa-plus"></i> Thêm mới cư dân</p>
                         <p *ngIf="isEdit" class="modal-title pull-left"><i class="fa fa-pencil-square-o"></i> Chỉnh sửa  <span>{{tencanhan}}</span></p>
                         <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
                             <span aria-hidden="true">&times;</span>
@@ -27,32 +26,32 @@
                     </div>
                     <div class="modal-body" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
                         <div class="row">
-                            <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="cumToaNhaId-{{uniqueId}}">Chọn cụm tòa nhà</label>
-                                <div class="control">
-                                    <select name="cumToaNhaId" [(ngModel)]="cumsSelected" #cumToaNhaId class="form-control" (change)="cumToaNhaIdChange(tangLauId.value,toaNhaId.value,cumToaNhaId.value)">
-                                        <option value="0">--- Chọn cụm tòa nhà ---</option>
-                                        <option *ngFor="let o of cums" value="{{o.cumToaNhaId}}">
-                                            {{o.tenCumToaNha}}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="toaNhaId-{{uniqueId}}">Chọn tòa nhà</label>
-                                <div class="control">
-                                    <select name="toaNhaId" [(ngModel)]="toasSelected" #toaNhaId class="form-control" (change)="ToaNhaIdChange(tangLauId.value,toaNhaId.value,cumToaNhaId.value)">
-                                        <option value="0">--- Chọn tòa nhà ---</option>
-                                        <option *ngFor="let o of toas" value="{{o.toaNhaId}}">
-                                            {{o.tenKhoiNha}}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
+                            <!--<div class="has-feedback col-sm-3">
+        <label class="control-label" for="cumToaNhaId-{{uniqueId}}">Chọn cụm tòa nhà</label>
+        <div class="control">
+            <select name="cumToaNhaId" [(ngModel)]="cumsSelected" #cumToaNhaId class="form-control" (change)="cumToaNhaIdChange(tangLauId.value,toaNhaId.value,cumToaNhaId.value)">
+                <option value="0">--- Chọn cụm tòa nhà ---</option>
+                <option *ngFor="let o of cums" value="{{o.cumToaNhaId}}">
+                    {{o.tenCumToaNha}}
+                </option>
+            </select>
+        </div>
+    </div>
+    <div class="has-feedback col-sm-3">
+        <label class="control-label" for="toaNhaId-{{uniqueId}}">Chọn tòa nhà</label>
+        <div class="control">
+            <select name="toaNhaId" [(ngModel)]="toasSelected" #toaNhaId class="form-control" (change)="ToaNhaIdChange(tangLauId.value,toaNhaId.value,cumToaNhaId.value)">
+                <option value="0">--- Chọn tòa nhà ---</option>
+                <option *ngFor="let o of toas" value="{{o.toaNhaId}}">
+                    {{o.tenKhoiNha}}
+                </option>
+            </select>
+        </div>
+    </div>-->
                             <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="tangLauId-{{uniqueId}}">Chọn tầng lầu</label>
                                 <div class="control">
-                                    <select name="tangLauId" [(ngModel)]="tangsSelected" #tangLauId class="form-control" (change)="TangLauIdChange(tangLauId.value,toaNhaId.value,cumToaNhaId.value)">
+                                    <select name="tangLauId" [(ngModel)]="tangsSelected" #tangLauId class="form-control" (change)="TangLauIdChange(tangLauId.value)">
                                         <option value="0">--- Chọn tầng lầu ---</option>
                                         <option *ngFor="let o of tangs" value="{{o.tangLauId}}">
                                             {{o.tenTangLau}}
@@ -72,6 +71,22 @@
 
                                     <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkMatBangId, 'glyphicon-remove' : !chkMatBangId}"></span>
                                     <span *ngIf="showValidationErrors && f.submitted && !chkMatBangId" class="errorMessage">
+                                        Chọn mặt bằng!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="has-feedback col-sm-6">
+                                <label class="control-label" for="quanHeChuHoId-{{uniqueId}}">Quan hệ với chủ hộ</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && chkquanHeChuHo, 'has-error' : f.submitted && !chkquanHeChuHo}">
+                                    <select name="quanHeChuHoId" [(ngModel)]="CuDanEdit.quanHeChuHoId" #quanHeChuHoId="ngModel" class="form-control" (change)="quanHeChuHoIdChange(quanHeChuHoId.value)">
+                                        <option value="0">--- Chọn mqh với chủ hộ ---</option>
+                                        <option *ngFor="let o of qhch" value="{{o.quanHeChuHoId}}">
+                                            {{o.tenQuanHeChuHo}}
+                                        </option>
+                                    </select>
+
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkquanHeChuHo, 'glyphicon-remove' : !chkquanHeChuHo}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !chkquanHeChuHo" class="errorMessage">
                                         Chọn mặt bằng!
                                     </span>
                                 </div>
@@ -105,16 +120,22 @@
                                 <div class="clearfix"></div>
                             </div>
                             <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="queQuan-{{uniqueId}}">Quê quán</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && queQuan.valid, 'has-error' : f.submitted && !queQuan.valid}">
-                                    <input autofocus type="text" class="form-control" name="queQuan" [(ngModel)]="CuDanEdit.queQuan" #queQuan="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': queQuan.valid, 'glyphicon-remove' : !queQuan.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !queQuan.valid" class="errorMessage">
-                                        Nhập quê quán!
+                                <label class="control-label" for="dienThoai-{{uniqueId}}">Điện thoại</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && dienThoai.valid, 'has-error' : f.submitted && !dienThoai.valid}">
+                                    <input autofocus type="text" class="form-control" name="dienThoai" [(ngModel)]="CuDanEdit.dienThoai" #dienThoai="ngModel" required />
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': dienThoai.valid, 'glyphicon-remove' : !dienThoai.valid}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !dienThoai.valid" class="errorMessage">
+                                        Nhập điện thoại!
                                     </span>
                                 </div>
                             </div>
                             <div class="clearfix"></div>
+                            <div class="has-feedback col-sm-3">
+                                <label class="control-label " for="email-{{uniqueId}}">Email</label>
+                                <div class="control">
+                                    <input autofocus type="text" class="form-control" name="email" [(ngModel)]="CuDanEdit.email" #email="ngModel" (ngModelChange)="onValidateEmail($event)" />
+                                </div>
+                            </div>
                             <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="quocTich-{{uniqueId}}">Quốc tịch</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && chkquocTich, 'has-error' : f.submitted && !chkquocTich}">
@@ -131,6 +152,16 @@
                                 </div>
                             </div>
                             <div class="has-feedback col-sm-3">
+                                <label class="control-label" for="queQuan-{{uniqueId}}">Quê quán</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && queQuan.valid, 'has-error' : f.submitted && !queQuan.valid}">
+                                    <input autofocus type="text" class="form-control" name="queQuan" [(ngModel)]="CuDanEdit.queQuan" #queQuan="ngModel" required />
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': queQuan.valid, 'glyphicon-remove' : !queQuan.valid}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !queQuan.valid" class="errorMessage">
+                                        Nhập quê quán!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="cmt-{{uniqueId}}">Chứng minh thư nhân dân</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && cmt.valid, 'has-error' : f.submitted && !cmt.valid}">
                                     <input autofocus type="text" class="form-control" name="cmt" [(ngModel)]="CuDanEdit.cmt" #cmt="ngModel" required />
@@ -140,6 +171,7 @@
                                     </span>
                                 </div>
                             </div>
+                            <div class="clearfix"></div>
                             <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="tonGiao-{{uniqueId}}">Tôn giáo</label>
                                 <div class="control">
@@ -156,7 +188,6 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="clearfix"></div>
                             <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="soViSa-{{uniqueId}}">Số visa(Nếu có)</label>
                                 <div class="control">
@@ -167,41 +198,23 @@
                                 <label class="control-label" for="ngayHetHanViSa-{{uniqueId}}">Ngày hết hạn visa</label>
                                 <kendo-datepicker [(value)]="valueNgayHetHanVisa" [format]="'dd/MM/yyyy'" [disabled]="!isDisibleInputVisa" class="form-control"></kendo-datepicker>
                             </div>
-
-                            <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="chuHo-{{uniqueId}}">Chủ hộ</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && chkChuHoId, 'has-error' : f.submitted && !chkChuHoId}">
-                                    <select name="chuHo" [(ngModel)]="CuDanEdit.chuHo" #chuHo="ngModel" class="form-control" (change)="chuHoChange(chuHo.value)">
-                                        <option value="0">--- Chọn chủ hộ ---</option>
-                                        <option *ngFor="let o of chuho" value="{{o.cuDanId}}">
-                                            {{o.hoTen}}
-                                        </option>
-                                    </select>
-
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkChuHoId, 'glyphicon-remove' : !chkChuHoId}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !chkChuHoId" class="errorMessage">
-                                        Chọn mặt bằng!
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="quanHeChuHoId-{{uniqueId}}">Quan hệ với chủ hộ</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && chkquanHeChuHo, 'has-error' : f.submitted && !chkquanHeChuHo}">
-                                    <select name="quanHeChuHoId" [(ngModel)]="CuDanEdit.quanHeChuHoId" #quanHeChuHoId="ngModel" class="form-control" (change)="quanHeChuHoIdChange(quanHeChuHoId.value)">
-                                        <option value="0">--- Chọn mqh với chủ hộ ---</option>
-                                        <option *ngFor="let o of qhch" value="{{o.quanHeChuHoId}}">
-                                            {{o.tenQuanHeChuHo}}
-                                        </option>
-                                    </select>
-
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkquanHeChuHo, 'glyphicon-remove' : !chkquanHeChuHo}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !chkquanHeChuHo" class="errorMessage">
-                                        Chọn mặt bằng!
-                                    </span>
-                                </div>
-                            </div>
                             <div class="clearfix"></div>
+                            <!--<div class="has-feedback col-sm-3">
+        <label class="control-label" for="chuHo-{{uniqueId}}">Chủ hộ</label>
+        <div class="control" [ngClass]="{'has-success': f.submitted && chkChuHoId, 'has-error' : f.submitted && !chkChuHoId}">
+            <select name="chuHo" [(ngModel)]="CuDanEdit.chuHo" #chuHo="ngModel" class="form-control" (change)="chuHoChange(chuHo.value)">
+                <option value="0">--- Chọn chủ hộ ---</option>
+                <option *ngFor="let o of chuho" value="{{o.cuDanId}}">
+                    {{o.hoTen}}
+                </option>
+            </select>
+
+            <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkChuHoId, 'glyphicon-remove' : !chkChuHoId}"></span>
+            <span *ngIf="showValidationErrors && f.submitted && !chkChuHoId" class="errorMessage">
+                Chọn mặt bằng!
+            </span>
+        </div>
+    </div>-->
 
                             <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="soHoKhau-{{uniqueId}}">Số hộ khẩu</label>
@@ -217,7 +230,7 @@
                                 <label class="control-label" for="ngayCapHoKhau-{{uniqueId}}">Ngày cấp hộ khẩu</label>
                                 <kendo-datepicker [(value)]="valueNgayCapHoKhau" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
                             </div>
-                            <div class="has-feedback col-sm-3">
+                            <div class="has-feedback col-sm-6">
                                 <label class="control-label" for="noiCapHoKhau-{{uniqueId}}">Nơi cấp hộ khẩu</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && noiCapHoKhau.valid, 'has-error' : f.submitted && !noiCapHoKhau.valid}">
                                     <input autofocus type="text" class="form-control" name="noiCapHoKhau" [(ngModel)]="CuDanEdit.noiCapHoKhau" #noiCapHoKhau="ngModel" required />
@@ -227,32 +240,8 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="dienThoai-{{uniqueId}}">Điện thoại</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && dienThoai.valid, 'has-error' : f.submitted && !dienThoai.valid}">
-                                    <input autofocus type="text" class="form-control" name="dienThoai" [(ngModel)]="CuDanEdit.dienThoai" #dienThoai="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': dienThoai.valid, 'glyphicon-remove' : !dienThoai.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !dienThoai.valid" class="errorMessage">
-                                        Nhập điện thoại!
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
 
-                            <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="ngayChuyenDen-{{uniqueId}}">Ngày chuyển đến</label>
-                                <kendo-datepicker [(value)]="valueNgayChuyenden" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
-                            </div>
-                            <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="ngayDi-{{uniqueId}}">Ngày chuyển đi</label>
-                                <kendo-datepicker [(value)]="valueNgayChuyendi" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
-                            </div>
-                            <div class="has-feedback col-sm-3">
-                                <label class="control-label " for="email-{{uniqueId}}">Email</label>
-                                <div class="control">
-                                    <input autofocus type="text" class="form-control" name="email" [(ngModel)]="CuDanEdit.email" #email="ngModel" (ngModelChange)="onValidateEmail($event)" />
-                                </div>
-                            </div>
+                            <div class="clearfix"></div>
                             <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="trangThaiTamTru-{{uniqueId}}">Trạng thái tạm trú</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && chktrangThaiTamTru, 'has-error' : f.submitted && !chktrangThaiTamTru}">
@@ -268,7 +257,6 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="clearfix"></div>
                             <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="ngayDkTamTru-{{uniqueId}}">Ngày đăng ký tạm trú</label>
                                 <kendo-datepicker [(value)]="valuengayDangKyTamTru" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
@@ -293,7 +281,16 @@
                                     </span>
                                 </div>
                             </div>
+                            <div class="clearfix"></div>
                             <div class="has-feedback col-sm-3">
+                                <label class="control-label" for="ngayChuyenDen-{{uniqueId}}">Ngày chuyển đến</label>
+                                <kendo-datepicker [(value)]="valueNgayChuyenden" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
+                            </div>
+                            <div class="has-feedback col-sm-3">
+                                <label class="control-label" for="ngayDi-{{uniqueId}}">Ngày chuyển đi</label>
+                                <kendo-datepicker [(value)]="valueNgayChuyendi" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
+                            </div>
+                            <div class="has-feedback col-sm-6">
                                 <label class="control-label" for="ghiChu-{{uniqueId}}">Ghi chú</label>
                                 <div class="control">
                                     <input autofocus type="text" class="form-control" name="ghiChu" [(ngModel)]="CuDanEdit.ghiChu" #ghiChu="ngModel" />

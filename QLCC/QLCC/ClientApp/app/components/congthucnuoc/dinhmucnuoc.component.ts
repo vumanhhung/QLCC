@@ -7,6 +7,7 @@ import { DinhMucNuoc } from '../../models/dinhmucnuoc.model';
 import { DinhMucNuocService } from '../../services/dinhmucnuoc.service';
 import { CongThucNuoc } from '../../models/congthucnuoc.model';
 import { AppTranslationService } from '../../services/app-translation.service';
+import { last } from 'rxjs/operators';
 
 @Component({
     selector: "dinhmucnuoc",
@@ -69,20 +70,20 @@ export class DinhMucNuocComponent implements OnInit {
     ngOnInit() {
         if (this.isGeneralEditor) {
             let gT = (key: string) => this.translationService.getTranslation(key);
-            this.columns = [
-                { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
-                { prop: 'tenDinhMucNuoc', name: gT('Tên định mức nước'), canAutoResize: true },
-                { prop: 'soDau', name: gT('Số đầu') },
-                { prop: 'soCuoi', name: gT('Số cuối') },
-                { prop: 'gia', name: gT('Giá'), cellTemplate: this.giaTemplate },
-                { prop: 'dienGiai', name: gT('Diễn giải') },
-                { name: '', width: 70, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
-            ];
+            //this.columns = [
+            //    { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
+            //    { prop: 'tenDinhMucNuoc', name: gT('Tên định mức nước'), canAutoResize: true },
+            //    { prop: 'soDau', name: gT('Số đầu') },
+            //    { prop: 'soCuoi', name: gT('Số cuối') },
+            //    { prop: 'gia', name: gT('Giá'), cellTemplate: this.giaTemplate },
+            //    { prop: 'dienGiai', name: gT('Diễn giải') },
+            //    { name: '', width: 70, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
+            //];
         }
     }
 
     loadData() {
-        this.gvService.getAllDinhMucNuoc(this.rowCongthucnuoc.congThucNuocId).subscribe(result => this.onDataLoadSuccessful(result), error => this.onDataLoadFailed(error));
+        this.gvService.getAllDinhMucNuoc(this.rowCongthucnuoc.congThucNuocId).subscribe(result => this.list = result, error => this.onDataLoadFailed(error));
     }
 
     loadCongthucNuoc(row: CongThucNuoc) {
@@ -197,16 +198,35 @@ export class DinhMucNuocComponent implements OnInit {
         } else if (this.gia == "0" || this.gia == "") {
             this.showErrorAlert("Lỗi nhập liệu", "Vui lòng nhập giá > 0!");
             return false;
-        } else {
+        } else if (this.DinhMucNuocEdit.soDau > this.DinhMucNuocEdit.soCuoi) {
+            this.showErrorAlert("Lỗi nhập liệu", "Vui lòng nhập số cuối > số đầu");
+            return false;
+        }else {
             this.isSaving = true;
             this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
             this.DinhMucNuocEdit.gia = Number(this.gia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
             if (this.isNew == true) {
                 this.DinhMucNuocEdit.congThucNuocId = this.rowCongthucnuoc.congThucNuocId;
-                this.gvService.addnewDinhMucNuoc(this.DinhMucNuocEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
+                this.gvService.addnewDinhMucNuoc(this.DinhMucNuocEdit).subscribe(results => {
+                    if (results.tenDinhMucNuoc == "Exist") {
+                        this.showErrorAlert("Lỗi nhập liệu", "Tên định mức: " + this.DinhMucNuocEdit.tenDinhMucNuoc + " đã tồn tại trên hệ thống, vui lòng nhập tên khác!");
+                        this.alertService.stopLoadingMessage();
+                        return false;
+                    } else {
+                        this.saveSuccessHelper(results);
+                    }
+                }, error => this.saveFailedHelper(error));
             }
             else {
-                this.gvService.updateDinhMucNuoc(this.DinhMucNuocEdit.congThucNuocId, this.DinhMucNuocEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
+                this.gvService.updateDinhMucNuoc(this.DinhMucNuocEdit.congThucNuocId, this.DinhMucNuocEdit).subscribe(response => {
+                    if (response == "Exist") {
+                        this.showErrorAlert("Lỗi nhập liệu", "Tên định mức: " + this.DinhMucNuocEdit.tenDinhMucNuoc + " đã tồn tại trên hệ thống, vui lòng nhập tên khác!");
+                        this.alertService.stopLoadingMessage();
+                        return false;
+                    } else {
+                        this.saveSuccessHelper()
+                    }
+                }, error => this.saveFailedHelper(error));
             }
         }
     }

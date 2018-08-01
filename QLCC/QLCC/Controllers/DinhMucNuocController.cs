@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using DAL.Models;
+using QLCC.Helpers;
 
 namespace QLCC.Controllers
 {
@@ -68,26 +69,26 @@ namespace QLCC.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(dinhmucnuoc).State = EntityState.Modified;
-
-            try
+            var user = this.User.Identity.Name;
+            var userId = Utilities.GetUserId(this.User);
+            dinhmucnuoc.NgaySua = DateTime.Now;
+            dinhmucnuoc.NguoiSua = user;
+            var checkten = await _context.DinhMucNuocs.SingleOrDefaultAsync(r => r.TenDinhMucNuoc == dinhmucnuoc.TenDinhMucNuoc && r.DinhMucNuocId != id);
+            if (checkten == null)
             {
+                _context.Entry(dinhmucnuoc).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                return NoContent();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!DinhMucNuocExists(id))
+                var warn = "";
+                if (checkten != null)
                 {
-                    return NotFound();
+                    warn = "Exist";
                 }
-                else
-                {
-                    throw;
-                }
+                return Ok(warn);
             }
-
-            return NoContent();
         }
         
         // POST: api/DinhMucNuocs
@@ -98,11 +99,26 @@ namespace QLCC.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            _context.DinhMucNuocs.Add(dinhmucnuoc);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetDinhMucNuoc", new { id = dinhmucnuoc.DinhMucNuocId }, dinhmucnuoc);
+            var user = this.User.Identity.Name;
+            var userId = Utilities.GetUserId(this.User);
+            dinhmucnuoc.NgayNhap = DateTime.Now;
+            dinhmucnuoc.NguoiNhap = user;
+            var checkten = await _context.DinhMucNuocs.SingleOrDefaultAsync(r => r.TenDinhMucNuoc == dinhmucnuoc.TenDinhMucNuoc);
+            if (checkten == null)
+            {
+                _context.DinhMucNuocs.Add(dinhmucnuoc);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("Getdinhmucnuoc", new { id = dinhmucnuoc.DinhMucNuocId }, dinhmucnuoc);
+            }
+            else
+            {
+                var warn = new DinhMucNuoc();
+                if (checkten != null)
+                {
+                    warn.TenDinhMucNuoc = "Exist";
+                }
+                return Ok(warn);
+            }
         }
         
         // DELETE: api/DinhMucNuocs/5

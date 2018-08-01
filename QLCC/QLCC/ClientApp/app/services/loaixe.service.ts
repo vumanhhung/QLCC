@@ -17,11 +17,11 @@ export class LoaiXeService {
     constructor(private router: Router, private http: HttpClient, private loaixeEndpoint: LoaiXeEndpoint, private authService: AuthService) {
 
     }
-    
+
     getItems(start: number, count: number, whereClause: string, orderBy: string) {
         return this.loaixeEndpoint.getItems<LoaiXe[]>(start, count, whereClause, orderBy);
     }
-    
+
     getAllLoaiXe() {
         return this.loaixeEndpoint.getAllLoaiXe<LoaiXe[]>();
     }
@@ -38,7 +38,7 @@ export class LoaiXeService {
 
     addnewLoaiXe(loaixe?: LoaiXe) {
         return this.loaixeEndpoint.addnewLoaiXe<LoaiXe>(loaixe);
-    }    
+    }
 
     refreshLoggedInUser() {
         return this.authService.refreshLogin();
@@ -47,5 +47,9 @@ export class LoaiXeService {
     deleteLoaiXe(id: number) {
         return this.loaixeEndpoint.deleteLoaiXe(id);
     }
-    
+
+    getName(tenloaixe?: LoaiXe) {
+        return this.loaixeEndpoint.getName<LoaiXe>(tenloaixe);
+    }
+
 }

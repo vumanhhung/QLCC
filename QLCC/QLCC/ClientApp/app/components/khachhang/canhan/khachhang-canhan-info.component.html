@@ -24,31 +24,6 @@
                     </div>
                     <div class="modal-body" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
                         <div class="row">
-                            <div class="has-feedback col-sm-6">
-                                <label class="control-label" for="hoDem-{{uniqueId}}">Họ đệm</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && hoDem.valid, 'has-error' : f.submitted && !hoDem.valid}">
-                                    <input autofocus type="text" class="form-control" name="hoDem" [(ngModel)]="KhachHangEdit.hoDem" #hoDem="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': hoDem.valid, 'glyphicon-remove' : !hoDem.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !hoDem.valid" class="errorMessage">
-                                        Vui lòng nhập họ đệm!
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="has-feedback col-sm-6">
-                                <label class="control-label" for="ten-{{uniqueId}}">Tên</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && ten.valid, 'has-error' : f.submitted && !ten.valid}">
-                                    <input autofocus type="text" class="form-control" name="ten" [(ngModel)]="KhachHangEdit.ten" #ten="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ten.valid, 'glyphicon-remove' : !ten.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !ten.valid" class="errorMessage">
-                                        Vui lòng nhập tên!
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="has-feedback col-sm-4">
-                                <label class="control-label" for="ngaySinh-{{uniqueId}}">Ngày sinh</label>
-                                <kendo-datepicker [(value)]="valueNgaySinh" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
-                            </div>
                             <div class="has-feedback col-sm-4">
                                 <label class="control-label" for="nhomKhachHang-{{uniqueId}}">Nhóm khách hàng</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && chkNhomKhachHang, 'has-error' : f.submitted && !chkNhomKhachHang}">
@@ -63,6 +38,31 @@
                                         Vui lòng chọn nhóm khách hàng!
                                     </span>
                                 </div>
+                            </div>
+                            <div class="has-feedback col-sm-4">
+                                <label class="control-label" for="hoDem-{{uniqueId}}">Họ đệm</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && hoDem.valid, 'has-error' : f.submitted && !hoDem.valid}">
+                                    <input autofocus type="text" class="form-control" name="hoDem" [(ngModel)]="KhachHangEdit.hoDem" #hoDem="ngModel" required />
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': hoDem.valid, 'glyphicon-remove' : !hoDem.valid}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !hoDem.valid" class="errorMessage">
+                                        Vui lòng nhập họ đệm!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="has-feedback col-sm-4">
+                                <label class="control-label" for="ten-{{uniqueId}}">Tên</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && ten.valid, 'has-error' : f.submitted && !ten.valid}">
+                                    <input autofocus type="text" class="form-control" name="ten" [(ngModel)]="KhachHangEdit.ten" #ten="ngModel" required />
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ten.valid, 'glyphicon-remove' : !ten.valid}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !ten.valid" class="errorMessage">
+                                        Vui lòng nhập tên!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="has-feedback col-sm-4">
+                                <label class="control-label" for="ngaySinh-{{uniqueId}}">Ngày sinh</label>
+                                <kendo-datepicker [(value)]="valueNgaySinh" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
                             </div>
                             <div class="has-feedback col-sm-4">
                                 <label class="control-label" for="gioiTinh-{{uniqueId}}">Giới tính</label>

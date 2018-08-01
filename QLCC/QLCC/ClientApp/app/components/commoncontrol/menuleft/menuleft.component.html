@@ -4,12 +4,12 @@
     <div class="slimScrollDiv" [ngStyle]="{'height.px':heightMenu}" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
         <ul class="sidebar-menu">
             <li class="" (click)="toggleNavigationSub('TrangChu',$event)" [class.active]="isActiveMenu == 'TrangChu'"><a href="javascript://" routerLink="/"><i class="fa fa-home"></i> <span>Trang chủ</span></a> </li>
-            <li class="treeview " (click)="toggleNavigationSub('qlmb',$event)" [class.active]="isActiveMenu == 'qlmb'">
+            <li [hidden]="!xemMatBang" class="treeview " (click)="toggleNavigationSub('qlmb',$event)" [class.active]="isActiveMenu == 'qlmb'">
                 <a href="javascript://" routerLink="/quanlymatbang"> <i class="fa fa-building"></i> <span>Quản lý mặt bằng</span> <i class="fa fa-angle-left pull-right"></i> </a>
                 <ul class="treeview-menu">
-                    <li class=""><a href="javascript:;" routerLink="/cumtoanha"><i class="fa fa-arrow-circle-right"></i>{{'cumtoanha.title' | translate}}</a></li>
-                    <li class=""><a href="javascript:;" routerLink="/toanha"><i class="fa fa-arrow-circle-right"></i>{{'toanha.title' | translate}}</a></li>
-                    <li class=""><a href="javascript:;" routerLink="/tanglau"><i class="fa fa-arrow-circle-right"></i>{{'tanglau.title' | translate}}</a></li>
+                    <li [hidden]="!xemCum" class=""><a href="javascript:;" routerLink="/cumtoanha"><i class="fa fa-arrow-circle-right"></i>{{'cumtoanha.title' | translate}}</a></li>
+                    <li [hidden]="!xemToaNha" class=""><a href="javascript:;" routerLink="/toanha"><i class="fa fa-arrow-circle-right"></i>{{'toanha.title' | translate}}</a></li>
+                    <li [hidden]="!xemTangLau" class=""><a href="javascript:;" routerLink="/tanglau"><i class="fa fa-arrow-circle-right"></i>{{'tanglau.title' | translate}}</a></li>
                 </ul>
             </li>
 
@@ -42,9 +42,15 @@
             <li class=""><a href="javascript:;" (click)="building()"><i class="fa fa-arrow-circle-right"></i>Nhật ký xử lý yêu cầu</a></li>-->
                 </ul>
             </li>
-            <!--<li class="" (click)="toggleNavigationSub('ctn',$event)" [class.active]="isActiveMenu == 'ctn'"><a href="javascript://" routerLink="/congthucnuoc"> <i class="fa fa-cogs"></i> <span>Công thức nước</span></a></li>-->
-            <li class="" (click)="toggleNavigationSub('dvcb',$event)" [class.active]="isActiveMenu == 'dvcb'"><a href="javascript://" routerLink="/dichvucoban"> <i class="fa fa-cogs"></i> <span>Dịch vụ cơ bản</span></a></li>
-            <li class=""><a href="javascript://" (click)="building()"> <i class="fa fa-cogs"></i> <span>Dịch vụ</span></a></li>
+            <li class="treeview " (click)="toggleNavigationSub('bgcb',$event)" [class.active]="isActiveMenu == 'bgcb'">
+                <a href="javascript://" routerLink="/banggiadichvucoban"> <i class="fa fa-cogs"></i> <span>Dịch vụ</span><i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li class=""><a href="javascript:;" routerLink="/loaixe"><i class="fa fa-arrow-circle-right"></i>QL Loại xe</a></li>
+                    <li class=""><a href="javascript:;" routerLink="/banggiaxe"><i class="fa fa-arrow-circle-right"></i>QL Bảng giá xe</a></li>
+                    <li class=""><a href="javascript:" routerLink="/loaidichvu"><i class="fa fa-arrow-circle-right"></i>QL Loại dịch vụ</a></li>
+                </ul>
+            </li>
+            <li class="" (click)="toggleNavigationSub('dvcb',$event)" [class.active]="isActiveMenu == 'dvcb'"><a href="javascript://" routerLink="/dichvucoban"> <i class="fa fa-fa fa-bath"></i> <span>Dịch vụ cơ bản</span></a></li>
             <li class=""><a href="javascript://" (click)="building()"> <i class="fa fa-fa fa-bath"></i> <span>Vật tư</span></a></li>
             <li class=""><a href="javascript://" (click)="building()"> <i class="fa fa-bar-chart"></i> <span>Thống kê - báo cáo</span></a></li>
             <li class=""><a href="javascript://" (click)="building()"> <i class="fa fa-question-circle"></i> <span>Trợ giúp</span></a></li>

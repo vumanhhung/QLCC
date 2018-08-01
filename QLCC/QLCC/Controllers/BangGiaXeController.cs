@@ -15,27 +15,35 @@ namespace QLCC.Controllers
     public class BangGiaXesController : Controller
     {
         private readonly ApplicationDbContext _context;
-        
+
         public BangGiaXesController(ApplicationDbContext context)
         {
             _context = context;
         }
-        
+
         // PUT: api/BangGiaXes/getItems/5/5/x
         [HttpPut("getItems/{start}/{count}/{orderby}")]
         public IEnumerable<BangGiaXe> GetItems([FromRoute] int start, int count, string orderBy, [FromBody] string whereClause)
-        {            
+        {
             orderBy = orderBy != "x" ? orderBy : "";
-            return _context.Set<BangGiaXe>().FromSql($"tbl_BangGiaXe_GetItemsByRange {start},{count},{whereClause},{orderBy}").ToList<BangGiaXe>();
+            var bgx = _context.Set<BangGiaXe>().FromSql($"tbl_BangGiaXe_GetItemsByRange {start},{count},{whereClause},{orderBy}").ToList<BangGiaXe>();
+            if (bgx.Count > 0)
+            {
+                for (int i = 0; i < bgx.Count; i++)
+                {
+                    bgx[i].LoaiXe = _context.LoaiXes.SingleOrDefault(o => o.LoaiXeId == bgx[i].LoaiXeId);
+                }
+            }
+            return bgx;
         }
-        
+
         // GET: api/BangGiaXes
         [HttpGet]
         public IEnumerable<BangGiaXe> GetBangGiaXes()
         {
             return _context.BangGiaXes;
         }
-        
+
         // GET: api/BangGiaXes/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBangGiaXe([FromRoute] int id)
@@ -54,7 +62,7 @@ namespace QLCC.Controllers
 
             return Ok(banggiaxe);
         }
-        
+
         // PUT: api/BangGiaXes/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBangGiaXe([FromRoute] int id, [FromBody] BangGiaXe banggiaxe)
@@ -89,7 +97,7 @@ namespace QLCC.Controllers
 
             return NoContent();
         }
-        
+
         // POST: api/BangGiaXes
         [HttpPost]
         public async Task<IActionResult> PostBangGiaXe([FromBody] BangGiaXe banggiaxe)
@@ -104,7 +112,7 @@ namespace QLCC.Controllers
 
             return CreatedAtAction("GetBangGiaXe", new { id = banggiaxe.BangGiaXeId }, banggiaxe);
         }
-        
+
         // DELETE: api/BangGiaXes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBangGiaXe([FromRoute] int id)
@@ -125,10 +133,10 @@ namespace QLCC.Controllers
 
             return Ok(banggiaxe);
         }
-        
+
         private bool BangGiaXeExists(int id)
-        {                        
+        {
             return _context.BangGiaXes.Any(e => e.BangGiaXeId == id);
         }
-    }    
+    }
 }

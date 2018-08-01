@@ -26,7 +26,17 @@ namespace QLCC.Controllers
         public IEnumerable<BangGiaDichVuCoBan> GetItems([FromRoute] int start, int count, string orderBy, [FromBody] string whereClause)
         {            
             orderBy = orderBy != "x" ? orderBy : "";
-            return _context.Set<BangGiaDichVuCoBan>().FromSql($"tbl_BangGiaDichVuCoBan_GetItemsByRange {start},{count},{whereClause},{orderBy}").ToList<BangGiaDichVuCoBan>();
+            var bgcb =  _context.Set<BangGiaDichVuCoBan>().FromSql($"tbl_BangGiaDichVuCoBan_GetItemsByRange {start},{count},{whereClause},{orderBy}").ToList<BangGiaDichVuCoBan>();
+            if (bgcb.Count > 0)
+            {
+                for (int i = 0; i < bgcb.Count; i++)
+                {
+                    bgcb[i].LoaiDichVu = _context.LoaiDichVus.SingleOrDefault(o => o.LoaiDichVuId == bgcb[i].LoaiDichVuId);
+                    bgcb[i].LoaiTien = _context.LoaiTiens.SingleOrDefault(o => o.LoaiTienId == bgcb[i].LoaiTienId);
+                    bgcb[i].DonViTinh = _context.DonViTinhs.SingleOrDefault(o => o.DonViTinhId == bgcb[i].DonViTinhId);
+                }
+            }
+            return bgcb;
         }
         
         // GET: api/BangGiaDichVuCoBans

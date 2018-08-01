@@ -21,10 +21,12 @@ import { Utilities } from './utilities';
 import { LoginResponse, IdToken } from '../models/login-response.model';
 import { User } from '../models/user.model';
 import { Permission, PermissionNames, PermissionValues } from '../models/permission.model';
+import { NguoiDungToaNha } from '../models/nguoidungtoanha.model';
+import { NguoiDungToaNhaEndpoint } from './nguoidungtoanha-endpoint.service';
 
 @Injectable()
 export class AuthService {
-
+    list: NguoiDungToaNha[] = [];
     public get loginUrl() { return this.configurations.loginUrl; }
     public get homeUrl() { return this.configurations.homeUrl; }
 
@@ -37,7 +39,8 @@ export class AuthService {
     private _loginStatus = new Subject<boolean>();
 
 
-    constructor(private router: Router, private configurations: ConfigurationService, private endpointFactory: EndpointFactory, private localStorage: LocalStoreManager) {
+    constructor(private router: Router, private configurations: ConfigurationService, private endpointFactory: EndpointFactory, private localStorage: LocalStoreManager
+        , private sv: NguoiDungToaNhaEndpoint) {
         this.initializeLoginStatus();
     }
 
@@ -274,4 +277,16 @@ export class AuthService {
     get rememberMe(): boolean {
         return this.localStorage.getDataObject<boolean>(DBkeys.REMEMBER_ME) == true;
     }
+
+    //NguoiDungToaNha() {
+    //    var obj = new NguoiDungToaNha();
+    //    if (this.currentUser) {
+    //        var where = "NguoiDungId = '" + this.currentUser.id + "'";
+    //        this.sv.getItems<NguoiDungToaNha[]>(0, 1, where, "x").subscribe(result => { this.list = result }, error => { });
+    //    }
+    //}
+
+    //get ReturnList(): NguoiDungToaNha[] {
+    //    return this.list;
+    //}
 }

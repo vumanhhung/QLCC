@@ -35,7 +35,7 @@
                 <div class="box-body">
                     <div>
                         <div class="dataTables_length">
-                            <label>
+                            <!--<label>
                                 Cụm
                                 <select class="form-control input-sm" #dCumToaNha (change)="SelectedCumToaNha(drMatBang.value,drTangLau.value,drToaNha.value,dCumToaNha.value)">
                                     <option value="0">---Tất cả---</option>
@@ -52,10 +52,10 @@
                                         {{o.tenKhoiNha}}
                                     </option>
                                 </select>
-                            </label>
+                            </label>-->
                             <label>
                                 Tầng (lầu)
-                                <select class="form-control input-sm" #drTangLau (change)="SelectedTangLauValue(drMatBang.value,drTangLau.value,drToaNha.value,dCumToaNha.value)">
+                                <select class="form-control input-sm" #drTangLau (change)="SelectedTangLauValue(drTangLau.value)">
                                     <option value="0">---Tất cả---</option>
                                     <option *ngFor="let o of tang" [value]="o.tangLauId">
                                         {{o.tenTangLau}}
@@ -64,7 +64,7 @@
                             </label>
                             <label>
                                 Phòng
-                                <select class="form-control input-sm" #drMatBang (change)="SelectedMatBang(drMatBang.value,drTangLau.value,drToaNha.value,dCumToaNha.value)">
+                                <select class="form-control input-sm" #drMatBang (change)="SelectedMatBang(drMatBang.value,drTangLau.value)">
                                     <option value="0">---Tất cả---</option>
                                     <option *ngFor="let o of matbangs" [value]="o.matBangId">
                                         {{o.tenMatBang}}

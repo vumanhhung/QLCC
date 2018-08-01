@@ -9,7 +9,14 @@ namespace DAL.Models
         public int KhachHangId { get; set; }
         public string HoDem { get; set; }
         public string Ten { get; set; }
-        public int? GioiTinh { get; set; }        
+        public string TenDayDu
+        {
+            get
+            {
+                return this.KhDoanhNghiep == true ? this.TenCongTy : this.HoDem + " " + this.Ten;
+            }
+        }
+        public int? GioiTinh { get; set; }
         public DateTime? NgaySinh { get; set; }
         public string DienThoai { get; set; }
         public string Email { get; set; }

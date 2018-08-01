@@ -21,6 +21,10 @@ import { LoaiMatBang } from '../../models/loaimatbang.model';
 import { LoaiMatBangService } from '../../services/loaimatbang.service';
 import { ImportExcelComponent } from '../controls/import-excel.component';
 
+import { NguoiDungToaNha } from '../../models/nguoidungtoanha.model';
+import { AuthService } from '../../services/auth.service';
+import { NguoiDungToaNhaService } from '../../services/nguoidungtoanha.service';
+
 @Component({
     selector: "matbang",
     templateUrl: "./matbang.component.html",
@@ -33,9 +37,9 @@ export class MatBangComponent implements OnInit, AfterViewInit {
     public limit: number = 10;
     rows: MatBang[] = [];
     rowsCache: MatBang[] = [];
-    groups: CumToaNha[] = [];
+    //groups: CumToaNha[] = [];
     loaitien: LoaiTien[] = [];
-    items: ToaNha[] = [];
+    //items: ToaNha[] = [];
     tanglau: TangLau[] = [];
     trangthai: TrangThai[] = [];
     loaimatbang: LoaiMatBang[] = [];
@@ -48,6 +52,7 @@ export class MatBangComponent implements OnInit, AfterViewInit {
     isCloseBox: boolean = false;
     public maunenThayDoi: string = "";
     private isActiveViewStatus: boolean = false;
+    objNDTN: NguoiDungToaNha = new NguoiDungToaNha();
 
     @ViewChild('f')
     private form;
@@ -74,11 +79,11 @@ export class MatBangComponent implements OnInit, AfterViewInit {
     importexcel: ImportExcelComponent;
 
 
-    constructor(private alertService: AlertService, private translationService: AppTranslationService, private matbangService: MatBangService, private toanhaService: ToaNhaService, private cumtoanhaService: CumToaNhaService, private tanglauService: TangLauService, private trangthaiService: TrangThaiService, private loaitienService: LoaiTienService, private loaimatbangService: LoaiMatBangService) {
+    constructor(private alertService: AlertService, private translationService: AppTranslationService, private matbangService: MatBangService, private toanhaService: ToaNhaService, private cumtoanhaService: CumToaNhaService, private tanglauService: TangLauService, private trangthaiService: TrangThaiService, private loaitienService: LoaiTienService, private loaimatbangService: LoaiMatBangService, private authService: AuthService, private nguoidungtoanhaService: NguoiDungToaNhaService) {
     }
     public headerPaddingCells: any = {
         background: '#048b8b',
-        textAlign:'center'
+        textAlign: 'center'
     }
 
     changeRandomString() {
@@ -97,13 +102,28 @@ export class MatBangComponent implements OnInit, AfterViewInit {
             { name: gT('matbang.qlmb_chucnang'), width: 180, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false, cellClass: "overflow" }
         ];
 
-        this.loadData(0, 0, 0);
-        this.loadGroup(0);
-        this.loadTangLau(0, 0);
-        this.loadItem(0);
-        this.loadAllTrangThai();
-        this.loadAllLoaiTien();
-        this.loadAllLoaiMatBang();
+        //this.loadGroup(0);        
+        //this.loadItem(0);
+
+        if (this.authService.currentUser) {
+            var userId = this.authService.currentUser.id;
+            var where = "NguoiDungId = '" + userId + "'";
+            this.nguoidungtoanhaService.getItems(0, 1, where, "x").subscribe(result => this.getNguoiDungToaNha(result), error => {
+                this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất dữ liệu người dùng tòa nhà từ máy chủ.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
+                    MessageSeverity.error, error);
+            });
+        }
+    }
+
+    getNguoiDungToaNha(list: NguoiDungToaNha[]) {
+        if (list.length > 0) {
+            this.objNDTN = list[0];
+            this.loadTangLau(this.objNDTN.toaNhaId, this.objNDTN.toaNha.cumToaNhaId);
+            this.loadData(0, this.objNDTN.toaNhaId, this.objNDTN.toaNha.cumToaNhaId);
+            this.loadAllTrangThai();
+            this.loadAllLoaiTien();
+            this.loadAllLoaiMatBang();
+        }
     }
 
     ngAfterViewInit() {
@@ -116,6 +136,10 @@ export class MatBangComponent implements OnInit, AfterViewInit {
             this.matbangEdit = null;
             this.sourcematbang = null;
             this.MatBangEditor.editorModal.hide();
+        };
+
+        this.importexcel.changesSavedCallback = () => {
+            this.loadData(0, this.objNDTN.toaNhaId, this.objNDTN.toaNha.cumToaNhaId);
         };
     }
 
@@ -130,27 +154,28 @@ export class MatBangComponent implements OnInit, AfterViewInit {
     }
 
     addNewToList() {
-        this.loadData(0, 0, 0);
+        
         if (this.sourcematbang) {
             Object.assign(this.sourcematbang, this.matbangEdit);
             this.matbangEdit = null;
             this.sourcematbang = null;
         }
         else {
-            let objMatBang = new MatBang();
-            Object.assign(objMatBang, this.matbangEdit);
-            this.matbangEdit = null;
+            this.loadData(0, this.objNDTN.toaNhaId, this.objNDTN.toaNha.cumToaNhaId);
+            //let objMatBang = new MatBang();
+            //Object.assign(objMatBang, this.matbangEdit);
+            //this.matbangEdit = null;
 
-            let maxIndex = 0;
-            for (let u of this.rowsCache) {
-                if ((<any>u).index > maxIndex)
-                    maxIndex = (<any>u).index;
-            }
+            //let maxIndex = 0;
+            //for (let u of this.rowsCache) {
+            //    if ((<any>u).index > maxIndex)
+            //        maxIndex = (<any>u).index;
+            //}
 
-            (<any>objMatBang).index = maxIndex + 1;
+            //(<any>objMatBang).index = maxIndex + 1;
 
-            this.rowsCache.splice(0, 0, objMatBang);
-            this.rows.splice(0, 0, objMatBang);
+            //this.rowsCache.splice(0, 0, objMatBang);
+            //this.rows.splice(0, 0, objMatBang);
         }
     }
 
@@ -164,57 +189,41 @@ export class MatBangComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = true;
         this.matbangService.getMatBangByToaNha(tanglau, toanha, cumtoanha).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
     }
-    loadItem(s: number) {
-        this.toanhaService.getToaNhaByCum(s).subscribe(results => this.onDataLoadItemSuccessful(results), error => this.onDataLoadFailed(error));
-    }
+
     loadAllTrangThai() {
         this.trangthaiService.getAllTrangThai().subscribe(results => this.onDataLoadTrangThaiSuccessful(results), error => this.onDataLoadFailed(error))
     }
-    loadGroup(s: number) {
-        this.cumtoanhaService.getAllCumToaNha().subscribe(results => this.onDataCumLoadSuccessful(results), error => this.onDataLoadFailed(error));
-    }
+
     loadTangLau(toanha: number, cumtoanha: number) {
         this.tanglauService.getTangLauByToaNha(toanha, cumtoanha).subscribe(results => this.onDataLoadTangLauSuccessful(results), error => this.onDataLoadFailed(error));
     }
+
     loadAllLoaiTien() {
         this.loaitienService.getAllLoaiTien().subscribe(results => this.onDataLoadLoaiTienSuccessful(results), error => this.onDataLoadFailed(error))
     }
+
     loadAllLoaiMatBang() {
         this.loaimatbangService.getAllLoaiMatBang().subscribe(results => this.onDataLoadLoaiMatBangSuccessful(results), error => this.onDataLoadFailed(error))
     }
+
     onDataLoadLoaiMatBangSuccessful(obj: LoaiMatBang[]) {
         this.loaimatbang = obj;
     }
+
     onDataLoadLoaiTienSuccessful(obj: LoaiTien[]) {
         this.loaitien = obj;
     }
-    onDataLoadItemSuccessful(obj: ToaNha[]) {
-        this.items = obj;
-    }
+
     onDataLoadTrangThaiSuccessful(obj: TrangThai[]) {
         this.trangthai = obj;
     }
+
     onDataLoadTangLauSuccessful(obj: TangLau[]) {
         this.tanglau = obj;
     }
-    SelectedGroupValue(tanglau: number, valueitem: number, value: number) {
-        this.loadItem(value);
-        this.loadTangLau(valueitem, value);
-        this.loadData(tanglau, valueitem, value);
-    }
 
-    SelectedTangLauValue(tanglau: number, toanha: number, cumtoanha: number) {
-        this.loadData(tanglau, toanha, cumtoanha);
-    }
-
-
-    onDataCumLoadSuccessful(obj: CumToaNha[]) {
-        this.groups = obj;
-    }
-
-    SelectedItemValue(tanglau: number, value: number, cumvalue: number) {
-        this.loadTangLau(value, cumvalue);
-        this.loadData(tanglau, value, cumvalue);
+    SelectedTangLauValue(tanglau: number) {
+        this.loadData(tanglau, this.objNDTN.toaNhaId, this.objNDTN.toaNha.cumToaNhaId);
     }
 
     onDataLoadSuccessful(obj: MatBang[]) {
@@ -240,7 +249,8 @@ export class MatBangComponent implements OnInit, AfterViewInit {
 
     openBox() {
         if (this.isCloseBox == false) {
-            this.isCloseBox = true;        }
+            this.isCloseBox = true;
+        }
         else {
             this.isCloseBox = false;
             this.isActiveViewStatus = false;
@@ -249,9 +259,11 @@ export class MatBangComponent implements OnInit, AfterViewInit {
     }
 
     importMatBang() {
-        this.importexcel.cumtoanhas = this.groups;
-        this.importexcel.toanhas = this.items;
+        //this.importexcel.cumtoanhas = this.groups;
+        //this.importexcel.toanhas = this.items;
         this.importexcel.tanglaus = this.tanglau;
+        this.importexcel.cumToaNhaId = this.objNDTN.toaNha.cumToaNhaId;
+        this.importexcel.toaNhaId = this.objNDTN.toaNha.toaNhaId;
         this.importexcel.editorModal.show();
     }
 
@@ -260,15 +272,16 @@ export class MatBangComponent implements OnInit, AfterViewInit {
         this.MatBangEditor.tenmatbang = "";
         this.editingRowName = null;
         this.sourcematbang = null;
-        this.MatBangEditor.cums = this.groups;
-        this.MatBangEditor.toas = this.items;
+        //this.MatBangEditor.cums = this.groups;
+        //this.MatBangEditor.toas = this.items;
         this.MatBangEditor.trangthais = this.trangthai;
         this.MatBangEditor.tangs = this.tanglau;
 
         this.MatBangEditor.loaitien = this.loaitien;
         this.MatBangEditor.loaimatbangs = this.loaimatbang;
-        this.matbangEdit = this.MatBangEditor.newMatBang();
-        this.MatBangEditor.isViewDetails = false
+        this.matbangEdit = this.MatBangEditor.newMatBang(this.objNDTN.toaNhaId, this.objNDTN.toaNha.cumToaNhaId);
+        this.MatBangEditor.isViewDetails = false;
+        
         this.MatBangEditor.editorModal.show();
     }
 
@@ -292,12 +305,12 @@ export class MatBangComponent implements OnInit, AfterViewInit {
                 this.rows = this.rows.filter(item => item !== row)
                 this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
             },
-                error => {
-                    this.alertService.stopLoadingMessage();
-                    this.loadingIndicator = false;
-                    this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
-                        MessageSeverity.error, error);
-                });
+            error => {
+                this.alertService.stopLoadingMessage();
+                this.loadingIndicator = false;
+                this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
+                    MessageSeverity.error, error);
+            });
     }
 
     editMatBang(row: MatBang) {
@@ -317,8 +330,8 @@ export class MatBangComponent implements OnInit, AfterViewInit {
             this.MatBangEditor.trangthaichiakhoa = true;
         }
         this.MatBangEditor.loaitien = this.loaitien;
-        this.MatBangEditor.cums = this.groups;
-        this.MatBangEditor.toas = this.items;
+        //this.MatBangEditor.cums = this.groups;
+        //this.MatBangEditor.toas = this.items;
         this.MatBangEditor.trangthais = this.trangthai;
         this.MatBangEditor.tangs = this.tanglau;
         this.MatBangEditor.loaimatbangs = this.loaimatbang;
@@ -349,10 +362,7 @@ export class MatBangComponent implements OnInit, AfterViewInit {
         }
         if (row.chuSoHuu != 0) {
             this.MatBangEditor.chkchuSoHuu = true;
-        }
-        if (row.khachThue != 0) {
-            this.MatBangEditor.chkkhachThue = true;
-        }
+        }        
         this.MatBangEditor.isViewDetails = false;
         this.MatBangEditor.editorModal.show();
     }
@@ -374,8 +384,8 @@ export class MatBangComponent implements OnInit, AfterViewInit {
             this.MatBangEditor.trangthaichiakhoa = true;
         }
         this.MatBangEditor.loaitien = this.loaitien;
-        this.MatBangEditor.cums = this.groups;
-        this.MatBangEditor.toas = this.items;
+        //this.MatBangEditor.cums = this.groups;
+        //this.MatBangEditor.toas = this.items;
         this.MatBangEditor.trangthais = this.trangthai;
         this.MatBangEditor.tangs = this.tanglau;
         this.MatBangEditor.loaimatbangs = this.loaimatbang;
@@ -406,10 +416,7 @@ export class MatBangComponent implements OnInit, AfterViewInit {
         }
         if (row.chuSoHuu != 0) {
             this.MatBangEditor.chkchuSoHuu = true;
-        }
-        if (row.khachThue != 0) {
-            this.MatBangEditor.chkkhachThue = true;
-        }
+        }        
         this.MatBangEditor.isViewDetails = false;
         this.MatBangEditor.isViewDetails = true;
         this.MatBangEditor.editorModal.show();
@@ -431,4 +438,27 @@ export class MatBangComponent implements OnInit, AfterViewInit {
     buiding(row: MatBang) {
         this.alertService.showDialog('Chức năng đang được xây dựng?', DialogType.alert);
     }
+
+    //loadItem(s: number) {
+    //    this.toanhaService.getToaNhaByCum(s).subscribe(results => this.onDataLoadItemSuccessful(results), error => this.onDataLoadFailed(error));
+    //}
+    //loadGroup(s: number) {
+    //    this.cumtoanhaService.getAllCumToaNha().subscribe(results => this.onDataCumLoadSuccessful(results), error => this.onDataLoadFailed(error));
+    //}
+    //onDataLoadItemSuccessful(obj: ToaNha[]) {
+    //    this.items = obj;
+    //}
+    //onDataCumLoadSuccessful(obj: CumToaNha[]) {
+    //    this.groups = obj;
+    //}
+
+    //SelectedItemValue(tanglau: number, value: number, cumvalue: number) {
+    //    this.loadTangLau(value, cumvalue);
+    //    this.loadData(tanglau, value, cumvalue);
+    //}
+    //SelectedGroupValue(tanglau: number, valueitem: number, value: number) {
+    //    this.loadItem(value);
+    //    this.loadTangLau(valueitem, value);
+    //    this.loadData(tanglau, valueitem, value);
+    //}
 }

@@ -22,6 +22,10 @@ import { QuanHeChuHoService } from '../../services/quanhechuho.service';
 import { TrangThaiCuDanService } from '../../services/trangthaicudan.service';
 import { TrangThaiCuDan } from '../../models/trangthaicudan.model';
 
+import { NguoiDungToaNha } from '../../models/nguoidungtoanha.model';
+import { AuthService } from '../../services/auth.service';
+import { NguoiDungToaNhaService } from '../../services/nguoidungtoanha.service';
+
 @Component({
     selector: "cudan",
     templateUrl: "./cudan.component.html",
@@ -47,6 +51,8 @@ export class CuDanComponent implements OnInit, AfterViewInit {
     chuho: CuDan[] = [];
     qhch: QuanHeChuHo[] = [];
     trangthaicudan: TrangThaiCuDan[] = [];
+    objNDTN: NguoiDungToaNha = new NguoiDungToaNha();
+
     @ViewChild('f')
     private form;
 
@@ -71,7 +77,7 @@ export class CuDanComponent implements OnInit, AfterViewInit {
 
     @ViewChild('cudanEditor')
     CuDanEditor: CuDanInfoComponent;
-    constructor(private alertService: AlertService, private translationService: AppTranslationService, private cudanService: CuDanService, private matbangService: MatBangService, private toanhaService: ToaNhaService, private cumtoanhaService: CumToaNhaService, private tanglauService: TangLauService, private quoctichService: QuocTichService, private qhchService: QuanHeChuHoService, private trangthaicudanService: TrangThaiCuDanService) {
+    constructor(private alertService: AlertService, private translationService: AppTranslationService, private cudanService: CuDanService, private matbangService: MatBangService, private toanhaService: ToaNhaService, private cumtoanhaService: CumToaNhaService, private tanglauService: TangLauService, private quoctichService: QuocTichService, private qhchService: QuanHeChuHoService, private trangthaicudanService: TrangThaiCuDanService, private authService: AuthService, private nguoidungtoanhaService: NguoiDungToaNhaService) {
     }
 
     ngOnInit() {
@@ -81,21 +87,36 @@ export class CuDanComponent implements OnInit, AfterViewInit {
             { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
             { prop: 'hoTen', name: gT('Họ tên') },
             { prop: 'quanhechuhos.tenQuanHeChuHo', name: gT('Quan hệ chủ hộ') },
-            { name: gT('Ngày đến'), cellTemplate: this.ngayDenTemplate},
-            { name: gT('Ngày đi'), cellTemplate: this.ngayDiTemplate},
-            { name: gT('ĐK tạm trú'), cellTemplate: this.TrangThaiTamTruTemplate},
+            { name: gT('Ngày đến'), cellTemplate: this.ngayDenTemplate },
+            { name: gT('Ngày đi'), cellTemplate: this.ngayDiTemplate },
+            { name: gT('ĐK tạm trú'), cellTemplate: this.TrangThaiTamTruTemplate },
             { prop: 'trangthaicudans.tenTrangThaiCuDan', name: gT('Trạng thái') },
             { name: 'Chức năng', width: 100, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false, cellClass: "overflow" }
         ];
 
-        this.loadCumToaNha();
-        this.loadToaNha(0);
-        this.loadTangLau(0, 0);
-        this.loadMatBang(0, 0, 0);
-        this.loadAllQuocTich();
-        this.loadChuHo();
-        this.loadQuanHeChuHo();
-        this.loadTrangThaiCuDan();
+        //this.loadCumToaNha();
+        //this.loadToaNha(0);
+        
+        if (this.authService.currentUser) {
+            var userId = this.authService.currentUser.id;
+            var where = "NguoiDungId = '" + userId + "'";
+            this.nguoidungtoanhaService.getItems(0, 1, where, "x").subscribe(result => this.getNguoiDungToaNha(result), error => {
+                this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất dữ liệu người dùng tòa nhà từ máy chủ.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
+                    MessageSeverity.error, error);
+            });
+        }
+    }
+
+    getNguoiDungToaNha(list: NguoiDungToaNha[]) {
+        if (list.length > 0) {
+            this.objNDTN = list[0];
+            this.loadTangLau(this.objNDTN.toaNhaId, this.objNDTN.toaNha.cumToaNhaId);
+            this.loadMatBang(0, this.objNDTN.toaNhaId, this.objNDTN.toaNha.cumToaNhaId);
+            this.loadAllQuocTich();
+            this.loadChuHo();
+            this.loadQuanHeChuHo();
+            this.loadTrangThaiCuDan();
+        }
     }
 
     loadMatBangById(id: number) {
@@ -165,12 +186,12 @@ export class CuDanComponent implements OnInit, AfterViewInit {
             for (let u of this.matbangs) {
                 this.arrMatBang.push(<any>u.matBangId);
             }
-              if (this.arrMatBang.length < 1) {
+            if (this.arrMatBang.length < 1) {
                 this.arrMatBang.push(0)
             }
         }
 
-       // alert(this.arrMatBang.length)
+        // alert(this.arrMatBang.length)
         this.loadData(this.arrMatBang);
     }
     loadAllQuocTich() {
@@ -232,22 +253,6 @@ export class CuDanComponent implements OnInit, AfterViewInit {
         }
         this.loadData(this.arrMatBang);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     ngAfterViewInit() {
         this.CuDanEditor.changesSavedCallback = () => {
@@ -330,6 +335,8 @@ export class CuDanComponent implements OnInit, AfterViewInit {
         this.CuDanEditor.qhch = this.qhch;
         this.CuDanEditor.quoctich = this.quoctich;
         this.cudanEdit = this.CuDanEditor.newCuDan();
+        this.CuDanEditor.toaNhaId = this.objNDTN.toaNhaId;
+        this.CuDanEditor.cumToaNhaId = this.objNDTN.toaNha.cumToaNhaId;
         this.CuDanEditor.isViewDetails = false;
         this.CuDanEditor.editorModal.show();
     }
@@ -380,6 +387,8 @@ export class CuDanComponent implements OnInit, AfterViewInit {
         this.CuDanEditor.quoctich = this.quoctich;
         this.cudanEdit = this.CuDanEditor.editCuDan(row);
         this.CuDanEditor.isViewDetails = false;
+        this.CuDanEditor.toaNhaId = this.objNDTN.toaNhaId;
+        this.CuDanEditor.cumToaNhaId = this.objNDTN.toaNha.cumToaNhaId;
         this.CuDanEditor.editorModal.show();
     }
     viewCuDan(row: CuDan) {

@@ -4,6 +4,13 @@ import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { Utilities } from '../../services/utilities';
 import { DichVuCoBan } from "../../models/dichvucoban.model";
 import { DichVuCoBanService } from "./../../services/dichvucoban.service";
+import { MatBang } from '../../models/matbang.model';
+import { KhachHang } from '../../models/khachhang.model';
+import { LoaiDichVu } from '../../models/loaidichvu.model';
+import { DonViTinh } from '../../models/donvitinh.model';
+import { LoaiTien } from '../../models/loaitien.model';
+import { ModalDirective } from 'ngx-bootstrap/modal';
+import { LoaiTienService } from '../../services/loaitien.service';
 
 @Component({
     selector: "dichvucoban-info",
@@ -14,17 +21,43 @@ import { DichVuCoBanService } from "./../../services/dichvucoban.service";
 export class DichVuCoBanInfoComponent implements OnInit {
     private isNew = false;
     private isSaving = false;
+    private isEdit = false;
+    isViewDetail = false;
+
     private showValidationErrors: boolean = false;
     private uniqueId: string = Utilities.uniqueId();
     private DichVuCoBanEdit: DichVuCoBan = new DichVuCoBan();
-    public value: Date = new Date();
+
+    public valueNgayChungTu: Date = new Date();
+    public valueNgayThanhToan: Date = new Date();
+    public valueTuNgay: Date = new Date();
+    public valueDenNgay: Date = new Date();
+
+    public dongia: string = "0";
+    public thanhtien: string = "0";
+    public tygia: string = "0";
+    public tienthanhtoan: string = "0";
+    public tienquydoi: string = "0";
+
+    ChkmatBang: boolean;
+    ChkkhachHang: boolean;
+    ChkloaiDichVu: boolean;
+    ChkdonViTinh: boolean;
+    ChkloaiTien: boolean;
+
+    matBang: MatBang[] = [];
+    khachHang: KhachHang[] = [];
+    loaiDichVu: LoaiDichVu[] = [];
+    donViTinh: DonViTinh[] = [];
+    loaiTien: LoaiTien[] = [];
+
     public formResetToggle = true;
     private isEditMode = false;
     private editingRowName: string;
     public changesSavedCallback: () => void;
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
-    
+
     @Input()
     isViewOnly: boolean;
 
@@ -33,10 +66,13 @@ export class DichVuCoBanInfoComponent implements OnInit {
 
     @ViewChild('f')
     private form;
-    
-    constructor(private alertService: AlertService, private gvService: DichVuCoBanService) {
+
+    @ViewChild('editorModal')
+    editorModal: ModalDirective;
+
+    constructor(private alertService: AlertService, private gvService: DichVuCoBanService, private loaitienService: LoaiTienService) {
     }
-    
+
     ngOnInit() {
         if (!this.isGeneralEditor) {
             this.loadData();
@@ -46,8 +82,9 @@ export class DichVuCoBanInfoComponent implements OnInit {
     loadData() {
         this.alertService.startLoadingMessage();
         this.gvService.getDichVuCoBanByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
+
     }
-    
+
     private onDataLoadSuccessful(obj: DichVuCoBan) {
         this.alertService.stopLoadingMessage();
     }
@@ -71,7 +108,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
             });
         }
     }
-    
+
     private cancel() {
         this.DichVuCoBanEdit = new DichVuCoBan();
         this.showValidationErrors = false;
@@ -87,7 +124,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
 
     private save() {
         this.isSaving = true;
-        this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");        
+        this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
         if (this.isNew) {
             this.gvService.addnewDichVuCoBan(this.DichVuCoBanEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
         }
@@ -95,13 +132,33 @@ export class DichVuCoBanInfoComponent implements OnInit {
             this.gvService.updateDichVuCoBan(this.DichVuCoBanEdit.dichVuCoBanId, this.DichVuCoBanEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
         }
     }
-    
+
     newDichVuCoBan() {
         this.isGeneralEditor = true;
         this.isNew = true;
         this.showValidationErrors = true;
         this.editingRowName = null;
+        this.ChkmatBang = false;
+        this.ChkkhachHang = false;
+        this.ChkloaiDichVu = false;
+        this.ChkdonViTinh = false;
+        this.ChkloaiTien = false;
+        this.isEdit = false;
         this.DichVuCoBanEdit = new DichVuCoBan();
+        this.DichVuCoBanEdit.matBangId = 0;
+        this.DichVuCoBanEdit.khachHangId = 0;
+        this.DichVuCoBanEdit.loaiDichVuId = 0;
+        this.DichVuCoBanEdit.donViTinhId = 0;
+        this.DichVuCoBanEdit.loaiTienId = 0;
+        this.DichVuCoBanEdit.lapLai = false;
+        this.DichVuCoBanEdit.trangThai = 1;
+        this.DichVuCoBanEdit.soLuong = 0;
+        this.dongia = this.formatPrice("0");
+        this.tygia = this.formatPrice("0");
+        var result = Number(this.dongia) * this.DichVuCoBanEdit.soLuong;
+        this.thanhtien = this.formatPrice(result.toString());
+        this.tienthanhtoan = this.formatPrice("0");
+        this.tienquydoi = this.formatPrice("0");
         this.edit();
         return this.DichVuCoBanEdit;
     }
@@ -112,11 +169,11 @@ export class DichVuCoBanInfoComponent implements OnInit {
 
         this.isSaving = false;
         this.alertService.stopLoadingMessage();
-        this.showValidationErrors = false;        
+        this.showValidationErrors = false;
         if (this.isGeneralEditor) {
             if (this.isNew) {
                 this.alertService.showMessage("Thành công", `Thực hiện thêm mới thành công`, MessageSeverity.success);
-            }                
+            }
             else
                 this.alertService.showMessage("Thành công", `Thực hiện thay đổi thông tin thành công`, MessageSeverity.success);
         }
@@ -137,7 +194,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
         if (this.changesFailedCallback)
             this.changesFailedCallback();
     }
-    
+
     private showErrorAlert(caption: string, message: string) {
         this.alertService.showMessage(caption, message, MessageSeverity.error);
     }
@@ -146,6 +203,11 @@ export class DichVuCoBanInfoComponent implements OnInit {
         if (obj) {
             this.isGeneralEditor = true;
             this.isNew = false;
+            this.ChkmatBang = true;
+            this.ChkkhachHang = true;
+            this.ChkloaiDichVu = true;
+            this.ChkdonViTinh = true;
+            this.ChkloaiTien = true;
             //this.editingRowName = obj.tenDichVuCoBan;
             this.DichVuCoBanEdit = new DichVuCoBan();
             Object.assign(this.DichVuCoBanEdit, obj);
@@ -175,5 +237,103 @@ export class DichVuCoBanInfoComponent implements OnInit {
 
         if (this.changesSavedCallback)
             this.changesSavedCallback();
-    }    
+    }
+
+    onEditorModalHidden() {
+        this.editingRowName = null;
+        this.resetForm(true);
+    }
+
+    matBangChk(id: number) {
+        if (id > 0) {
+            this.ChkmatBang = true;
+        } else {
+            this.ChkmatBang = false;
+        }
+    }
+
+    khachHangChk(id: number) {
+        if (id > 0) {
+            this.ChkkhachHang = true;
+        } else {
+            this.ChkkhachHang = false;
+        }
+    }
+
+    loaiDichVuChk(id: number) {
+        if (id > 0) {
+            this.ChkloaiDichVu = true;
+        } else {
+            this.ChkloaiDichVu = false;
+        }
+    }
+
+    loaiTienChk(id: number) {
+        if (id > 0) {
+            var change = 0;
+            this.loaitienService.getLoaiTienByID(id).subscribe(result => {
+                this.tygia = this.formatPrice(result.tyGia.toString());
+                var pS = this.tienthanhtoan.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+                change = Number(pS) * Number(this.tygia);
+                this.tienquydoi = this.formatPrice(change.toString());
+            });
+            this.ChkloaiTien = true;
+        } else {
+            this.tygia = this.formatPrice("0");
+            this.tienquydoi = this.formatPrice("0"); 
+            this.ChkloaiTien = false;
+        }
+    }
+
+    donViTinhChk(id: number) {
+        if (id > 0) {
+            this.ChkdonViTinh = true;
+        } else {
+            this.ChkdonViTinh = false;
+        }
+    }
+
+
+    dongiaChange(price: string) {
+        if (price) {
+            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+            var pN = Number(pS);
+            var result = Number(pS) * this.DichVuCoBanEdit.soLuong;
+            this.dongia = Utilities.formatNumber(pN);
+            this.thanhtien = this.formatPrice(result.toString());
+            this.tienthanhtoan = this.thanhtien
+        }
+    }
+    soluongChange() {
+        if (this.DichVuCoBanEdit.soLuong > 0) {
+            var pS = this.dongia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+            var result = Number(pS) * this.DichVuCoBanEdit.soLuong;
+            this.thanhtien = this.formatPrice(result.toString())
+            this.tienthanhtoan = this.thanhtien
+        }        
+    }
+    tygiaChange(price: string) {
+        if (price) {
+            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+            var pN = Number(pS);
+            this.tygia = Utilities.formatNumber(pN);
+        }
+    }
+    tienquydoiChange(price: string) {
+        if (price) {
+            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+            var pN = Number(pS);
+            this.tienquydoi = Utilities.formatNumber(pN);
+        }
+    }
+    formatPrice(price: string): string {
+        if (price) {
+            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+            var pN = Number(price);
+            var fm = Utilities.formatNumber(pN);
+            return fm;
+        } else {
+            return "";
+        }
+    }
 }

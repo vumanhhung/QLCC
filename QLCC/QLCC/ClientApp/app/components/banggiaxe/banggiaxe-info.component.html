@@ -22,7 +22,7 @@
             <label class="control-label col-md-2" for="dinhMuc-{{uniqueId}}">Định mức</label>
             <div class="col-md-10" [ngClass]="{'has-success': f.submitted && dinhMuc.valid, 'has-error' : f.submitted && !dinhMuc.valid}">
                 <input autofocus type="number" class="form-control" name="dinhMuc" [(ngModel)]="BangGiaXeEdit.dinhMuc" #dinhMuc="ngModel" required />
-                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" style="margin-left:10px;" [ngClass]="{'glyphicon-ok ': dinhMuc.valid, 'glyphicon-remove' : !dinhMuc.valid}"></span>
+                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': dinhMuc.valid, 'glyphicon-remove' : !dinhMuc.valid}"></span>
                 <span *ngIf="showValidationErrors && f.submitted && !dinhMuc.valid" class="errorMessage">
                     Vui lòng nhập định mức!
                 </span>

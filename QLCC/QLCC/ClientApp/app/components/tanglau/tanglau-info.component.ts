@@ -22,10 +22,10 @@ export class TangLauInfoComponent implements OnInit {
     isViewDetails = false;
     public tenCumToaNha: string;
     public chkToaNhaId: boolean = false;
-    toanhas: ToaNha[];
-    cums: CumToaNha[];
+    //toanhas: ToaNha[];
+    //cums: CumToaNha[];
     toaId: ToaNha;
-    cumsSelected : number;
+    cumsSelected: number;
     private isNew = false;
     private isSaving = false;
     private showValidationErrors: boolean = false;
@@ -39,7 +39,7 @@ export class TangLauInfoComponent implements OnInit {
     public changesSavedCallback: () => void;
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
-    
+
     @Input()
     isViewOnly: boolean;
 
@@ -50,10 +50,10 @@ export class TangLauInfoComponent implements OnInit {
     private form;
     @ViewChild('editorModal')
     editorModal: ModalDirective;
-    
+
     constructor(private alertService: AlertService, private gvService: TangLauService, private toanhaService: ToaNhaService, private cumtoanhaService: CumToaNhaService) {
     }
-    
+
     ngOnInit() {
         if (!this.isGeneralEditor) {
             this.loadData();
@@ -62,16 +62,16 @@ export class TangLauInfoComponent implements OnInit {
 
     loadData() {
         this.alertService.startLoadingMessage();
-        this.gvService.getTangLauByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
+        this.gvService.getTangLauByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onDataLoadFailed(error));
     }
-    
+
     private onDataLoadSuccessful(obj: TangLau) {
         this.alertService.stopLoadingMessage();
     }
 
-    private onCurrentUserDataLoadFailed(error: any) {
+    private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
-        this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất dữ liệu người dùng từ máy chủ.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
+        this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất dữ liệu tầng lầu từ máy chủ.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
             MessageSeverity.error, error);
     }
 
@@ -88,7 +88,7 @@ export class TangLauInfoComponent implements OnInit {
             });
         }
     }
-    
+
     private cancel() {
         if (this.isViewDetails == false) {
             this.alertService.showMessage("Hủy thao tác", "Thao tác bị hủy bởi người dùng", MessageSeverity.default);
@@ -118,15 +118,15 @@ export class TangLauInfoComponent implements OnInit {
         }
     }
 
-    toaNhaIdChange(toaId: number) {
-        if (toaId > 0) {
-            this.chkToaNhaId = true;
-        } else {
-            this.chkToaNhaId = false;
-        }
-    }
+    //toaNhaIdChange(toaId: number) {
+    //    if (toaId > 0) {
+    //        this.chkToaNhaId = true;
+    //    } else {
+    //        this.chkToaNhaId = false;
+    //    }
+    //}
 
-    newTangLau() {
+    newTangLau(toanhaId: number) {
         this.chkToaNhaId = false;
         this.cumsSelected = 0;
         this.isGeneralEditor = true;
@@ -135,7 +135,7 @@ export class TangLauInfoComponent implements OnInit {
         this.showValidationErrors = true;
         this.editingRowName = null;
         this.TangLauEdit = new TangLau();
-        this.TangLauEdit.toaNhaId = 0;
+        this.TangLauEdit.toaNhaId = toanhaId;
         this.edit();
         return this.TangLauEdit;
     }
@@ -146,11 +146,11 @@ export class TangLauInfoComponent implements OnInit {
 
         this.isSaving = false;
         this.alertService.stopLoadingMessage();
-        this.showValidationErrors = false;        
+        this.showValidationErrors = false;
         if (this.isGeneralEditor) {
             if (this.isNew) {
                 this.alertService.showMessage("Thành công", `Thực hiện thêm mới thành công`, MessageSeverity.success);
-            }                
+            }
             else
                 this.alertService.showMessage("Thành công", `Thực hiện thay đổi thông tin thành công`, MessageSeverity.success);
         }
@@ -165,57 +165,57 @@ export class TangLauInfoComponent implements OnInit {
     private saveFailedHelper(error: any) {
         this.isSaving = false;
         this.alertService.stopLoadingMessage();
-        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage("Lưu không thành công", "Các lỗi sau đã xảy ra trong khi lưu các thay đổi của bạn:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
 
         if (this.changesFailedCallback)
             this.changesFailedCallback();
     }
 
-    cumToaNhaIdChange(cumId: number) {
-        this.loadToaNhaByCumToaNha(cumId);
-    }
+    //cumToaNhaIdChange(cumId: number) {
+    //    this.loadToaNhaByCumToaNha(cumId);
+    //}
 
-    loadToaNhaByCumToaNha(s: number) {
-        this.toanhaService.getToaNhaByCum(s).subscribe(results => this.onDataLoadToaNhaSuccessful(results), error => this.onDataLoadFailed(error));
-    }
-    onDataLoadToaNhaSuccessful(obj: ToaNha[]) {
-        this.toanhas = obj;
-    }
+    //loadToaNhaByCumToaNha(s: number) {
+    //    this.toanhaService.getToaNhaByCum(s).subscribe(results => this.onDataLoadToaNhaSuccessful(results), error => this.onDataLoadFailed(error));
+    //}
+    //onDataLoadToaNhaSuccessful(obj: ToaNha[]) {
+    //    this.toanhas = obj;
+    //}
     private showErrorAlert(caption: string, message: string) {
         this.alertService.showMessage(caption, message, MessageSeverity.error);
     }
-    loadToaNhaById(toanhaId: number) {
-        this.toanhaService.getToaNhaByID(toanhaId).subscribe(results => this.onDataLoadToaNhaSuccessful1(results), error => this.onDataLoadFailed(error));
-    }
-    onDataLoadToaNhaSuccessful1(obj: ToaNha) {
-        this.toaId = obj;
-        this.tenCumToaNha = this.toaId.cumtoanhas.tenCumToaNha;
-        this.cumsSelected = this.toaId.cumToaNhaId;
-    }
-    onDataLoadFailed(error: any) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
+    //loadToaNhaById(toanhaId: number) {
+    //    this.toanhaService.getToaNhaByID(toanhaId).subscribe(results => this.onDataLoadToaNhaSuccessful1(results), error => this.onDataLoadFailed(error));
+    //}
+    //onDataLoadToaNhaSuccessful1(obj: ToaNha) {
+    //    this.toaId = obj;
+    //    this.tenCumToaNha = this.toaId.cumtoanhas.tenCumToaNha;
+    //    this.cumsSelected = this.toaId.cumToaNhaId;
+    //}
+    //onDataLoadFailed(error: any) {
+    //    this.alertService.stopLoadingMessage();
+    //    this.loadingIndicator = false;
 
-        this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất người dùng từ máy chủ.\r\nErrors: "${Utilities.getHttpResponseMessage(error)}"`,
-            MessageSeverity.error, error);
-    }
+    //    this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất người dùng từ máy chủ.\r\nErrors: "${Utilities.getHttpResponseMessage(error)}"`,
+    //        MessageSeverity.error, error);
+    //}
     editTangLau(obj: TangLau) {
         if (obj) {
-            this.loadToaNhaById(obj.toaNhaId);
+            //this.loadToaNhaById(obj.toaNhaId);
             this.isGeneralEditor = true;
             this.isNew = false;
             this.isEdit = true;
             this.editingRowName = obj.tenTangLau;
             this.TangLauEdit = new TangLau();
             Object.assign(this.TangLauEdit, obj);
-            Object.assign(this.TangLauEdit, obj);
+            //Object.assign(this.TangLauEdit, obj);
             this.edit();
 
             return this.TangLauEdit;
         }
         else {
-            return this.newTangLau();
+            //return this.newTangLau();
         }
     }
 
@@ -236,7 +236,7 @@ export class TangLauInfoComponent implements OnInit {
 
         if (this.changesSavedCallback)
             this.changesSavedCallback();
-    }    
+    }
     private moveToEditForm() {
         this.isViewDetails = false;
         this.isEdit = true;

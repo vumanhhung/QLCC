@@ -79,7 +79,7 @@
                 <div class="box-body">
                     <div>
                         <div class="dataTables_length">
-                            <label>
+                            <!--<label>
                                 Cụm
                                 <select class="form-control input-sm" #drGroup (change)="SelectedGroupValue(drTangLau.value,drItem.value,drGroup.value)">
                                     <option value="0">---Tất cả---</option>
@@ -96,10 +96,10 @@
                                         {{o.tenKhoiNha}}
                                     </option>
                                 </select>
-                            </label>
+                            </label>-->
                             <label>
                                 Tầng (lầu)
-                                <select class="form-control input-sm" #drTangLau (change)="SelectedTangLauValue(drTangLau.value,drItem.value,drGroup.value)">
+                                <select class="form-control input-sm" #drTangLau (change)="SelectedTangLauValue(drTangLau.value)">
                                     <option value="0">---Tất cả---</option>
                                     <option *ngFor="let o of tanglau" [value]="o.tangLauId">
                                         {{o.tenTangLau}}

@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body">
                 <div class="dataTables_length">
-                    <label>
+                    <!--<label>
                         Cụm
                         <select class="form-control input-sm" #drCumToaNha (change)="SelectedGroupValue(drTangLau.value,drToaNha.value,drCumToaNha.value)">
                             <option value="0">---Tất cả---</option>
@@ -26,10 +26,10 @@
                                 {{o.tenKhoiNha}}
                             </option>
                         </select>
-                    </label>
+                    </label>-->
                     <label>
                         Tầng (lầu)
-                        <select class="form-control input-sm" #drTangLau (change)="SelectedTangLauValue(drTangLau.value,drToaNha.value,drCumToaNha.value)">
+                        <select class="form-control input-sm" #drTangLau (change)="SelectedTangLauValue(drTangLau.value)">
                             <option value="0">---Tất cả---</option>
                             <option *ngFor="let o of tanglaus" [value]="o.tangLauId">
                                 {{o.tenTangLau}}
@@ -76,7 +76,7 @@
                 <div class="actionBtn-form-group">
                     <div class="col-sm-7">
                         <div class="pull-right">
-                            <button *ngIf="isDisplayUploadButton" type="button" class="btn btn-info" (click)="Upload(drCumToaNha.value,drToaNha.value,drTangLau.value)">Upload</button>
+                            <button *ngIf="isDisplayUploadButton" type="button" class="btn btn-info" (click)="Upload(drTangLau.value)">Upload</button>
                             <button type="button" (click)="closeImport()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
                         </div>
                     </div>

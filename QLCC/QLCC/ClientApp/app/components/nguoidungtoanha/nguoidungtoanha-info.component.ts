@@ -69,6 +69,7 @@ export class NguoiDungToaNhaInfoComponent implements OnInit {
     }
 
     onDataToaNhaLoadSuccessful(obj: ToaNha[]) {
+        this.chkToaNhaId = false;
         this.NguoiDungToaNhaEdit.toaNhaId = 0;
         this.toanhas = obj;
     }

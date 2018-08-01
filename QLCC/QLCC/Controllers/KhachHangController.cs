@@ -35,7 +35,7 @@ namespace QLCC.Controllers
                 obj.NhomKhachHang = _context.NhomKhachHangs.SingleOrDefault(m => m.NhomKhachHangId == khO[i].NhomKhachHangId);
                 kh.Add(obj);
             }
-            return kh;
+            return khO;
         }
 
         // GET: api/KhachHangs

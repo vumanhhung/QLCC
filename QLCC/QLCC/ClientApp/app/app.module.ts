@@ -98,7 +98,8 @@ import { commonroadComponent } from "./components/commoncontrol/commonroad/commo
 import { gobackComponent } from "./components/commoncontrol/commonroad/goback.component";
 
 import { FloursComponent } from "./components/flour/flour.component";
-//khai bao mat bang service
+
+//khai service
 import { CumToaNhaService } from './services/cumtoanha.service';
 import { CumToaNhaEndpoint } from './services/cumtoanha-endpoint.service';
 import { ToaNhaService } from './services/toanha.service';
@@ -109,9 +110,6 @@ import { TrangThaiService } from './services/trangthai.service';
 import { TrangThaiEndpoint } from './services/trangthai-endpoint.service';
 import { MatBangService } from './services/matbang.service';
 import { MatBangEndpoint } from './services/matbang-endpoint.service';
-
-
-//khai bao danh muc service
 import { ChucVuService } from './services/chucvu.service';
 import { ChucVuEndpoint } from './services/chucvu-endpoint.service';
 import { DonViTinhService } from './services/donvitinh.service';
@@ -156,12 +154,19 @@ import { YeuCauService } from './services/yeucau.service';
 import { YeuCauEndpoint } from './services/yeucau-endpoint.service';
 import { NguoiDungToaNhaService } from './services/nguoidungtoanha.service';
 import { NguoiDungToaNhaEndpoint } from './services/nguoidungtoanha-endpoint.service';
+import { LoaiXeService } from './services/loaixe.service';
+import { LoaiXeEndpoint } from './services/loaixe-endpoint.service';
+import { BangGiaXeService } from './services/banggiaxe.service';
+import { BangGiaXeEndpoint } from './services/banggiaxe-endpoint.service';
+import { BangGiaDichVuCoBanService } from './services/banggiadichvucoban.service';
+import { BangGiaDichVuCoBanEndpoint } from './services/banggiadichvucoban-endpoint.service';
+import { LoaiDichVuService } from './services/loaidichvu.service';
+import { LoaiDichVuEndpoint } from './services/loaidichvu-endpoint.service';
 
-//khai bao mat bang component
+//KHAI BÁO COMPONENT
 import { CumToaNhaComponent } from "./components/cumtoanha/cumtoanha.component";
 import { CumToaNhaInfoComponent } from "./components/cumtoanha/cumtoanha-info.component";
 import { ImportExcelComponent } from "./components/controls/import-excel.component";
-
 import { ToaNhaComponent } from "./components/toanha/toanha.component";
 import { ToaNhaInfoComponent } from "./components/toanha/toanha-info.component";
 import { TangLauComponent } from "./components/tanglau/tanglau.component";
@@ -171,7 +176,6 @@ import { MatBangInfoComponent } from "./components/matbang/matbang-info.componen
 import { TrangThaiComponent } from "./components/trangthai/trangthai.component";
 import { TrangThaiInfoComponent } from "./components/trangthai/trangthai-info.component";
 import { DanhMucComponent } from "./components/danhmuc/danhmuc.component";
-//khai bao danh muc component
 import { ChucVuComponent } from "./components/chucvu/chucvu.component";
 import { ChucVuInfoComponent } from "./components/chucvu/chucvu-info.component";
 import { LoaiTienComponent } from "./components/loaitien/loaitien.component";
@@ -216,21 +220,25 @@ import { NhomKhachHangComponent } from "./components/nhomkhachhang/nhomkhachhang
 import { NhomKhachHangInfoComponent } from "./components/nhomkhachhang/nhomkhachhang-info.component";
 import { YeuCauComponent } from "./components/yeucau/yeucau.component";
 import { YeuCauInfoComponent } from "./components/yeucau/yeucau-info.component";
-//import { NguoiDungToaNhaComponent } from "./components/nguoidungtoanha/nguoidungtoanha.component";
+import { NguoiDungToaNhaComponent } from "./components/nguoidungtoanha/nguoidungtoanha.component";
 import { NguoiDungToaNhaInfoComponent } from "./components/nguoidungtoanha/nguoidungtoanha-info.component";
+import { LoaiXeComponent } from "./components/loaixe/loaixe.component";
+import { LoaiXeInfoComponent } from "./components/loaixe/loaixe-info.component";
+import { BangGiaXeComponent } from "./components/banggiaxe/banggiaxe.component";
+import { BangGiaXeInfoComponent } from "./components/banggiaxe/banggiaxe-info.component";
+import { BangGiaDichVuCoBanComponent } from "./components/banggiadichvucoban/banggiadichvucoban.component";
+import { BangGiaDichVuCoBanInfoComponent } from "./components/banggiadichvucoban/banggiadichvucoban-info.component";
+import { LoaiDichVuComponent } from "./components/loaidichvu/loaidichvu.component";
+import { LoaiDichVuInfoComponent } from "./components/loaidichvu/loaidichvu-info.component";
 import { CongThucNuocComponent } from "./components/congthucnuoc/congthucnuoc.component";
 import { CongThucNuocInfoComponent } from "./components/congthucnuoc/congthucnuoc-info.component";
+import { DinhMucNuocComponent } from "./components/congthucnuoc/dinhmucnuoc.component";
+import { DichVuCoBanComponent } from "./components/dichvucoban/dichvucoban.component";
+import { DichVuCoBanInfoComponent } from "./components/dichvucoban/dichvucoban-info.component";
 import { CongThucNuocService } from "./services/congthucnuoc.service";
 import { CongThucNuocEndpoint } from "./services/congthucnuoc-endpoint.service";
 import { DinhMucNuocService } from "./services/dinhmucnuoc.service";
 import { DinhMucNuocEndpoint } from "./services/dinhmucnuoc-endpoint.service";
-import { DinhMucNuocComponent } from "./components/congthucnuoc/dinhmucnuoc.component";
-import { BangGiaXeComponent } from "./components/banggiaxe/banggiaxe.component";
-import { BangGiaXeInfoComponent } from "./components/banggiaxe/banggiaxe-info.component";
-import { BangGiaXeEndpoint } from "./services/banggiaxe-endpoint.service";
-import { BangGiaXeService } from "./services/banggiaxe.service";
-import { DichVuCoBanComponent } from "./components/dichvucoban/dichvucoban.component";
-import { DichVuCoBanInfoComponent } from "./components/dichvucoban/dichvucoban-info.component";
 import { DichVuCoBanService } from "./services/dichvucoban.service";
 import { DichVuCoBanEndpoint } from "./services/dichvucoban-endpoint.service";
 
@@ -364,13 +372,19 @@ import { DichVuCoBanEndpoint } from "./services/dichvucoban-endpoint.service";
         NhomKhachHangInfoComponent,
         YeuCauComponent,
         YeuCauInfoComponent,
-        //NguoiDungToaNhaComponent,
+        NguoiDungToaNhaComponent,
         NguoiDungToaNhaInfoComponent,
+        LoaiXeComponent,
+        LoaiXeInfoComponent,
+        BangGiaXeComponent,
+        BangGiaXeInfoComponent,
+        BangGiaDichVuCoBanComponent,
+        BangGiaDichVuCoBanInfoComponent,
+        LoaiDichVuComponent,
+        LoaiDichVuInfoComponent,
         CongThucNuocComponent,
         CongThucNuocInfoComponent,
         DinhMucNuocComponent,
-        BangGiaXeComponent,
-        BangGiaXeInfoComponent,
         DichVuCoBanComponent,
         DichVuCoBanInfoComponent,
         DanhMucComponent
@@ -442,12 +456,18 @@ import { DichVuCoBanEndpoint } from "./services/dichvucoban-endpoint.service";
         NguoiDungToaNhaEndpoint,
         YeuCauService,
         YeuCauEndpoint,
+        LoaiXeService,
+        LoaiXeEndpoint,
+        BangGiaXeService,
+        BangGiaXeEndpoint,
+        BangGiaDichVuCoBanService,
+        BangGiaDichVuCoBanEndpoint,
+        LoaiDichVuService,
+        LoaiDichVuEndpoint,
         CongThucNuocService,
         CongThucNuocEndpoint,
         DinhMucNuocService,
         DinhMucNuocEndpoint,
-        BangGiaXeEndpoint,
-        BangGiaXeService,
         DichVuCoBanService,
         DichVuCoBanEndpoint
         //MenuLeftComponent,

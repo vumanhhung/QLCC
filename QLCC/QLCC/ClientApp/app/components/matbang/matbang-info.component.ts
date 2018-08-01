@@ -18,6 +18,11 @@ import { LoaiTienService } from '../../services/loaitien.service';
 import { LoaiMatBang } from '../../models/loaimatbang.model';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
+import { KhachHang } from '../../models/khachhang.model';
+import { KhachHangService } from '../../services/khachhang.service';
+import { CuDan } from '../../models/cudan.model';
+import { CuDanService } from '../../services/cudan.service';
+
 @Component({
     selector: "matbang-info",
     templateUrl: "./matbang-info.component.html",
@@ -26,6 +31,8 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 })
 
 export class MatBangInfoComponent implements OnInit {
+    khachhangsFilter: KhachHang[];
+    cudansFilter: CuDan[];
     public tenmatbang: string = "";
     public isFullScreenModal: boolean = false;
     isViewDetails = false;
@@ -45,7 +52,6 @@ export class MatBangInfoComponent implements OnInit {
     chkcaNhan: boolean;
     chkgiaoChiaKhoa: boolean;
     chkchuSoHuu: boolean;
-    chkkhachThue: boolean;
     private isNew = false;
     private isEdit = false;
     private isSaving = false;
@@ -59,12 +65,17 @@ export class MatBangInfoComponent implements OnInit {
     public changesSavedCallback: () => void;
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
-    public cums: CumToaNha[];
-    public toas: ToaNha[];
+    //public cums: CumToaNha[];
+    //public toas: ToaNha[];
     public tangs: TangLau[];
     public trangthais: TrangThai[];
     public loaimatbangs: LoaiMatBang[];
     public trangthaiByID: TrangThai;
+    khachhangs: KhachHang[] = [];
+    khachhang: KhachHang = new KhachHang();
+    cudans: CuDan[] = [];
+    cudan: CuDan = new CuDan();
+
     @Input()
     isViewOnly: boolean;
     loadingIndicator: boolean
@@ -75,24 +86,28 @@ export class MatBangInfoComponent implements OnInit {
     private form;
     @ViewChild('editorModal')
     editorModal: ModalDirective;
-    constructor(private el: ElementRef, private alertService: AlertService, private gvService: MatBangService, private toanhaService: ToaNhaService, private cumtoanhaService: CumToaNhaService, private tanglauService: TangLauService, private trangthaiService: TrangThaiService) {
+    constructor(private el: ElementRef, private alertService: AlertService, private gvService: MatBangService, private toanhaService: ToaNhaService, private cumtoanhaService: CumToaNhaService, private tanglauService: TangLauService, private trangthaiService: TrangThaiService, private khService: KhachHangService, private cudanService: CuDanService) {
     }
 
-    
+
     ngOnInit() {
-        if (!this.isGeneralEditor) {
-            this.loadData();
-        }
+        //if (!this.isGeneralEditor) {
+        //    this.loadData();
+        //}
+
+        this.loadData();
     }
 
     loadData() {
         this.alertService.startLoadingMessage();
-        this.gvService.getMatBangByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
+        this.khachhangs = [];
+        this.cudans = [];
+        this.cudanService.getAllCuDan().subscribe(result => { this.cudans = result, this.cudansFilter = result }, error => this.onCurrentUserDataLoadFailed(error));
     }
 
-    private onDataLoadSuccessful(obj: MatBang) {
-        this.alertService.stopLoadingMessage();
-    }
+    //private onDataLoadSuccessful(obj: MatBang) {
+    //    this.alertService.stopLoadingMessage();
+    //}
 
     private onCurrentUserDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
@@ -131,11 +146,13 @@ export class MatBangInfoComponent implements OnInit {
     }
 
     private save() {
-        if (this.chkcaNhan == false || this.chkchuSoHuu == false || this.chkCumToaNhaId == false || this.chkgiaoChiaKhoa == false || this.chkkhachThue == false || this.chkloaiMatBangId == false || this.chkloaiTien == false || this.chktangLauId == false || this.chkToaNhaId == false || this.chkTrangThaiId == false) { return false; }
+        if (this.chkcaNhan == false || this.chkchuSoHuu == false || this.chkgiaoChiaKhoa == false || this.chkloaiMatBangId == false || this.chkloaiTien == false || this.chktangLauId == false || this.chkTrangThaiId == false) { return false; }
         else {
             this.isSaving = true;
             this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
             this.MatBangEdit.ngaybanGiao = this.value;
+            this.MatBangEdit.chuSoHuu = this.khachhang.khachHangId;
+            this.MatBangEdit.khachThue = this.cudan.cuDanId;
             if (this.isNew) {
                 this.gvService.addnewMatBang(this.MatBangEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
             }
@@ -173,10 +190,8 @@ export class MatBangInfoComponent implements OnInit {
     }
 
 
-    newMatBang() {
-        this.chkCumToaNhaId = false;
+    newMatBang(toaNhaId: number, cumToaNhaId: number) {
         this.bgcolorStautus = "#fff";
-        this.chkToaNhaId = false;
         this.chktangLauId = false;
         this.chkTrangThaiId = false;
         this.chkloaiMatBangId = false;
@@ -184,7 +199,6 @@ export class MatBangInfoComponent implements OnInit {
         this.chkcaNhan = false;
         this.chkgiaoChiaKhoa = false;
         this.chkchuSoHuu = false;
-        this.chkkhachThue = false;
 
         this.isGeneralEditor = true;
         this.isNew = true;
@@ -192,8 +206,8 @@ export class MatBangInfoComponent implements OnInit {
         this.showValidationErrors = true;
         this.editingRowName = null;
         this.MatBangEdit = new MatBang();
-        this.MatBangEdit.cumToaNhaId = 0;
-        this.MatBangEdit.toaNhaId = 0;
+        this.MatBangEdit.cumToaNhaId = cumToaNhaId;
+        this.MatBangEdit.toaNhaId = toaNhaId;
         this.MatBangEdit.tangLauId = 0;
         this.MatBangEdit.trangThaiId = 0;
         this.MatBangEdit.loaiMatBangId = 0;
@@ -249,7 +263,7 @@ export class MatBangInfoComponent implements OnInit {
     }
 
     editMatBang(obj: MatBang) {
-        this.loadToaNhaByCumToaNha(obj.cumToaNhaId);
+        //this.loadToaNhaByCumToaNha(obj.cumToaNhaId);
         this.loadTangLauByToaNha(obj.toaNhaId, obj.cumToaNhaId);
         this.LoadTrangthaiById(obj.trangThaiId);
         if (obj) {
@@ -267,7 +281,7 @@ export class MatBangInfoComponent implements OnInit {
             return this.MatBangEdit;
         }
         else {
-            return this.newMatBang();
+            //return this.newMatBang();
         }
     }
 
@@ -289,16 +303,16 @@ export class MatBangInfoComponent implements OnInit {
             this.changesSavedCallback();
     }
 
-    loadToaNhaByCumToaNha(s: number) {
-        this.toanhaService.getToaNhaByCum(s).subscribe(results => this.onDataLoadToaNhaSuccessful(results), error => this.onDataLoadFailed(error));
-    }
+    //loadToaNhaByCumToaNha(s: number) {
+    //    this.toanhaService.getToaNhaByCum(s).subscribe(results => this.onDataLoadToaNhaSuccessful(results), error => this.onDataLoadFailed(error));
+    //}
 
     loadTangLauByToaNha(toanha: number, cumtoanha) {
         this.tanglauService.getTangLauByToaNha(toanha, cumtoanha).subscribe(results => this.onDataLoadTangLauSuccessful(results), error => this.onDataLoadFailed(error));
     }
-    onDataLoadToaNhaSuccessful(obj: ToaNha[]) {
-        this.toas = obj;
-    }
+    //onDataLoadToaNhaSuccessful(obj: ToaNha[]) {
+    //    this.toas = obj;
+    //}
     onDataLoadTangLauSuccessful(obj: TangLau[]) {
         this.tangs = obj;
     }
@@ -310,26 +324,26 @@ export class MatBangInfoComponent implements OnInit {
             MessageSeverity.error, error);
     }
 
-    cumToaNhaIdChange(cumId: number) {
-        if (cumId > 0) {
-            this.chkCumToaNhaId = true;
-        } else {
-            this.chkCumToaNhaId = false;
-        }
-        this.MatBangEdit.toaNhaId = 0;
-        this.loadToaNhaByCumToaNha(cumId);
-        this.loadTangLauByToaNha(0, cumId);
-    }
+    //cumToaNhaIdChange(cumId: number) {
+    //    if (cumId > 0) {
+    //        this.chkCumToaNhaId = true;
+    //    } else {
+    //        this.chkCumToaNhaId = false;
+    //    }
+    //    this.MatBangEdit.toaNhaId = 0;
+    //    this.loadToaNhaByCumToaNha(cumId);
+    //    this.loadTangLauByToaNha(0, cumId);
+    //}
 
-    ToaNhaIdChange(toanhaId: number, cumtoanhaId: number) {
-        if (toanhaId > 0) {
-            this.chkToaNhaId = true;
-        } else {
-            this.chkToaNhaId = false;
-        }
-        this.MatBangEdit.tangLauId = 0;
-        this.loadTangLauByToaNha(toanhaId, cumtoanhaId);
-    }
+    //ToaNhaIdChange(toanhaId: number, cumtoanhaId: number) {
+    //    if (toanhaId > 0) {
+    //        this.chkToaNhaId = true;
+    //    } else {
+    //        this.chkToaNhaId = false;
+    //    }
+    //    this.MatBangEdit.tangLauId = 0;
+    //    this.loadTangLauByToaNha(toanhaId, cumtoanhaId);
+    //}
 
     TangLauIdChange(tanglauId: number) {
         if (tanglauId > 0) {
@@ -353,7 +367,11 @@ export class MatBangInfoComponent implements OnInit {
         }
     }
     caNhanChange(canhanh: number) {
-        if (canhanh > 0) {
+        if (canhanh == 1) {
+            this.chkcaNhan = true;
+            this.khService.getAllKhachHang().subscribe(result => { this.khachhangs = result, this.khachhangsFilter = result }, error => this.onCurrentUserDataLoadFailed(error));
+        } else if (canhanh == 2) {
+            this.khService.getAllKhachHangDoanhNghiep().subscribe(result => { this.khachhangs = result, this.khachhangsFilter = result }, error => this.onCurrentUserDataLoadFailed(error));
             this.chkcaNhan = true;
         } else {
             this.chkcaNhan = false;
@@ -376,19 +394,23 @@ export class MatBangInfoComponent implements OnInit {
         this.trangthaiByID = tt;
         this.bgcolorStautus = tt.mauNen;
     }
-    chuSoHuuChange(chusohuu: number) {
-        if (chusohuu > 0) {
+    chuSoHuuChange(khachhang) {
+        if (khachhang) {
             this.chkchuSoHuu = true;
-        } else {
+        }
+        else {
             this.chkchuSoHuu = false;
         }
     }
-    khachThueChange(khachthue: number) {
-        if (khachthue > 0) {
-            this.chkkhachThue = true;
-        } else {
-            this.chkkhachThue = false;
-        }
+    //khachThueChange(cudan) {        
+    //}
+
+    khachThuefilterChange(value) {
+        this.cudansFilter = this.cudans.filter((s) => s.hoTen.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+    }
+
+    chuSoHuufilterChange(value) {
+        this.khachhangsFilter = this.khachhangs.filter((s) => s.tenDayDu.toLowerCase().indexOf(value.toLowerCase()) !== -1);
     }
 
     giaoChiaKhoaChange(s: number) {

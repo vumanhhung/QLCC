@@ -26,24 +26,22 @@
                     </div>
                     <div class="modal-body" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
                         <div class="row">
-                            <div class="col-sm-12" style="padding:0;">
-                                <div class="has-feedback col-sm-4">
-                                    <label class="control-label" for="nhomKhachHang-{{uniqueId}}">Nhóm khách hàng</label>
-                                    <div class="control" [ngClass]="{'has-success': f.submitted && chkNhomKhachHang, 'has-error' : f.submitted && !chkNhomKhachHang}">
-                                        <select name="nhomKhachHangId" [(ngModel)]="KhachHangEdit.nhomKhachHangId" #nhomKhachHangId="ngModel" class="form-control" (change)="nhomKhachHangChk(nhomKhachHangId.value)">
-                                            <option value="0">--- Chọn nhóm khách hàng ---</option>
-                                            <option *ngFor="let o of nhomKhachHang" value="{{o.nhomKhachHangId}}">
-                                                {{o.tenNhomKhachHang}}
-                                            </option>
-                                        </select>
-                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkNhomKhachHang, 'glyphicon-remove' : !chkNhomKhachHang}"></span>
-                                        <span *ngIf="showValidationErrors && f.submitted && !chkNhomKhachHang" class="errorMessage">
-                                            Vui lòng chọn nhóm khách hàng!
-                                        </span>
-                                    </div>
+                            <h6 class="col-lg-12" style="margin:0"><i>---Thông tin công ty---</i></h6>
+                            <div class="has-feedback col-sm-4">
+                                <label class="control-label" for="nhomKhachHang-{{uniqueId}}">Nhóm khách hàng</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && chkNhomKhachHang, 'has-error' : f.submitted && !chkNhomKhachHang}">
+                                    <select name="nhomKhachHangId" [(ngModel)]="KhachHangEdit.nhomKhachHangId" #nhomKhachHangId="ngModel" class="form-control" (change)="nhomKhachHangChk(nhomKhachHangId.value)">
+                                        <option value="0">--- Chọn nhóm khách hàng ---</option>
+                                        <option *ngFor="let o of nhomKhachHang" value="{{o.nhomKhachHangId}}">
+                                            {{o.tenNhomKhachHang}}
+                                        </option>
+                                    </select>
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkNhomKhachHang, 'glyphicon-remove' : !chkNhomKhachHang}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !chkNhomKhachHang" class="errorMessage">
+                                        Vui lòng chọn nhóm khách hàng!
+                                    </span>
                                 </div>
                             </div>
-                            <div class="clearfix"></div>
                             <div class="has-feedback col-sm-4">
                                 <label class="control-label" for="tenCongTy-{{uniqueId}}">Tên công ty</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && tenCongTy.valid, 'has-error' : f.submitted && !tenCongTy.valid}">
@@ -58,21 +56,6 @@
                                 <label class="control-label" for="tenVietTat-{{uniqueId}}">Tên viết tắt</label>
                                 <div class="control">
                                     <input autofocus type="text" class="form-control" name="tenVietTat" [(ngModel)]="KhachHangEdit.tenVietTat" #tenVietTat="ngModel" />
-                                </div>
-                            </div>
-                            <div class="has-feedback col-sm-4">
-                                <label class="control-label" for="quocTich-{{uniqueId}}">Quốc tịch</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && chkquocTich, 'has-error' : f.submitted && !chkquocTich}">
-                                    <select name="quocTich" [(ngModel)]="KhachHangEdit.quocTich" #quocTich="ngModel" class="form-control" (change)="quocTichChange(quocTich.value)">
-                                        <option value="0">--- Chọn quốc tịch ---</option>
-                                        <option *ngFor="let o of quoctich" value="{{o.tenNuoc}}">
-                                            {{o.tenNuoc}}
-                                        </option>
-                                    </select>
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkquocTich, 'glyphicon-remove' : !chkquocTich}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !chkquocTich" class="errorMessage">
-                                        Vui lòng chọn quốc tịch!
-                                    </span>
                                 </div>
                             </div>
                             <div class="clearfix"></div>
@@ -105,40 +88,6 @@
                                         Vui lòng nhập fax!
                                     </span>
                                 </div>
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="has-feedback col-sm-4">
-                                <label class="control-label" for="nguoiDaiDien-{{uniqueId}}">Người đại diện</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && nguoiDaiDien.valid, 'has-error' : f.submitted && !nguoiDaiDien.valid}">
-                                    <input autofocus type="text" class="form-control" name="nguoiDaiDien" [(ngModel)]="KhachHangEdit.nguoiDaiDien" #nguoiDaiDien="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': nguoiDaiDien.valid, 'glyphicon-remove' : !nguoiDaiDien.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !nguoiDaiDien.valid" class="errorMessage">
-                                        Vui lòng nhập người đại diện!
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="has-feedback col-sm-4">
-                                <label class="control-label" for="chucVu-{{uniqueId}}">Chức vụ</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && chucVu.valid, 'has-error' : f.submitted && !chucVu.valid}">
-                                    <input autofocus type="text" class="form-control" name="chucVu" [(ngModel)]="KhachHangEdit.chucVu" #chucVu="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chucVu.valid, 'glyphicon-remove' : !chucVu.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !chucVu.valid" class="errorMessage">
-                                        Vui lòng nhập chức vụ!
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="has-feedback col-sm-4">
-                                <label class="control-label" for="gioiTinh-{{uniqueId}}">Giới tính</label>
-                                <div class="clearfix"></div>
-                                <div style="float: left;margin-right: 40px;margin-top: 10px">
-                                    <input type="radio" id="r_nam" [value]="1" name="gioitinh" class="k-radio" checked [(ngModel)]="KhachHangEdit.gioiTinh" #gioiTinh="ngModel" />
-                                    <label class="k-radio-label" for="r_nam">Nam</label><br />
-                                </div>
-                                <div style="float: left;margin-right: 40px;margin-top: 10px">
-                                    <input type="radio" id="r_nu" [value]="2" name="gioitinh" class="k-radio" [(ngModel)]="KhachHangEdit.gioiTinh" #gioiTinh="ngModel" />
-                                    <label class="k-radio-label" for="r_nu">Nữ</label><br />
-                                </div>
-                                <div class="clearfix"></div>
                             </div>
                             <div class="clearfix"></div>
                             <div class="has-feedback col-sm-4">
@@ -203,6 +152,56 @@
                                     </span>
                                 </div>
                             </div>
+                            <div class="clearfix"></div>
+                            <h6 class="col-lg-12" style="margin-bottom:0"><i>---Thông tin người đại diện---</i></h6>
+                            <div class="has-feedback col-sm-3">
+                                <label class="control-label" for="nguoiDaiDien-{{uniqueId}}">Người đại diện</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && nguoiDaiDien.valid, 'has-error' : f.submitted && !nguoiDaiDien.valid}">
+                                    <input autofocus type="text" class="form-control" name="nguoiDaiDien" [(ngModel)]="KhachHangEdit.nguoiDaiDien" #nguoiDaiDien="ngModel" required />
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': nguoiDaiDien.valid, 'glyphicon-remove' : !nguoiDaiDien.valid}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !nguoiDaiDien.valid" class="errorMessage">
+                                        Vui lòng nhập người đại diện!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="has-feedback col-sm-3">
+                                <label class="control-label" for="chucVu-{{uniqueId}}">Chức vụ</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && chucVu.valid, 'has-error' : f.submitted && !chucVu.valid}">
+                                    <input autofocus type="text" class="form-control" name="chucVu" [(ngModel)]="KhachHangEdit.chucVu" #chucVu="ngModel" required />
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chucVu.valid, 'glyphicon-remove' : !chucVu.valid}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !chucVu.valid" class="errorMessage">
+                                        Vui lòng nhập chức vụ!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="has-feedback col-sm-3">
+                                <label class="control-label" for="gioiTinh-{{uniqueId}}">Giới tính</label>
+                                <div class="clearfix"></div>
+                                <div style="float: left;margin-right: 40px;margin-top: 10px">
+                                    <input type="radio" id="r_nam" [value]="1" name="gioitinh" class="k-radio" checked [(ngModel)]="KhachHangEdit.gioiTinh" #gioiTinh="ngModel" />
+                                    <label class="k-radio-label" for="r_nam">Nam</label><br />
+                                </div>
+                                <div style="float: left;margin-right: 40px;margin-top: 10px">
+                                    <input type="radio" id="r_nu" [value]="2" name="gioitinh" class="k-radio" [(ngModel)]="KhachHangEdit.gioiTinh" #gioiTinh="ngModel" />
+                                    <label class="k-radio-label" for="r_nu">Nữ</label><br />
+                                </div>
+                            </div>
+                            <div class="has-feedback col-sm-3">
+                                <label class="control-label" for="quocTich-{{uniqueId}}">Quốc tịch</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && chkquocTich, 'has-error' : f.submitted && !chkquocTich}">
+                                    <select name="quocTich" [(ngModel)]="KhachHangEdit.quocTich" #quocTich="ngModel" class="form-control" (change)="quocTichChange(quocTich.value)">
+                                        <option value="0">--- Chọn quốc tịch ---</option>
+                                        <option *ngFor="let o of quoctich" value="{{o.tenNuoc}}">
+                                            {{o.tenNuoc}}
+                                        </option>
+                                    </select>
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkquocTich, 'glyphicon-remove' : !chkquocTich}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !chkquocTich" class="errorMessage">
+                                        Vui lòng chọn quốc tịch!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
                             <div class="col-md-12">
                                 <hr class="edit-last-separator-hr" />
                             </div>

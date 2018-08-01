@@ -259,6 +259,7 @@ export class DinhMucNuocComponent implements OnInit {
 
     formatPrice(price: string): string {
         if (price) {
+            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
             var pN = Number(price);
             var fm = Utilities.formatNumber(pN);
             return fm;

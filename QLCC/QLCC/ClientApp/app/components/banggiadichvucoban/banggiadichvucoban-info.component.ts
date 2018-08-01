@@ -4,6 +4,9 @@ import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { Utilities } from '../../services/utilities';
 import { BangGiaDichVuCoBan } from "../../models/banggiadichvucoban.model";
 import { BangGiaDichVuCoBanService } from "./../../services/banggiadichvucoban.service";
+import { LoaiDichVu } from '../../models/loaidichvu.model';
+import { LoaiTien } from '../../models/loaitien.model';
+import { DonViTinh } from '../../models/donvitinh.model';
 
 @Component({
     selector: "banggiadichvucoban-info",
@@ -24,7 +27,12 @@ export class BangGiaDichVuCoBanInfoComponent implements OnInit {
     public changesSavedCallback: () => void;
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
-    
+    toaNhaId: number;
+    loaidichvus: LoaiDichVu[] = [];
+    loaitiens: LoaiTien[] = [];
+    donvitinhs: DonViTinh[] = [];
+    donGia: string = "0";
+
     @Input()
     isViewOnly: boolean;
 
@@ -33,10 +41,10 @@ export class BangGiaDichVuCoBanInfoComponent implements OnInit {
 
     @ViewChild('f')
     private form;
-    
+
     constructor(private alertService: AlertService, private gvService: BangGiaDichVuCoBanService) {
     }
-    
+
     ngOnInit() {
         if (!this.isGeneralEditor) {
             this.loadData();
@@ -47,7 +55,7 @@ export class BangGiaDichVuCoBanInfoComponent implements OnInit {
         this.alertService.startLoadingMessage();
         this.gvService.getBangGiaDichVuCoBanByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
     }
-    
+
     private onDataLoadSuccessful(obj: BangGiaDichVuCoBan) {
         this.alertService.stopLoadingMessage();
     }
@@ -71,7 +79,7 @@ export class BangGiaDichVuCoBanInfoComponent implements OnInit {
             });
         }
     }
-    
+
     private cancel() {
         this.BangGiaDichVuCoBanEdit = new BangGiaDichVuCoBan();
         this.showValidationErrors = false;
@@ -86,22 +94,33 @@ export class BangGiaDichVuCoBanInfoComponent implements OnInit {
     }
 
     private save() {
-        this.isSaving = true;
-        this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");        
-        if (this.isNew) {
-            this.gvService.addnewBangGiaDichVuCoBan(this.BangGiaDichVuCoBanEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
-        }
-        else {
-            this.gvService.updateBangGiaDichVuCoBan(this.BangGiaDichVuCoBanEdit.bangGiaDichVuCoBanId, this.BangGiaDichVuCoBanEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
+        if (this.donGia == "0" || this.donGia == "") {
+            this.showErrorAlert("Lỗi nhập liệu", "Vui lòng nhập đơn giá > 0!");
+            return false;
+        } else {
+            this.isSaving = true;
+            this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
+            if (this.isNew) {
+                this.BangGiaDichVuCoBanEdit.toaNhaId = this.toaNhaId;
+                this.BangGiaDichVuCoBanEdit.donGia = Number(this.donGia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
+                this.gvService.addnewBangGiaDichVuCoBan(this.BangGiaDichVuCoBanEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
+            }
+            else {
+                this.gvService.updateBangGiaDichVuCoBan(this.BangGiaDichVuCoBanEdit.bangGiaDichVuCoBanId, this.BangGiaDichVuCoBanEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
+            }
         }
     }
-    
+
     newBangGiaDichVuCoBan() {
         this.isGeneralEditor = true;
         this.isNew = true;
         this.showValidationErrors = true;
         this.editingRowName = null;
         this.BangGiaDichVuCoBanEdit = new BangGiaDichVuCoBan();
+        this.BangGiaDichVuCoBanEdit.loaiDichVuId = this.loaidichvus.length > 0 ? this.loaidichvus[0].loaiDichVuId : null;
+        this.BangGiaDichVuCoBanEdit.loaiTienId = this.loaitiens.length > 0 ? this.loaitiens[0].loaiTienId : null;
+        this.BangGiaDichVuCoBanEdit.donViTinhId = this.donvitinhs.length > 0 ? this.donvitinhs[0].donViTinhId : null;
+        this.donGia == "1000";
         this.edit();
         return this.BangGiaDichVuCoBanEdit;
     }
@@ -112,11 +131,11 @@ export class BangGiaDichVuCoBanInfoComponent implements OnInit {
 
         this.isSaving = false;
         this.alertService.stopLoadingMessage();
-        this.showValidationErrors = false;        
+        this.showValidationErrors = false;
         if (this.isGeneralEditor) {
             if (this.isNew) {
                 this.alertService.showMessage("Thành công", `Thực hiện thêm mới thành công`, MessageSeverity.success);
-            }                
+            }
             else
                 this.alertService.showMessage("Thành công", `Thực hiện thay đổi thông tin thành công`, MessageSeverity.success);
         }
@@ -137,7 +156,7 @@ export class BangGiaDichVuCoBanInfoComponent implements OnInit {
         if (this.changesFailedCallback)
             this.changesFailedCallback();
     }
-    
+
     private showErrorAlert(caption: string, message: string) {
         this.alertService.showMessage(caption, message, MessageSeverity.error);
     }
@@ -149,7 +168,7 @@ export class BangGiaDichVuCoBanInfoComponent implements OnInit {
             this.editingRowName = obj.dienGiai;
             this.BangGiaDichVuCoBanEdit = new BangGiaDichVuCoBan();
             Object.assign(this.BangGiaDichVuCoBanEdit, obj);
-            Object.assign(this.BangGiaDichVuCoBanEdit, obj);
+            this.donGia = this.formatPrice(this.BangGiaDichVuCoBanEdit.donGia.toString());
             this.edit();
 
             return this.BangGiaDichVuCoBanEdit;
@@ -175,5 +194,22 @@ export class BangGiaDichVuCoBanInfoComponent implements OnInit {
 
         if (this.changesSavedCallback)
             this.changesSavedCallback();
-    }    
+    }
+
+    donGiaChange(price: string) {
+        if (price) {
+            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+            var pN = Number(pS);
+            this.donGia = Utilities.formatNumber(pN);
+        }
+    }
+
+    formatPrice(price: string): string {
+        if (price) {
+            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+            var pN = Number(pS);
+            var fm = Utilities.formatNumber(pN);
+            return fm;
+        } else return "";
+    }
 }

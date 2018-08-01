@@ -1,131 +1,173 @@
-﻿<div>
-    <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="LoaiDichVuInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
-          (!tenLoaiDichVu.valid && showErrorAlert('TenLoaiDichVu không được để trống', 'Vui lòng nhập TenLoaiDichVu!'));
-(!moTa.valid && showErrorAlert('MoTa không được để trống', 'Vui lòng nhập MoTa!'));
+﻿<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div *ngIf="!isViewDetails" class="EditForm">
+                <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="LoaiDichVuInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
+                      (!tenLoaiDichVu.valid && showErrorAlert('TenLoaiDichVu không được để trống', 'Vui lòng nhập TenLoaiDichVu!'));
+                      (!moTa.valid && showErrorAlert('MoTa không được để trống', 'Vui lòng nhập MoTa!'));
 (!viTri.valid && showErrorAlert('ViTri không được để trống', 'Vui lòng nhập ViTri!'));
-(!maLoaiDichVuCha.valid && showErrorAlert('MaLoaiDichVuCha không được để trống', 'Vui lòng nhập MaLoaiDichVuCha!'));
-(!dichVuCoBan.valid && showErrorAlert('DichVuCoBan không được để trống', 'Vui lòng nhập DichVuCoBan!'));
-(!trangThai.valid && showErrorAlert('TrangThai không được để trống', 'Vui lòng nhập TrangThai!'));
-(!nguoiNhap.valid && showErrorAlert('NguoiNhap không được để trống', 'Vui lòng nhập NguoiNhap!'));
-(!ngayNhap.valid && showErrorAlert('NgayNhap không được để trống', 'Vui lòng nhập NgayNhap!'));
-(!nguoiSua.valid && showErrorAlert('NguoiSua không được để trống', 'Vui lòng nhập NguoiSua!'));
-(!ngaySua.valid && showErrorAlert('NgaySua không được để trống', 'Vui lòng nhập NgaySua!'));
 ">
-<div class="form-group has-feedback">
-<label class="control-label col-md-2" for="tenLoaiDichVu-{{uniqueId}}">TenLoaiDichVu</label>
-<div class="col-md-10" [ngClass]="{'has-success': f.submitted && tenLoaiDichVu.valid, 'has-error' : f.submitted && !tenLoaiDichVu.valid}">
-<input autofocus type="text" class="form-control" name="tenLoaiDichVu" [(ngModel)]="LoaiDichVuEdit.tenLoaiDichVu" #tenLoaiDichVu="ngModel" required />
-<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tenLoaiDichVu.valid, 'glyphicon-remove' : !tenLoaiDichVu.valid}"></span>
-<span *ngIf="showValidationErrors && f.submitted && !tenLoaiDichVu.valid" class="errorMessage">
-Vui lòng nhập tenLoaiDichVu!
-</span>
-</div>
-</div>
-<div class="form-group has-feedback">
-<label class="control-label col-md-2" for="moTa-{{uniqueId}}">MoTa</label>
-<div class="col-md-10" [ngClass]="{'has-success': f.submitted && moTa.valid, 'has-error' : f.submitted && !moTa.valid}">
-<input autofocus type="text" class="form-control" name="moTa" [(ngModel)]="LoaiDichVuEdit.moTa" #moTa="ngModel" required />
-<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': moTa.valid, 'glyphicon-remove' : !moTa.valid}"></span>
-<span *ngIf="showValidationErrors && f.submitted && !moTa.valid" class="errorMessage">
-Vui lòng nhập moTa!
-</span>
-</div>
-</div>
-<div class="form-group has-feedback">
-<label class="control-label col-md-2" for="viTri-{{uniqueId}}">ViTri</label>
-<div class="col-md-10" [ngClass]="{'has-success': f.submitted && viTri.valid, 'has-error' : f.submitted && !viTri.valid}">
-<input autofocus type="text" class="form-control" name="viTri" [(ngModel)]="LoaiDichVuEdit.viTri" #viTri="ngModel" required />
-<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': viTri.valid, 'glyphicon-remove' : !viTri.valid}"></span>
-<span *ngIf="showValidationErrors && f.submitted && !viTri.valid" class="errorMessage">
-Vui lòng nhập viTri!
-</span>
-</div>
-</div>
-<div class="form-group has-feedback">
-<label class="control-label col-md-2" for="maLoaiDichVuCha-{{uniqueId}}">MaLoaiDichVuCha</label>
-<div class="col-md-10" [ngClass]="{'has-success': f.submitted && maLoaiDichVuCha.valid, 'has-error' : f.submitted && !maLoaiDichVuCha.valid}">
-<input autofocus type="text" class="form-control" name="maLoaiDichVuCha" [(ngModel)]="LoaiDichVuEdit.maLoaiDichVuCha" #maLoaiDichVuCha="ngModel" required />
-<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': maLoaiDichVuCha.valid, 'glyphicon-remove' : !maLoaiDichVuCha.valid}"></span>
-<span *ngIf="showValidationErrors && f.submitted && !maLoaiDichVuCha.valid" class="errorMessage">
-Vui lòng nhập maLoaiDichVuCha!
-</span>
-</div>
-</div>
-<div class="form-group has-feedback">
-<label class="control-label col-md-2" for="dichVuCoBan-{{uniqueId}}">DichVuCoBan</label>
-<div class="col-md-10" [ngClass]="{'has-success': f.submitted && dichVuCoBan.valid, 'has-error' : f.submitted && !dichVuCoBan.valid}">
-<input autofocus type="text" class="form-control" name="dichVuCoBan" [(ngModel)]="LoaiDichVuEdit.dichVuCoBan" #dichVuCoBan="ngModel" required />
-<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': dichVuCoBan.valid, 'glyphicon-remove' : !dichVuCoBan.valid}"></span>
-<span *ngIf="showValidationErrors && f.submitted && !dichVuCoBan.valid" class="errorMessage">
-Vui lòng nhập dichVuCoBan!
-</span>
-</div>
-</div>
-<div class="form-group has-feedback">
-<label class="control-label col-md-2" for="trangThai-{{uniqueId}}">TrangThai</label>
-<div class="col-md-10" [ngClass]="{'has-success': f.submitted && trangThai.valid, 'has-error' : f.submitted && !trangThai.valid}">
-<input autofocus type="text" class="form-control" name="trangThai" [(ngModel)]="LoaiDichVuEdit.trangThai" #trangThai="ngModel" required />
-<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': trangThai.valid, 'glyphicon-remove' : !trangThai.valid}"></span>
-<span *ngIf="showValidationErrors && f.submitted && !trangThai.valid" class="errorMessage">
-Vui lòng nhập trangThai!
-</span>
-</div>
-</div>
-<div class="form-group has-feedback">
-<label class="control-label col-md-2" for="nguoiNhap-{{uniqueId}}">NguoiNhap</label>
-<div class="col-md-10" [ngClass]="{'has-success': f.submitted && nguoiNhap.valid, 'has-error' : f.submitted && !nguoiNhap.valid}">
-<input autofocus type="text" class="form-control" name="nguoiNhap" [(ngModel)]="LoaiDichVuEdit.nguoiNhap" #nguoiNhap="ngModel" required />
-<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': nguoiNhap.valid, 'glyphicon-remove' : !nguoiNhap.valid}"></span>
-<span *ngIf="showValidationErrors && f.submitted && !nguoiNhap.valid" class="errorMessage">
-Vui lòng nhập nguoiNhap!
-</span>
-</div>
-</div>
-<div class="form-group has-feedback">
-<label class="control-label col-md-2" for="ngayNhap-{{uniqueId}}">NgayNhap</label>
-<div class="col-md-10" [ngClass]="{'has-success': f.submitted && ngayNhap.valid, 'has-error' : f.submitted && !ngayNhap.valid}">
-<input autofocus type="text" class="form-control" name="ngayNhap" [(ngModel)]="LoaiDichVuEdit.ngayNhap" #ngayNhap="ngModel" required />
-<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ngayNhap.valid, 'glyphicon-remove' : !ngayNhap.valid}"></span>
-<span *ngIf="showValidationErrors && f.submitted && !ngayNhap.valid" class="errorMessage">
-Vui lòng nhập ngayNhap!
-</span>
-</div>
-</div>
-<div class="form-group has-feedback">
-<label class="control-label col-md-2" for="nguoiSua-{{uniqueId}}">NguoiSua</label>
-<div class="col-md-10" [ngClass]="{'has-success': f.submitted && nguoiSua.valid, 'has-error' : f.submitted && !nguoiSua.valid}">
-<input autofocus type="text" class="form-control" name="nguoiSua" [(ngModel)]="LoaiDichVuEdit.nguoiSua" #nguoiSua="ngModel" required />
-<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': nguoiSua.valid, 'glyphicon-remove' : !nguoiSua.valid}"></span>
-<span *ngIf="showValidationErrors && f.submitted && !nguoiSua.valid" class="errorMessage">
-Vui lòng nhập nguoiSua!
-</span>
-</div>
-</div>
-<div class="form-group has-feedback">
-<label class="control-label col-md-2" for="ngaySua-{{uniqueId}}">NgaySua</label>
-<div class="col-md-10" [ngClass]="{'has-success': f.submitted && ngaySua.valid, 'has-error' : f.submitted && !ngaySua.valid}">
-<input autofocus type="text" class="form-control" name="ngaySua" [(ngModel)]="LoaiDichVuEdit.ngaySua" #ngaySua="ngModel" required />
-<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ngaySua.valid, 'glyphicon-remove' : !ngaySua.valid}"></span>
-<span *ngIf="showValidationErrors && f.submitted && !ngaySua.valid" class="errorMessage">
-Vui lòng nhập ngaySua!
-</span>
-</div>
-</div>
-        <div class="col-md-12">
-            <hr class="edit-last-separator-hr" />
+                    <div class="modal-header">
+                        <p *ngIf="isNew" class="modal-title pull-left">
+                            <i class="fa fa-plus"></i> Thêm mới loại dịch vụ
+                        </p>
+                        <p *ngIf="isEdit" class="modal-title pull-left">
+                            <i class="fa fa-pencil-square-o"></i> Chỉnh sửa thông tin loại dịch vụ
+                        </p>
+                        <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-md-2" for="tenLoaiDichVu-{{uniqueId}}">Tên loại dịch vụ</label>
+                                <div class="col-md-5">
+                                    <input autofocus type="text" class="form-control" name="tenLoaiDichVu" [(ngModel)]="LoaiDichVuEdit.tenLoaiDichVu" #tenLoaiDichVu="ngModel" required />
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tenLoaiDichVu.valid, 'glyphicon-remove' : !tenLoaiDichVu.valid}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !tenLoaiDichVu.valid" class="errorMessage">
+                                        Vui lòng nhập ký hiệu!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-md-2" for="moTa-{{uniqueId}}">Mô tả</label>
+                                <div class="col-md-5">
+                                    <input autofocus type="text" class="form-control" name="moTa" [(ngModel)]="LoaiDichVuEdit.moTa" #moTa="ngModel" required />
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': moTa.valid, 'glyphicon-remove' : !moTa.valid}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !moTa.valid" class="errorMessage">
+                                        Vui lòng nhập mô tả!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-md-2" for="maLoaiDichVuCha-{{uniqueId}}">Danh mục cha</label>
+                                <div class="col-md-5" [ngClass]="{'has-success': f.submitted && chDichVu, 'has-error' : f.submitted && !chDichVu}">
+                                    <select name="maLoaiDichVuCha" [(ngModel)]="LoaiDichVuEdit.maLoaiDichVuCha" #maLoaiDichVuCha="ngModel" class="form-control" (change)="changeDanhMuc(maLoaiDichVuCha.value)">
+                                        <option value="0">--- Chọn nhóm dịch vụ ---</option>
+                                        <option *ngFor="let o of listDichVu" value="{{o.loaiDichVuId}}">
+                                            {{o.tenLoaiDichVu}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-md-2" for="viTri-{{uniqueId}}">Vị trí</label>
+                                <div class="col-md-5">
+                                    <input autofocus type="number" class="form-control" name="viTri" min="1" [(ngModel)]="LoaiDichVuEdit.viTri" #viTri="ngModel" required />
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': viTri.valid, 'glyphicon-remove' : !viTri.valid}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !viTri.valid" class="errorMessage">
+                                        Vui lòng nhập vị trí!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-md-2" for="dichVuCoBan-{{uniqueId}}">Dịch vụ cơ bản</label>
+                                <div class="col-md-5">
+                                    <div style="float: left;margin-right: 40px;margin-top: 10px">
+                                        <input type="radio" id="r_true" [value]="true" name="dichVuCoBan" class="k-radio" checked [(ngModel)]="LoaiDichVuEdit.dichVuCoBan" #dichVuCoBan="ngModel" />
+                                        <label class="k-radio-label" for="r_true">Đúng</label>
+                                        <br />
+                                    </div>
+                                    <div style="float: left;margin-right: 40px;margin-top: 10px">
+                                        <input type="radio" id="r_false" [value]="false" name="dichVuCoBan" class="k-radio" [(ngModel)]="LoaiDichVuEdit.dichVuCoBan" #dichVuCoBan="ngModel" />
+                                        <label class="k-radio-label" for="r_false">Sai</label>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="control-label col-md-2" for="trangThai-{{uniqueId}}">Trạng thái</label>
+                                <div class="col-md-5">
+                                    <div style="float: left;margin-right: 40px;margin-top: 10px">
+                                        <input type="radio" id="r_dang" [value]="1" name="trangThai" class="k-radio" checked [(ngModel)]="LoaiDichVuEdit.trangThai" #trangThai="ngModel" />
+                                        <label class="k-radio-label" for="r_dang">Đang hoạt động</label>
+                                        <br />
+                                    </div>
+                                    <div style="float: left;margin-right: 40px;margin-top: 10px">
+                                        <input type="radio" id="r_dung" [value]="2" name="trangThai" class="k-radio" [(ngModel)]="LoaiDichVuEdit.trangThai" #trangThai="ngModel" />
+                                        <label class="k-radio-label" for="r_dung">Dừng hoạt động</label>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <hr class="edit-last-separator-hr" />
+                            </div>
+                            <div class="form-group actionBtn-form-group">
+                                <div class="col-sm-7">
+                                    <div class="pull-right">
+                                        <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                                        <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                                        <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
+                                            <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
+                                        </button>
+                                        <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="form-group actionBtn-form-group">
-            <div class="col-sm-7">
-                <div class="pull-right">
-                    <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
-                    <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
-                    <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
-                    <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
-                        <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
-                    </button>
+    </div>
+
+
+    <div *ngIf="isViewDetails" class="ViewForm">
+        <div class="modal-header">
+            <p class="modal-title pull-left">
+                <i class="fa fa-eye"></i> Chi tiết loại dịch vụ
+                <span>{{tenLoaiDichVu}}</span>
+            </p>
+            <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div>
+                <form #f="ngForm">
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="boldText">Tên Loại dịch vụ:</td>
+                                    <td>{{LoaiDichVuEdit.tenLoaiDichVu}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="boldText">Mô tả:</td>
+                                    <td>{{LoaiDichVuEdit.moTa}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="boldText">Trạng thái:</td>
+                                    <td *ngIf="LoaiDichVuEdit.trangThai == 1">Đang hoạt động</td>
+                                    <td *ngIf="LoaiDichVuEdit.trangThai == 2">Dừng hoạt động</td>
+                                </tr>
+                                <tr>
+                                    <td class="boldText">Ngày Nhập:</td>
+                                    <td>{{LoaiDichVuEdit.ngayNhap | date:'dd/MM/yyyy'}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="boldText">Ngày Sửa:</td>
+                                    <td>{{LoaiDichVuEdit.ngaySua | date: 'dd/MM/yyyy'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="actionBtn-form-group">
+                <div class="col-sm-7">
+                    <div class="pull-right">
+                        <button type="button" (click)="movetoEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                        <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="clearfix"></div>
-    </form>
+    </div>
 </div>

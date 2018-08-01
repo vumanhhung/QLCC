@@ -15,6 +15,9 @@ import { CumToaNhaService } from '../../services/cumtoanha.service';
 import { TangLauService } from '../../services/tanglau.service';
 import { MatBang } from '../../models/matbang.model';
 import { MatBangService } from '../../services/matbang.service';
+import { NguoiDungToaNha } from '../../models/nguoidungtoanha.model';
+import { AuthService } from '../../services/auth.service';
+import { NguoiDungToaNhaService } from '../../services/nguoidungtoanha.service';
 
 @Component({
     selector: "yeucau",
@@ -41,6 +44,7 @@ export class YeuCauComponent implements OnInit, AfterViewInit {
     matbangs: MatBang[] = [];
     arrMatBang: number[] = [];
     listMB: string = "";
+    objNDTN: NguoiDungToaNha = new NguoiDungToaNha();
 
     @ViewChild('f')
     private form;
@@ -64,7 +68,7 @@ export class YeuCauComponent implements OnInit, AfterViewInit {
     @ViewChild('ThoiGianHen')
     ThoiGianHen: TemplateRef<any>;
 
-    constructor(private alertService: AlertService, private translationService: AppTranslationService, private yeucauService: YeuCauService, private matbangService: MatBangService, private toanhaService: ToaNhaService, private cumtoanhaService: CumToaNhaService, private tanglauService: TangLauService, ) {
+    constructor(private alertService: AlertService, private translationService: AppTranslationService, private yeucauService: YeuCauService, private matbangService: MatBangService, private toanhaService: ToaNhaService, private cumtoanhaService: CumToaNhaService, private tanglauService: TangLauService, private authService: AuthService, private nguoidungtoanhaService: NguoiDungToaNhaService) {
     }
 
     ngOnInit() {
@@ -87,12 +91,27 @@ export class YeuCauComponent implements OnInit, AfterViewInit {
             { name: 'Chức năng', width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
 
-        this.loadCumToaNha();
-        this.loadToaNha(0);
-        this.loadTangLau(0, 0);
-        this.chkAll = true;
-        this.loadMatBang(0, 0, 0);
+        //this.loadCumToaNha();
+        //this.loadToaNha(0);       
+
+        if (this.authService.currentUser) {
+            var userId = this.authService.currentUser.id;
+            var where = "NguoiDungId = '" + userId + "'";
+            this.nguoidungtoanhaService.getItems(0, 1, where, "x").subscribe(result => this.getNguoiDungToaNha(result), error => {
+                this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất dữ liệu người dùng tòa nhà từ máy chủ.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
+                    MessageSeverity.error, error);
+            });
+        }
         //this.loadData(this.listMB, this.chkAll);
+    }
+
+    getNguoiDungToaNha(list: NguoiDungToaNha[]) {
+        if (list.length > 0) {
+            this.objNDTN = list[0];
+            this.loadTangLau(this.objNDTN.toaNhaId, this.objNDTN.toaNha.cumToaNhaId);
+            this.chkAll = false;
+            this.loadMatBang(0, this.objNDTN.toaNhaId, this.objNDTN.toaNha.cumToaNhaId);
+        }
     }
 
     ngAfterViewInit() {
@@ -158,7 +177,7 @@ export class YeuCauComponent implements OnInit, AfterViewInit {
             this.listMB = this.listMB.substring(0, this.listMB.length - 1);
             this.listMB += ")";
         } else {
-            this.listMB = "";
+            this.listMB = "(0)";
         }
         this.loadData(this.listMB, this.chkAll);
     }
@@ -227,6 +246,8 @@ export class YeuCauComponent implements OnInit, AfterViewInit {
         this.editingRowName = null;
         this.sourceyeucau = null;
         this.yeucauEdit = this.YeuCauEditor.newYeuCau();
+        this.YeuCauEditor.toaNhaId = this.objNDTN.toaNhaId;
+        this.YeuCauEditor.cumToaNhaId = this.objNDTN.toaNha.cumToaNhaId;
         this.YeuCauEditor.editorModal.show();
         this.YeuCauEditor.cums = this.cums;
         this.YeuCauEditor.toas = this.toas;
@@ -258,12 +279,12 @@ export class YeuCauComponent implements OnInit, AfterViewInit {
                 this.rows = this.rows.filter(item => item !== row)
                 this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
             },
-            error => {
-                this.alertService.stopLoadingMessage();
-                this.loadingIndicator = false;
-                this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
-                    MessageSeverity.error, error);
-            });
+                error => {
+                    this.alertService.stopLoadingMessage();
+                    this.loadingIndicator = false;
+                    this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
+                        MessageSeverity.error, error);
+                });
     }
 
     editYeuCau(row: YeuCau) {
@@ -274,6 +295,8 @@ export class YeuCauComponent implements OnInit, AfterViewInit {
         this.YeuCauEditor.toas = this.toas;
         this.YeuCauEditor.tangs = this.tang;
         this.YeuCauEditor.matbangs = this.matbangs;
+        this.YeuCauEditor.toaNhaId = this.objNDTN.toaNhaId;
+        this.YeuCauEditor.cumToaNhaId = this.objNDTN.toaNha.cumToaNhaId;
         this.YeuCauEditor.editorModal.show();
     }
 
@@ -289,17 +312,17 @@ export class YeuCauComponent implements OnInit, AfterViewInit {
         this.loadTangLau(toanha, cumtoanha);
         this.loadMatBang(tanglau, toanha, cumtoanha);
     }
-    SelectedTangLauValue(matbang: number, tanglau: number, toanha: number, cumtoanha: number) {
+    SelectedTangLauValue(tanglau: number) {
         this.chkAll = false;
-        this.loadMatBang(tanglau, toanha, cumtoanha);
+        this.loadMatBang(tanglau, this.objNDTN.toaNhaId, this.objNDTN.toaNha.cumToaNhaId);
     }
-    SelectedMatBang(matbang: number, tanglau: number, toanha: number, cumtoanha: number) {
+    SelectedMatBang(matbang: number, tanglau: number) {
         if (matbang != 0) {
             this.listMB = "(" + matbang.toString() + ")";
             this.loadData(this.listMB, false);
         } else if (matbang == 0) {
             this.chkAll = false;
-            this.loadMatBang(tanglau, toanha, cumtoanha);
+            this.loadMatBang(tanglau, this.objNDTN.toaNhaId, this.objNDTN.toaNha.cumToaNhaId);
         }
     }
 }

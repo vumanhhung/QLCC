@@ -1,7 +1,7 @@
 ﻿
 <section class="content-header">
     <h1>Quản lý tầng lầu</h1>
-    <commonroad></commonroad>
+    <commonroad></commonroad>    
 </section>
 <section class="content">
     <div class="row">
@@ -33,7 +33,7 @@
                 <div class="box-body">
                     <div>
                         <div class="dataTables_length">
-                            <label>
+                            <!--<label>
                                 Cụm
                                 <select class="form-control input-sm" #drCum (change)="SelectedCumValue(drGroup.value,drCum.value)">
                                     <option value="0">---Tất cả---</option>
@@ -50,7 +50,7 @@
                                         {{t.tenKhoiNha}}
                                     </option>
                                 </select>
-                            </label>
+                            </label>-->
                         </div>
 
                         <div class="DTTT_container">
@@ -82,7 +82,7 @@
                             </div>
                         </div>
                         <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <a class="btn btn-func btn-success" href="javascript:;" tooltip="Chi tiết" (click)="ViewTangLau(row)"><i class="fa fa-eye"></i></a>
+                            <!--<a class="btn btn-func btn-success" href="javascript:;" tooltip="Chi tiết" (click)="ViewTangLau(row)"><i class="fa fa-eye"></i></a>-->
                             <a class="btn btn-func btn-primary" href="javascript:;" (click)="editTangLau(row)" tooltip="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                             <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteTangLau(row)" tooltip="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </ng-template>

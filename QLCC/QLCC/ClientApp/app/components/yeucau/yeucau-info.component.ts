@@ -77,6 +77,8 @@ export class YeuCauInfoComponent implements OnInit {
     chkMucDoUuTien: boolean = false;
     chkNguonTiepNhan: boolean = false;
     chkTrangThaiYeuCau: boolean = false;
+    toaNhaId: number;
+    cumToaNhaId: number;
 
     public objCum: CumToaNha = new CumToaNha;
     public objMatBang: MatBang = new MatBang;
@@ -250,7 +252,7 @@ export class YeuCauInfoComponent implements OnInit {
             return this.YeuCauEdit;
         }
         else {
-            return this.newYeuCau();
+            //return this.newYeuCau();
         }
     }
 
@@ -314,9 +316,9 @@ export class YeuCauInfoComponent implements OnInit {
         this.loadMatBang(tangId, toaId, cumId);
         this.loadPhongBan(false, cumId, "(" + toaId + ")");
     }
-    TangLauIdChange(tangId: number, toaId: number, cumId: number) {
+    TangLauIdChange(tangId: number) {
         this.YeuCauEdit.matBangId = 0;
-        this.loadMatBang(tangId, toaId, cumId);
+        this.loadMatBang(tangId, this.toaNhaId, this.cumToaNhaId);
     }
 
     matBangIdChange(matbang: number, tanglau: number, toanha: number, cumtoanha: number) {

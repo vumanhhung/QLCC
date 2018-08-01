@@ -61,6 +61,8 @@ export class CuDanInfoComponent implements OnInit {
     toanhaView: string = "";
     tanglauView: string = "";
     ChuHoView: string = "";
+    toaNhaId: number;
+    cumToaNhaId: number;
 
     private isNew = false;
     private isSaving = false;
@@ -159,7 +161,7 @@ export class CuDanInfoComponent implements OnInit {
     }
 
     private save() {
-        if (this.chkMatBangId == false || this.chkquocTich == false || this.chkChuHoId == false || this.chkquanHeChuHo == false || this.chktrangThaiTamTru == false || this.chktrangThaiCuDanId == false) {
+        if (this.chkMatBangId == false || this.chkquocTich == false || this.chkquanHeChuHo == false || this.chktrangThaiTamTru == false || this.chktrangThaiCuDanId == false) {
             return false;
         }
         else {
@@ -196,9 +198,9 @@ export class CuDanInfoComponent implements OnInit {
         this.loadTangLau(toaId, cumId);
         this.loadMatBang(tangId, toaId, cumId);
     }
-    TangLauIdChange(tangId: number, toaId: number, cumId: number) {
+    TangLauIdChange(tangId: number) {
         this.CuDanEdit.matBangId = 0;
-        this.loadMatBang(tangId, toaId, cumId);
+        this.loadMatBang(tangId, this.toaNhaId, this.cumToaNhaId);
     }
     matBangIdChange(matbang: number) {
         if (matbang > 0) {
@@ -272,7 +274,7 @@ export class CuDanInfoComponent implements OnInit {
         this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất người dùng từ máy chủ.\r\nErrors: "${Utilities.getHttpResponseMessage(error)}"`,
             MessageSeverity.error, error);
     }
-    newCuDan() {
+    newCuDan() {        
         this.isEdit = false;
         this.isGeneralEditor = true;
         this.isNew = true;
@@ -372,7 +374,7 @@ export class CuDanInfoComponent implements OnInit {
             return this.CuDanEdit;
         }
         else {
-            return this.newCuDan();
+            //return this.newCuDan();
         }
     }
 

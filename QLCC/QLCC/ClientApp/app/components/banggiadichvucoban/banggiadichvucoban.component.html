@@ -1,6 +1,6 @@
 ﻿
 <section class="content-header">
-    <h1>Quản lý BangGiaDichVuCoBan</h1>
+    <h1>Quản lý bảng giá dịch vụ cơ bản</h1>
     <commonroad></commonroad>
 </section>
 <section class="content">
@@ -13,8 +13,7 @@
             </div>
             <div style="margin-bottom:1%;" align="right" class="col-sm-6">
                 <div class="row">
-                    <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newBangGiaDichVuCoBan()"><i class="fa fa-plus"></i></a>
-                    <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.Settings' | translate}}" (click)="configBangGiaDichVuCoBan"><i class="fa fa-cog"></i></a>
+                    <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newBangGiaDichVuCoBan()"><i class="fa fa-plus"></i></a>                    
                 </div>
             </div>
 
@@ -34,12 +33,7 @@
                                     <option value="100">100</option>
                                 </select> bản ghi
                             </label>
-                        </div>
-                        <div class="DTTT_container">
-                            <a class="DTTT_button DTTT_button_print" title="{{'preferences.Print' | translate}}" tabindex="0">
-                                <span>{{'preferences.Print' | translate}}</span>
-                            </a>
-                        </div>
+                        </div>                       
                         <div class="clearfix"></div>
                         <ngx-datatable class="material colored-header sm table table-striped table-hover "
                                        [loadingIndicator]="loadingIndicator"

@@ -16,6 +16,7 @@ import { MatBangService } from '../../services/matbang.service';
 import { LoaiDichVuService } from '../../services/loaidichvu.service';
 import { DonViTinhService } from '../../services/donvitinh.service';
 import { LoaiTienService } from '../../services/loaitien.service';
+import * as XLSX from 'ts-xlsx';
 
 @Component({
     selector: "dichvucoban",
@@ -25,6 +26,7 @@ import { LoaiTienService } from '../../services/loaitien.service';
 
 export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     public limit: number = 10;
+    randomString: string = Utilities.RandomText(10);
     columns: any[] = [];
     rows: DichVuCoBan[] = [];
     rowsCache: DichVuCoBan[] = [];
@@ -38,6 +40,10 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     dichvucobanEdit: DichVuCoBan;
     sourcedichvucoban: DichVuCoBan;
     editingRowName: { name: string };
+    selectFileUpload: string = "";
+    arrayBuffer: any;
+    file: File;
+
 
     @ViewChild('f')
     private form;
@@ -53,6 +59,15 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
 
     @ViewChild('actionsTemplate')
     actionsTemplate: TemplateRef<any>;
+
+    @ViewChild('startTemplate')
+    startTemplate: TemplateRef<any>;
+
+    @ViewChild('endTemplate')
+    endTemplate: TemplateRef<any>;
+
+    @ViewChild('priceTemplate')
+    priceTemplate: TemplateRef<any>;
 
     @ViewChild('dichvucobanEditor')
     DichVuCoBanEditor: DichVuCoBanInfoComponent;
@@ -72,14 +87,16 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         this.columns = [
             { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },              
             { prop: 'soChungTu', name: gT('Số chứng từ')},
-            { prop: 'matBang.tenMatBang', name: gT('Tên mặt bằng')},
-            { prop: 'khachHang.ten', name: gT('Tên khách hàng')},
-            { prop: 'loaidichvu.tenLoaiDichVu', name: gT('Loại dịch vụ')},
-            { prop: 'dienGiai', name: gT('Diễn giải')},
-            { prop: 'trangThai', name: gT('Trạng thái')},
+            { prop: 'matBangs.tenMatBang', name: gT('Tên mặt bằng')},
+            { prop: 'khachHangs.ten', name: gT('Tên khách hàng')},
+            { prop: 'loaiDichVus.tenLoaiDichVu', name: gT('Loại dịch vụ') },
+            { name: gT('Tổng thanh toán'), cell: this.priceTemplate },
+            { name: gT('Ngày bắt đầu'), cellTemplate: this.startTemplate },
+            { name: gT('Ngày hết hạn'), cellTemplate: this.endTemplate },
+            { prop: 'lapLai', name: gT('Lặp lại'), cellTemplate: this.nameTemplate },
+            { prop: 'trangThai', name: gT('Trạng thái'), cellTemplate: this.descriptionTemplate },
             { name: gT('matbang.qlmb_chucnang'), width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
-
         this.loadData();
         this.loadAllKhachHang();
         this.loadAllLoaiDichVu();
@@ -137,6 +154,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     }
     
     addNewToList() {
+        this.loadData();
         if (this.sourcedichvucoban) {
             Object.assign(this.sourcedichvucoban, this.dichvucobanEdit);
             this.dichvucobanEdit = null;
@@ -194,7 +212,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         this.DichVuCoBanEditor.loaiDichVu = this.loaiDichVu;
         this.DichVuCoBanEditor.loaiTien = this.loaiTien;
         this.DichVuCoBanEditor.donViTinh = this.donViTinh;
-        this.DichVuCoBanEditor.isViewDetail = false;
+        this.DichVuCoBanEditor.isViewDetails = false;
         this.dichvucobanEdit = this.DichVuCoBanEditor.newDichVuCoBan();        
         this.DichVuCoBanEditor.editorModal.show();
     }
@@ -240,7 +258,54 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         this.DichVuCoBanEditor.loaiDichVu = this.loaiDichVu;
         this.DichVuCoBanEditor.loaiTien = this.loaiTien;
         this.DichVuCoBanEditor.donViTinh = this.donViTinh;
-        this.DichVuCoBanEditor.isViewDetail = false;
+        this.DichVuCoBanEditor.isViewDetails = false;
+        this.DichVuCoBanEditor.editorModal.show();
+    }
+
+    viewDichVuCoBan(row: DichVuCoBan) {
+        //this.editingRowName = { name: row.tenichVuCoBan };
+        this.sourcedichvucoban = row;
+        this.dichvucobanEdit = this.DichVuCoBanEditor.editDichVuCoBan(row);
+        this.DichVuCoBanEditor.khachHang = this.khachHang;
+        this.DichVuCoBanEditor.matBang = this.matBang;
+        this.DichVuCoBanEditor.loaiDichVu = this.loaiDichVu;
+        this.DichVuCoBanEditor.loaiTien = this.loaiTien;
+        this.DichVuCoBanEditor.donViTinh = this.donViTinh;
+        this.DichVuCoBanEditor.isViewDetails = true;
         this.DichVuCoBanEditor.editorModal.show();
     }    
+
+    changeRandomString() {
+        this.randomString = Utilities.RandomText(10);
+    }
+
+    formatPrice(price: string): string {
+        if (price) {
+            var pN = Number(price);
+            var fm = Utilities.formatNumber(pN);
+            return fm;
+        } else return "";
+    }
+
+    incomingfile(event: any) {
+        this.file = event.target.files[0];
+    }
+
+    UploadFile() {
+        let fileReader = new FileReader();
+        fileReader.onload = (e) => {
+            this.arrayBuffer = fileReader.result;
+            var data = new Uint8Array(this.arrayBuffer);
+            var arr = new Array();
+            for (var i = 0; i != data.length; i++) {
+                arr[i] = String.fromCharCode(data[i]);
+            }
+            var bstr = arr.join("");
+            var workbook = XLSX.read(bstr, { type: "binary" });
+            var first_sheet_name = workbook.SheetNames[0];
+            var worksheet = workbook.Sheets[first_sheet_name];
+            console.log(XLSX.utils.sheet_to_json(worksheet, { raw: true }));
+        }
+        fileReader.readAsArrayBuffer(this.file);
+    }
 }

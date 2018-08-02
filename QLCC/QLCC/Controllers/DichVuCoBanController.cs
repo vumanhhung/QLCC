@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using DAL.Models;
+using QLCC.Helpers;
 
 namespace QLCC.Controllers
 {
@@ -33,7 +34,7 @@ namespace QLCC.Controllers
         [HttpGet]
         public IEnumerable<DichVuCoBan> GetDichVuCoBans()
         {
-            return _context.DichVuCoBans;
+            return _context.DichVuCoBans.Include(m => m.matBangs).Include(m => m.khachHangs).Include(m => m.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs);
         }
         
         // GET: api/DichVuCoBans/5
@@ -68,26 +69,26 @@ namespace QLCC.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(dichvucoban).State = EntityState.Modified;
-
-            try
+            var user = User.Identity.Name;
+            var userId = Utilities.GetUserId(this.User);
+            dichvucoban.NgaySua = DateTime.Now;
+            dichvucoban.NguoiSua = user;
+            var checkten = await _context.DichVuCoBans.SingleOrDefaultAsync(r => r.SoChungTu == dichvucoban.SoChungTu && r.DichVuCoBanId != id);
+            if (checkten == null)
             {
+                _context.Entry(dichvucoban).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                return NoContent();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!DichVuCoBanExists(id))
+                var warn = "";
+                if (checkten != null)
                 {
-                    return NotFound();
+                    warn = "Exist";
                 }
-                else
-                {
-                    throw;
-                }
+                return Ok(warn);
             }
-
-            return NoContent();
         }
         
         // POST: api/DichVuCoBans
@@ -98,11 +99,26 @@ namespace QLCC.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            _context.DichVuCoBans.Add(dichvucoban);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetDichVuCoBan", new { id = dichvucoban.DichVuCoBanId }, dichvucoban);
+            var user = this.User.Identity.Name;
+            var userId = Utilities.GetUserId(this.User);
+            dichvucoban.NgayNhap = DateTime.Now;
+            dichvucoban.NguoiNhap = user;
+            var checkten = await _context.DichVuCoBans.SingleOrDefaultAsync(r => r.SoChungTu == dichvucoban.SoChungTu);
+            if (checkten == null)
+            {
+                _context.DichVuCoBans.Add(dichvucoban);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("GetDichVuCoBan", new { id = dichvucoban.DichVuCoBanId }, dichvucoban);
+            }
+            else
+            {
+                var warn = new DichVuCoBan();
+                if (checkten != null)
+                {
+                    warn.SoChungTu = "Exist";
+                }
+                return Ok(warn);
+            }
         }
         
         // DELETE: api/DichVuCoBans/5

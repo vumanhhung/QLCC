@@ -33,7 +33,6 @@ namespace DAL.Models
         public CumToaNha cumtoanha { get; set; }
         public TrangThai trangthai { get; set; }
         public LoaiMatBang loaimatbang { get; set; }
-
         [JsonIgnore]
         public virtual ICollection<CuDan> cudans { get; set; }
     }

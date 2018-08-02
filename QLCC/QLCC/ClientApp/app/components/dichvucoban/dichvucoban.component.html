@@ -13,7 +13,50 @@
             <div style="margin-bottom:1%;" align="right" class="col-sm-6">
                 <div class="row">
                     <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newDichVuCoBan()"><i class="fa fa-plus"></i></a>
-                    <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.Settings' | translate}}" (click)="configDichVuCoBan"><i class="fa fa-cog"></i></a>
+                    <a class="btn btn-primary" href="javascript://" tooltip="Import dịch vụ cơ bản" (click)="importCuDan()"><i class="fa fa-download"></i></a>
+                    <a class="btn btn-primary" href="javascript://" tooltip="Export dịch vụ cơ bản" (click)="excelexport.save()">
+                        <i class="fa fa-upload"></i>
+                        <kendo-excelexport [data]="rows" fileName="DichVuCoBanExPort-{{randomString}}.xlsx" #excelexport [headerPaddingCellOptions]="headerPaddingCells">
+                            <kendo-excelexport-column field="index" [locked]="true" title="STT" [width]="50" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b',fontweight:'bold' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="soChungTu" title="Số chứng từ" [width]="100" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="ngayChungTu" title="Ngày chứng từ" [width]="160" [cellOptions]="{ format: 'dd-mm-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="matBangs.tenMatBang" title="Tên mặt bằng" [width]="100" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="khachHangs.hoDem" title="Họ đệm" [width]="80" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b',bordercolor:'#000' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="khachHangs.ten" title="Tên" [width]="80" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="loaiDichVus.tenLoaiDichVu" title="Loại Dịch Vụ" [width]="200" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="donViTinhs.tenDonViTinh" title="Đơn vị tính" [width]="100" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="donGia" title="Đơn giá" [width]="100" [cellOptions]="{format: '#,##'}" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="soLuong" title="Số lượng" [width]="100" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="thanhTien" title="Thành tiền" [width]="100" [cellOptions]="{format: '#,##'}" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="ngayThanhToan" title="Ngày thanh toán" [width]="160" [cellOptions]="{ format: 'dd-mm-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="kyThanhToan" title="Kỳ thanh toán" [width]="160" [cellOptions]="{ format: 'dd-mm-yy' }" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="tienThanhToan" title="Tiền thanh toán" [width]="120" [cellOptions]="{format: '#,##'}" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="tienTTQuyDoi" title="Tiền thanh toán quy đổi" [width]="200" [cellOptions]="{format: '#,##'}" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="loaiTiens.tenLoaiTien" title="Loại tiền tệ" [width]="100" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="tyGia" title="Tỷ giá" [width]="100" [cellOptions]="{format: '#,##'}" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="tuNgay" title="Từ ngày" [width]="160" [cellOptions]="{ format: 'dd-mm-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="denNgay" title="Đến ngày" [width]= "160" [cellOptions]="{ format: 'dd-mm-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                        </kendo-excelexport>
+                    </a>
                 </div>
             </div>
 
@@ -35,10 +78,10 @@
                             </label>
                         </div>
                         <!--<div class="DTTT_container">
-                            <a class="DTTT_button DTTT_button_print" title="{{'preferences.Print' | translate}}" tabindex="0">
-                                <span>{{'preferences.Print' | translate}}</span>
-                            </a>
-                        </div>-->
+        <a class="DTTT_button DTTT_button_print" title="{{'preferences.Print' | translate}}" tabindex="0">
+            <span>{{'preferences.Print' | translate}}</span>
+        </a>
+    </div>-->
                         <div class="clearfix"></div>
                         <ngx-datatable class="material colored-header sm table table-striped table-hover "
                                        [loadingIndicator]="loadingIndicator"
@@ -50,8 +93,26 @@
                                        [limit]="limit"
                                        [columnMode]="'force'">
                         </ngx-datatable>
+                        <ng-template #priceTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <!--<p>{{formatPrice(row.thanhTien)}}</p>-->
+                            <p>{{row.tienThanhToan}}</p>
+                        </ng-template>
+                        <ng-template #startTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <p>{{row.tuNgay | date: 'dd/MM/yyyy'}}</p>
+                        </ng-template>
+                        <ng-template #endTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <p>{{row.denNgay | date: 'dd/MM/yyyy'}}</p>
+                        </ng-template>
+                        <ng-template #nameTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <p *ngIf="row.lapLai == true" class="status">Có</p>
+                            <p *ngIf="row.lapLai == false" class="status">Không</p>
+                        </ng-template>
+                        <ng-template #descriptionTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <p *ngIf="row.trangThai == 1" class="status">Đang sử dụng</p>
+                            <p *ngIf="row.trangThai == 0" class="status">Ngừng sử dụng</p>
+                        </ng-template>
                         <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <a class="btn btn-func btn-success" href="javascript:;" title="Chi tiết"><i class="fa fa-eye"></i></a>
+                            <a class="btn btn-func btn-success" href="javascript:;" (click)="viewDichVuCoBan(row)" title="Chi tiết"><i class="fa fa-eye"></i></a>
                             <a class="btn btn-func btn-primary" href="javascript:;" (click)="editDichVuCoBan(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                             <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDichVuCoBan(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </ng-template>

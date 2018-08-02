@@ -36,9 +36,9 @@
                                 <kendo-datepicker [(value)]="valueNgayChungTu" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
                             </div>
                             <div class="clearfix"></div>
-                            <div class="col-sm-3">
+                            <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="khachHangId-{{uniqueId}}">Khách hàng</label>
-                                <div [ngClass]="{'has-success': f.submitted && ChkkhachHang, 'has-error' : f.submitted && !ChkkhachHang}">
+                                <div class="control" [ngClass]="{'has-success': f.submitted && ChkkhachHang, 'has-error' : f.submitted && !ChkkhachHang}">
                                     <select name="khachHangId" [(ngModel)]="DichVuCoBanEdit.khachHangId" #khachHangId="ngModel" class="form-control" (change)="khachHangChk(khachHangId.value)">
                                         <option value="0">--- Chọn khách hàng ---</option>
                                         <option *ngFor="let o of khachHang" value="{{ o.khachHangId }}">
@@ -107,10 +107,6 @@
                                 <label class="control-label" for="soLuong-{{uniqueId}}">Số lượng</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && soLuong.valid, 'has-error' : f.submitted && !soLuong.valid}">
                                     <input autofocus type="number" min="0" class="form-control" name="soLuong" [(ngModel)]="DichVuCoBanEdit.soLuong" #soLuong="ngModel" (ngModelChange)="soluongChange()" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': soLuong.valid, 'glyphicon-remove' : !soLuong.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !soLuong.valid" class="errorMessage">
-                                        Vui lòng nhập số lượng!
-                                    </span>
                                 </div>
                             </div>
                             <div class="has-feedback col-sm-4">
@@ -125,9 +121,9 @@
                                 <kendo-datepicker [(value)]="valueNgayThanhToan" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
                             </div>
                             <div class="has-feedback col-sm-4">
-                                <label class="control-label" for="kyThanhToan-{{uniqueId}}">Kỳ thanh toán</label>
+                                <label class="control-label" for="kyThanhToan-{{uniqueId}}">Kỳ thanh toán (tháng)</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && kyThanhToan.valid, 'has-error' : f.submitted && !kyThanhToan.valid}">
-                                    <input autofocus type="text" class="form-control" name="kyThanhToan" [(ngModel)]="DichVuCoBanEdit.kyThanhToan" #kyThanhToan="ngModel" required>
+                                    <input autofocus type="text" class="form-control" name="kyThanhToan" [(ngModel)]="DichVuCoBanEdit.kyThanhToan" #kyThanhToan="ngModel" (ngModelChange)="kythanhtoanChange()" required>
                                     <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': kyThanhToan.valid, 'glyphicon-remove' : !kyThanhToan.valid}"></span>
                                     <span *ngIf="showValidationErrors && f.submitted && !kyThanhToan.valid" class="errorMessage">
                                         Vui lòng nhập kỳ thanh toán!
@@ -232,6 +228,116 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="isViewDetails" class="ViewForm">
+        <div class="modal-header">
+            <p class="modal-title pull-left">
+                <i class="fa fa-eye"></i> Chi tiết loại dịch vụ
+                <span>{{tenLoaiDichVu}}</span>
+            </p>
+            <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div>
+                <form #f="ngForm">
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td colspan="8" class="headView">Thông tin chung</td>
+                                </tr>
+                                <tr>
+                                    <td class="boldText">Số chứng từ</td>
+                                    <td>{{DichVuCoBanEdit.soChungTu}}</td>
+                                    <td class="boldText">Ngày chứng từ</td>
+                                    <td>{{DichVuCoBanEdit.ngayChungTu | date:'dd/MM/yyyy'}}</td>
+                                    <td class="boldText">Từ ngày</td>
+                                    <td>{{DichVuCoBanEdit.tuNgay | date:'dd/MM/yyyy'}}</td>
+                                    <td class="boldText">Đến ngày</td>
+                                    <td>{{DichVuCoBanEdit.denNgay | date:'dd/MM/yyyy'}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="boldText">Mặt bằng:</td>
+                                    <td>{{DichVuCoBanEdit.matBangs.tenMatBang}}</td>
+                                    <td class="boldText">Khách hàng:</td>
+                                    <td>{{DichVuCoBanEdit.khachHangs.hoDem}} {{DichVuCoBanEdit.khachHangs.ten}}</td>
+                                    <td class="boldText">Loại dịch vụ</td>
+                                    <td>{{DichVuCoBanEdit.loaiDichVus.tenLoaiDichVu}}</td>
+                                    <td class="boldText">Đơn vị tính:</td>
+                                    <td>{{DichVuCoBanEdit.donViTinhs.tenDonViTinh}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="boldText">Diễn giải</td>
+                                    <td colspan="7">{{DichVuCoBanEdit.dienGiai}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="boldText">Lặp lại:</td>
+                                    <td colspan="3" *ngIf="DichVuCoBanEdit.lapLai == true">Có</td>
+                                    <td colspan="3" *ngIf="DichVuCoBanEdit.lapLai == false">Không</td>
+                                    <td class="boldText">Trạng thái:</td>
+                                    <td colspan="3" *ngIf="DichVuCoBanEdit.trangThai == 1">Đang sử dụng</td>
+                                    <td colspan="3" *ngIf="DichVuCoBanEdit.trangThai == 0">Ngừng sử dụng</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8" class="headView">Thông tin thanh toán</td>
+                                </tr>
+                                <tr>
+                                    <td class="boldText">Đơn giá:</td>
+                                    <td colspan="2">{{formatPrice(DichVuCoBanEdit.donGia)}}</td>
+                                    <td class="boldText">Số lượng</td>
+                                    <td colspan="1">{{DichVuCoBanEdit.soLuong}}</td>
+                                    <td class="boldText">Thành tiền</td>
+                                    <td colspan="2">{{formatPrice(DichVuCoBanEdit.thanhTien)}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="boldText">Ngày thanh toán</td>
+                                    <td colspan="2">{{DichVuCoBanEdit.ngayThanhToan | date: 'dd/MM/yyyy'}}</td>
+                                    <td class="boldText">Kỳ thanh toán</td>
+                                    <td colspan="1">{{DichVuCoBanEdit.kyThanhToan}}</td>
+                                    <td class="boldText">Tiền thanh toán</td>
+                                    <td colspan="2">{{formatPrice(DichVuCoBanEdit.tienThanhToan)}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8" class="headView">Quy đổi tiền tệ</td>
+                                </tr>
+                                <tr>
+                                    <td class="boldText">Loại tiền quy đổi</td>
+                                    <td colspan="3">{{DichVuCoBanEdit.loaiTiens.tenLoaiTien}}</td>
+                                    <td class="boldText">Tiền thanh toán</td>
+                                    <td colspan="3">{{formatPrice(DichVuCoBanEdit.tienTTQuyDoi)}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8" class="headView">Thông tin chỉnh sửa</td>
+                                </tr>
+                                <tr>
+                                    <td class="boldText">Ngày nhập</td>
+                                    <td>{{DichVuCoBanEdit.ngayNhap | date: 'dd/MM/yyyy'}}</td>
+                                    <td class="boldText">Người nhập</td>
+                                    <td>{{DichVuCoBanEdit.nguoiNhap}}</td>
+                                    <td class="boldText">Ngày sửa</td>
+                                    <td>{{DichVuCoBanEdit.ngaySua | date: 'dd/MM/yyyy'}}</td>
+                                    <td class="boldText">Người sửa</td>
+                                    <td>{{DichVuCoBanEdit.nguoiSua}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="actionBtn-form-group">
+                <div class="col-sm-7">
+                    <div class="pull-right">
+                        <button type="button" (click)="movetoEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                                        <button *ngIf="isEditMode" type="button" (click)="closeModal()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+</div>
+                </div>
             </div>
         </div>
     </div>

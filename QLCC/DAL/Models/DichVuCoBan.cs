@@ -31,5 +31,11 @@ namespace DAL.Models
 		public string NguoiNhap { get; set; }
 		public DateTime? NgaySua { get; set; }
 		public string NguoiSua { get; set; }
+
+        public MatBang matBangs { get; set; }
+        public KhachHang khachHangs { get; set; }
+        public LoaiDichVu loaiDichVus { get; set; }
+        public LoaiTien loaiTiens { get; set; }
+        public DonViTinh donViTinhs { get; set; }
     }
 }

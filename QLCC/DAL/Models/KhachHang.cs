@@ -46,5 +46,6 @@ namespace DAL.Models
         public NhomKhachHang NhomKhachHang { get; set; }
 
 
+
     }
 }

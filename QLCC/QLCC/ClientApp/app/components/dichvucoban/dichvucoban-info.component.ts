@@ -354,7 +354,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
     kythanhtoanChange() {
         if (this.DichVuCoBanEdit.kyThanhToan > 0) {
             console.log(this.DichVuCoBanEdit.kyThanhToan);
-            this.valueDenNgay = new Date(this.valueDenNgay.setMonth(this.valueDenNgay.getMonth() + Number(this.DichVuCoBanEdit.kyThanhToan)));
+            this.valueDenNgay = new Date(this.valueDenNgay.setMonth(this.valueTuNgay.getMonth() + Number(this.DichVuCoBanEdit.kyThanhToan)));
         } else this.valueDenNgay = new Date();
     }
     tygiaChange(price: string) {
@@ -388,5 +388,17 @@ export class DichVuCoBanInfoComponent implements OnInit {
 
     closeModal() {
         this.editorModal.hide();
+    }
+
+    printDiv() {
+            var myWindow = window.open('', '', 'width=200,height=100');
+            myWindow.document.write("<table class='table table-bordered' id='formToPrint'>");
+            myWindow.document.write("<tbody><tr>");
+            myWindow.document.write("<td colspan='8' class='headView'>Thông tin chung</td>");
+            myWindow.document.write("</tr></tbody></table>");
+            myWindow.document.close();
+            myWindow.focus();
+            myWindow.print();
+            myWindow.close();
     }
 }

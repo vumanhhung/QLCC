@@ -62,4 +62,11 @@ export class DichVuCoBanEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.deleteDichVuCoBan(id));
             });
     }
+
+    checkExpire<T>(): Observable<T> {
+        let endpointUrl = `${this.dichvucobanUrl}/CheckExpire`;
+        return this.http.get(endpointUrl, this.getRequestHeaders()).catch(error => {
+            return this.handleError(error, () => this.checkExpire());
+        });
+    }
 }

@@ -17,6 +17,7 @@ import { LoaiDichVuService } from '../../services/loaidichvu.service';
 import { DonViTinhService } from '../../services/donvitinh.service';
 import { LoaiTienService } from '../../services/loaitien.service';
 import * as XLSX from 'ts-xlsx';
+import { window } from 'rxjs/operators';
 
 @Component({
     selector: "dichvucoban",
@@ -42,7 +43,6 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     editingRowName: { name: string };
     selectFileUpload: string = "";
     arrayBuffer: any;
-    file: File;
 
 
     @ViewChild('f')
@@ -90,7 +90,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
             { prop: 'matBangs.tenMatBang', name: gT('Tên mặt bằng')},
             { prop: 'khachHangs.ten', name: gT('Tên khách hàng')},
             { prop: 'loaiDichVus.tenLoaiDichVu', name: gT('Loại dịch vụ') },
-            { name: gT('Tổng thanh toán'), cell: this.priceTemplate },
+            { name: gT('Tổng thanh toán'), cellTemplate: this.priceTemplate },
             { name: gT('Ngày bắt đầu'), cellTemplate: this.startTemplate },
             { name: gT('Ngày hết hạn'), cellTemplate: this.endTemplate },
             { prop: 'lapLai', name: gT('Lặp lại'), cellTemplate: this.nameTemplate },
@@ -287,25 +287,16 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         } else return "";
     }
 
-    incomingfile(event: any) {
-        this.file = event.target.files[0];
-    }
-
-    UploadFile() {
-        let fileReader = new FileReader();
-        fileReader.onload = (e) => {
-            this.arrayBuffer = fileReader.result;
-            var data = new Uint8Array(this.arrayBuffer);
-            var arr = new Array();
-            for (var i = 0; i != data.length; i++) {
-                arr[i] = String.fromCharCode(data[i]);
+    lapLaiEvent() {
+        this.dichvucobanService.checkExpire().subscribe(results => {
+            if (results != null) {
+                this.dichvucobanService.addnewDichVuCoBan(results).subscribe(result => {
+                    result.ngayChungTu = new Date();
+                    result.ngayThanhToan = new Date();
+                    result.tuNgay = new Date();
+                    result.denNgay = new Date(result.denNgay.setMonth(result.tuNgay.getMonth() + Number(result.kyThanhToan)));
+                })
             }
-            var bstr = arr.join("");
-            var workbook = XLSX.read(bstr, { type: "binary" });
-            var first_sheet_name = workbook.SheetNames[0];
-            var worksheet = workbook.Sheets[first_sheet_name];
-            console.log(XLSX.utils.sheet_to_json(worksheet, { raw: true }));
-        }
-        fileReader.readAsArrayBuffer(this.file);
+        })
     }
 }

@@ -98,6 +98,7 @@ import { DichVuCoBanComponent } from './components/dichvucoban/dichvucoban.compo
             { path: "loaidichvu", component: LoaiDichVuComponent, canActivate: [AuthGuard], data: { title: "Loại dịch vụ" } },
             { path: "congthucnuoc", component: CongThucNuocComponent, canActivate: [AuthGuard], data: { title: "Công thức nước" } },
             { path: "dichvucoban", component: DichVuCoBanComponent, canActivate: [AuthGuard], data: { title: "Dịch vụ cơ bản" } },
+            { path: "matbang", component: MatBangComponent, canActivate: [AuthGuard], data: { title: "Mặt bằng" } },
             //{ path: "role/:id", component: RoleEditorComponent},
             { path: "settings", component: SettingsComponent, canActivate: [AuthGuard], data: { title: "Cấu hình" } },
             { path: "about", component: AboutComponent, data: { title: "Giới thiệu" } },

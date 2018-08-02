@@ -47,5 +47,8 @@ export class DichVuCoBanService {
     deleteDichVuCoBan(id: number) {
         return this.dichvucobanEndpoint.deleteDichVuCoBan(id);
     }
-    
+
+    checkExpire() {
+        return this.dichvucobanEndpoint.checkExpire<DichVuCoBan>();
+    }
 }

@@ -13,7 +13,7 @@
             <div style="margin-bottom:1%;" align="right" class="col-sm-6">
                 <div class="row">
                     <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newDichVuCoBan()"><i class="fa fa-plus"></i></a>
-                    <a class="btn btn-primary" href="javascript://" tooltip="Import dịch vụ cơ bản" (click)="importCuDan()"><i class="fa fa-download"></i></a>
+                    <a class="btn btn-primary" href="javascript://" tooltip="Import dịch vụ cơ bản" (click)="importDichVuCoBan()"><i class="fa fa-download"></i></a>
                     <a class="btn btn-primary" href="javascript://" tooltip="Export dịch vụ cơ bản" (click)="excelexport.save()">
                         <i class="fa fa-upload"></i>
                         <kendo-excelexport [data]="rows" fileName="DichVuCoBanExPort-{{randomString}}.xlsx" #excelexport [headerPaddingCellOptions]="headerPaddingCells">
@@ -77,11 +77,11 @@
                                 </select> bản ghi
                             </label>
                         </div>
-                        <!--<div class="DTTT_container">
-        <a class="DTTT_button DTTT_button_print" title="{{'preferences.Print' | translate}}" tabindex="0">
-            <span>{{'preferences.Print' | translate}}</span>
-        </a>
-    </div>-->
+                        <div class="DTTT_container">
+                            <a class="DTTT_button DTTT_button_print" title="{{'preferences.Print' | translate}}" tabindex="0" onclick="window.print();">
+                                <span>{{'preferences.Print' | translate}}</span>
+                            </a>
+                        </div>
                         <div class="clearfix"></div>
                         <ngx-datatable class="material colored-header sm table table-striped table-hover "
                                        [loadingIndicator]="loadingIndicator"
@@ -94,8 +94,7 @@
                                        [columnMode]="'force'">
                         </ngx-datatable>
                         <ng-template #priceTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <!--<p>{{formatPrice(row.thanhTien)}}</p>-->
-                            <p>{{row.tienThanhToan}}</p>
+                            <p>{{formatPrice(row.thanhTien)}}</p>
                         </ng-template>
                         <ng-template #startTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
                             <p>{{row.tuNgay | date: 'dd/MM/yyyy'}}</p>

@@ -146,5 +146,13 @@ namespace QLCC.Controllers
         {                        
             return _context.DichVuCoBans.Any(e => e.DichVuCoBanId == id);
         }
+
+        [HttpGet("CheckExpire")]
+        public async Task<ActionResult> getLapLai()
+        {
+            var expire = new DateTime();
+            var checkExpire = await _context.DichVuCoBans.SingleOrDefaultAsync(r => r.DenNgay == expire && r.LapLai == true);
+            return Ok(checkExpire);
+        }
     }    
 }

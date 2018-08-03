@@ -51,4 +51,8 @@ export class DichVuCoBanService {
     checkExpire() {
         return this.dichvucobanEndpoint.checkExpire<DichVuCoBan>();
     }
+
+    importDVCB(dichvucoban?: any, khachHangId?: number, matBangId?: number, loaiDichVuId?: number, donViTinhId?: number, loaiTienId?: number) {
+        return this.dichvucobanEndpoint.importDVCB<any>(dichvucoban, khachHangId, matBangId, loaiDichVuId, donViTinhId, loaiTienId);
+    }
 }

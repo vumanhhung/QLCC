@@ -17,7 +17,8 @@ import { LoaiDichVuService } from '../../services/loaidichvu.service';
 import { DonViTinhService } from '../../services/donvitinh.service';
 import { LoaiTienService } from '../../services/loaitien.service';
 import * as XLSX from 'ts-xlsx';
-import { window } from 'rxjs/operators';
+import { formatDate } from '@telerik/kendo-intl';
+import { DichVuCoBanImportComponent } from './dichvucoban-import.component';
 
 @Component({
     selector: "dichvucoban",
@@ -69,6 +70,9 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     @ViewChild('priceTemplate')
     priceTemplate: TemplateRef<any>;
 
+    @ViewChild('importexcel')
+    importexcel: DichVuCoBanImportComponent;
+
     @ViewChild('dichvucobanEditor')
     DichVuCoBanEditor: DichVuCoBanInfoComponent;
 
@@ -80,15 +84,15 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         private donvitinhService: DonViTinhService,
         private loaitienService: LoaiTienService) {
     }
-    
+
     ngOnInit() {
         let gT = (key: string) => this.translationService.getTranslation(key);
 
         this.columns = [
-            { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },              
-            { prop: 'soChungTu', name: gT('Số chứng từ')},
-            { prop: 'matBangs.tenMatBang', name: gT('Tên mặt bằng')},
-            { prop: 'khachHangs.ten', name: gT('Tên khách hàng')},
+            { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
+            { prop: 'soChungTu', name: gT('Số chứng từ') },
+            { prop: 'matBangs.tenMatBang', name: gT('Tên mặt bằng') },
+            { prop: 'khachHangs.ten', name: gT('Tên khách hàng') },
             { prop: 'loaiDichVus.tenLoaiDichVu', name: gT('Loại dịch vụ') },
             { name: gT('Tổng thanh toán'), cellTemplate: this.priceTemplate },
             { name: gT('Ngày bắt đầu'), cellTemplate: this.startTemplate },
@@ -139,7 +143,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     onDataLoadLoaiTienSuccessful(obj: LoaiTien[]) {
         this.loaiTien = obj;
     }
-    
+
     ngAfterViewInit() {
         this.DichVuCoBanEditor.changesSavedCallback = () => {
             this.addNewToList();
@@ -152,7 +156,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
             this.DichVuCoBanEditor.editorModal.hide();
         };
     }
-    
+
     addNewToList() {
         this.loadData();
         if (this.sourcedichvucoban) {
@@ -170,20 +174,20 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
                 if ((<any>u).index > maxIndex)
                     maxIndex = (<any>u).index;
             }
-            
+
             (<any>objDichVuCoBan).index = maxIndex + 1;
 
             this.rowsCache.splice(0, 0, objDichVuCoBan);
             this.rows.splice(0, 0, objDichVuCoBan);
         }
     }
-    
+
     loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.dichvucobanService.getAllDichVuCoBan().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
     }
-    
+
     onDataLoadSuccessful(obj: DichVuCoBan[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
@@ -195,7 +199,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         this.rowsCache = [...obj];
         this.rows = obj;
     }
-    
+
     onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
@@ -213,22 +217,22 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         this.DichVuCoBanEditor.loaiTien = this.loaiTien;
         this.DichVuCoBanEditor.donViTinh = this.donViTinh;
         this.DichVuCoBanEditor.isViewDetails = false;
-        this.dichvucobanEdit = this.DichVuCoBanEditor.newDichVuCoBan();        
+        this.dichvucobanEdit = this.DichVuCoBanEditor.newDichVuCoBan();
         this.DichVuCoBanEditor.editorModal.show();
     }
-    
+
     SelectedValue(value: number) {
         this.limit = value;
     }
-    
+
     onSearchChanged(value: string) {
-        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false,r.dichVuCoBanId,r.soChungTu,r.ngayChungTu,r.matBangId,r.khachHangId,r.loaiDichVuId,r.donViTinhId,r.donGia,r.soLuong,r.thanhTien,r.ngayThanhToan,r.kyThanhToan,r.tienThanhToan,r.tienTTQuyDoi,r.loaiTienId,r.tyGia,r.tuNgay,r.denNgay,r.dienGiai,r.lapLai,r.trangThai,r.ngayNhap,r.nguoiNhap,r.ngaySua,r.nguoiSua));
+        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.dichVuCoBanId, r.soChungTu, r.ngayChungTu, r.matBangId, r.khachHangId, r.loaiDichVuId, r.donViTinhId, r.donGia, r.soLuong, r.thanhTien, r.ngayThanhToan, r.kyThanhToan, r.tienThanhToan, r.tienTTQuyDoi, r.loaiTienId, r.tyGia, r.tuNgay, r.denNgay, r.dienGiai, r.lapLai, r.trangThai, r.ngayNhap, r.nguoiNhap, r.ngaySua, r.nguoiSua));
     }
 
     deleteDichVuCoBan(row: DichVuCoBan) {
         this.alertService.showDialog('Bạn có chắc chắn muốn xóa bản ghi này?', DialogType.confirm, () => this.deleteHelper(row));
     }
-    
+
     deleteHelper(row: DichVuCoBan) {
         this.alertService.startLoadingMessage("Đang thực hiện xóa...");
         this.loadingIndicator = true;
@@ -241,12 +245,12 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
                 this.rows = this.rows.filter(item => item !== row)
                 this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
             },
-            error => {
-                this.alertService.stopLoadingMessage();
-                this.loadingIndicator = false;
-                this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
-                    MessageSeverity.error, error);
-            });
+                error => {
+                    this.alertService.stopLoadingMessage();
+                    this.loadingIndicator = false;
+                    this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
+                        MessageSeverity.error, error);
+                });
     }
 
     editDichVuCoBan(row: DichVuCoBan) {
@@ -273,7 +277,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         this.DichVuCoBanEditor.donViTinh = this.donViTinh;
         this.DichVuCoBanEditor.isViewDetails = true;
         this.DichVuCoBanEditor.editorModal.show();
-    }    
+    }
 
     changeRandomString() {
         this.randomString = Utilities.RandomText(10);
@@ -287,6 +291,40 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         } else return "";
     }
 
+    printDiv() {              
+        this.dichvucobanService.getAllDichVuCoBan().subscribe(result => { 
+            var myWindow = window.open('', '', 'width=200,height=100');
+            for (let item of result) {
+                myWindow.document.write("<div style='padding-top: 10px;'><p><span style='font-weight: bold;font-size: 14px;'>Số chứng từ: <span>" + item.soChungTu + "<p>")
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày chứng từ: <span>" + item.ngayChungTu + "<p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Mặt bằng: <span>" + item.matBangs.tenMatBang + "<p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Khách hàng: <span>" + item.khachHangs.hoDem + " " + item.khachHangs.ten + "<p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Loại dịch vụ: <span>" + item.loaiDichVus.tenLoaiDichVu + "<p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Đơn vị tính: <span>" + item.donViTinhs.tenDonViTinh + "<p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Diễn giải: <span>" + item.dienGiai + "<p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Đơn giá: <span>" + item.donGia + "<p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Số lượng: <span>" + item.soLuong + "<p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Thành tiền: <span>" + item.thanhTien + "<p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày thanh toán: <span>" + item.ngayThanhToan + "<p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày bắt đầu: <span>" + item.tuNgay + "<p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày hết hạn: <span>" + item.denNgay + "<p></div>");             
+                myWindow.document.write("<hr/>");
+            }
+            myWindow.focus();
+            myWindow.print();
+            myWindow.close();
+        });   
+    }
+
+    importDichVuCoBan() {
+        this.importexcel.khachHangs = this.khachHang;
+        this.importexcel.matBangs = this.matBang;
+        this.importexcel.loaiDichVus = this.loaiDichVu;
+        this.importexcel.donViTinhs = this.donViTinh;
+        this.importexcel.loaiTiens = this.loaiTien;
+        this.importexcel.dvcbModal.show();
+    }
+
     lapLaiEvent() {
         this.dichvucobanService.checkExpire().subscribe(results => {
             if (results != null) {
@@ -297,6 +335,6 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
                     result.denNgay = new Date(result.denNgay.setMonth(result.tuNgay.getMonth() + Number(result.kyThanhToan)));
                 })
             }
-        })
-    }
+        });
+    }    
 }

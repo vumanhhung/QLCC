@@ -64,9 +64,17 @@ export class DichVuCoBanEndpoint extends EndpointFactory {
     }
 
     checkExpire<T>(): Observable<T> {
-        let endpointUrl = `${this.dichvucobanUrl}/CheckExpire`;
+        let endpointUrl = `${this.dichvucobanUrl}/CheckExpire/`;
         return this.http.get(endpointUrl, this.getRequestHeaders()).catch(error => {
             return this.handleError(error, () => this.checkExpire());
+        });
+    }
+
+    importDVCB<T>(dichvucobanObject?: any, khachHangId?: number, matBangId?: number, loaiDichVuId?: number, donViTinhId?: number, loaiTienId?: number): Observable<T> {
+        let body = JSON.stringify(dichvucobanObject);
+        let endpointUrl = `${this.dichvucobanUrl}/importDichVuCoBan/${khachHangId}/${matBangId}/${loaiDichVuId}/${donViTinhId}/${loaiTienId}`;
+        return this.http.post(endpointUrl, body, this.getRequestHeaders()).catch(error => {
+            return this.handleError(error, () => this.importDVCB(dichvucobanObject));
         });
     }
 }

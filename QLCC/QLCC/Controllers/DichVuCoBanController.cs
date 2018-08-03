@@ -154,5 +154,33 @@ namespace QLCC.Controllers
             var checkExpire = await _context.DichVuCoBans.SingleOrDefaultAsync(r => r.DenNgay == expire && r.LapLai == true);
             return Ok(checkExpire);
         }
+
+        [HttpPost("importDichVuCoBan/{khachHangId}/{matBangId}/{loaiDichVuId}/{donViTinhId}/{loaiTienId}")]
+        public async Task<IActionResult> importDichVuCoBan([FromBody] DichVuCoBan[] dichvucoban, [FromRoute] int khachHangId, int matBangId, int loaiDichVuId, int donViTinhId, int loaiTienId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var user = User.Identity.Name;
+            var userId = Utilities.GetUserId(this.User);
+            foreach(var dvcb in dichvucoban)
+            {
+                dvcb.LoaiDichVuId = loaiDichVuId;
+                dvcb.MatBangId = matBangId;
+                dvcb.KhachHangId = khachHangId;
+                dvcb.DonViTinhId = donViTinhId;
+                dvcb.LoaiTienId = loaiTienId;
+                var tygia = await _context.LoaiTiens.SingleOrDefaultAsync(r => r.LoaiTienId == loaiTienId);
+                dvcb.TyGia = tygia.TyGia;
+                dvcb.TienTTQuyDoi = dvcb.TienThanhToan * dvcb.TyGia;
+
+                dvcb.NgayNhap = DateTime.Now;
+                dvcb.NguoiNhap = user;
+                _context.DichVuCoBans.Add(dvcb);
+            }
+            await _context.SaveChangesAsync();
+            return Ok(dichvucoban);
+        }
     }    
 }

@@ -241,6 +241,7 @@ import { DinhMucNuocService } from "./services/dinhmucnuoc.service";
 import { DinhMucNuocEndpoint } from "./services/dinhmucnuoc-endpoint.service";
 import { DichVuCoBanService } from "./services/dichvucoban.service";
 import { DichVuCoBanEndpoint } from "./services/dichvucoban-endpoint.service";
+import { DichVuCoBanImportComponent } from "./components/dichvucoban/dichvucoban-import.component";
 
 @NgModule({
     imports: [
@@ -387,6 +388,7 @@ import { DichVuCoBanEndpoint } from "./services/dichvucoban-endpoint.service";
         DinhMucNuocComponent,
         DichVuCoBanComponent,
         DichVuCoBanInfoComponent,
+        DichVuCoBanImportComponent,
         DanhMucComponent
     ],
     providers: [        

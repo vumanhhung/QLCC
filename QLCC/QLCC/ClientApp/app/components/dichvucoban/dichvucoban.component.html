@@ -41,7 +41,7 @@
                             </kendo-excelexport-column>
                             <kendo-excelexport-column field="ngayThanhToan" title="Ngày thanh toán" [width]="160" [cellOptions]="{ format: 'dd-mm-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
-                            <kendo-excelexport-column field="kyThanhToan" title="Kỳ thanh toán" [width]="160" [cellOptions]="{ format: 'dd-mm-yy' }" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            <kendo-excelexport-column field="kyThanhToan" title="Kỳ thanh toán" [width]="100" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
                             <kendo-excelexport-column field="tienThanhToan" title="Tiền thanh toán" [width]="120" [cellOptions]="{format: '#,##'}" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
@@ -78,7 +78,7 @@
                             </label>
                         </div>
                         <div class="DTTT_container">
-                            <a class="DTTT_button DTTT_button_print" title="{{'preferences.Print' | translate}}" tabindex="0" onclick="window.print();">
+                            <a class="DTTT_button DTTT_button_print" title="{{'preferences.Print' | translate}}" tabindex="0" (click)="printDiv()">
                                 <span>{{'preferences.Print' | translate}}</span>
                             </a>
                         </div>
@@ -116,6 +116,7 @@
                             <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDichVuCoBan(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </ng-template>
                         <dichvucoban-info #dichvucobanEditor [isGeneralEditor]="true"></dichvucoban-info>
+                        <dichvucoban-import #importexcel></dichvucoban-import>
                     </div>
                 </div>
             </div>

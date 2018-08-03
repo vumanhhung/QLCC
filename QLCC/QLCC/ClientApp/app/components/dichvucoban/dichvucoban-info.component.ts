@@ -245,12 +245,31 @@ export class DichVuCoBanInfoComponent implements OnInit {
             //this.editingRowName = obj.tenDichVuCoBan;
             this.DichVuCoBanEdit = new DichVuCoBan();
             Object.assign(this.DichVuCoBanEdit, obj);
-            this.dongia = this.formatPrice(this.DichVuCoBanEdit.donGia.toString());
-            this.thanhtien = this.formatPrice(this.DichVuCoBanEdit.thanhTien.toString());
-            this.tienthanhtoan = this.formatPrice(this.DichVuCoBanEdit.tienThanhToan.toString());
-            this.tygia = this.formatPrice(this.DichVuCoBanEdit.tyGia.toString());
-            this.tienquydoi = this.formatPrice(this.DichVuCoBanEdit.tienTTQuyDoi.toString());
-            
+            if (this.DichVuCoBanEdit.donGia.toString() != "0") {
+                this.dongia = this.formatPrice(this.DichVuCoBanEdit.donGia.toString());
+            } else {
+                this.dongia = "0";
+            }
+            if (this.DichVuCoBanEdit.thanhTien.toString() != "0") {
+                this.thanhtien = this.formatPrice(this.DichVuCoBanEdit.thanhTien.toString());
+            } else {
+                this.thanhtien = "0";
+            }
+            if (this.DichVuCoBanEdit.tienThanhToan.toString() != "0") {
+                this.tienthanhtoan = this.formatPrice(this.DichVuCoBanEdit.tienThanhToan.toString());
+            } else {
+                this.tienthanhtoan = "0";
+            }
+            if (this.DichVuCoBanEdit.tyGia.toString() != "0") {
+                this.tygia = this.formatPrice(this.DichVuCoBanEdit.tyGia.toString());
+            } else {
+                this.tygia = "0";
+            }
+            if (this.DichVuCoBanEdit.tienTTQuyDoi.toString() != "0") {
+                this.tienquydoi = this.formatPrice(this.DichVuCoBanEdit.tienTTQuyDoi.toString());
+            } else {
+                this.tienquydoi = "0";
+            }            
             this.edit();
 
             return this.DichVuCoBanEdit;
@@ -391,14 +410,11 @@ export class DichVuCoBanInfoComponent implements OnInit {
     }
 
     printDiv() {
-            var myWindow = window.open('', '', 'width=200,height=100');
-            myWindow.document.write("<table class='table table-bordered' id='formToPrint'>");
-            myWindow.document.write("<tbody><tr>");
-            myWindow.document.write("<td colspan='8' class='headView'>Thông tin chung</td>");
-            myWindow.document.write("</tr></tbody></table>");
-            myWindow.document.close();
-            myWindow.focus();
-            myWindow.print();
-            myWindow.close();
+        var myWindow = window.open('', '', 'width=200,height=100');
+        myWindow.document.write("<p>" + this.DichVuCoBanEdit.soChungTu + "</p>");
+        myWindow.document.close();
+        myWindow.focus();
+        myWindow.print();
+        myWindow.close();
     }
 }

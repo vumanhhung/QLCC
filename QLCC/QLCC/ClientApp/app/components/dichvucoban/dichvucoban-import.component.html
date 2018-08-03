@@ -1,4 +1,4 @@
-﻿<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
+﻿<div class="modal fade" bsModal #dvcbModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,6 +8,68 @@
                 </button>
             </div>
             <div class="modal-body">
+                <div class="dataTables_length">
+                    <div class="col-md-4">
+                        <label>
+                            Khách hàng
+                            <select class="form-control input-sm" #drKhachHang (change)="SelectedKhachHangValue(drKhachHang.value)">
+                                <option value="0">---Tất cả---</option>
+                                <option *ngFor="let o of khachHangs" [value]="o.khachHangId">
+                                    {{o.hoDem}} {{o.ten}}
+                                </option>
+                            </select>
+                        </label>
+                        <label class="error" style="padding-left:10px;color:red" *ngIf="!isSelectedKhachHang">Vui lòng chọn khách hàng</label>
+                    </div>
+                    <div class="col-md-4">
+                        <label>
+                            Mặt bằng
+                            <select class="form-control input-sm" #drMatBang (change)="SelectedMatBangValue(drMatBang.value)">
+                                <option value="0">---Tất cả---</option>
+                                <option *ngFor="let o of matBangs" [value]="o.matBangId">
+                                    {{o.tenMatBang}}
+                                </option>
+                            </select>
+                        </label>
+                        <label class="error" style="padding-left:10px;color:red" *ngIf="!isSelectedMatBang">Vui lòng chọn mặt bằng</label>
+                    </div>
+                    <div class="col-md-4">
+                        <label>
+                            Loại dịch vụ
+                            <select class="form-control input-sm" #drLoaiDichVu (change)="SelectedLoaiDichVuValue(drLoaiDichVu.value)">
+                                <option value="0">---Tất cả---</option>
+                                <option *ngFor="let o of loaiDichVus" [value]="o.loaiDichVuId">
+                                    {{o.tenLoaiDichVu}}
+                                </option>
+                            </select>
+                        </label>
+                        <label class="error" style="padding-left:10px;color:red" *ngIf="!isSelectedLoaiDichVu">Vui lòng chọn loại dịch vụ</label>
+                    </div>
+                    <div class="col-md-4">
+                        <label>
+                            Đơn vị tính
+                            <select class="form-control input-sm" #drDonViTinh (change)="SelectedDonViTinhValue(drDonViTinh.value)">
+                                <option value="0">---Tất cả---</option>
+                                <option *ngFor="let o of donViTinhs" [value]="o.donViTinhId">
+                                    {{o.tenDonViTinh}}
+                                </option>
+                            </select>
+                        </label>
+                        <label class="error" style="padding-left:10px;color:red" *ngIf="!isSelectedDonViTinh">Vui lòng chọn đơn vị tính</label>
+                    </div>
+                    <div class="col-md-4">
+                        <label>
+                            Loại tiền
+                            <select class="form-control input-sm" #drLoaiTien (change)="SelectedLoaiTienValue(drLoaiTien.value)">
+                                <option value="0">---Tất cả---</option>
+                                <option *ngFor="let o of loaiTiens" [value]="o.loaiTienId">
+                                    {{o.tenLoaiTien}}
+                                </option>
+                            </select>
+                        </label>
+                        <label class="error" style="padding-left:10px;color:red" *ngIf="!isSelectedLoaiTien">Vui lòng chọn loại tiền</label>
+                    </div>
+                </div>
                 <div class="clearfix"></div>
                 <div class="col-md-12">
                     <hr class="edit-last-separator-hr" />
@@ -46,7 +108,7 @@
                 <div class="actionBtn-form-group">
                     <div class="col-sm-7">
                         <div class="pull-right">
-                            <button *ngIf="isDisplayUploadButton" type="button" class="btn btn-info" (click)="Upload(drTangLau.value)">Upload</button>
+                            <button *ngIf="isDisplayUploadButton" type="button" class="btn btn-info" (click)="Upload(drKhachHang.value,drMatBang.value,drLoaiDichVu.value,drDonViTinh.value,drLoaiTien.value)">Upload</button>
                             <button type="button" (click)="closeImport()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
                         </div>
                     </div>

@@ -207,11 +207,11 @@ export class DinhMucNuocComponent implements OnInit {
             this.DinhMucNuocEdit.gia = Number(this.gia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
             if (this.isNew == true) {
                 this.DinhMucNuocEdit.congThucNuocId = this.rowCongthucnuoc.congThucNuocId;
-                this.gvService.addnewDinhMucNuoc(this.DinhMucNuocEdit).subscribe(results => {
+                this.gvService.addnewDinhMucNuoc(this.DinhMucNuocEdit, this.DinhMucNuocEdit.congThucNuocId).subscribe(results => {
                     if (results.tenDinhMucNuoc == "Exist") {
                         this.showErrorAlert("Lỗi nhập liệu", "Tên định mức: " + this.DinhMucNuocEdit.tenDinhMucNuoc + " đã tồn tại trên hệ thống, vui lòng nhập tên khác!");
                         this.alertService.stopLoadingMessage();
-                        return false;
+                        this.isSaving = false;
                     } else {
                         this.saveSuccessHelper(results);
                     }
@@ -279,7 +279,6 @@ export class DinhMucNuocComponent implements OnInit {
 
     formatPrice(price: string): string {
         if (price) {
-            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
             var pN = Number(price);
             var fm = Utilities.formatNumber(pN);
             return fm;

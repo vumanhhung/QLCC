@@ -36,7 +36,7 @@ export class DinhMucNuocService {
         }
     }
 
-    addnewDinhMucNuoc(dinhmucnuoc?: DinhMucNuoc) {
+    addnewDinhMucNuoc(dinhmucnuoc?: DinhMucNuoc, id?: number) {
         return this.dinhmucnuocEndpoint.addnewDinhMucNuoc<DinhMucNuoc>(dinhmucnuoc);
     }    
 

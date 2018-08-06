@@ -242,6 +242,7 @@ import { DinhMucNuocEndpoint } from "./services/dinhmucnuoc-endpoint.service";
 import { DichVuCoBanService } from "./services/dichvucoban.service";
 import { DichVuCoBanEndpoint } from "./services/dichvucoban-endpoint.service";
 import { DichVuCoBanImportComponent } from "./components/dichvucoban/dichvucoban-import.component";
+import { DatePipe } from "@angular/common";
 
 @NgModule({
     imports: [
@@ -471,7 +472,8 @@ import { DichVuCoBanImportComponent } from "./components/dichvucoban/dichvucoban
         DinhMucNuocService,
         DinhMucNuocEndpoint,
         DichVuCoBanService,
-        DichVuCoBanEndpoint
+        DichVuCoBanEndpoint,
+        DatePipe
         //MenuLeftComponent,
         //FooterComponent,
         //commonroadComponent,

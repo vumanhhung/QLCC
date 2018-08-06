@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using DAL.Models;
+using QLCC.Helpers;
 
 namespace QLCC.Controllers
 {
@@ -78,7 +79,10 @@ namespace QLCC.Controllers
             {
                 return BadRequest();
             }
-
+            var user = User.Identity.Name;
+            var userId = Utilities.GetUserId(this.User);
+            banggiadichvucoban.NgaySua = DateTime.Now;
+            banggiadichvucoban.NguoiSua = user;
             _context.Entry(banggiadichvucoban).State = EntityState.Modified;
 
             try
@@ -108,7 +112,10 @@ namespace QLCC.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            var user = User.Identity.Name;
+            var userId = Utilities.GetUserId(this.User);
+            banggiadichvucoban.NgayNhap = DateTime.Now;
+            banggiadichvucoban.NguoiNhap = user;
             _context.BangGiaDichVuCoBans.Add(banggiadichvucoban);
             await _context.SaveChangesAsync();
 
@@ -139,6 +146,24 @@ namespace QLCC.Controllers
         private bool BangGiaDichVuCoBanExists(int id)
         {                        
             return _context.BangGiaDichVuCoBans.Any(e => e.BangGiaDichVuCoBanId == id);
+        }
+
+        [HttpGet("GetLoaiDichVu/{id}")]
+        public async Task<IActionResult> GetBangGiaDichVuCoBanByLoaiDichVuId([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var banggiadichvucoban = await _context.BangGiaDichVuCoBans.SingleOrDefaultAsync(m => m.LoaiDichVuId == id);
+
+            if (banggiadichvucoban == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(banggiadichvucoban);
         }
     }    
 }

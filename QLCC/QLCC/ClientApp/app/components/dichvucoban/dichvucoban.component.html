@@ -13,6 +13,7 @@
             <div style="margin-bottom:1%;" align="right" class="col-sm-6">
                 <div class="row">
                     <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newDichVuCoBan()"><i class="fa fa-plus"></i></a>
+                    <a class="btn btn-primary" href="javascript://" title="In tất cả các bản ghi" (click)="printDiv()"><i class="fa fa-print"></i></a>
                     <a class="btn btn-primary" href="javascript://" tooltip="Import dịch vụ cơ bản" (click)="importDichVuCoBan()"><i class="fa fa-download"></i></a>
                     <a class="btn btn-primary" href="javascript://" tooltip="Export dịch vụ cơ bản" (click)="excelexport.save()">
                         <i class="fa fa-upload"></i>
@@ -21,7 +22,7 @@
                             </kendo-excelexport-column>
                             <kendo-excelexport-column field="soChungTu" title="Số chứng từ" [width]="100" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
-                            <kendo-excelexport-column field="ngayChungTu" title="Ngày chứng từ" [width]="160" [cellOptions]="{ format: 'dd-mm-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            <kendo-excelexport-column field="ngayChungTu" title="Ngày chứng từ" [width]="160" [cellOptions]="{ format: 'dd-MM-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
                             <kendo-excelexport-column field="matBangs.tenMatBang" title="Tên mặt bằng" [width]="100" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
@@ -39,7 +40,7 @@
                             </kendo-excelexport-column>
                             <kendo-excelexport-column field="thanhTien" title="Thành tiền" [width]="100" [cellOptions]="{format: '#,##'}" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
-                            <kendo-excelexport-column field="ngayThanhToan" title="Ngày thanh toán" [width]="160" [cellOptions]="{ format: 'dd-mm-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            <kendo-excelexport-column field="ngayThanhToan" title="Ngày thanh toán" [width]="160" [cellOptions]="{ format: 'dd-MM-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
                             <kendo-excelexport-column field="kyThanhToan" title="Kỳ thanh toán" [width]="100" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
@@ -51,9 +52,9 @@
                             </kendo-excelexport-column>
                             <kendo-excelexport-column field="tyGia" title="Tỷ giá" [width]="100" [cellOptions]="{format: '#,##'}" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
-                            <kendo-excelexport-column field="tuNgay" title="Từ ngày" [width]="160" [cellOptions]="{ format: 'dd-mm-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            <kendo-excelexport-column field="tuNgay" title="Từ ngày" [width]="160" [cellOptions]="{ format: 'dd-MM-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
-                            <kendo-excelexport-column field="denNgay" title="Đến ngày" [width]= "160" [cellOptions]="{ format: 'dd-mm-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            <kendo-excelexport-column field="denNgay" title="Đến ngày" [width]= "160" [cellOptions]="{ format: 'dd-MM-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
                         </kendo-excelexport>
                     </a>
@@ -76,11 +77,6 @@
                                     <option value="100">100</option>
                                 </select> bản ghi
                             </label>
-                        </div>
-                        <div class="DTTT_container">
-                            <a class="DTTT_button DTTT_button_print" title="{{'preferences.Print' | translate}}" tabindex="0" (click)="printDiv()">
-                                <span>{{'preferences.Print' | translate}}</span>
-                            </a>
                         </div>
                         <div class="clearfix"></div>
                         <ngx-datatable class="material colored-header sm table table-striped table-hover "

@@ -47,5 +47,8 @@ export class BangGiaDichVuCoBanService {
     deleteBangGiaDichVuCoBan(id: number) {
         return this.banggiadichvucobanEndpoint.deleteBangGiaDichVuCoBan(id);
     }
-    
+
+    getBangGiaDichVuCoBanByLoaiDichVuID(id?: number) {
+        return this.banggiadichvucobanEndpoint.getBangGiaDichVuCoBanByLoaiDichVuID<BangGiaDichVuCoBan>(id);
+    }
 }

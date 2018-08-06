@@ -93,7 +93,7 @@ namespace QLCC.Controllers
         
         // POST: api/DinhMucNuocs
         [HttpPost]
-        public async Task<IActionResult> PostDinhMucNuoc([FromBody] DinhMucNuoc dinhmucnuoc)
+        public async Task<IActionResult> PostDinhMucNuoc([FromBody] DinhMucNuoc dinhmucnuoc,[FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -103,7 +103,7 @@ namespace QLCC.Controllers
             var userId = Utilities.GetUserId(this.User);
             dinhmucnuoc.NgayNhap = DateTime.Now;
             dinhmucnuoc.NguoiNhap = user;
-            var checkten = await _context.DinhMucNuocs.SingleOrDefaultAsync(r => r.TenDinhMucNuoc == dinhmucnuoc.TenDinhMucNuoc);
+            var checkten = await _context.DinhMucNuocs.SingleOrDefaultAsync(r => r.TenDinhMucNuoc == dinhmucnuoc.TenDinhMucNuoc && r.CongThucNuocId == id);
             if (checkten == null)
             {
                 _context.DinhMucNuocs.Add(dinhmucnuoc);
@@ -130,7 +130,7 @@ namespace QLCC.Controllers
                 return BadRequest(ModelState);
             }
 
-            var dinhmucnuoc = await _context.DinhMucNuocs.SingleOrDefaultAsync(m => m.DinhMucNuocId == id);
+            var dinhmucnuoc = await _context.DinhMucNuocs.SingleOrDefaultAsync(m => m.CongThucNuocId == id);
             if (dinhmucnuoc == null)
             {
                 return NotFound();

@@ -60,7 +60,7 @@ namespace QLCC.Controllers
             {
                 return BadRequest();
             }
-
+            
             _context.Entry(trangthai).State = EntityState.Modified;
 
             try

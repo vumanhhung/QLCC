@@ -171,7 +171,6 @@ export class DichVuCoBanImportComponent implements OnInit, AfterViewInit {
         }
     }
     Upload(khachhang: number, matbang: number, loaidichvu: number, donvitinh: number, loaitien: number) {
-        console.log(khachhang, matbang, loaidichvu, donvitinh, loaitien);
         this.isUploadClick = true;
         this.ArrLog.push("Bắt đầu");
         let fileReader = new FileReader();
@@ -204,10 +203,9 @@ export class DichVuCoBanImportComponent implements OnInit, AfterViewInit {
         var count: number = 0;
         if (obj.length) {
             for (var a = 0; a < obj.length; a++) {
-                console.log(obj[a].soChungTu);
-                //this.ArrLog.push("Thực hiện insert bản ghi thứ " + (a + 1) + ":___" + obj[a].soChungTu);
+                this.ArrLog.push("Thực hiện insert bản ghi thứ " + (a + 1) + ":___" + obj[a].soChungTu);
                 this.ArrLog.push("Thành công");
-                //this.logImport.nativeElement.insertAdjacentHTML("beforebegin", "<div class='itemLog' style='margin-bottom:3px;padding-bottom:3px'>Thực hiện insert bản ghi thứ " + (a + 1) + ":___<span class='nameItem' style='font-style:italic'>" + obj[a].soChungTu + "</span></div><div class='itemLog status' style='color: #048b8b;margin-bottom:3px;padding-bottom:3px;border-bottom: 1px solid #ccc;'>Thành công  <i class='fa fa-check'></i></div>");
+                this.logImport.nativeElement.insertAdjacentHTML("beforebegin", "<div class='itemLog' style='margin-bottom:3px;padding-bottom:3px'>Thực hiện insert bản ghi thứ " + (a + 1) + ":___<span class='nameItem' style='font-style:italic'>" + obj[a].soChungTu + "</span></div><div class='itemLog status' style='color: #048b8b;margin-bottom:3px;padding-bottom:3px;border-bottom: 1px solid #ccc;'>Thành công  <i class='fa fa-check'></i></div>");
                 this.valueProgress = ((a + 1) / (obj.length)) * 100;
             }
             this.logImport.nativeElement.insertAdjacentHTML("afterend", "<div class='itemLog complete' style='color: #048b8b;font-weight:900'>Hoàn thành!</div>");

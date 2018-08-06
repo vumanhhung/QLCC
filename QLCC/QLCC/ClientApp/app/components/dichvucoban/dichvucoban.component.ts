@@ -19,6 +19,7 @@ import { LoaiTienService } from '../../services/loaitien.service';
 import * as XLSX from 'ts-xlsx';
 import { formatDate } from '@telerik/kendo-intl';
 import { DichVuCoBanImportComponent } from './dichvucoban-import.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: "dichvucoban",
@@ -82,7 +83,8 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         private matbangService: MatBangService,
         private loaidichvuService: LoaiDichVuService,
         private donvitinhService: DonViTinhService,
-        private loaitienService: LoaiTienService) {
+        private loaitienService: LoaiTienService,
+        private datePipe: DatePipe) {
     }
 
     ngOnInit() {
@@ -295,19 +297,19 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         this.dichvucobanService.getAllDichVuCoBan().subscribe(result => { 
             var myWindow = window.open('', '', 'width=200,height=100');
             for (let item of result) {
-                myWindow.document.write("<div style='padding-top: 10px;'><p><span style='font-weight: bold;font-size: 14px;'>Số chứng từ: <span>" + item.soChungTu + "<p>")
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày chứng từ: <span>" + item.ngayChungTu + "<p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Mặt bằng: <span>" + item.matBangs.tenMatBang + "<p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Khách hàng: <span>" + item.khachHangs.hoDem + " " + item.khachHangs.ten + "<p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Loại dịch vụ: <span>" + item.loaiDichVus.tenLoaiDichVu + "<p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Đơn vị tính: <span>" + item.donViTinhs.tenDonViTinh + "<p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Diễn giải: <span>" + item.dienGiai + "<p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Đơn giá: <span>" + item.donGia + "<p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Số lượng: <span>" + item.soLuong + "<p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Thành tiền: <span>" + item.thanhTien + "<p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày thanh toán: <span>" + item.ngayThanhToan + "<p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày bắt đầu: <span>" + item.tuNgay + "<p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày hết hạn: <span>" + item.denNgay + "<p></div>");             
+                myWindow.document.write("<div style='padding-top: 10px;'><p><span style='font-weight: bold;font-size: 14px;'>Số chứng từ: </span>" + item.soChungTu + "</p>")
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày chứng từ: </span>" + this.datePipe.transform(item.ngayChungTu, 'dd/MM/yyyy') + "</p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Mặt bằng: </span>" + item.matBangs.tenMatBang + "</p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Khách hàng: </span>" + item.khachHangs.hoDem + " " + item.khachHangs.ten + "</p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Loại dịch vụ: </span>" + item.loaiDichVus.tenLoaiDichVu + "</p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Đơn vị tính: </span>" + item.donViTinhs.tenDonViTinh + "</p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Diễn giải: </span>" + item.dienGiai + "</p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Đơn giá: </span>" + this.formatPrice(item.donGia.toString()) + "</p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Số lượng: </span>" + item.soLuong + "</p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Thành tiền: </span>" + this.formatPrice(item.thanhTien.toString()) + "</p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày thanh toán: </span>" + this.datePipe.transform(item.ngayThanhToan, 'dd/MM/yyyy') + "</p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày bắt đầu: </span>" + this.datePipe.transform(item.tuNgay, 'dd/MM/yyyy') + "</p>");
+                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày hết hạn: </span>" + this.datePipe.transform(item.denNgay, 'dd/MM/yyyy') + "</p></div>");             
                 myWindow.document.write("<hr/>");
             }
             myWindow.focus();

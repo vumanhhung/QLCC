@@ -41,7 +41,7 @@ export class DinhMucNuocEndpoint extends EndpointFactory {
             });
     }
     
-    addnewDinhMucNuoc<T>(dinhmucnuocObject?: any): Observable<T> {
+    addnewDinhMucNuoc<T>(dinhmucnuocObject?: any, id?: number): Observable<T> {
         let body = JSON.stringify(dinhmucnuocObject);
         return this.http.post(this.dinhmucnuocUrl, body, this.getRequestHeaders()).catch(error => {
             return this.handleError(error, () => this.addnewDinhMucNuoc(dinhmucnuocObject));
@@ -56,7 +56,7 @@ export class DinhMucNuocEndpoint extends EndpointFactory {
         });
     }
     
-    deleteDinhMucNuoc<T>(id: number): Observable<T> {
+    deleteDinhMucNuoc<T>(id: number,): Observable<T> {
         let endpointUrl = `${this.dinhmucnuocUrl}/${id}`;
         return this.http.delete(endpointUrl, this.getRequestHeaders())
             .catch(error => {

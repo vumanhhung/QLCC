@@ -4,7 +4,6 @@
             <div class="EditForm">
                 <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="DinhMucNuocForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
 (!tenDinhMucNuoc.valid && showErrorAlert('Tên định mức nước không được để trống', 'Vui lòng nhập Tên định mức nước!'));
-(!soDau.valid && showErrorAlert('Số Đầu không được để trống', 'Vui lòng nhập Số Đầu!'));
 (!soCuoi.valid && showErrorAlert('Số Cuối không được để trống', 'Vui lòng nhập Số Cuối!'));
 (!dienGiai.valid && showErrorAlert('Diễn Giải không được để trống', 'Vui lòng nhập Diễn Giải!'));
 ">
@@ -40,11 +39,7 @@
                                 <div class="col-md-6">
                                     <label class="control-label col-md-5" for="soDau-{{uniqueId}}">Số Đầu</label>
                                     <div class="col-md-7" [ngClass]="{'has-success': f.submitted && soDau.valid, 'has-error' : f.submitted && !soDau.valid}">
-                                        <input autofocus type="number" min="0" class="form-control" name="soDau" [(ngModel)]="DinhMucNuocEdit.soDau" #soDau="ngModel" required />
-                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" style="padding-left:8%;" [ngClass]="{'glyphicon-ok ': soDau.valid, 'glyphicon-remove' : !soDau.valid}"></span>
-                                        <span *ngIf="showValidationErrors && f.submitted && !soDau.valid" class="errorMessage">
-                                            Vui lòng nhập Số Đầu!
-                                        </span>
+                                        <input autofocus type="number" min="0" class="form-control" name="soDau" [(ngModel)]="DinhMucNuocEdit.soDau" #soDau="ngModel" required disabled/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">

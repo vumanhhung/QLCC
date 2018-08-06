@@ -62,4 +62,13 @@ export class BangGiaDichVuCoBanEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.deleteBangGiaDichVuCoBan(id));
             });
     }
+
+    getBangGiaDichVuCoBanByLoaiDichVuID<T>(Id?: number): Observable<T> {
+        let endpointUrl = Id ? `${this.banggiadichvucobanUrl}/GetLoaiDichVu/${Id}` : this.banggiadichvucobanUrl;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getBangGiaDichVuCoBanByLoaiDichVuID(Id));
+            });
+    }
 }

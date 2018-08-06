@@ -11,6 +11,9 @@ import { DonViTinh } from '../../models/donvitinh.model';
 import { LoaiTien } from '../../models/loaitien.model';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { LoaiTienService } from '../../services/loaitien.service';
+import { DatePipe } from '@angular/common';
+import { BangGiaDichVuCoBan } from '../../models/banggiadichvucoban.model';
+import { BangGiaDichVuCoBanService } from '../../services/banggiadichvucoban.service';
 
 @Component({
     selector: "dichvucoban-info",
@@ -48,8 +51,9 @@ export class DichVuCoBanInfoComponent implements OnInit {
     matBang: MatBang[] = [];
     khachHang: KhachHang[] = [];
     loaiDichVu: LoaiDichVu[] = [];
-    donViTinh: DonViTinh[] = [];
     loaiTien: LoaiTien[] = [];
+    donViTinh: DonViTinh[] = [];
+    banggiadichvucoban: BangGiaDichVuCoBan[] = [];
 
     public formResetToggle = true;
     private isEditMode = false;
@@ -70,7 +74,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
     @ViewChild('editorModal')
     editorModal: ModalDirective;
 
-    constructor(private alertService: AlertService, private gvService: DichVuCoBanService, private loaitienService: LoaiTienService) {
+    constructor(private alertService: AlertService, private gvService: DichVuCoBanService, private banggiadichvucobanservice: BangGiaDichVuCoBanService, private loaitienservice: LoaiTienService, private datePipe: DatePipe) {
     }
 
     ngOnInit() {
@@ -144,7 +148,6 @@ export class DichVuCoBanInfoComponent implements OnInit {
             this.DichVuCoBanEdit.tuNgay = this.valueTuNgay;
             this.DichVuCoBanEdit.ngayChungTu = this.valueNgayChungTu;
             this.DichVuCoBanEdit.ngayThanhToan = this.valueNgayThanhToan;
-            console.log(this.DichVuCoBanEdit);
             if (this.isNew) {
                 this.gvService.addnewDichVuCoBan(this.DichVuCoBanEdit).subscribe(results => {
                     if (results.soChungTu == "Exist") {
@@ -163,7 +166,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
                     } else this.saveSuccessHelper();
                 }, error => this.saveFailedHelper(error));
             }
-        }        
+        }
     }
 
     newDichVuCoBan() {
@@ -245,31 +248,11 @@ export class DichVuCoBanInfoComponent implements OnInit {
             //this.editingRowName = obj.tenDichVuCoBan;
             this.DichVuCoBanEdit = new DichVuCoBan();
             Object.assign(this.DichVuCoBanEdit, obj);
-            if (this.DichVuCoBanEdit.donGia.toString() != "0") {
-                this.dongia = this.formatPrice(this.DichVuCoBanEdit.donGia.toString());
-            } else {
-                this.dongia = "0";
-            }
-            if (this.DichVuCoBanEdit.thanhTien.toString() != "0") {
-                this.thanhtien = this.formatPrice(this.DichVuCoBanEdit.thanhTien.toString());
-            } else {
-                this.thanhtien = "0";
-            }
-            if (this.DichVuCoBanEdit.tienThanhToan.toString() != "0") {
-                this.tienthanhtoan = this.formatPrice(this.DichVuCoBanEdit.tienThanhToan.toString());
-            } else {
-                this.tienthanhtoan = "0";
-            }
-            if (this.DichVuCoBanEdit.tyGia.toString() != "0") {
-                this.tygia = this.formatPrice(this.DichVuCoBanEdit.tyGia.toString());
-            } else {
-                this.tygia = "0";
-            }
-            if (this.DichVuCoBanEdit.tienTTQuyDoi.toString() != "0") {
-                this.tienquydoi = this.formatPrice(this.DichVuCoBanEdit.tienTTQuyDoi.toString());
-            } else {
-                this.tienquydoi = "0";
-            }            
+            this.dongia = this.formatPrice(this.DichVuCoBanEdit.donGia.toString());
+            this.thanhtien = this.formatPrice(this.DichVuCoBanEdit.thanhTien.toString());
+            this.tienthanhtoan = this.formatPrice(this.DichVuCoBanEdit.tienThanhToan.toString());
+            this.tygia = this.formatPrice(this.DichVuCoBanEdit.tyGia.toString());
+            this.tienquydoi = this.formatPrice(this.DichVuCoBanEdit.tienTTQuyDoi.toString());
             this.edit();
 
             return this.DichVuCoBanEdit;
@@ -320,6 +303,19 @@ export class DichVuCoBanInfoComponent implements OnInit {
 
     loaiDichVuChk(id: number) {
         if (id > 0) {
+            var change = 0;
+            this.banggiadichvucobanservice.getBangGiaDichVuCoBanByLoaiDichVuID(id).subscribe(results => {
+                console.log(results);
+                this.DichVuCoBanEdit.donViTinhId = results.donViTinhId;
+                this.DichVuCoBanEdit.loaiTienId = results.loaiTienId;
+                this.dongia = this.formatPrice(results.donGia.toString());
+                this.loaitienservice.getLoaiTienByID(id).subscribe(result => {
+                    this.tygia = this.formatPrice(result.tyGia.toString());
+                    var pS = this.tienthanhtoan.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+                    change = Number(pS) * Number(this.tygia);
+                    this.tienquydoi = this.formatPrice(change.toString());
+                })
+            })
             this.ChkloaiDichVu = true;
         } else {
             this.ChkloaiDichVu = false;
@@ -327,18 +323,11 @@ export class DichVuCoBanInfoComponent implements OnInit {
     }
 
     loaiTienChk(id: number) {
-        if (id > 0) {
-            var change = 0;
-            this.loaitienService.getLoaiTienByID(id).subscribe(result => {
-                this.tygia = this.formatPrice(result.tyGia.toString());
-                var pS = this.tienthanhtoan.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
-                change = Number(pS) * Number(this.tygia);
-                this.tienquydoi = this.formatPrice(change.toString());
-            });
+        if (id > 0) {            
             this.ChkloaiTien = true;
         } else {
             this.tygia = this.formatPrice("0");
-            this.tienquydoi = this.formatPrice("0"); 
+            this.tienquydoi = this.formatPrice("0");
             this.ChkloaiTien = false;
         }
     }
@@ -367,12 +356,11 @@ export class DichVuCoBanInfoComponent implements OnInit {
             var pS = this.dongia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
             var result = Number(pS) * this.DichVuCoBanEdit.soLuong;
             this.thanhtien = this.formatPrice(result.toString());
-            this.tienthanhtoan = this.thanhtien;            
-        }        
+            this.tienthanhtoan = this.thanhtien;
+        }
     }
     kythanhtoanChange() {
         if (this.DichVuCoBanEdit.kyThanhToan > 0) {
-            console.log(this.DichVuCoBanEdit.kyThanhToan);
             this.valueDenNgay = new Date(this.valueDenNgay.setMonth(this.valueTuNgay.getMonth() + Number(this.DichVuCoBanEdit.kyThanhToan)));
         } else this.valueDenNgay = new Date();
     }
@@ -409,10 +397,22 @@ export class DichVuCoBanInfoComponent implements OnInit {
         this.editorModal.hide();
     }
 
-    printDiv() {
+    printOnly() {
         var myWindow = window.open('', '', 'width=200,height=100');
-        myWindow.document.write("<p>" + this.DichVuCoBanEdit.soChungTu + "</p>");
-        myWindow.document.close();
+        myWindow.document.write("<div style='padding-top: 15px;padding-bottom: 15px'><p><span style='font-weight: bold;font-size: 14px;'>Số chứng từ: </span>" + this.DichVuCoBanEdit.soChungTu + "</p>")
+        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày chứng từ: </span>" + this.datePipe.transform(this.DichVuCoBanEdit.ngayChungTu, 'dd/MM/yyyy') + "</p>");
+        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Mặt bằng: </span>" + this.DichVuCoBanEdit.matBangs.tenMatBang + "<p>");
+        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Khách hàng: </span>" + this.DichVuCoBanEdit.khachHangs.hoDem + " " + this.DichVuCoBanEdit.khachHangs.ten + "</p>");
+        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Loại dịch vụ: </span>" + this.DichVuCoBanEdit.loaiDichVus.tenLoaiDichVu + "</p>");
+        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Đơn vị tính: </span>" + this.DichVuCoBanEdit.donViTinhs.tenDonViTinh + "</p>");
+        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Diễn giải: </span>" + this.DichVuCoBanEdit.dienGiai + "<p>");
+        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Đơn giá: </span>" + this.formatPrice(this.DichVuCoBanEdit.donGia.toString()) + "</p>");
+        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Số lượng: </span>" + this.DichVuCoBanEdit.soLuong + "<p>");
+        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Thành tiền: </span>" + this.formatPrice(this.DichVuCoBanEdit.thanhTien.toString()) + "</p>");
+        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày thanh toán: </span>" + this.datePipe.transform(this.DichVuCoBanEdit.ngayThanhToan, 'dd/MM/yyyy') + "</p>");
+        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày bắt đầu: </span>" + this.datePipe.transform(this.DichVuCoBanEdit.tuNgay, 'dd/MM/yyyy') + "</p>");
+        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày hết hạn: </span>" + this.datePipe.transform(this.DichVuCoBanEdit.denNgay, 'dd/MM/yyyy') + "</p></div>");
+        myWindow.document.write("<hr/>");
         myWindow.focus();
         myWindow.print();
         myWindow.close();

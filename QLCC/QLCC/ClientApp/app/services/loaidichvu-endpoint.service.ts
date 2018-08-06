@@ -79,4 +79,12 @@ export class LoaiDichVuEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.dequy());
             })
     }
+
+    filterStatus<T>(status?: number) {
+        let enpointUrl = `${this.loaidichvuUrl}/FilterByStatus`;
+        return this.http.get(enpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.filterStatus());
+            })
+    }
 }

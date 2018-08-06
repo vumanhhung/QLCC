@@ -13,6 +13,7 @@ import { of } from 'rxjs/observable/of';
 import { id } from '@swimlane/ngx-datatable/release/utils';
 import { ListComponent } from '@progress/kendo-angular-dropdowns';
 import { max } from 'rxjs/operator/max';
+import { errors } from '@telerik/kendo-intl';
 
 @Component({
     selector: "loaidichvu",
@@ -32,6 +33,7 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
     sourceloaidichvu: LoaiDichVu;
     editingRowName: { name: string };
     maxSub: number;
+    filterStatus: string;
 
     @ViewChild('f')
     private form;
@@ -64,8 +66,8 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
             { prop: 'tenLoaiDichVu', name: gT('Tên loại dịch vụ') },
             { prop: 'moTa', name: gT('Mô tả') },
             { prop: 'viTri', name: gT('Vị trí') },
-            { prop: 'trangThai', name: gT('TrangThai'), cellTemplate: this.statusTemplate },
-            { name: '', width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
+            { prop: 'trangThai', name: gT('Trạng Thái'), cellTemplate: this.statusTemplate },
+            { name: gT('Chức Năng'), width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
         this.loadData();
     }
@@ -112,7 +114,13 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
     loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.loaidichvuService.dequy().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        if (this.filterStatus == "null") {
+            this.loaidichvuService.dequy().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        } else if (this.filterStatus == "1" || this.filterStatus == "0") {
+            var status = Number(this.filterStatus);
+            this.loaidichvuService.filterStatus(status).subscribe(results => this.onDataLoadSuccessful(results), errors => this.onDataLoadFailed(errors));
+        }
+        
     }
 
     onDataLoadSuccessful(obj: LoaiDichVu[]) {
@@ -149,7 +157,7 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
     }
 
     onSearchChanged(value: string) {
-        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.loaiDichVuId, r.tenLoaiDichVu, r.moTa, r.viTri, r.maLoaiDichVuCha, r.dichVuCoBan, r.trangThai, r.nguoiNhap, r.ngayNhap, r.nguoiSua, r.ngaySua));
+        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.tenLoaiDichVu, r.moTa, r.viTri));
     }
 
     deleteLoaiDichVu(row: LoaiDichVu) {

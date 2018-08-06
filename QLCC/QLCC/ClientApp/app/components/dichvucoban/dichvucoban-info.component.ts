@@ -189,6 +189,8 @@ export class DichVuCoBanInfoComponent implements OnInit {
         this.DichVuCoBanEdit.lapLai = false;
         this.DichVuCoBanEdit.trangThai = 1;
         this.DichVuCoBanEdit.soLuong = 0;
+        this.valueTuNgay = new Date(this.valueTuNgay.getFullYear(), this.valueTuNgay.getMonth(), 1);
+        this.valueDenNgay = new Date(this.valueDenNgay.getFullYear(), this.valueDenNgay.getMonth() + 1, 0);
         this.dongia = this.formatPrice("0");
         this.tygia = this.formatPrice("0");
         var result = Number(this.dongia) * this.DichVuCoBanEdit.soLuong;
@@ -394,7 +396,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
     }
 
     closeModal() {
-        this.editorModal.hide();
+        this.editorModal.hide(); 
     }
 
     printOnly() {

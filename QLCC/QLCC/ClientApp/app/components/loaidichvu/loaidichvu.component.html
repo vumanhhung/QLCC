@@ -8,10 +8,16 @@
             <div style="margin-bottom:1%" class="col-sm-6">
                 <div class="row">
                     <search-box (searchChange)="onSearchChanged($event)" placeholder="Tìm kiếm">></search-box>
+                    <!--<select name="filterStatus" [(ngModel)]="filterStatus" #filterStatus>
+                        <option value="null">Tất cả trạng thái</option>
+                        <option value="1">Đang hoạt động</option>
+                        <option value="0">Dừng hoạt động</option>
+                    </select>-->
                 </div>
             </div>
             <div style="margin-bottom:1%;" align="right" class="col-sm-6">
                 <div class="row">
+                    <goback></goback>
                     <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newLoaiDichVu()"><i class="fa fa-plus"></i></a>
                     <!--<a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.Settings' | translate}}" (click)="configLoaiDichVu"><i class="fa fa-cog"></i></a>-->
                 </div>

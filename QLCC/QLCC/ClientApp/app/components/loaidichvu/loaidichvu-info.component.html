@@ -1,6 +1,6 @@
 ﻿<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width:550px;">
             <div *ngIf="!isViewDetails" class="EditForm">
                 <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="LoaiDichVuInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
                       (!tenLoaiDichVu.valid && showErrorAlert('TenLoaiDichVu không được để trống', 'Vui lòng nhập TenLoaiDichVu!'));
@@ -21,8 +21,8 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="form-group has-feedback">
-                                <label class="control-label col-md-2" for="tenLoaiDichVu-{{uniqueId}}">Tên loại dịch vụ</label>
-                                <div class="col-md-5">
+                                <label class="control-label col-md-3" for="tenLoaiDichVu-{{uniqueId}}">Tên loại dịch vụ</label>
+                                <div class="col-md-7">
                                     <input autofocus type="text" class="form-control" name="tenLoaiDichVu" [(ngModel)]="LoaiDichVuEdit.tenLoaiDichVu" #tenLoaiDichVu="ngModel" required />
                                     <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tenLoaiDichVu.valid, 'glyphicon-remove' : !tenLoaiDichVu.valid}"></span>
                                     <span *ngIf="showValidationErrors && f.submitted && !tenLoaiDichVu.valid" class="errorMessage">
@@ -31,8 +31,8 @@
                                 </div>
                             </div>
                             <div class="form-group has-feedback">
-                                <label class="control-label col-md-2" for="moTa-{{uniqueId}}">Mô tả</label>
-                                <div class="col-md-5">
+                                <label class="control-label col-md-3" for="moTa-{{uniqueId}}">Mô tả</label>
+                                <div class="col-md-7">
                                     <input autofocus type="text" class="form-control" name="moTa" [(ngModel)]="LoaiDichVuEdit.moTa" #moTa="ngModel" required />
                                     <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': moTa.valid, 'glyphicon-remove' : !moTa.valid}"></span>
                                     <span *ngIf="showValidationErrors && f.submitted && !moTa.valid" class="errorMessage">
@@ -41,8 +41,8 @@
                                 </div>
                             </div>
                             <div class="form-group has-feedback">
-                                <label class="control-label col-md-2" for="maLoaiDichVuCha-{{uniqueId}}">Danh mục cha</label>
-                                <div class="col-md-5" [ngClass]="{'has-success': f.submitted && chDichVu, 'has-error' : f.submitted && !chDichVu}">
+                                <label class="control-label col-md-3" for="maLoaiDichVuCha-{{uniqueId}}">Danh mục cha</label>
+                                <div class="col-md-7" [ngClass]="{'has-success': f.submitted && chDichVu, 'has-error' : f.submitted && !chDichVu}">
                                     <select name="maLoaiDichVuCha" [(ngModel)]="LoaiDichVuEdit.maLoaiDichVuCha" #maLoaiDichVuCha="ngModel" class="form-control" (change)="changeDanhMuc(maLoaiDichVuCha.value)">
                                         <option value="0">--- Chọn nhóm dịch vụ ---</option>
                                         <option *ngFor="let o of listDichVu" value="{{o.loaiDichVuId}}">
@@ -52,8 +52,8 @@
                                 </div>
                             </div>
                             <div class="form-group has-feedback">
-                                <label class="control-label col-md-2" for="viTri-{{uniqueId}}">Vị trí</label>
-                                <div class="col-md-5">
+                                <label class="control-label col-md-3" for="viTri-{{uniqueId}}">Vị trí</label>
+                                <div class="col-md-7">
                                     <input autofocus type="number" class="form-control" name="viTri" min="1" [(ngModel)]="LoaiDichVuEdit.viTri" #viTri="ngModel" required />
                                     <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': viTri.valid, 'glyphicon-remove' : !viTri.valid}"></span>
                                     <span *ngIf="showValidationErrors && f.submitted && !viTri.valid" class="errorMessage">
@@ -62,8 +62,8 @@
                                 </div>
                             </div>
                             <div class="form-group has-feedback">
-                                <label class="control-label col-md-2" for="dichVuCoBan-{{uniqueId}}">Dịch vụ cơ bản</label>
-                                <div class="col-md-5">
+                                <label class="control-label col-md-3" for="dichVuCoBan-{{uniqueId}}">Dịch vụ cơ bản</label>
+                                <div class="col-md-7">
                                     <div style="float: left;margin-right: 40px;margin-top: 10px">
                                         <input type="radio" id="r_true" [value]="true" name="dichVuCoBan" class="k-radio" checked [(ngModel)]="LoaiDichVuEdit.dichVuCoBan" #dichVuCoBan="ngModel" />
                                         <label class="k-radio-label" for="r_true">Đúng</label>
@@ -77,8 +77,8 @@
                                 </div>
                             </div>
                             <div class="form-group has-feedback">
-                                <label class="control-label col-md-2" for="trangThai-{{uniqueId}}">Trạng thái</label>
-                                <div class="col-md-5">
+                                <label class="control-label col-md-3" for="trangThai-{{uniqueId}}">Trạng thái</label>
+                                <div class="col-md-8">
                                     <div style="float: left;margin-right: 40px;margin-top: 10px">
                                         <input type="radio" id="r_dang" [value]="1" name="trangThai" class="k-radio" checked [(ngModel)]="LoaiDichVuEdit.trangThai" #trangThai="ngModel" />
                                         <label class="k-radio-label" for="r_dang">Đang hoạt động</label>
@@ -111,63 +111,61 @@
                     </div>
                 </form>
             </div>
-        </div>
-    </div>
-
-
-    <div *ngIf="isViewDetails" class="ViewForm">
-        <div class="modal-header">
-            <p class="modal-title pull-left">
-                <i class="fa fa-eye"></i> Chi tiết loại dịch vụ
-                <span>{{tenLoaiDichVu}}</span>
-            </p>
-            <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div>
-                <form #f="ngForm">
-                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
-                        <table class="table table-bordered">
-                            <tbody>
-                                <!--<tr>
-                                    <td class="boldText">Tên Loại dịch vụ:</td>
-                                    <td>{{LoaiDichVuEdit.tenLoaiDichVu}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="boldText">Mô tả:</td>
-                                    <td>{{LoaiDichVuEdit.moTa}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="boldText">Trạng thái:</td>
-                                    <td *ngIf="LoaiDichVuEdit.trangThai == 1">Đang hoạt động</td>
-                                    <td *ngIf="LoaiDichVuEdit.trangThai == 2">Dừng hoạt động</td>
-                                </tr>
-                                <tr>
-                                    <td class="boldText">Ngày Nhập:</td>
-                                    <td>{{LoaiDichVuEdit.ngayNhap | date:'dd/MM/yyyy'}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="boldText">Ngày Sửa:</td>
-                                    <td>{{LoaiDichVuEdit.ngaySua | date: 'dd/MM/yyyy'}}</td>
-                                </tr>-->
-                            </tbody>
-                        </table>
+            <div *ngIf="isViewDetails" class="EditForm">
+                <div class="modal-header">
+                    <p class="modal-title pull-left">
+                        <i class="fa fa-eye"></i> Chi tiết loại dịch vụ
+                        <span>{{tenLoaiDichVu}}</span>
+                    </p>
+                    <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <form #f="ngForm">
+                            <div>
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td class="boldText">Tên Loại dịch vụ:</td>
+                                            <td>{{LoaiDichVuEdit.tenLoaiDichVu}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Mô tả:</td>
+                                            <td>{{LoaiDichVuEdit.moTa}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Trạng thái:</td>
+                                            <td *ngIf="LoaiDichVuEdit.trangThai == 1">Đang hoạt động</td>
+                                            <td *ngIf="LoaiDichVuEdit.trangThai == 2">Dừng hoạt động</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Ngày Nhập:</td>
+                                            <td>{{LoaiDichVuEdit.ngayNhap | date:'dd/MM/yyyy'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Ngày Sửa:</td>
+                                            <td>{{LoaiDichVuEdit.ngaySua | date: 'dd/MM/yyyy'}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="clearfix"></div>
+                        </form>
                     </div>
-                    <div class="clearfix"></div>
-                </form>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <div class="actionBtn-form-group">
-                <div class="col-sm-7">
-                    <div class="pull-right">
-                        <button type="button" (click)="movetoEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
-                        <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                </div>
+                <div class="modal-footer">
+                    <div class="actionBtn-form-group">
+                        <div class="col-sm-7">
+                            <div class="pull-right">
+                                <button type="button" (click)="movetoEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                                <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </div>   
 </div>

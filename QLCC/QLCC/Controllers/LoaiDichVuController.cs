@@ -183,5 +183,11 @@ namespace QLCC.Controllers
                 DeQuy(list, obj.LoaiDichVuId, st + "|=> ");
             }
         }
+        [HttpGet("FilterByStatus")]
+        public async Task<IActionResult> getAllByStatus([FromRoute] int status)
+        {
+            var filter = await _context.LoaiDichVus.SingleOrDefaultAsync(r => r.TrangThai == status);
+            return Ok(filter);
+        }
     }
 }

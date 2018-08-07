@@ -81,7 +81,15 @@ export class LoaiDichVuEndpoint extends EndpointFactory {
     }
 
     filterStatus<T>(status?: number) {
-        let enpointUrl = `${this.loaidichvuUrl}/FilterByStatus`;
+        let enpointUrl = `${this.loaidichvuUrl}/FilterByStatus/${status}`;
+        return this.http.get(enpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.filterStatus());
+            })
+    }
+
+    listDV<T>(id?: number): Observable<T> {
+        let enpointUrl = `${this.loaidichvuUrl}/ListDV/${id}`;
         return this.http.get(enpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.filterStatus());

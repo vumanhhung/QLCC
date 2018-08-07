@@ -31,6 +31,7 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
     loaidichvuEdit: LoaiDichVu;
     listDichVu: LoaiDichVu[] = [];
     sourceloaidichvu: LoaiDichVu;
+    public selectedGropup: number = 0;
     editingRowName: { name: string };
     maxSub: number;
     filterStatus: string;
@@ -69,25 +70,24 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
             { prop: 'trangThai', name: gT('Trạng Thái'), cellTemplate: this.statusTemplate },
             { name: gT('Chức Năng'), width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
-        this.loadData();
+        this.loadData(0);
     }
 
     ngAfterViewInit() {
         this.LoaiDichVuEditor.changesSavedCallback = () => {
             this.addNewToList();
-            this.LoaiDichVuEditor.editorModal.hide();
-            this.loadData();
+            this.LoaiDichVuEditor.editorModal.hide();            
         };
 
         this.LoaiDichVuEditor.changesCancelledCallback = () => {
             this.loaidichvuEdit = null;
             this.sourceloaidichvu = null;
             this.LoaiDichVuEditor.editorModal.hide();
-            this.loadData();
         };
     }
 
     addNewToList() {
+        this.loadData(0);
         if (this.sourceloaidichvu) {
             Object.assign(this.sourceloaidichvu, this.loaidichvuEdit);
             this.loaidichvuEdit = null;
@@ -111,13 +111,12 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         }
     }
 
-    loadData() {
+    loadData(status: number) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        if (this.filterStatus == "null") {
+        if (status == 0) {
             this.loaidichvuService.dequy().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
-        } else if (this.filterStatus == "1" || this.filterStatus == "0") {
-            var status = Number(this.filterStatus);
+        } else if (status > 0) {
             this.loaidichvuService.filterStatus(status).subscribe(results => this.onDataLoadSuccessful(results), errors => this.onDataLoadFailed(errors));
         }
         
@@ -199,5 +198,9 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         this.loaidichvuEdit = this.LoaiDichVuEditor.editLoaiDichVu(row);
         this.LoaiDichVuEditor.isViewDetails = true;
         this.LoaiDichVuEditor.editorModal.show();
+    }
+
+    SelectedStatusValue(status: number) {
+        this.loadData(status);
     }
 }

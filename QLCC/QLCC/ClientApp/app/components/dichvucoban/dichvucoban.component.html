@@ -22,7 +22,7 @@
                             </kendo-excelexport-column>
                             <kendo-excelexport-column field="soChungTu" title="Số chứng từ" [width]="100" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
-                            <kendo-excelexport-column field="ngayChungTu" title="Ngày chứng từ" [width]="160" [cellOptions]="{ format: 'dd-MM-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            <kendo-excelexport-column field="ngayChungTu" title="Ngày chứng từ" [width]="160" [cellOptions]="{ format: 'dd-MM-yy' }" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
                             <kendo-excelexport-column field="matBangs.tenMatBang" title="Tên mặt bằng" [width]="100" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
@@ -40,7 +40,7 @@
                             </kendo-excelexport-column>
                             <kendo-excelexport-column field="thanhTien" title="Thành tiền" [width]="100" [cellOptions]="{format: '#,##'}" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
-                            <kendo-excelexport-column field="ngayThanhToan" title="Ngày thanh toán" [width]="160" [cellOptions]="{ format: 'dd-MM-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            <kendo-excelexport-column field="ngayThanhToan" title="Ngày thanh toán" [width]="160" [cellOptions]="{ format: 'dd-MM-yy' }" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
                             <kendo-excelexport-column field="kyThanhToan" title="Kỳ thanh toán" [width]="100" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
@@ -52,9 +52,9 @@
                             </kendo-excelexport-column>
                             <kendo-excelexport-column field="tyGia" title="Tỷ giá" [width]="100" [cellOptions]="{format: '#,##'}" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
-                            <kendo-excelexport-column field="tuNgay" title="Từ ngày" [width]="160" [cellOptions]="{ format: 'dd-MM-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            <kendo-excelexport-column field="tuNgay" title="Từ ngày" [width]="160" [cellOptions]="{ format: 'dd-MM-yy' }" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
-                            <kendo-excelexport-column field="denNgay" title="Đến ngày" [width]= "160" [cellOptions]="{ format: 'dd-MM-yy' }"  [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            <kendo-excelexport-column field="denNgay" title="Đến ngày" [width]="160" [cellOptions]="{ format: 'dd-MM-yy' }" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
                         </kendo-excelexport>
                     </a>
@@ -67,6 +67,38 @@
                 <div class="box-body">
                     <div>
                         <div class="dataTables_length">
+                            <div (change)="SelectedTangLauValue(drTangLau.value,drloaiDV.value,drStatus.value)">
+                                <label style="margin-right:10px;">
+                                    Tầng lầu
+                                    <select class="form-control input-sm" #drTangLau [(ngModel)]="selectedTangLau">
+                                        <option value="0">---Tất cả---</option>
+                                        <option *ngFor="let o of tanglau" [value]="o.tangLauId">
+                                            {{o.tenTangLau}}
+                                        </option>
+                                    </select>
+                                </label>
+                                <label style="margin-right:10px;">
+                                    Loại dịch vụ
+                                    <select class="form-control input-sm" #drloaiDV [(ngModel)]="selectedLoaiDV">
+                                        <option value="0">---Tất cả---</option>
+                                        <option *ngFor="let o of loaiDichVu" [value]="o.loaiDichVuId">
+                                            {{o.tenLoaiDichVu}}
+                                        </option>
+                                    </select>
+                                </label>
+                                <label>
+                                    Trạng thái
+                                    <select class="form-control input-sm" #drStatus [(ngModel)]="selectedTrangThai">
+                                        <option value="0">---Tất cả---</option>
+                                        <option value="1">Đang sử dụng</option>
+                                        <option value="2">Dừng sử dụng</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <label>
+                                Ngày chứng từ
+                                <kendo-datepicker [format]="'MM yyyy'" [(value)]="filterNgayChungTu" [bottomView]="'year'" [topView]="'decade'"></kendo-datepicker>
+                            </label>
                             <label>
                                 Hiển thị
                                 <select class="form-control input-sm" #drSelected (change)="SelectedValue(drSelected.value)">
@@ -104,7 +136,7 @@
                         </ng-template>
                         <ng-template #descriptionTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
                             <p *ngIf="row.trangThai == 1" class="status">Đang sử dụng</p>
-                            <p *ngIf="row.trangThai == 0" class="status">Ngừng sử dụng</p>
+                            <p *ngIf="row.trangThai == 2" class="status">Ngừng sử dụng</p>
                         </ng-template>
                         <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
                             <a class="btn btn-func btn-success" href="javascript:;" (click)="viewDichVuCoBan(row)" title="Chi tiết"><i class="fa fa-eye"></i></a>

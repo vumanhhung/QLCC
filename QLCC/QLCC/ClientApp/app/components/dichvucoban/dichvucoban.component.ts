@@ -20,6 +20,9 @@ import * as XLSX from 'ts-xlsx';
 import { formatDate } from '@telerik/kendo-intl';
 import { DichVuCoBanImportComponent } from './dichvucoban-import.component';
 import { DatePipe } from '@angular/common';
+import { TangLau } from '../../models/tanglau.model';
+import { TangLauService } from '../../services/tanglau.service';
+import { take } from 'rxjs/operator/take';
 
 @Component({
     selector: "dichvucoban",
@@ -38,6 +41,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     loaiDichVu: LoaiDichVu[] = [];
     donViTinh: DonViTinh[] = [];
     loaiTien: LoaiTien[] = [];
+    tanglau: TangLau[] = [];
     loadingIndicator: boolean;
     public formResetToggle = true;
     dichvucobanEdit: DichVuCoBan;
@@ -45,6 +49,10 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     editingRowName: { name: string };
     selectFileUpload: string = "";
     arrayBuffer: any;
+    filterNgayChungTu: Date;
+    public selectedTangLau: number = 0;
+    public selectedTrangThai: number = 0;
+    public selectedLoaiDV: number = 0;
 
 
     @ViewChild('f')
@@ -84,6 +92,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         private loaidichvuService: LoaiDichVuService,
         private donvitinhService: DonViTinhService,
         private loaitienService: LoaiTienService,
+        private tanglauService: TangLauService,
         private datePipe: DatePipe) {
     }
 
@@ -103,14 +112,24 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
             { prop: 'trangThai', name: gT('Trạng thái'), cellTemplate: this.descriptionTemplate },
             { name: gT('matbang.qlmb_chucnang'), width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
-        this.loadData();
+        this.filterNgayChungTu = new Date();
+        console.log(this.filterNgayChungTu.getMonth());
+        this.dichvucobanService.test().subscribe(results => { console.log(results) }); 
+        this.loadData(0,0,0);
         this.loadAllKhachHang();
         this.loadAllLoaiDichVu();
         this.loadAllLoaiTien();
         this.loadAllDonViTinh();
         this.loadAllMatBang();
+        this.loadAllTangLau();
     }
 
+    loadAllTangLau() {
+        this.tanglauService.getAllTangLau().subscribe(results => this.onDataLoadTangLauSuccessful(results), error => this.onDataLoadFailed(error));
+    }
+    onDataLoadTangLauSuccessful(obj: TangLau[]) {
+        this.tanglau = obj;
+    }
     loadAllKhachHang() {
         this.khachHangService.getAllKhachHang().subscribe(results => this.onDataLoadKhachHangSuccessful(results), error => this.onDataLoadFailed(error))
     }
@@ -160,7 +179,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     }
 
     addNewToList() {
-        this.loadData();
+        this.loadData(0,0,0);
         if (this.sourcedichvucoban) {
             Object.assign(this.sourcedichvucoban, this.dichvucobanEdit);
             this.dichvucobanEdit = null;
@@ -184,10 +203,15 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         }
     }
 
-    loadData() {
+    loadData(tanglauId: number, loaidichvuId: number, status:number) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.dichvucobanService.getAllDichVuCoBan().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        if (tanglauId > 0 || loaidichvuId > 0 || status > 0) {
+            this.dichvucobanService.getItemByFilter(tanglauId, loaidichvuId, status).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        } else {
+            this.dichvucobanService.getAllDichVuCoBan().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        }
+        
     }
 
     onDataLoadSuccessful(obj: DichVuCoBan[]) {
@@ -339,4 +363,8 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
             }
         });
     }    
+
+    SelectedTangLauValue(tanglauId: number, loaidichvuId: number, status: number) {
+        this.loadData(tanglauId, loaidichvuId, status);
+    }
 }

@@ -16,27 +16,27 @@ namespace QLCC.Controllers
     public class DichVuCoBansController : Controller
     {
         private readonly ApplicationDbContext _context;
-        
+
         public DichVuCoBansController(ApplicationDbContext context)
         {
             _context = context;
         }
-        
+
         // PUT: api/DichVuCoBans/getItems/5/5/x
         [HttpPut("getItems/{start}/{count}/{orderby}")]
         public IEnumerable<DichVuCoBan> GetItems([FromRoute] int start, int count, string orderBy, [FromBody] string whereClause)
-        {            
+        {
             orderBy = orderBy != "x" ? orderBy : "";
             return _context.Set<DichVuCoBan>().FromSql($"tbl_DichVuCoBan_GetItemsByRange {start},{count},{whereClause},{orderBy}").ToList<DichVuCoBan>();
         }
-        
+
         // GET: api/DichVuCoBans
         [HttpGet]
         public IEnumerable<DichVuCoBan> GetDichVuCoBans()
         {
             return _context.DichVuCoBans.Include(m => m.matBangs).Include(m => m.khachHangs).Include(m => m.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs);
         }
-        
+
         // GET: api/DichVuCoBans/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDichVuCoBan([FromRoute] int id)
@@ -55,7 +55,7 @@ namespace QLCC.Controllers
 
             return Ok(dichvucoban);
         }
-        
+
         // PUT: api/DichVuCoBans/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDichVuCoBan([FromRoute] int id, [FromBody] DichVuCoBan dichvucoban)
@@ -90,7 +90,7 @@ namespace QLCC.Controllers
                 return Ok(warn);
             }
         }
-        
+
         // POST: api/DichVuCoBans
         [HttpPost]
         public async Task<IActionResult> PostDichVuCoBan([FromBody] DichVuCoBan dichvucoban)
@@ -120,7 +120,7 @@ namespace QLCC.Controllers
                 return Ok(warn);
             }
         }
-        
+
         // DELETE: api/DichVuCoBans/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDichVuCoBan([FromRoute] int id)
@@ -141,9 +141,9 @@ namespace QLCC.Controllers
 
             return Ok(dichvucoban);
         }
-        
+
         private bool DichVuCoBanExists(int id)
-        {                        
+        {
             return _context.DichVuCoBans.Any(e => e.DichVuCoBanId == id);
         }
 
@@ -164,7 +164,7 @@ namespace QLCC.Controllers
             }
             var user = User.Identity.Name;
             var userId = Utilities.GetUserId(this.User);
-            foreach(var dvcb in dichvucoban)
+            foreach (var dvcb in dichvucoban)
             {
                 dvcb.LoaiDichVuId = loaiDichVuId;
                 dvcb.MatBangId = matBangId;
@@ -182,5 +182,51 @@ namespace QLCC.Controllers
             await _context.SaveChangesAsync();
             return Ok(dichvucoban);
         }
-    }    
+
+        [HttpGet("GetItemByFilter/{tanglauid}/{loaidichvuId}/{status}")]
+        public IEnumerable<DichVuCoBan> getItemByFilter([FromRoute] int tanglauId, int loaidichvuId, int status)
+        {
+            if (tanglauId != 0 && loaidichvuId == 0 && status == 0)
+            {
+                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Where(r => r.matBangs.TangLauId == tanglauId && r.MatBangId == r.matBangs.MatBangId);
+            }
+            else if (tanglauId == 0 && loaidichvuId != 0 && status == 0)
+            {
+                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Where(r => r.LoaiDichVuId == loaidichvuId);
+            }
+            else if (tanglauId == 0 && loaidichvuId == 0 && status != 0)
+            {
+                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Where(r => r.TrangThai == status);
+            }
+            else if (tanglauId != 0 && loaidichvuId != 0 && status == 0)
+            {
+                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Where(r => r.matBangs.TangLauId == tanglauId && r.MatBangId == r.matBangs.MatBangId).Where(r => r.LoaiDichVuId == loaidichvuId);
+            }
+            else if (tanglauId != 0 && loaidichvuId == 0 && status != 0)
+            {
+                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Where(r => r.matBangs.TangLauId == tanglauId && r.MatBangId == r.matBangs.MatBangId).Where(r => r.TrangThai == status);
+            }
+            else if (tanglauId == 0 && loaidichvuId != 0 && status != 0)
+            {
+                return _context.DichVuCoBans.Include(r => r.matBangs).Include(r => r.loaiDichVus).Include(m => m.khachHangs).Where(r => r.LoaiDichVuId == loaidichvuId).Where(r => r.LoaiDichVuId == loaidichvuId);
+            }
+            else
+            {
+                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Where(r => r.matBangs.TangLauId == tanglauId && r.MatBangId == r.matBangs.MatBangId && r.LoaiDichVuId == loaidichvuId && r.TrangThai == status);
+            }
+        }
+
+        //[HttpGet("GetItemByDate")]
+        //public IEnumerable<DichVuCoBan> getItemByDate([FromRoute] int month, int year)
+        //{
+        //    return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Where(r => r.NgayChungTu.Value.Month == month && r.NgayChungTu.Value.Year == year);
+        //}    
+
+        [HttpGet("Test")]
+        public async Task<IActionResult> test()
+        {
+            var test = await _context.DichVuCoBans.SingleOrDefaultAsync(r => Convert.ToInt32(r.NgayChungTu.Value.Month) == 7);
+            return Ok(test);
+        }
+    }
 }

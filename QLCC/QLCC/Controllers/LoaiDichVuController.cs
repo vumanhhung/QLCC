@@ -183,11 +183,33 @@ namespace QLCC.Controllers
                 DeQuy(list, obj.LoaiDichVuId, st + "|=> ");
             }
         }
-        [HttpGet("FilterByStatus")]
-        public async Task<IActionResult> getAllByStatus([FromRoute] int status)
+        [HttpGet("FilterByStatus/{status}")]
+        public IEnumerable<LoaiDichVu> getAllByStatus([FromRoute] int status)
         {
-            var filter = await _context.LoaiDichVus.SingleOrDefaultAsync(r => r.TrangThai == status);
-            return Ok(filter);
+            List<LoaiDichVu> list = new List<LoaiDichVu>();
+            //list = _context.LoaiDichVus.Where(r => r.TrangThai == status).ToList<LoaiDichVu>();
+            DeQuyByStatus(list, 0,status, "");
+            return list;
+        }
+
+        void DeQuyByStatus(List<LoaiDichVu> list, int parentid,int status, string st)
+        {
+            List<LoaiDichVu> ldv = new List<LoaiDichVu>();
+            ldv = _context.LoaiDichVus.Where(r => r.TrangThai == status && r.MaLoaiDichVuCha == parentid).OrderBy(m => m.TenLoaiDichVu).ToList<LoaiDichVu>();
+            for (int i = 0; i < ldv.Count; i++)
+            {
+                LoaiDichVu obj = new LoaiDichVu();
+                obj = ldv[i];
+                obj.TenLoaiDichVu = st + obj.TenLoaiDichVu;
+                list.Add(obj);
+                DeQuyByStatus(list, obj.LoaiDichVuId, status, st + "|=> ");
+            }
+        }
+
+        [HttpGet("ListDV/{id}")]
+        public IEnumerable<LoaiDichVu> getListLDV([FromRoute] int id)
+        {
+            return _context.LoaiDichVus.Where(r => r.LoaiDichVuId != id).OrderBy(r => r.TenLoaiDichVu).ThenByDescending(r => r.MaLoaiDichVuCha); 
         }
     }
 }

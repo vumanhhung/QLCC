@@ -55,4 +55,8 @@ export class LoaiDichVuService {
     filterStatus(status?: number) {
         return this.loaidichvuEndpoint.filterStatus<LoaiDichVu[]>(status);
     }
+
+    listDV(id?: number) {
+        return this.loaidichvuEndpoint.listDV<LoaiDichVu[]>(id);
+    }
 }

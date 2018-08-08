@@ -307,11 +307,10 @@ export class DichVuCoBanInfoComponent implements OnInit {
         if (id > 0) {
             var change = 0;
             this.banggiadichvucobanservice.getBangGiaDichVuCoBanByLoaiDichVuID(id).subscribe(results => {
-                console.log(results);
                 this.DichVuCoBanEdit.donViTinhId = results.donViTinhId;
                 this.DichVuCoBanEdit.loaiTienId = results.loaiTienId;
                 this.dongia = this.formatPrice(results.donGia.toString());
-                this.loaitienservice.getLoaiTienByID(id).subscribe(result => {
+                this.loaitienservice.getLoaiTienByID(results.loaiTienId).subscribe(result => {
                     this.tygia = this.formatPrice(result.tyGia.toString());
                     var pS = this.tienthanhtoan.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
                     change = Number(pS) * Number(this.tygia);

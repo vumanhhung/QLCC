@@ -1,6 +1,6 @@
 ﻿<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content" style="max-width:550px;">
+        <div class="modal-content" style="max-width:550px;margin-left:22%;">
             <div *ngIf="!isViewDetails" class="EditForm">
                 <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="LoaiDichVuInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
                       (!tenLoaiDichVu.valid && showErrorAlert('TenLoaiDichVu không được để trống', 'Vui lòng nhập TenLoaiDichVu!'));
@@ -111,57 +111,57 @@
                     </div>
                 </form>
             </div>
-            <div *ngIf="isViewDetails" class="EditForm">
-                <div class="modal-header">
-                    <p class="modal-title pull-left">
-                        <i class="fa fa-eye"></i> Chi tiết loại dịch vụ
-                        <span>{{tenLoaiDichVu}}</span>
-                    </p>
-                    <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+        </div>
+        <div *ngIf="isViewDetails" class="ViewForm">
+            <div class="modal-header">
+                <p class="modal-title pull-left">
+                    <i class="fa fa-eye"></i> Chi tiết loại dịch vụ
+                    <span>{{tenLoaiDichVu}}</span>
+                </p>
+                <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form #f="ngForm">
+                        <div>
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td class="boldText">Tên Loại dịch vụ:</td>
+                                        <td>{{LoaiDichVuEdit.tenLoaiDichVu}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="boldText">Mô tả:</td>
+                                        <td>{{LoaiDichVuEdit.moTa}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="boldText">Trạng thái:</td>
+                                        <td *ngIf="LoaiDichVuEdit.trangThai == 1">Đang hoạt động</td>
+                                        <td *ngIf="LoaiDichVuEdit.trangThai == 2">Dừng hoạt động</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="boldText">Ngày Nhập:</td>
+                                        <td>{{LoaiDichVuEdit.ngayNhap | date:'dd/MM/yyyy'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="boldText">Ngày Sửa:</td>
+                                        <td>{{LoaiDichVuEdit.ngaySua | date: 'dd/MM/yyyy'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
                 </div>
-                <div class="modal-body">
-                    <div>
-                        <form #f="ngForm">
-                            <div>
-                                <table class="table table-bordered">
-                                    <tbody>
-                                        <tr>
-                                            <td class="boldText">Tên Loại dịch vụ:</td>
-                                            <td>{{LoaiDichVuEdit.tenLoaiDichVu}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="boldText">Mô tả:</td>
-                                            <td>{{LoaiDichVuEdit.moTa}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="boldText">Trạng thái:</td>
-                                            <td *ngIf="LoaiDichVuEdit.trangThai == 1">Đang hoạt động</td>
-                                            <td *ngIf="LoaiDichVuEdit.trangThai == 2">Dừng hoạt động</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="boldText">Ngày Nhập:</td>
-                                            <td>{{LoaiDichVuEdit.ngayNhap | date:'dd/MM/yyyy'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="boldText">Ngày Sửa:</td>
-                                            <td>{{LoaiDichVuEdit.ngaySua | date: 'dd/MM/yyyy'}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="clearfix"></div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="actionBtn-form-group">
-                        <div class="col-sm-7">
-                            <div class="pull-right">
-                                <button type="button" (click)="movetoEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
-                                <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
-                            </div>
+            </div>
+            <div class="modal-footer">
+                <div class="actionBtn-form-group">
+                    <div class="col-sm-7">
+                        <div class="pull-right">
+                            <button type="button" (click)="movetoEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                            <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
                         </div>
                     </div>
                 </div>

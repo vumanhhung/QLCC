@@ -64,7 +64,7 @@ export class DichVuCoBanEndpoint extends EndpointFactory {
     }
 
     checkExpire<T>(): Observable<T> {
-        let endpointUrl = `${this.dichvucobanUrl}/CheckExpire/`;
+        let endpointUrl = `${this.dichvucobanUrl}/CheckExpire`;
         return this.http.get(endpointUrl, this.getRequestHeaders()).catch(error => {
             return this.handleError(error, () => this.checkExpire());
         });
@@ -85,10 +85,10 @@ export class DichVuCoBanEndpoint extends EndpointFactory {
         });
     }
 
-    test<T>(): Observable<T> {
-        let endpointUrl = `${this.dichvucobanUrl}/Test/`;
+    filterByDate<T>(month?: number, year?: number): Observable<T>{
+        let endpointUrl = `${this.dichvucobanUrl}/FilterByDate/${month}/${year}`;
         return this.http.get(endpointUrl, this.getRequestHeaders()).catch(error => {
-            return this.handleError(error, () => this.test());
+            return this.handleError(error, () => this.filterByDate());
         })
     }
 }

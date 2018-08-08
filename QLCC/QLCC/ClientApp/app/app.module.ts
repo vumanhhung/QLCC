@@ -6,7 +6,7 @@
 // ==> Gun4Hire: contact@ebenmonney.com
 // ======================================
 
-import { NgModule, ErrorHandler } from "@angular/core";
+import { LOCALE_ID, NgModule, ErrorHandler  } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule } from '@angular/platform-browser';
@@ -33,6 +33,8 @@ import { PopoverModule } from "ngx-bootstrap/popover";
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { ChartsModule } from 'ng2-charts';
+import { IntlModule } from '@progress/kendo-angular-intl';
+import '@progress/kendo-angular-intl/locales/vi/all';
 //import { CKEditorModule } from 'ng2-ckeditor';
 import * as EmailValidator from 'email-validator';
 
@@ -244,6 +246,7 @@ import { DichVuCoBanEndpoint } from "./services/dichvucoban-endpoint.service";
 import { DichVuCoBanImportComponent } from "./components/dichvucoban/dichvucoban-import.component";
 import { DatePipe } from "@angular/common";
 
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -276,7 +279,8 @@ import { DatePipe } from "@angular/common";
         CarouselModule.forRoot(),
         ModalModule.forRoot(),
         MalihuScrollbarModule.forRoot(),
-        ChartsModule
+        ChartsModule,
+        IntlModule
     ],
     declarations: [
         AppComponent,
@@ -392,7 +396,8 @@ import { DatePipe } from "@angular/common";
         DichVuCoBanImportComponent,
         DanhMucComponent
     ],
-    providers: [        
+    providers: [
+        //{ provide: LOCALE_ID, useValue: 'vi' },
         { provide: 'BASE_URL', useFactory: getBaseUrl },
         { provide: ErrorHandler, useClass: AppErrorHandler },
         AlertService,

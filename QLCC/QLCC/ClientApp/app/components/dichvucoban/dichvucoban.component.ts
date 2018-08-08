@@ -23,6 +23,9 @@ import { DatePipe } from '@angular/common';
 import { TangLau } from '../../models/tanglau.model';
 import { TangLauService } from '../../services/tanglau.service';
 import { take } from 'rxjs/operator/take';
+import { NguoiDungToaNha } from '../../models/nguoidungtoanha.model';
+import { AuthService } from '../../services/auth.service';
+import { NguoiDungToaNhaService } from '../../services/nguoidungtoanha.service';
 
 @Component({
     selector: "dichvucoban",
@@ -34,6 +37,8 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     public limit: number = 10;
     randomString: string = Utilities.RandomText(10);
     columns: any[] = [];
+    selected: any[] = [];
+
     rows: DichVuCoBan[] = [];
     rowsCache: DichVuCoBan[] = [];
     matBang: MatBang[] = [];
@@ -42,6 +47,8 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     donViTinh: DonViTinh[] = [];
     loaiTien: LoaiTien[] = [];
     tanglau: TangLau[] = [];
+    objNDTN: NguoiDungToaNha = new NguoiDungToaNha();
+
     loadingIndicator: boolean;
     public formResetToggle = true;
     dichvucobanEdit: DichVuCoBan;
@@ -49,11 +56,11 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     editingRowName: { name: string };
     selectFileUpload: string = "";
     arrayBuffer: any;
-    filterNgayChungTu: Date;
+
     public selectedTangLau: number = 0;
     public selectedTrangThai: number = 0;
     public selectedLoaiDV: number = 0;
-
+    public valueDate: Date = new Date();
 
     @ViewChild('f')
     private form;
@@ -79,6 +86,12 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     @ViewChild('priceTemplate')
     priceTemplate: TemplateRef<any>;
 
+    @ViewChild('checkTemplate')
+    checkTemplate: TemplateRef<any>;
+
+    @ViewChild('checkAllTemplate')
+    checkAllTemplate: TemplateRef<any>;
+
     @ViewChild('importexcel')
     importexcel: DichVuCoBanImportComponent;
 
@@ -93,6 +106,8 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         private donvitinhService: DonViTinhService,
         private loaitienService: LoaiTienService,
         private tanglauService: TangLauService,
+        private nguoidungtoanhaService: NguoiDungToaNhaService,
+        private authService: AuthService,
         private datePipe: DatePipe) {
     }
 
@@ -100,32 +115,46 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         let gT = (key: string) => this.translationService.getTranslation(key);
 
         this.columns = [
+            { headerTemplate: this.checkAllTemplate, width: 50, cellTemplate: this.checkTemplate, canAutoResize: false, sortable: false, draggable: false },
             { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
             { prop: 'soChungTu', name: gT('Số chứng từ') },
             { prop: 'matBangs.tenMatBang', name: gT('Tên mặt bằng') },
             { prop: 'khachHangs.ten', name: gT('Tên khách hàng') },
-            { prop: 'loaiDichVus.tenLoaiDichVu', name: gT('Loại dịch vụ') },
             { name: gT('Tổng thanh toán'), cellTemplate: this.priceTemplate },
             { name: gT('Ngày bắt đầu'), cellTemplate: this.startTemplate },
             { name: gT('Ngày hết hạn'), cellTemplate: this.endTemplate },
             { prop: 'lapLai', name: gT('Lặp lại'), cellTemplate: this.nameTemplate },
             { prop: 'trangThai', name: gT('Trạng thái'), cellTemplate: this.descriptionTemplate },
-            { name: gT('matbang.qlmb_chucnang'), width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
+            { name: gT('matbang.qlmb_chucnang'), width: 100, cellTemplate: this.actionsTemplate, canAutoResize: false, sortable: false, draggable: false }
         ];
-        this.filterNgayChungTu = new Date();
-        console.log(this.filterNgayChungTu.getMonth());
-        this.dichvucobanService.test().subscribe(results => { console.log(results) }); 
-        this.loadData(0,0,0);
+        this.loadData(0, 0, 0);
         this.loadAllKhachHang();
         this.loadAllLoaiDichVu();
         this.loadAllLoaiTien();
         this.loadAllDonViTinh();
-        this.loadAllMatBang();
-        this.loadAllTangLau();
+        if (this.authService.currentUser) {
+            var userId = this.authService.currentUser.id;
+            var where = "NguoiDungId = '" + userId + "'";
+            this.nguoidungtoanhaService.getItems(0, 1, where, "x").subscribe(result => this.getNguoiDungToaNha(result), error => {
+                this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất dữ liệu người dùng tòa nhà từ máy chủ.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
+                    MessageSeverity.error, error);
+            });
+        }
+        //this.loadAllTangLau();
     }
 
-    loadAllTangLau() {
-        this.tanglauService.getAllTangLau().subscribe(results => this.onDataLoadTangLauSuccessful(results), error => this.onDataLoadFailed(error));
+    getNguoiDungToaNha(list: NguoiDungToaNha[]) {
+        if (list.length > 0) {
+            this.objNDTN = list[0];
+            this.loadAllTangLau(this.objNDTN.toaNhaId, this.objNDTN.toaNha.cumToaNhaId);
+            this.loadAllMatBang(0, this.objNDTN.toaNhaId, this.objNDTN.toaNha.cumToaNhaId);
+        }
+    }
+
+    loadAllTangLau(toanha: number, cumtoanha: number) {
+        this.tanglauService.getTangLauByToaNha(toanha, cumtoanha).subscribe(results => {
+            this.onDataLoadTangLauSuccessful(results)
+        }, error => this.onDataLoadFailed(error));
     }
     onDataLoadTangLauSuccessful(obj: TangLau[]) {
         this.tanglau = obj;
@@ -136,28 +165,24 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     onDataLoadKhachHangSuccessful(obj: KhachHang[]) {
         this.khachHang = obj;
     }
-
-    loadAllMatBang() {
-        this.matbangService.getAllMatBang().subscribe(results => this.onDataLoadMatBangSuccessful(results), error => this.onDataLoadFailed(error))
+    loadAllMatBang(tanglau: number, toanha: number, cumtoanha: number, ) {
+        this.matbangService.getMatBangByToaNha(tanglau, toanha, cumtoanha).subscribe(results => this.onDataLoadMatBangSuccessful(results), error => this.onDataLoadFailed(error))
     }
     onDataLoadMatBangSuccessful(obj: MatBang[]) {
         this.matBang = obj;
     }
-
     loadAllLoaiDichVu() {
-        this.loaidichvuService.dequy().subscribe(results => this.onDataLoadLoaiDichVuSuccessful(results), error => this.onDataLoadFailed(error))
+        this.loaidichvuService.listDVCB().subscribe(results => this.onDataLoadLoaiDichVuSuccessful(results), error => this.onDataLoadFailed(error))
     }
     onDataLoadLoaiDichVuSuccessful(obj: LoaiDichVu[]) {
         this.loaiDichVu = obj;
     }
-
     loadAllDonViTinh() {
         this.donvitinhService.getAllDonViTinh().subscribe(results => this.onDataLoadDonViTinhSuccessful(results), error => this.onDataLoadFailed(error))
     }
     onDataLoadDonViTinhSuccessful(obj: DonViTinh[]) {
         this.donViTinh = obj;
     }
-
     loadAllLoaiTien() {
         this.loaitienService.getAllLoaiTien().subscribe(results => this.onDataLoadLoaiTienSuccessful(results), error => this.onDataLoadFailed(error))
     }
@@ -179,7 +204,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     }
 
     addNewToList() {
-        this.loadData(0,0,0);
+        this.loadData(0, 0, 0);
         if (this.sourcedichvucoban) {
             Object.assign(this.sourcedichvucoban, this.dichvucobanEdit);
             this.dichvucobanEdit = null;
@@ -203,7 +228,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         }
     }
 
-    loadData(tanglauId: number, loaidichvuId: number, status:number) {
+    loadData(tanglauId: number, loaidichvuId: number, status: number) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         if (tanglauId > 0 || loaidichvuId > 0 || status > 0) {
@@ -211,7 +236,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         } else {
             this.dichvucobanService.getAllDichVuCoBan().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
         }
-        
+
     }
 
     onDataLoadSuccessful(obj: DichVuCoBan[]) {
@@ -317,29 +342,27 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         } else return "";
     }
 
-    printDiv() {              
-        this.dichvucobanService.getAllDichVuCoBan().subscribe(result => { 
-            var myWindow = window.open('', '', 'width=200,height=100');
-            for (let item of result) {
-                myWindow.document.write("<div style='padding-top: 10px;'><p><span style='font-weight: bold;font-size: 14px;'>Số chứng từ: </span>" + item.soChungTu + "</p>")
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày chứng từ: </span>" + this.datePipe.transform(item.ngayChungTu, 'dd/MM/yyyy') + "</p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Mặt bằng: </span>" + item.matBangs.tenMatBang + "</p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Khách hàng: </span>" + item.khachHangs.hoDem + " " + item.khachHangs.ten + "</p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Loại dịch vụ: </span>" + item.loaiDichVus.tenLoaiDichVu + "</p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Đơn vị tính: </span>" + item.donViTinhs.tenDonViTinh + "</p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Diễn giải: </span>" + item.dienGiai + "</p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Đơn giá: </span>" + this.formatPrice(item.donGia.toString()) + "</p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Số lượng: </span>" + item.soLuong + "</p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Thành tiền: </span>" + this.formatPrice(item.thanhTien.toString()) + "</p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày thanh toán: </span>" + this.datePipe.transform(item.ngayThanhToan, 'dd/MM/yyyy') + "</p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày bắt đầu: </span>" + this.datePipe.transform(item.tuNgay, 'dd/MM/yyyy') + "</p>");
-                myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày hết hạn: </span>" + this.datePipe.transform(item.denNgay, 'dd/MM/yyyy') + "</p></div>");             
-                myWindow.document.write("<hr/>");
-            }
-            myWindow.focus();
-            myWindow.print();
-            myWindow.close();
-        });   
+    printDiv(selected: any[]) {
+        var myWindow = window.open('', '', 'width=200,height=100');
+        for (let item of selected) {
+            myWindow.document.write("<div style='padding-top: 10px;'><p><span style='font-weight: bold;font-size: 14px;'>Số chứng từ: </span>" + item.soChungTu + "</p>")
+            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày chứng từ: </span>" + this.datePipe.transform(item.ngayChungTu, 'dd/MM/yyyy') + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Mặt bằng: </span>" + item.matBangs.tenMatBang + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Khách hàng: </span>" + item.khachHangs.hoDem + " " + item.khachHangs.ten + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Loại dịch vụ: </span>" + item.loaiDichVus.tenLoaiDichVu + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Đơn vị tính: </span>" + item.donViTinhs.tenDonViTinh + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Diễn giải: </span>" + item.dienGiai + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Đơn giá: </span>" + this.formatPrice(item.donGia.toString()) + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Số lượng: </span>" + item.soLuong + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Thành tiền: </span>" + this.formatPrice(item.thanhTien.toString()) + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày thanh toán: </span>" + this.datePipe.transform(item.ngayThanhToan, 'dd/MM/yyyy') + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày bắt đầu: </span>" + this.datePipe.transform(item.tuNgay, 'dd/MM/yyyy') + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày hết hạn: </span>" + this.datePipe.transform(item.denNgay, 'dd/MM/yyyy') + "</p></div>");
+            myWindow.document.write("<hr/>");
+        }
+        myWindow.focus();
+        myWindow.print();
+        myWindow.close();
     }
 
     importDichVuCoBan() {
@@ -362,9 +385,19 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
                 })
             }
         });
-    }    
+    }
 
     SelectedTangLauValue(tanglauId: number, loaidichvuId: number, status: number) {
         this.loadData(tanglauId, loaidichvuId, status);
+    }
+
+    filterDate(value: Date): void {
+        console.log(formatDate(value, 'MM yyyy'));
+        this.dichvucobanService.filterByDate(value.getMonth(), value.getFullYear()).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+    }
+
+    onSelect({ selected }) {
+        this.selected.splice(0, this.selected.length);
+        this.selected.push(...selected);
     }
 }

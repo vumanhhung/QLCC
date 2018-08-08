@@ -60,7 +60,7 @@ export class DichVuCoBanService {
         return this.dichvucobanEndpoint.getItembyFilter<DichVuCoBan[]>(tanglauId, loaidichvuId, status);
     }
 
-    test() {
-        return this.dichvucobanEndpoint.test<DichVuCoBan[]>();
+    filterByDate(month?: number, year?: number) {
+        return this.dichvucobanEndpoint.filterByDate<DichVuCoBan[]>(month, year);
     }
 }

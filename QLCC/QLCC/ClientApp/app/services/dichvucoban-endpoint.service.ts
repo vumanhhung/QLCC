@@ -78,14 +78,14 @@ export class DichVuCoBanEndpoint extends EndpointFactory {
         });
     }
 
-    getItembyFilter<T>(tanglauId?: number, loaidichvuId?: number, status?: number): Observable<T> {
-        let endpointUrl = `${this.dichvucobanUrl}/GetItemByFilter/${tanglauId}/${loaidichvuId}/${status}`;
+    getItembyFilter<T>(tanglauId?: number, loaidichvuId?: number, status?: number, month?: number, year?: number): Observable<T> {
+        let endpointUrl = `${this.dichvucobanUrl}/GetItemByFilter/${tanglauId}/${loaidichvuId}/${status}/${month}/${year}`;
         return this.http.get(endpointUrl, this.getRequestHeaders()).catch(error => {
             return this.handleError(error, () => this.getItembyFilter());
         });
     }
 
-    filterByDate<T>(month?: number, year?: number): Observable<T>{
+    filterByDate<T>(month?: number, year?: number): Observable<T> {
         let endpointUrl = `${this.dichvucobanUrl}/FilterByDate/${month}/${year}`;
         return this.http.get(endpointUrl, this.getRequestHeaders()).catch(error => {
             return this.handleError(error, () => this.filterByDate());

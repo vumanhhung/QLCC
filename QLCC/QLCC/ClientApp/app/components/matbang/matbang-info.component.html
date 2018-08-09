@@ -143,29 +143,6 @@
                             </div>
                             <div class="clearfix"></div>
                             <div class="has-feedback col-sm-6">
-                                <label class="control-label" for="dienTich-{{uniqueId}}">Diện tích(m2)</label>
-                                <div class="control" style="position:relative;z-index:1">
-                                    <span class="formatnumber">{{valuedienTich}}</span>
-                                    <input autofocus type="text" class="form-control" name="dienTich" [(ngModel)]="MatBangEdit.dienTich" #dienTich="ngModel" OnlyNumber="true" (ngModelChange)="ondienTichChange($event)" />
-                                    <!--<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': dienTich.valid, 'glyphicon-remove' : !dienTich.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !dienTich.valid" class="errorMessage">
-                                        Vui lòng nhập diện tích mặt bằng!
-                                    </span>-->
-                                </div>
-                            </div>
-                            <div class="has-feedback col-sm-6">
-                                <label class="control-label" for="giaThue-{{uniqueId}}">Giá cho thuê (triệu đồng)</label>
-                                <div class="control" style="position:relative;z-index:1">
-                                    <span class="formatnumber">{{valuegiaThue}}</span>
-                                    <input autofocus type="text" class="form-control" name="giaThue" [(ngModel)]="MatBangEdit.giaThue" #giaThue="ngModel" OnlyNumber="true" (ngModelChange)="ongiaThueChange($event)" />
-                                    <!--<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': giaThue.valid, 'glyphicon-remove' : !giaThue.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !giaThue.valid" class="errorMessage">
-                                        Vui lòng nhập giá cho thuê!
-                                    </span>-->
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="has-feedback col-sm-6">
                                 <label class="control-label" for="caNhan-{{uniqueId}}">Chọn hình thức</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && chkcaNhan, 'has-error' : f.submitted && !chkcaNhan}">
                                     <select name="caNhan" [(ngModel)]="MatBangEdit.caNhan" #caNhan="ngModel" class="form-control" (change)="caNhanChange(caNhan.value)">
@@ -209,6 +186,21 @@
                                                     [(ngModel)]="cudan" name="khachThue"
                                                     [filterable]="true"
                                                     (filterChange)="khachThuefilterChange($event)"></kendo-combobox>
+                                </div>
+                            </div>
+                            <div class="has-feedback col-sm-6">
+                                <label class="control-label" for="giaThue-{{uniqueId}}">Giá cho thuê (triệu đồng)</label>
+                                <div class="control" style="position:relative;z-index:1">
+                                    <span class="formatnumber">{{valuegiaThue}}</span>
+                                    <input autofocus type="text" class="form-control" name="giaThue" [(ngModel)]="MatBangEdit.giaThue" #giaThue="ngModel" OnlyNumber="true" (ngModelChange)="ongiaThueChange($event)" />
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="has-feedback col-sm-6">
+                                <label class="control-label" for="dienTich-{{uniqueId}}">Diện tích(m2)</label>
+                                <div class="control" style="position:relative;z-index:1">
+                                    <span class="formatnumber">{{valuedienTich}}</span>
+                                    <input autofocus type="text" class="form-control" name="dienTich" [(ngModel)]="MatBangEdit.dienTich" #dienTich="ngModel" OnlyNumber="true" (ngModelChange)="ondienTichChange($event)" />
                                 </div>
                             </div>
                             <div class="has-feedback col-sm-6">
@@ -413,7 +405,7 @@
                                 </div>
                                 <div class="tab-pane" id="thexe">
                                     <div [@fadeInOut] class="noidung-tab" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
-                                        <thexe></thexe>
+                                        <thexemb></thexemb>
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="lichsusudung">

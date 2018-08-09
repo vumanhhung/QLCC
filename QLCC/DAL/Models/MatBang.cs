@@ -22,7 +22,7 @@ namespace DAL.Models
 		public int? GiaoChiaKhoa { get; set; }
 		public DateTime? NgaybanGiao { get; set; }
 		public string DienGiai { get; set; }
-		public int? ChuSoHuu { get; set; }
+		public int? KhachHangId { get; set; }
 		public int? KhachThue { get; set; }
         public string NguoiNhap { get; set; }
         public DateTime? NgayNhap { get; set; }
@@ -33,6 +33,7 @@ namespace DAL.Models
         public CumToaNha cumtoanha { get; set; }
         public TrangThai trangthai { get; set; }
         public LoaiMatBang loaimatbang { get; set; }
+        public KhachHang KhachHangs { get; set; }
         [JsonIgnore]
         public virtual ICollection<CuDan> cudans { get; set; }
     }

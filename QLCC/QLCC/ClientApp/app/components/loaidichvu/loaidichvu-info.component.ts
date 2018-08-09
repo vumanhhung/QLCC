@@ -194,7 +194,6 @@ export class LoaiDichVuInfoComponent implements OnInit {
             Object.assign(this.LoaiDichVuEdit, obj);
             Object.assign(this.LoaiDichVuEdit, obj);
             this.edit();
-            this.gvService.listDV(obj.loaiDichVuId).subscribe(results => this.listDichVu = results);
             this.gvService.getLoaiDichVuByID(obj.loaiDichVuId).subscribe(result => this.LoaiDichVuEdit.tenLoaiDichVu = result.tenLoaiDichVu);
             return this.LoaiDichVuEdit;
         }

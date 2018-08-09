@@ -37,21 +37,6 @@
                             </div>
                             <div class="clearfix"></div>
                             <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="khachHangId-{{uniqueId}}">Khách hàng</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && ChkkhachHang, 'has-error' : f.submitted && !ChkkhachHang}">
-                                    <select name="khachHangId" [(ngModel)]="DichVuCoBanEdit.khachHangId" #khachHangId="ngModel" class="form-control" (change)="khachHangChk(khachHangId.value)">
-                                        <option value="0">--- Chọn khách hàng ---</option>
-                                        <option *ngFor="let o of khachHang" value="{{ o.khachHangId }}">
-                                            {{o.hoDem}} {{ o.ten }}
-                                        </option>
-                                    </select>
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkkhachHang, 'glyphicon-remove' : !ChkkhachHang}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !ChkkhachHang" class="errorMessage">
-                                        Vui lòng chọn khách hàng!
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="matBangId-{{uniqueId}}">Mặt bằng</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && ChkmatBang, 'has-error' : f.submitted && !ChkmatBang}">
                                     <select name="matBangId" [(ngModel)]="DichVuCoBanEdit.matBangId" #matBangId="ngModel" class="form-control" (change)="matBangChk(matBangId.value)">
@@ -63,6 +48,21 @@
                                     <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkmatBang, 'glyphicon-remove' : !ChkmatBang}"></span>
                                     <span *ngIf="showValidationErrors && f.submitted && !ChkmatBang" class="errorMessage">
                                         Vui lòng chọn mặt bằng!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="has-feedback col-sm-3">
+                                <label class="control-label" for="khachHangId-{{uniqueId}}">Khách hàng</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && ChkkhachHang, 'has-error' : f.submitted && !ChkkhachHang}">
+                                    <select name="khachHangId" [(ngModel)]="DichVuCoBanEdit.khachHangId" #khachHangId="ngModel" class="form-control" (change)="khachHangChk(khachHangId.value)">
+                                        <option value="0">--- Chọn khách hàng ---</option>
+                                        <option *ngFor="let o of khachHang" value="{{ o.khachHangId }}">
+                                            {{o.hoDem}} {{ o.ten }}
+                                        </option>
+                                    </select>
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkkhachHang, 'glyphicon-remove' : !ChkkhachHang}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !ChkkhachHang" class="errorMessage">
+                                        Vui lòng chọn khách hàng!
                                     </span>
                                 </div>
                             </div>
@@ -203,10 +203,6 @@
                                 <label class="control-label" for="dienGiai-{{uniqueId}}">Diễn giải</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && dienGiai.valid, 'has-error' : f.submitted && !dienGiai.valid}">
                                     <input autofocus type="text" class="form-control" name="dienGiai" [(ngModel)]="DichVuCoBanEdit.dienGiai" #dienGiai="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': dienGiai.valid, 'glyphicon-remove' : !dienGiai.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !dienGiai.valid" class="errorMessage">
-                                        Vui lòng nhập diễn giải!
-                                    </span>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -234,7 +230,7 @@
             <div class="modal-header">
                 <p class="modal-title pull-left">
                     <i class="fa fa-eye"></i> Chi tiết loại dịch vụ
-                    <span>{{tenLoaiDichVu}}</span>
+                    <span>{{DichVuCoBanEdit.soChungTu}}</span>
                 </p>
                 <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
                     <span aria-hidden="true">&times;</span>

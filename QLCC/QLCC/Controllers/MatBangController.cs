@@ -180,7 +180,7 @@ namespace QLCC.Controllers
             foreach(var mb in matbang)
             {
                 mb.LoaiTien = "VND";
-                mb.ChuSoHuu = 2;
+                mb.KhachHangId = 2;
                 mb.KhachThue = 2;
                 mb.GiaoChiaKhoa = 1;
                 mb.CaNhan = 2;

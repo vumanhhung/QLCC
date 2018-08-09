@@ -67,7 +67,7 @@
                 <div class="box-body">
                     <div>
                         <div class="dataTables_length">
-                            <div (change)="SelectedTangLauValue(drTangLau.value,drloaiDV.value,drStatus.value)">
+                            <div (change)="SelectedTangLauValue(drTangLau.value,drloaiDV.value,drStatus.value, valueDate)">
                                 <label style="margin-right:10px;">
                                     Tầng lầu
                                     <select class="form-control input-sm" #drTangLau [(ngModel)]="selectedTangLau">
@@ -99,9 +99,10 @@
                                     <kendo-datepicker style="margin-top:-4px; height: 30px; line-height: 30px;" 
                                                       [format]="'MM/yyyy'" 
                                                       [(value)]="valueDate" 
-                                                      [activeView]="'year'" 
+                                                      [bottomView]="'year'"
+                                                      [topView]="'decade'"
                                                       [navigation]="false"
-                                                      (valueChange)="filterDate($event)"></kendo-datepicker>
+                                                      (valueChange)="SelectedTangLauValue(drTangLau.value,drloaiDV.value,drStatus.value,$event)"></kendo-datepicker>
                                 </label>
                                 <label>
                                     Hiển thị

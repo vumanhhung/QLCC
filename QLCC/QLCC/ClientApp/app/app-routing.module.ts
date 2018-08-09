@@ -53,7 +53,7 @@ import { LoaiXeComponent } from "./components/loaixe/loaixe.component";
 import { BangGiaXeComponent } from "./components/banggiaxe/banggiaxe.component";
 import { BangGiaDichVuCoBanComponent } from "./components/banggiadichvucoban/banggiadichvucoban.component";
 import { LoaiDichVuComponent } from './components/loaidichvu/loaidichvu.component';
-import { CongThucNuocComponent } from './components/congthucnuoc/congthucnuoc.component';
+import { TheXeComponent } from './components/thexe/thexe.component';
 import { DichVuCoBanComponent } from './components/dichvucoban/dichvucoban.component';
 
 
@@ -96,9 +96,8 @@ import { DichVuCoBanComponent } from './components/dichvucoban/dichvucoban.compo
             { path: "banggiaxe", component: BangGiaXeComponent, canActivate: [AuthGuard], data: { title: "Bảng giá xe" } },
             { path: "banggiadichvucoban", component: BangGiaDichVuCoBanComponent, canActivate: [AuthGuard], data: { title: "Bảng giá dịch vụ cơ bản" } },
             { path: "loaidichvu", component: LoaiDichVuComponent, canActivate: [AuthGuard], data: { title: "Loại dịch vụ" } },
-            { path: "congthucnuoc", component: CongThucNuocComponent, canActivate: [AuthGuard], data: { title: "Công thức nước" } },
-            { path: "dichvucoban", component: DichVuCoBanComponent, canActivate: [AuthGuard], data: { title: "Dịch vụ cơ bản" } },
-            { path: "matbang", component: MatBangComponent, canActivate: [AuthGuard], data: { title: "Mặt bằng" } },
+            { path: "thexe", component: TheXeComponent, canActivate: [AuthGuard], data: { title: "Quản lý trông giữ xe" } },
+            { path: "dvcb", component: DichVuCoBanComponent, canActivate: [AuthGuard], data: { title: "Dịch vụ cơ bản" } },
             //{ path: "role/:id", component: RoleEditorComponent},
             { path: "settings", component: SettingsComponent, canActivate: [AuthGuard], data: { title: "Cấu hình" } },
             { path: "about", component: AboutComponent, data: { title: "Giới thiệu" } },

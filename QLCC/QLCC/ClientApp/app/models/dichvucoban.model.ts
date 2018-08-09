@@ -3,7 +3,6 @@ import { KhachHang } from "./khachhang.model";
 import { LoaiDichVu } from "./loaidichvu.model";
 import { LoaiTien } from "./loaitien.model";
 import { DonViTinh } from "./donvitinh.model";
-import { TangLau } from "./tanglau.model";
 
 export class DichVuCoBan {
     public dichVuCoBanId: number;

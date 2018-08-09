@@ -188,7 +188,7 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         this.sourceloaidichvu = row;
         this.loaidichvuEdit = this.LoaiDichVuEditor.editLoaiDichVu(row);
         this.LoaiDichVuEditor.isViewDetails = false;
-        this.LoaiDichVuEditor.listDichVu = this.listDichVu;
+        this.loaidichvuService.listDV(row.loaiDichVuId).subscribe(results => {this.LoaiDichVuEditor.listDichVu = results});        
         this.LoaiDichVuEditor.editorModal.show();
     }
 

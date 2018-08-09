@@ -1,0 +1,59 @@
+﻿<div class="modal fade" bsModal #thungracModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1">
+    <div class="modal-dialog modal-lg" style="width:1100px">
+        <div class="modal-content">
+            <div class="EditForm">
+                <div class="modal-header">
+                    <p class="modal-title pull-left"><i class="fa fa-plus"></i> Thùng rác - Thẻ xe thuộc căn hộ: {{matbangObj.tenMatBang}} </p>
+                    <button type="button" class="close pull-right" title="Close" (click)="thungracModal.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" style="max-height:500px">
+                    <div class="row">
+                        <div class="col-md-12 table-item">
+                            <table class="table">
+                                <tr>
+                                    <th>Mã thẻ xe</th>
+                                    <th>Loại xe</th>
+                                    <th>Phí gửi xe</th>
+                                    <th>Biển số</th>
+                                    <th>Màu xe</th>
+                                    <th>Chức năng</th>
+                                </tr>
+                                <tr *ngFor="let obj of thexes">
+                                    <td>{{obj.maTheXe}}</td>
+                                    <td>{{obj.loaiXes.tenLoaiXe}}</td>
+                                    <td>{{getFormatPrice(obj.phiGuiXe)}}</td>
+                                    <td>{{obj.bienSoXe}}</td>
+                                    <td>{{obj.mauXe}}</td>
+                                    <td>
+                                        <a class="btn btn-func btn-flat" title="Khôi phục" href="javascript:;" (click)="editStatus(obj)">
+                                            <i class="fa fa-retweet" aria-hidden="true"></i>
+                                        </a>
+                                        <a class="btn btn-func btn-danger" href="javascript:;" (click)="delete(obj)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="thexes.length==0">
+                                    <td colspan="6">
+                                        <p>Toàn bộ thẻ xe đã được khôi phục trạng thái hoặc đã bị xóa.</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group actionBtn-form-group" style="margin-bottom:0">
+                        <div class="col-sm-12" style="text-align:center">
+                            <div class="center-block">
+                                <button type="button" (click)="SavedCallback()" class="btn btn-danger"><i class='fa fa-times'></i> Thoát</button>
+                                <button type="submit" (click)="deleteAll()" class="btn btn-danger"><i class='fa fa-trash-o'></i> Xóa tất cả</button>
+                                <button type="submit" (click)="editStatusAll()" class="btn btn-flat"><i class='fa fa-retweet'></i> Khôi phục tất cả</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

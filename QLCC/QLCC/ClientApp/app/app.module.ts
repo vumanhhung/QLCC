@@ -6,7 +6,7 @@
 // ==> Gun4Hire: contact@ebenmonney.com
 // ======================================
 
-import { LOCALE_ID, NgModule, ErrorHandler  } from "@angular/core";
+import { NgModule, ErrorHandler } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule } from '@angular/platform-browser';
@@ -33,8 +33,6 @@ import { PopoverModule } from "ngx-bootstrap/popover";
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { ChartsModule } from 'ng2-charts';
-import { IntlModule } from '@progress/kendo-angular-intl';
-import '@progress/kendo-angular-intl/locales/vi/all';
 //import { CKEditorModule } from 'ng2-ckeditor';
 import * as EmailValidator from 'email-validator';
 
@@ -81,7 +79,7 @@ import { SearchBoxComponent } from "./components/controls/search-box.component";
 import { UserInfoComponent } from "./components/controls/user-info.component";
 import { CuDanMatBangComponent } from "./components/matbang/xemmatbang/cudan/cudan.component";
 import { DanhSachYeuCauComponent } from "./components/matbang/xemmatbang/danhsachyeucau/danhsachyeucau.component";
-import { TheXeComponent } from "./components/matbang/xemmatbang/thexe/thexe.component";
+import { TheXeMBComponent } from "./components/matbang/xemmatbang/thexemb/thexemb.component";
 import { LichSuSuDungComponent } from "./components/matbang/xemmatbang/lichsusudung/lichsusudung.component";
 import { LichSuThuPhiComponent } from "./components/matbang/xemmatbang/lichsuthuphi/lichsuthuphi.component";
 import { TaiSanComponent } from "./components/matbang/xemmatbang/taisan/taisan.component";
@@ -164,6 +162,13 @@ import { BangGiaDichVuCoBanService } from './services/banggiadichvucoban.service
 import { BangGiaDichVuCoBanEndpoint } from './services/banggiadichvucoban-endpoint.service';
 import { LoaiDichVuService } from './services/loaidichvu.service';
 import { LoaiDichVuEndpoint } from './services/loaidichvu-endpoint.service';
+import { TheXeService } from './services/thexe.service';
+import { TheXeEndpoint } from './services/thexe-endpoint.service';
+
+import { PhieuThuService } from './services/phieuthu.service';
+import { PhieuThuEndpoint } from './services/phieuthu-endpoint.service';
+import { PhieuThuChiTietService } from './services/phieuthuchitiet.service';
+import { PhieuThuChiTietEndpoint } from './services/phieuthuchitiet-endpoint.service';
 
 //KHAI BÁO COMPONENT
 import { CumToaNhaComponent } from "./components/cumtoanha/cumtoanha.component";
@@ -232,6 +237,11 @@ import { BangGiaDichVuCoBanComponent } from "./components/banggiadichvucoban/ban
 import { BangGiaDichVuCoBanInfoComponent } from "./components/banggiadichvucoban/banggiadichvucoban-info.component";
 import { LoaiDichVuComponent } from "./components/loaidichvu/loaidichvu.component";
 import { LoaiDichVuInfoComponent } from "./components/loaidichvu/loaidichvu-info.component";
+import { TheXeComponent } from "./components/thexe/thexe.component";
+import { TheXeInfoComponent } from "./components/thexe/thexe-info.component";
+import { PhieuThuInfoComponent } from "./components/phieuthu/phieuthu-info.component";
+import { TheXeThungRacComponent } from "./components/thexe/thexe-thungrac.component";
+
 import { CongThucNuocComponent } from "./components/congthucnuoc/congthucnuoc.component";
 import { CongThucNuocInfoComponent } from "./components/congthucnuoc/congthucnuoc-info.component";
 import { DinhMucNuocComponent } from "./components/congthucnuoc/dinhmucnuoc.component";
@@ -245,7 +255,6 @@ import { DichVuCoBanService } from "./services/dichvucoban.service";
 import { DichVuCoBanEndpoint } from "./services/dichvucoban-endpoint.service";
 import { DichVuCoBanImportComponent } from "./components/dichvucoban/dichvucoban-import.component";
 import { DatePipe } from "@angular/common";
-
 
 @NgModule({
     imports: [
@@ -279,8 +288,7 @@ import { DatePipe } from "@angular/common";
         CarouselModule.forRoot(),
         ModalModule.forRoot(),
         MalihuScrollbarModule.forRoot(),
-        ChartsModule,
-        IntlModule
+        ChartsModule
     ],
     declarations: [
         AppComponent,
@@ -295,7 +303,7 @@ import { DatePipe } from "@angular/common";
         CuDanComponent,
         CuDanMatBangComponent,
         DanhSachYeuCauComponent,
-        TheXeComponent,
+        TheXeMBComponent,
         LichSuSuDungComponent,
         LichSuThuPhiComponent,
         TaiSanComponent,
@@ -388,6 +396,10 @@ import { DatePipe } from "@angular/common";
         BangGiaDichVuCoBanInfoComponent,
         LoaiDichVuComponent,
         LoaiDichVuInfoComponent,
+        TheXeComponent,
+        TheXeInfoComponent,
+        PhieuThuInfoComponent,
+        TheXeThungRacComponent,
         CongThucNuocComponent,
         CongThucNuocInfoComponent,
         DinhMucNuocComponent,
@@ -397,7 +409,6 @@ import { DatePipe } from "@angular/common";
         DanhMucComponent
     ],
     providers: [
-        //{ provide: LOCALE_ID, useValue: 'vi' },
         { provide: 'BASE_URL', useFactory: getBaseUrl },
         { provide: ErrorHandler, useClass: AppErrorHandler },
         AlertService,
@@ -472,6 +483,12 @@ import { DatePipe } from "@angular/common";
         BangGiaDichVuCoBanEndpoint,
         LoaiDichVuService,
         LoaiDichVuEndpoint,
+        TheXeService,
+        TheXeEndpoint,
+        PhieuThuService,
+        PhieuThuEndpoint,
+        PhieuThuChiTietService,
+        PhieuThuChiTietEndpoint,
         CongThucNuocService,
         CongThucNuocEndpoint,
         DinhMucNuocService,

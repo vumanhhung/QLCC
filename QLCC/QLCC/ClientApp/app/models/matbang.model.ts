@@ -3,6 +3,7 @@ import { CumToaNha } from "./cumtoanha.model";
 import { TrangThai } from "./trangthai.model";
 import { TangLau } from "./tanglau.model";
 import { LoaiMatBang } from "./loaimatbang.model";
+import { KhachHang } from "./khachhang.model";
 
 
 export class MatBang {
@@ -21,7 +22,7 @@ export class MatBang {
     public giaoChiaKhoa: number;
     public ngaybanGiao: Date;
     public dienGiai: string;
-    public chuSoHuu: number;
+    public khacHangId: number;
     public khachThue: number;
     public nguoiNhap: string;
     public ngayNhap: Date;
@@ -32,8 +33,9 @@ export class MatBang {
     public trangthai: TrangThai;
     public tanglau: TangLau;
     public loaimatbang: LoaiMatBang;
+    public khacHangs: KhachHang;
 
-    constructor(matBangId?: number, cumToaNhaId?: number, toaNhaId?: number, tangLauId?: number, trangThaiId?: number, loaiMatBangId?: number, maMatBang?: string, tenMatBang?: string, dienTich?: number, giaThue?: number, loaiTien?: string, caNhan?: number, giaoChiaKhoa?: number, ngaybanGiao?: Date, dienGiai?: string, chuSoHuu?: number, khachThue?: number, nguoiNhap?: string, ngayNhap?: Date, nguoiSua?: string, ngaySua?: Date) {
+    constructor(matBangId?: number, cumToaNhaId?: number, toaNhaId?: number, tangLauId?: number, trangThaiId?: number, loaiMatBangId?: number, maMatBang?: string, tenMatBang?: string, dienTich?: number, giaThue?: number, loaiTien?: string, caNhan?: number, giaoChiaKhoa?: number, ngaybanGiao?: Date, dienGiai?: string, khacHangId?: number, khachThue?: number, nguoiNhap?: string, ngayNhap?: Date, nguoiSua?: string, ngaySua?: Date) {
         this.matBangId = matBangId;
         this.cumToaNhaId = cumToaNhaId;
         this.toaNhaId = toaNhaId;
@@ -49,7 +51,7 @@ export class MatBang {
         this.giaoChiaKhoa = giaoChiaKhoa;
         this.ngaybanGiao = ngaybanGiao;
         this.dienGiai = dienGiai;
-        this.chuSoHuu = chuSoHuu;
+        this.khacHangId = khacHangId;
         this.khachThue = khachThue;
         this.nguoiNhap = nguoiNhap;
         this.ngayNhap = ngayNhap;

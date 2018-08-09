@@ -72,7 +72,7 @@ export class BangGiaDichVuCoBanComponent implements OnInit, AfterViewInit {
             { prop: 'donViTinh.tenDonViTinh', name: gT('Đơn vị tính') },
             { prop: 'donGia', name: gT('Dơn giá') },
             { prop: 'dienGiai', name: gT('Mô tả') },
-            { name: '', width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
+            { name: 'Chức năng', width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
 
         if (this.authService.currentUser) {
@@ -89,7 +89,7 @@ export class BangGiaDichVuCoBanComponent implements OnInit, AfterViewInit {
         if (list.length > 0) {
             this.objNDTN = list[0];
             this.loadData();
-            this.loaidichvuService.getAllLoaiDichVu().subscribe(results => { this.loaidichvus = results }, error => this.onDataLoadFailed(error));
+            this.loaidichvuService.getItems(0, 0,"TrangThai = 1","x").subscribe(results => { this.loaidichvus = results }, error => this.onDataLoadFailed(error));
             this.loaitienService.getAllLoaiTien().subscribe(results => { this.loaitiens = results }, error => this.onDataLoadFailed(error));
             this.donvitinhService.getAllDonViTinh().subscribe(results => { this.donvitinhs = results }, error => this.onDataLoadFailed(error));
         }

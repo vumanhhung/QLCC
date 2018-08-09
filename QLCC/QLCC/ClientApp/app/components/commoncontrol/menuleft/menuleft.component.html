@@ -42,16 +42,18 @@
             <li class=""><a href="javascript:;" (click)="building()"><i class="fa fa-arrow-circle-right"></i>Nhật ký xử lý yêu cầu</a></li>-->
                 </ul>
             </li>
-            <li class="treeview " (click)="toggleNavigationSub('bgcb',$event)" [class.active]="isActiveMenu == 'bgcb'">
-                <a href="javascript://" routerLink="/banggiadichvucoban"> <i class="fa fa-cogs"></i> <span>Dịch vụ</span><i class="fa fa-angle-left pull-right"></i></a>
+            <li class="treeview " (click)="toggleNavigationSub('dvcb',$event)" [class.active]="isActiveMenu == 'dvcb'">
+                <a href="javascript://" routerLink="/dvcb"> <i class="fa fa-cogs"></i> <span>Dịch vụ</span><i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
                     <li class=""><a href="javascript:;" routerLink="/loaixe"><i class="fa fa-arrow-circle-right"></i>QL Loại xe</a></li>
-                    <li class=""><a href="javascript:;" routerLink="/banggiaxe"><i class="fa fa-arrow-circle-right"></i>QL Bảng giá xe</a></li>
-                    <li class=""><a href="javascript:" routerLink="/loaidichvu"><i class="fa fa-arrow-circle-right"></i>QL Loại dịch vụ</a></li>
+                    <li class=""><a href="javascript:;" routerLink="/banggiaxe"><i class="fa fa-arrow-circle-right"></i>QL bảng giá xe</a></li>
+                    <li class=""><a href="javascript:;" routerLink="/thexe"><i class="fa fa-arrow-circle-right"></i>Thu phí xe</a></li>
+                    <li class=""><a href="javascript:;" routerLink="/nuoc"><i class="fa fa-arrow-circle-right"></i>Thu phí nước</a></li>
+                    <!--<li class=""><a href="javascript:;" routerLink="/loaixe"><i class="fa fa-arrow-circle-right"></i>QL Loại xe</a></li>
+                    <li class=""><a href="javascript:;" routerLink="/banggiaxe"><i class="fa fa-arrow-circle-right"></i>QL bảng giá xe</a></li>-->
                 </ul>
             </li>
-            <li class="" (click)="toggleNavigationSub('dvcb',$event)" [class.active]="isActiveMenu == 'dvcb'"><a href="javascript://" routerLink="/dichvucoban"> <i class="fa fa-fa fa-bath"></i> <span>Dịch vụ cơ bản</span></a></li>
-            <li class=""><a href="javascript://" (click)="building()"> <i class="fa fa-fa fa-bath"></i> <span>Vật tư</span></a></li>
+            <li class=""><a href="javascript://" routerLink="/loaidichvu"> <i class="fa fa-fa fa-bath"></i> <span>Loại Dịch Vụ</span></a></li>
             <li class=""><a href="javascript://" (click)="building()"> <i class="fa fa-bar-chart"></i> <span>Thống kê - báo cáo</span></a></li>
             <li class=""><a href="javascript://" (click)="building()"> <i class="fa fa-question-circle"></i> <span>Trợ giúp</span></a></li>
         </ul>

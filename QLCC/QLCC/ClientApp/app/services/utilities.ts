@@ -617,4 +617,20 @@ export class Utilities {
 
         return new Intl.NumberFormat().format(number);
     }
+    public static formatPrice(price: string): string {
+        if (price) {
+            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+            var pN = Number(pS);
+            var fm = Utilities.formatNumber(pN);
+            return fm;
+        } else return "";
+    }
+
+    public static formatPriceStringToNumber(price: string): number {
+        if (price) {
+            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+            var pN = Number(pS);
+            return pN;
+        } else return 0;
+    }
 }

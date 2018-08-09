@@ -210,13 +210,14 @@ namespace QLCC.Controllers
         public IEnumerable<LoaiDichVu> getListLDV([FromRoute] int id)
         {
             List<LoaiDichVu> list = new List<LoaiDichVu>();
-            DeQuyByStatus(list, 0, id, "");
+            DeQuyListDV(list, 0, id, "");
             return list;
         }
         void DeQuyListDV(List<LoaiDichVu> list, int parentid, int id, string st)
         {
             List<LoaiDichVu> ldv = new List<LoaiDichVu>();
-            ldv = _context.LoaiDichVus.Where(r => r.LoaiDichVuId != id && r.MaLoaiDichVuCha == parentid).OrderBy(m => m.TenLoaiDichVu).ToList<LoaiDichVu>();
+            ldv = _context.LoaiDichVus.Where(r => r.LoaiDichVuId != id).Where(r => r.MaLoaiDichVuCha == parentid).OrderBy(m => m.TenLoaiDichVu).ToList<LoaiDichVu>();
+            //ldv = _context.LoaiDichVus.Where(r => r.LoaiDichVuId != id).OrderBy(m => m.TenLoaiDichVu).ToList<LoaiDichVu>();
             for (int i = 0; i < ldv.Count; i++)
             {
                 LoaiDichVu obj = new LoaiDichVu();
@@ -230,10 +231,9 @@ namespace QLCC.Controllers
         [HttpGet("ListDVCB")]
         public IEnumerable<LoaiDichVu> getListDVCB()
         {
-            yield return _context.LoaiDichVus.SingleOrDefault(r => r.LoaiDichVuId == r.banggiadichvucobans.LoaiDichVuId);
-            //List<LoaiDichVu> list = new List<LoaiDichVu>();
-            //DeQuyListDVCB(list, 0, "");
-            //return list;
+            List<LoaiDichVu> list = new List<LoaiDichVu>();
+            DeQuyListDVCB(list, 0, "");
+            return list;
         }
         void DeQuyListDVCB(List<LoaiDichVu> list, int parentid, string st)
         {

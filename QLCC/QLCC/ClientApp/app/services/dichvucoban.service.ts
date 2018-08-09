@@ -56,8 +56,8 @@ export class DichVuCoBanService {
         return this.dichvucobanEndpoint.importDVCB<any>(dichvucoban, khachHangId, matBangId, loaiDichVuId, donViTinhId, loaiTienId);
     }
 
-    getItemByFilter(tanglauId?: number, loaidichvuId?: number, status?: number) {
-        return this.dichvucobanEndpoint.getItembyFilter<DichVuCoBan[]>(tanglauId, loaidichvuId, status);
+    getItemByFilter(tanglauId?: number, loaidichvuId?: number, status?: number, month?: number, year?: number) {
+        return this.dichvucobanEndpoint.getItembyFilter<DichVuCoBan[]>(tanglauId, loaidichvuId, status, month, year);
     }
 
     filterByDate(month?: number, year?: number) {

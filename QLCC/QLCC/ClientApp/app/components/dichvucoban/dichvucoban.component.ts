@@ -17,15 +17,15 @@ import { LoaiDichVuService } from '../../services/loaidichvu.service';
 import { DonViTinhService } from '../../services/donvitinh.service';
 import { LoaiTienService } from '../../services/loaitien.service';
 import * as XLSX from 'ts-xlsx';
-import { formatDate } from '@telerik/kendo-intl';
 import { DichVuCoBanImportComponent } from './dichvucoban-import.component';
 import { DatePipe } from '@angular/common';
 import { TangLau } from '../../models/tanglau.model';
 import { TangLauService } from '../../services/tanglau.service';
-import { take } from 'rxjs/operator/take';
 import { NguoiDungToaNha } from '../../models/nguoidungtoanha.model';
 import { AuthService } from '../../services/auth.service';
 import { NguoiDungToaNhaService } from '../../services/nguoidungtoanha.service';
+import { BangGiaDichVuCoBan } from '../../models/banggiadichvucoban.model';
+import { BangGiaDichVuCoBanService } from '../../services/banggiadichvucoban.service';
 
 @Component({
     selector: "dichvucoban",
@@ -47,6 +47,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     donViTinh: DonViTinh[] = [];
     loaiTien: LoaiTien[] = [];
     tanglau: TangLau[] = [];
+    banggia: BangGiaDichVuCoBan[] = [];
     objNDTN: NguoiDungToaNha = new NguoiDungToaNha();
 
     loadingIndicator: boolean;
@@ -61,6 +62,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     public selectedTrangThai: number = 0;
     public selectedLoaiDV: number = 0;
     public valueDate: Date = new Date();
+    //public valueDate: Date;
 
     @ViewChild('f')
     private form;
@@ -107,6 +109,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         private loaitienService: LoaiTienService,
         private tanglauService: TangLauService,
         private nguoidungtoanhaService: NguoiDungToaNhaService,
+        private banggiaService: BangGiaDichVuCoBanService,
         private authService: AuthService,
         private datePipe: DatePipe) {
     }
@@ -127,11 +130,13 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
             { prop: 'trangThai', name: gT('Trạng thái'), cellTemplate: this.descriptionTemplate },
             { name: gT('matbang.qlmb_chucnang'), width: 100, cellTemplate: this.actionsTemplate, canAutoResize: false, sortable: false, draggable: false }
         ];
-        this.loadData(0, 0, 0);
+        this.loadData(0, 0, 0, this.valueDate);
+        console.log(this.valueDate);
         this.loadAllKhachHang();
         this.loadAllLoaiDichVu();
         this.loadAllLoaiTien();
         this.loadAllDonViTinh();
+        //this.loaidichvuService.test().subscribe(results => { console.log(results) });
         if (this.authService.currentUser) {
             var userId = this.authService.currentUser.id;
             var where = "NguoiDungId = '" + userId + "'";
@@ -152,9 +157,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     }
 
     loadAllTangLau(toanha: number, cumtoanha: number) {
-        this.tanglauService.getTangLauByToaNha(toanha, cumtoanha).subscribe(results => {
-            this.onDataLoadTangLauSuccessful(results)
-        }, error => this.onDataLoadFailed(error));
+        this.tanglauService.getTangLauByToaNha(toanha, cumtoanha).subscribe(results => this.onDataLoadTangLauSuccessful(results), error => this.onDataLoadFailed(error));
     }
     onDataLoadTangLauSuccessful(obj: TangLau[]) {
         this.tanglau = obj;
@@ -204,7 +207,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     }
 
     addNewToList() {
-        this.loadData(0, 0, 0);
+        this.loadData(0, 0, 0, this.valueDate);
         if (this.sourcedichvucoban) {
             Object.assign(this.sourcedichvucoban, this.dichvucobanEdit);
             this.dichvucobanEdit = null;
@@ -228,13 +231,14 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         }
     }
 
-    loadData(tanglauId: number, loaidichvuId: number, status: number) {
+    loadData(tanglauId: number, loaidichvuId: number, status: number, date: Date) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         if (tanglauId > 0 || loaidichvuId > 0 || status > 0) {
-            this.dichvucobanService.getItemByFilter(tanglauId, loaidichvuId, status).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
-        } else {
-            this.dichvucobanService.getAllDichVuCoBan().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+            this.dichvucobanService.getItemByFilter(tanglauId, loaidichvuId, status, date.getMonth(), date.getFullYear()).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        } 
+        if (tanglauId == 0 && loaidichvuId == 0 && status == 0) {
+            this.dichvucobanService.filterByDate(date.getMonth(), date.getFullYear()).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
         }
 
     }
@@ -306,13 +310,25 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
 
     editDichVuCoBan(row: DichVuCoBan) {
         //this.editingRowName = { name: row.tenichVuCoBan };
-        this.sourcedichvucoban = row;
-        this.dichvucobanEdit = this.DichVuCoBanEditor.editDichVuCoBan(row);
+        this.sourcedichvucoban = row;        
         this.DichVuCoBanEditor.khachHang = this.khachHang;
         this.DichVuCoBanEditor.matBang = this.matBang;
         this.DichVuCoBanEditor.loaiDichVu = this.loaiDichVu;
         this.DichVuCoBanEditor.loaiTien = this.loaiTien;
         this.DichVuCoBanEditor.donViTinh = this.donViTinh;
+        this.dichvucobanEdit = this.DichVuCoBanEditor.editDichVuCoBan(row);
+        try {
+            this.DichVuCoBanEditor.valueTuNgay = new Date(row.tuNgay.toString());
+            this.DichVuCoBanEditor.valueDenNgay = new Date(row.denNgay.toString());
+            this.DichVuCoBanEditor.valueNgayChungTu = new Date(row.ngayChungTu.toString());
+            this.DichVuCoBanEditor.valueNgayThanhToan = new Date(row.ngayThanhToan.toString());
+        }
+        catch{
+            this.DichVuCoBanEditor.valueNgayThanhToan = new Date();
+            this.DichVuCoBanEditor.valueNgayChungTu = new Date();
+            this.DichVuCoBanEditor.valueTuNgay = new Date();
+            this.DichVuCoBanEditor.valueDenNgay = new Date();
+        }
         this.DichVuCoBanEditor.isViewDetails = false;
         this.DichVuCoBanEditor.editorModal.show();
     }
@@ -320,12 +336,12 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     viewDichVuCoBan(row: DichVuCoBan) {
         //this.editingRowName = { name: row.tenichVuCoBan };
         this.sourcedichvucoban = row;
-        this.dichvucobanEdit = this.DichVuCoBanEditor.editDichVuCoBan(row);
         this.DichVuCoBanEditor.khachHang = this.khachHang;
         this.DichVuCoBanEditor.matBang = this.matBang;
         this.DichVuCoBanEditor.loaiDichVu = this.loaiDichVu;
         this.DichVuCoBanEditor.loaiTien = this.loaiTien;
         this.DichVuCoBanEditor.donViTinh = this.donViTinh;
+        this.dichvucobanEdit = this.DichVuCoBanEditor.editDichVuCoBan(row);
         this.DichVuCoBanEditor.isViewDetails = true;
         this.DichVuCoBanEditor.editorModal.show();
     }
@@ -387,13 +403,8 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         });
     }
 
-    SelectedTangLauValue(tanglauId: number, loaidichvuId: number, status: number) {
-        this.loadData(tanglauId, loaidichvuId, status);
-    }
-
-    filterDate(value: Date): void {
-        console.log(formatDate(value, 'MM yyyy'));
-        this.dichvucobanService.filterByDate(value.getMonth(), value.getFullYear()).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+    SelectedTangLauValue(tanglauId: number, loaidichvuId: number, status: number, date: Date) {
+        this.loadData(tanglauId, loaidichvuId, status, date);
     }
 
     onSelect({ selected }) {

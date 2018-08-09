@@ -14,6 +14,8 @@ import { LoaiTienService } from '../../services/loaitien.service';
 import { DatePipe } from '@angular/common';
 import { BangGiaDichVuCoBan } from '../../models/banggiadichvucoban.model';
 import { BangGiaDichVuCoBanService } from '../../services/banggiadichvucoban.service';
+import { KhachHangService } from '../../services/khachhang.service';
+import { MatBangService } from '../../services/matbang.service';
 
 @Component({
     selector: "dichvucoban-info",
@@ -74,7 +76,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
     @ViewChild('editorModal')
     editorModal: ModalDirective;
 
-    constructor(private alertService: AlertService, private gvService: DichVuCoBanService, private banggiadichvucobanservice: BangGiaDichVuCoBanService, private loaitienservice: LoaiTienService, private datePipe: DatePipe) {
+    constructor(private alertService: AlertService, private gvService: DichVuCoBanService, private banggiadichvucobanservice: BangGiaDichVuCoBanService, private loaitienservice: LoaiTienService, private khachhangservice: KhachHangService, private matbangservice: MatBangService, private datePipe: DatePipe) {
     }
 
     ngOnInit() {
@@ -248,13 +250,18 @@ export class DichVuCoBanInfoComponent implements OnInit {
             this.ChkdonViTinh = true;
             this.ChkloaiTien = true;
             //this.editingRowName = obj.tenDichVuCoBan;
+            this.dongia = this.formatPrice(obj.donGia.toString());
+            this.thanhtien = this.formatPrice(obj.thanhTien.toString());
+            this.tienthanhtoan = this.formatPrice(obj.tienThanhToan.toString());
+            this.tygia = this.formatPrice(obj.tyGia.toString());
+            this.tienquydoi = this.formatPrice(obj.tienTTQuyDoi.toString());
             this.DichVuCoBanEdit = new DichVuCoBan();
             Object.assign(this.DichVuCoBanEdit, obj);
-            this.dongia = this.formatPrice(this.DichVuCoBanEdit.donGia.toString());
-            this.thanhtien = this.formatPrice(this.DichVuCoBanEdit.thanhTien.toString());
-            this.tienthanhtoan = this.formatPrice(this.DichVuCoBanEdit.tienThanhToan.toString());
-            this.tygia = this.formatPrice(this.DichVuCoBanEdit.tyGia.toString());
-            this.tienquydoi = this.formatPrice(this.DichVuCoBanEdit.tienTTQuyDoi.toString());
+            Object.assign(this.DichVuCoBanEdit, obj);
+            //this.valueNgayChungTu = obj.ngayChungTu;
+            //this.valueNgayThanhToan = obj.ngayThanhToan;
+            //this.valueTuNgay = obj.tuNgay;
+            //this.valueDenNgay = obj.denNgay;
             this.edit();
 
             return this.DichVuCoBanEdit;
@@ -290,6 +297,11 @@ export class DichVuCoBanInfoComponent implements OnInit {
     matBangChk(id: number) {
         if (id > 0) {
             this.ChkmatBang = true;
+            this.matbangservice.getMatBangByID(id).subscribe(results => {
+                this.khachhangservice.getKhachHangByID(results.khacHangId).subscribe(result => {
+                    this.DichVuCoBanEdit.khachHangId = result.khachHangId;
+                }, error => { })
+            }, error => { })
         } else {
             this.ChkmatBang = false;
         }
@@ -316,7 +328,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
                     change = Number(pS) * Number(this.tygia);
                     this.tienquydoi = this.formatPrice(change.toString());
                 })
-            })
+            }, error => { })
             this.ChkloaiDichVu = true;
         } else {
             this.ChkloaiDichVu = false;
@@ -325,7 +337,14 @@ export class DichVuCoBanInfoComponent implements OnInit {
 
     loaiTienChk(id: number) {
         if (id > 0) {            
+            var change = 0;
             this.ChkloaiTien = true;
+            this.loaitienservice.getLoaiTienByID(this.DichVuCoBanEdit.loaiTienId).subscribe(result => {
+                    this.tygia = this.formatPrice(result.tyGia.toString());
+                    var pS = this.tienthanhtoan.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+                    change = Number(pS) * Number(this.tygia);
+                    this.tienquydoi = this.formatPrice(change.toString());
+                })
         } else {
             this.tygia = this.formatPrice("0");
             this.tienquydoi = this.formatPrice("0");

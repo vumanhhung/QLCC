@@ -179,7 +179,6 @@ export class YeuCauComponent implements OnInit, AfterViewInit {
         } else {
             this.listMB = "(0)";
         }
-        console.log(this.listMB);
         this.loadData(this.listMB, this.chkAll);
     }
 

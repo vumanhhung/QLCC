@@ -22,6 +22,7 @@ import { KhachHang } from '../../models/khachhang.model';
 import { KhachHangService } from '../../services/khachhang.service';
 import { CuDan } from '../../models/cudan.model';
 import { CuDanService } from '../../services/cudan.service';
+import { concat } from 'rxjs/operator/concat';
 
 @Component({
     selector: "matbang-info",
@@ -151,8 +152,13 @@ export class MatBangInfoComponent implements OnInit {
             this.isSaving = true;
             this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
             this.MatBangEdit.ngaybanGiao = this.value;
-            this.MatBangEdit.chuSoHuu = this.khachhang.khachHangId;
-            this.MatBangEdit.khachThue = this.cudan.cuDanId;
+            this.MatBangEdit.khacHangId = this.khachhang.khachHangId;            
+            try {
+                this.MatBangEdit.khachThue = this.cudan.cuDanId;
+            } catch (e) {
+                this.MatBangEdit.khachThue = null;
+            }
+            
             if (this.isNew) {
                 this.gvService.addnewMatBang(this.MatBangEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
             }
@@ -214,7 +220,7 @@ export class MatBangInfoComponent implements OnInit {
         this.MatBangEdit.loaiTien = "0";
         this.MatBangEdit.caNhan = 0;
         this.MatBangEdit.giaoChiaKhoa = 0;
-        this.MatBangEdit.chuSoHuu = 0;
+        this.MatBangEdit.khacHangId = 0;
         this.MatBangEdit.khachThue = 0;
         this.edit();
         return this.MatBangEdit;
@@ -273,9 +279,10 @@ export class MatBangInfoComponent implements OnInit {
             this.editingRowName = obj.tenMatBang;
             this.MatBangEdit = new MatBang();
             Object.assign(this.MatBangEdit, obj);
-            Object.assign(this.MatBangEdit, obj);
             this.valuedienTich = Utilities.formatNumber(obj.dienTich);
             this.valuegiaThue = Utilities.formatNumber(obj.giaThue);
+            this.getKhachHang(this.MatBangEdit.caNhan, this.MatBangEdit.khacHangId);
+            if (this.MatBangEdit.khachThue != null) this.cudan = this.cudans.find(o => o.cuDanId == this.MatBangEdit.khachThue);
             this.edit();
 
             return this.MatBangEdit;
@@ -364,6 +371,25 @@ export class MatBangInfoComponent implements OnInit {
             this.chkloaiTien = true;
         } else {
             this.chkloaiTien = false;
+        }
+    }
+    getKhachHang(canhanh: number, khachhangId: number) {
+        if (canhanh == 1) {
+            this.chkcaNhan = true;
+            this.khService.getAllKhachHang().subscribe(result => {
+                this.khachhangs = result;
+                this.khachhangsFilter = result;
+                this.khachhang = this.khachhangs.find(o => o.khachHangId == khachhangId);
+            }, error => this.onCurrentUserDataLoadFailed(error));
+        } else if (canhanh == 2) {
+            this.khService.getAllKhachHangDoanhNghiep().subscribe(result => {
+                this.khachhangs = result;
+                this.khachhangsFilter = result;
+                this.khachhang = this.khachhangs.find(o => o.khachHangId == khachhangId);
+            }, error => this.onCurrentUserDataLoadFailed(error));
+            this.chkcaNhan = true;
+        } else {
+            this.chkcaNhan = false;
         }
     }
     caNhanChange(canhanh: number) {

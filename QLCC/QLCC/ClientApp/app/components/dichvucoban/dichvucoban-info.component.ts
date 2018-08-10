@@ -190,7 +190,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
         this.DichVuCoBanEdit.loaiTienId = 0;
         this.DichVuCoBanEdit.lapLai = false;
         this.DichVuCoBanEdit.trangThai = 1;
-        this.DichVuCoBanEdit.soLuong = 0;
+        this.DichVuCoBanEdit.soLuong = 1;
         this.valueTuNgay = new Date(this.valueTuNgay.getFullYear(), this.valueTuNgay.getMonth(), 1);
         this.valueDenNgay = new Date(this.valueDenNgay.getFullYear(), this.valueDenNgay.getMonth() + 1, 0);
         this.dongia = this.formatPrice("0");
@@ -298,9 +298,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
         if (id > 0) {
             this.ChkmatBang = true;
             this.matbangservice.getMatBangByID(id).subscribe(results => {
-                this.khachhangservice.getKhachHangByID(results.khacHangId).subscribe(result => {
-                    this.DichVuCoBanEdit.khachHangId = result.khachHangId;
-                }, error => { })
+                this.DichVuCoBanEdit.khachHangId = results.khachHangId;
             }, error => { })
         } else {
             this.ChkmatBang = false;
@@ -322,6 +320,9 @@ export class DichVuCoBanInfoComponent implements OnInit {
                 this.DichVuCoBanEdit.donViTinhId = results.donViTinhId;
                 this.DichVuCoBanEdit.loaiTienId = results.loaiTienId;
                 this.dongia = this.formatPrice(results.donGia.toString());
+                var dg = this.dongia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+                this.thanhtien = this.formatPrice((Number(dg) * Number(this.DichVuCoBanEdit.soLuong)).toString());
+                this.tienthanhtoan = this.thanhtien;
                 this.loaitienservice.getLoaiTienByID(results.loaiTienId).subscribe(result => {
                     this.tygia = this.formatPrice(result.tyGia.toString());
                     var pS = this.tienthanhtoan.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
@@ -337,17 +338,8 @@ export class DichVuCoBanInfoComponent implements OnInit {
 
     loaiTienChk(id: number) {
         if (id > 0) {            
-            var change = 0;
             this.ChkloaiTien = true;
-            this.loaitienservice.getLoaiTienByID(this.DichVuCoBanEdit.loaiTienId).subscribe(result => {
-                    this.tygia = this.formatPrice(result.tyGia.toString());
-                    var pS = this.tienthanhtoan.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
-                    change = Number(pS) * Number(this.tygia);
-                    this.tienquydoi = this.formatPrice(change.toString());
-                })
         } else {
-            this.tygia = this.formatPrice("0");
-            this.tienquydoi = this.formatPrice("0");
             this.ChkloaiTien = false;
         }
     }
@@ -357,45 +349,6 @@ export class DichVuCoBanInfoComponent implements OnInit {
             this.ChkdonViTinh = true;
         } else {
             this.ChkdonViTinh = false;
-        }
-    }
-
-
-    dongiaChange(price: string) {
-        if (price) {
-            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
-            var pN = Number(pS);
-            var result = Number(pS) * this.DichVuCoBanEdit.soLuong;
-            this.dongia = Utilities.formatNumber(pN);
-            this.thanhtien = this.formatPrice(result.toString());
-            this.tienthanhtoan = this.thanhtien
-        }
-    }
-    soluongChange() {
-        if (this.DichVuCoBanEdit.soLuong > 0) {
-            var pS = this.dongia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
-            var result = Number(pS) * this.DichVuCoBanEdit.soLuong;
-            this.thanhtien = this.formatPrice(result.toString());
-            this.tienthanhtoan = this.thanhtien;
-        }
-    }
-    kythanhtoanChange() {
-        if (this.DichVuCoBanEdit.kyThanhToan > 0) {
-            this.valueDenNgay = new Date(this.valueDenNgay.setMonth(this.valueTuNgay.getMonth() + Number(this.DichVuCoBanEdit.kyThanhToan)));
-        } else this.valueDenNgay = new Date();
-    }
-    tygiaChange(price: string) {
-        if (price) {
-            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
-            var pN = Number(pS);
-            this.tygia = Utilities.formatNumber(pN);
-        }
-    }
-    tienquydoiChange(price: string) {
-        if (price) {
-            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
-            var pN = Number(pS);
-            this.tienquydoi = Utilities.formatNumber(pN);
         }
     }
     formatPrice(price: string): string {

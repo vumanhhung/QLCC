@@ -126,7 +126,7 @@ export class TheXeInfoComponent implements OnInit {
             this.isSaving = true;
             this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
             this.TheXeEdit.matBangId = this.objMatBang.matBangId;
-            this.TheXeEdit.khachHangId = this.objMatBang.khacHangId;            
+            this.TheXeEdit.khachHangId = this.objMatBang.khachHangId;            
             this.TheXeEdit.phiGuiXe = Number(this.phiGuiXe.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
             if (this.isNew) {
                 this.TheXeEdit.trangThai = 1;

@@ -5,7 +5,6 @@
                 <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="DinhMucNuocForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
 (!tenDinhMucNuoc.valid && showErrorAlert('Tên định mức nước không được để trống', 'Vui lòng nhập Tên định mức nước!'));
 (!soCuoi.valid && showErrorAlert('Số Cuối không được để trống', 'Vui lòng nhập Số Cuối!'));
-(!dienGiai.valid && showErrorAlert('Diễn Giải không được để trống', 'Vui lòng nhập Diễn Giải!'));
 ">
                     <div class="modal-header">
                         <p class="modal-title pull-left">
@@ -18,7 +17,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12" style="margin-bottom:10px;">
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <label class="control-label col-md-5" for="tenDinhMucNuoc-{{uniqueId}}">Tên công thức nước</label>
                                     <div class="col-md-7">
                                         <span class="form-control" style="border: none;">{{tenCongThucNuoc}}</span>
@@ -36,7 +35,7 @@
                                 </div>
                             </div>
                             <div class="col-md-12" style="margin-bottom:10px;">
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <label class="control-label col-md-5" for="soDau-{{uniqueId}}">Số Đầu</label>
                                     <div class="col-md-7" [ngClass]="{'has-success': f.submitted && soDau.valid, 'has-error' : f.submitted && !soDau.valid}">
                                         <input autofocus type="number" min="0" class="form-control" name="soDau" [(ngModel)]="DinhMucNuocEdit.soDau" #soDau="ngModel" required disabled/>
@@ -54,7 +53,7 @@
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <label class="control-label col-md-5" for="gia-{{uniqueId}}">Giá</label>
                                     <div class="col-md-7">
                                         <input OnlyNumber="true" autofocus type="text" class="form-control" name="gia" [(ngModel)]="gia" (ngModelChange)="giaChange($event)" />
@@ -63,11 +62,11 @@
                                 <div class="col-md-6">
                                     <label class="control-label col-md-5" for="dienGiai-{{uniqueId}}">Diễn Giải</label>
                                     <div class="col-md-7" [ngClass]="{'has-success': f.submitted && dienGiai.valid, 'has-error' : f.submitted && !dienGiai.valid}">
-                                        <input autofocus type="text" class="form-control" name="dienGiai" [(ngModel)]="DinhMucNuocEdit.dienGiai" #dienGiai="ngModel" required />
-                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" style="padding-left:8%;" [ngClass]="{'glyphicon-ok ': dienGiai.valid, 'glyphicon-remove' : !dienGiai.valid}"></span>
+                                        <input autofocus type="text" class="form-control" name="dienGiai" [(ngModel)]="DinhMucNuocEdit.dienGiai" #dienGiai="ngModel"/>
+                                        <!--<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" style="padding-left:8%;" [ngClass]="{'glyphicon-ok ': dienGiai.valid, 'glyphicon-remove' : !dienGiai.valid}"></span>
                                         <span *ngIf="showValidationErrors && f.submitted && !dienGiai.valid" class="errorMessage">
                                             Vui lòng nhập Diễn Giải!
-                                        </span>
+                                        </span>-->
                                     </div>
                                 </div>
                             </div>

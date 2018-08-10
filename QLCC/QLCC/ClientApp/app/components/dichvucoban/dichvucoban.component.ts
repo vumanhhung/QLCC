@@ -131,7 +131,6 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
             { name: gT('matbang.qlmb_chucnang'), width: 100, cellTemplate: this.actionsTemplate, canAutoResize: false, sortable: false, draggable: false }
         ];
         this.loadData(0, 0, 0, this.valueDate);
-        console.log(this.valueDate);
         this.loadAllKhachHang();
         this.loadAllLoaiDichVu();
         this.loadAllLoaiTien();

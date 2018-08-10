@@ -55,6 +55,7 @@ import { BangGiaDichVuCoBanComponent } from "./components/banggiadichvucoban/ban
 import { LoaiDichVuComponent } from './components/loaidichvu/loaidichvu.component';
 import { TheXeComponent } from './components/thexe/thexe.component';
 import { DichVuCoBanComponent } from './components/dichvucoban/dichvucoban.component';
+import { CongThucNuocComponent } from './components/congthucnuoc/congthucnuoc.component';
 
 
 @NgModule({
@@ -98,6 +99,7 @@ import { DichVuCoBanComponent } from './components/dichvucoban/dichvucoban.compo
             { path: "loaidichvu", component: LoaiDichVuComponent, canActivate: [AuthGuard], data: { title: "Loại dịch vụ" } },
             { path: "thexe", component: TheXeComponent, canActivate: [AuthGuard], data: { title: "Quản lý trông giữ xe" } },
             { path: "dvcb", component: DichVuCoBanComponent, canActivate: [AuthGuard], data: { title: "Dịch vụ cơ bản" } },
+            { path: "congthucnuoc", component: CongThucNuocComponent, canActivate: [AuthGuard], data: { title: "Dịch vụ cơ bản" } },
             //{ path: "role/:id", component: RoleEditorComponent},
             { path: "settings", component: SettingsComponent, canActivate: [AuthGuard], data: { title: "Cấu hình" } },
             { path: "about", component: AboutComponent, data: { title: "Giới thiệu" } },

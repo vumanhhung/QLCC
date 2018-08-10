@@ -22,7 +22,7 @@ export class MatBang {
     public giaoChiaKhoa: number;
     public ngaybanGiao: Date;
     public dienGiai: string;
-    public khacHangId: number;
+    public khachHangId: number;
     public khachThue: number;
     public nguoiNhap: string;
     public ngayNhap: Date;
@@ -35,7 +35,7 @@ export class MatBang {
     public loaimatbang: LoaiMatBang;
     public khacHangs: KhachHang;
 
-    constructor(matBangId?: number, cumToaNhaId?: number, toaNhaId?: number, tangLauId?: number, trangThaiId?: number, loaiMatBangId?: number, maMatBang?: string, tenMatBang?: string, dienTich?: number, giaThue?: number, loaiTien?: string, caNhan?: number, giaoChiaKhoa?: number, ngaybanGiao?: Date, dienGiai?: string, khacHangId?: number, khachThue?: number, nguoiNhap?: string, ngayNhap?: Date, nguoiSua?: string, ngaySua?: Date) {
+    constructor(matBangId?: number, cumToaNhaId?: number, toaNhaId?: number, tangLauId?: number, trangThaiId?: number, loaiMatBangId?: number, maMatBang?: string, tenMatBang?: string, dienTich?: number, giaThue?: number, loaiTien?: string, caNhan?: number, giaoChiaKhoa?: number, ngaybanGiao?: Date, dienGiai?: string, khachHangId?: number, khachThue?: number, nguoiNhap?: string, ngayNhap?: Date, nguoiSua?: string, ngaySua?: Date) {
         this.matBangId = matBangId;
         this.cumToaNhaId = cumToaNhaId;
         this.toaNhaId = toaNhaId;
@@ -51,7 +51,7 @@ export class MatBang {
         this.giaoChiaKhoa = giaoChiaKhoa;
         this.ngaybanGiao = ngaybanGiao;
         this.dienGiai = dienGiai;
-        this.khacHangId = khacHangId;
+        this.khachHangId = khachHangId;
         this.khachThue = khachThue;
         this.nguoiNhap = nguoiNhap;
         this.ngayNhap = ngayNhap;

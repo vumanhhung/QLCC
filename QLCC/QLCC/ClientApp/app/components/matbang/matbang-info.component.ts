@@ -152,7 +152,7 @@ export class MatBangInfoComponent implements OnInit {
             this.isSaving = true;
             this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
             this.MatBangEdit.ngaybanGiao = this.value;
-            this.MatBangEdit.khacHangId = this.khachhang.khachHangId;            
+            this.MatBangEdit.khachHangId = this.khachhang.khachHangId;            
             try {
                 this.MatBangEdit.khachThue = this.cudan.cuDanId;
             } catch (e) {
@@ -220,7 +220,7 @@ export class MatBangInfoComponent implements OnInit {
         this.MatBangEdit.loaiTien = "0";
         this.MatBangEdit.caNhan = 0;
         this.MatBangEdit.giaoChiaKhoa = 0;
-        this.MatBangEdit.khacHangId = 0;
+        this.MatBangEdit.khachHangId = 0;
         this.MatBangEdit.khachThue = 0;
         this.edit();
         return this.MatBangEdit;
@@ -281,7 +281,7 @@ export class MatBangInfoComponent implements OnInit {
             Object.assign(this.MatBangEdit, obj);
             this.valuedienTich = Utilities.formatNumber(obj.dienTich);
             this.valuegiaThue = Utilities.formatNumber(obj.giaThue);
-            this.getKhachHang(this.MatBangEdit.caNhan, this.MatBangEdit.khacHangId);
+            this.getKhachHang(this.MatBangEdit.caNhan, this.MatBangEdit.khachHangId);
             if (this.MatBangEdit.khachThue != null) this.cudan = this.cudans.find(o => o.cuDanId == this.MatBangEdit.khachThue);
             this.edit();
 

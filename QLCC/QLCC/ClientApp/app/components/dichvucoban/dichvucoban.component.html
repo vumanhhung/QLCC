@@ -68,7 +68,7 @@
                     <div>
                         <div class="dataTables_length">
                             <div (change)="SelectedTangLauValue(drTangLau.value,drloaiDV.value,drStatus.value, valueDate)">
-                                <label style="margin-right:10px;">
+                                <label style="margin-right:1%;">
                                     Tầng lầu
                                     <select class="form-control input-sm" #drTangLau [(ngModel)]="selectedTangLau">
                                         <option value="0">---Tất cả---</option>
@@ -77,7 +77,7 @@
                                         </option>
                                     </select>
                                 </label>
-                                <label style="margin-right:10px;">
+                                <label style="margin-right:1%;">
                                     Loại dịch vụ
                                     <select class="form-control input-sm" #drloaiDV [(ngModel)]="selectedLoaiDV">
                                         <option value="0">---Tất cả---</option>
@@ -86,7 +86,7 @@
                                         </option>
                                     </select>
                                 </label>
-                                <label style="margin-right: 10px;">
+                                <label style="margin-right: 1%;">
                                     Trạng thái
                                     <select class="form-control input-sm" #drStatus [(ngModel)]="selectedTrangThai">
                                         <option value="0">---Tất cả---</option>
@@ -94,7 +94,7 @@
                                         <option value="2">Dừng sử dụng</option>
                                     </select>
                                 </label>
-                                <label style="margin-right: 10px;">
+                                <label style="margin-right: 1%;">
                                     Ngày chứng từ
                                     <kendo-datepicker style="margin-top:-4px; height: 30px; line-height: 30px;" 
                                                       [format]="'MM/yyyy'" 

@@ -286,7 +286,7 @@ export class MatBangComponent implements OnInit, AfterViewInit {
     }
 
     onSearchChanged(value: string) {
-        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.matBangId, r.cumToaNhaId, r.toaNhaId, r.tangLauId, r.trangThaiId, r.loaiMatBangId, r.maMatBang, r.tenMatBang, r.dienTich, r.giaThue, r.loaiTien, r.caNhan, r.giaoChiaKhoa, r.ngaybanGiao, r.dienGiai, r.khacHangId, r.khachThue));
+        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.matBangId, r.cumToaNhaId, r.toaNhaId, r.tangLauId, r.trangThaiId, r.loaiMatBangId, r.maMatBang, r.tenMatBang, r.dienTich, r.giaThue, r.loaiTien, r.caNhan, r.giaoChiaKhoa, r.ngaybanGiao, r.dienGiai, r.khachHangId, r.khachThue));
     }
 
     deleteMatBang(row: MatBang) {
@@ -360,7 +360,7 @@ export class MatBangComponent implements OnInit, AfterViewInit {
         if (row.giaoChiaKhoa != 0) {
             this.MatBangEditor.chkgiaoChiaKhoa = true;
         }
-        if (row.khacHangId != 0) {
+        if (row.khachHangId != 0) {
             this.MatBangEditor.chkchuSoHuu = true;
         }        
         this.MatBangEditor.isViewDetails = false;
@@ -414,7 +414,7 @@ export class MatBangComponent implements OnInit, AfterViewInit {
         if (row.giaoChiaKhoa != 0) {
             this.MatBangEditor.chkgiaoChiaKhoa = true;
         }
-        if (row.khacHangId != 0) {
+        if (row.khachHangId != 0) {
             this.MatBangEditor.chkchuSoHuu = true;
         }        
         this.MatBangEditor.isViewDetails = false;

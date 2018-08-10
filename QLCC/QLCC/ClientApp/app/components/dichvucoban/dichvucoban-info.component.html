@@ -60,10 +60,10 @@
                                             {{o.hoDem}} {{ o.ten }}
                                         </option>
                                     </select>
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkkhachHang, 'glyphicon-remove' : !ChkkhachHang}"></span>
+                                    <!--<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkkhachHang, 'glyphicon-remove' : !ChkkhachHang}"></span>
                                     <span *ngIf="showValidationErrors && f.submitted && !ChkkhachHang" class="errorMessage">
                                         Vui lòng chọn khách hàng!
-                                    </span>
+                                    </span>-->
                                 </div>
                             </div>
                             <div class="has-feedback col-sm-3">
@@ -90,23 +90,23 @@
                                             {{o.tenDonViTinh}}
                                         </option>
                                     </select>
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkdonViTinh, 'glyphicon-remove' : !ChkdonViTinh}"></span>
+                                    <!--<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkdonViTinh, 'glyphicon-remove' : !ChkdonViTinh}"></span>
                                     <span *ngIf="showValidationErrors && f.submitted && !ChkdonViTinh" class="errorMessage">
                                         Vui lòng chọn đơn vị tính!
-                                    </span>
+                                    </span>-->
                                 </div>
                             </div>
                             <div class="clearfix"></div>
                             <div class="has-feedback col-sm-4">
                                 <label class="control-label" for="donGia-{{uniqueId}}">Đơn giá</label>
                                 <div class="control">
-                                    <input OnlyNumber="true" autofocus type="text" class="form-control" name="dongia" [(ngModel)]="dongia" (ngModelChange)="dongiaChange($event)" />
+                                    <input OnlyNumber="true" autofocus type="text" class="form-control" name="dongia" [(ngModel)]="dongia" />
                                 </div>
                             </div>
                             <div class="has-feedback col-sm-4">
                                 <label class="control-label" for="soLuong-{{uniqueId}}">Số lượng</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && soLuong.valid, 'has-error' : f.submitted && !soLuong.valid}">
-                                    <input autofocus type="number" min="0" class="form-control" name="soLuong" [(ngModel)]="DichVuCoBanEdit.soLuong" #soLuong="ngModel" (ngModelChange)="soluongChange()" required />
+                                    <input autofocus type="number" min="0" class="form-control" name="soLuong" [(ngModel)]="DichVuCoBanEdit.soLuong" #soLuong="ngModel" />
                                 </div>
                             </div>
                             <div class="has-feedback col-sm-4">
@@ -123,7 +123,7 @@
                             <div class="has-feedback col-sm-4">
                                 <label class="control-label" for="kyThanhToan-{{uniqueId}}">Kỳ thanh toán (tháng)</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && kyThanhToan.valid, 'has-error' : f.submitted && !kyThanhToan.valid}">
-                                    <input autofocus type="text" class="form-control" name="kyThanhToan" [(ngModel)]="DichVuCoBanEdit.kyThanhToan" #kyThanhToan="ngModel" (ngModelChange)="kythanhtoanChange()" required>
+                                    <input autofocus type="text" class="form-control" name="kyThanhToan" [(ngModel)]="DichVuCoBanEdit.kyThanhToan" #kyThanhToan="ngModel" required>
                                     <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': kyThanhToan.valid, 'glyphicon-remove' : !kyThanhToan.valid}"></span>
                                     <span *ngIf="showValidationErrors && f.submitted && !kyThanhToan.valid" class="errorMessage">
                                         Vui lòng nhập kỳ thanh toán!
@@ -146,16 +146,16 @@
                                             {{o.tenLoaiTien}}
                                         </option>
                                     </select>
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkloaiTien, 'glyphicon-remove' : !ChkloaiTien}"></span>
+                                    <!--<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkloaiTien, 'glyphicon-remove' : !ChkloaiTien}"></span>
                                     <span *ngIf="showValidationErrors && f.submitted && !ChkloaiTien" class="errorMessage">
                                         Vui lòng chọn đơn vị tính!
-                                    </span>
+                                    </span>-->
                                 </div>
                             </div>
                             <div class="has-feedback col-sm-4">
                                 <label class="control-label" for="tyGia-{{uniqueId}}">Tỷ giá</label>
                                 <div class="control">
-                                    <input OnlyNumber="true" autofocus type="text" class="form-control" name="tygia" [(ngModel)]="tygia" (ngModelChange)="tygiaChange($event)" disabled />
+                                    <input OnlyNumber="true" autofocus type="text" class="form-control" name="tygia" [(ngModel)]="tygia" disabled />
                                 </div>
                             </div>
                             <div class="has-feedback col-sm-4">
@@ -209,7 +209,7 @@
                                 <hr class="edit-last-separator-hr" />
                             </div>
                             <div class="form-group actionBtn-form-group">
-                                <div class="col-sm-8">
+                                <div class="col-sm-7">
                                     <div class="pull-right">
                                         <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
                                         <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
@@ -337,5 +337,5 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
 </div>

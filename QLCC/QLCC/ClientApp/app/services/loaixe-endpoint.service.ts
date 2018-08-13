@@ -70,4 +70,12 @@ export class LoaiXeEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getName(loaixeObject));
             });
     }
+
+    checkExist<T>(id?: number): Observable<T> {
+        let endpointUrl = `${this.loaixeUrl}/Exist/${id}`;
+        return this.http.get(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.checkExist(id));
+            });
+    }
 }

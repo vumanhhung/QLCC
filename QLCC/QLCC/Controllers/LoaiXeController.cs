@@ -168,5 +168,12 @@ namespace QLCC.Controllers
         {
             return _context.LoaiXes.Any(e => e.LoaiXeId == id);
         }
+
+        [HttpGet("Exist/{id}")]
+        public async Task<IActionResult> checkTheXe([FromRoute] int id)
+        {
+            var check = await _context.LoaiXes.SingleOrDefaultAsync(r => r.thexes.LoaiXeId == id);
+            return Ok(check);
+        }
     }
 }

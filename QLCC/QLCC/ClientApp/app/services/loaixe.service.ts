@@ -52,4 +52,7 @@ export class LoaiXeService {
         return this.loaixeEndpoint.getName<LoaiXe>(tenloaixe);
     }
 
+    checkExist(id?: number) {
+        return this.loaixeEndpoint.checkExist<LoaiXe[]>(id);
+    }
 }

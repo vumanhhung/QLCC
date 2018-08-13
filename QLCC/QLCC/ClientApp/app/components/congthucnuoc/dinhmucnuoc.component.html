@@ -63,10 +63,6 @@
                                     <label class="control-label col-md-5" for="dienGiai-{{uniqueId}}">Diễn Giải</label>
                                     <div class="col-md-7" [ngClass]="{'has-success': f.submitted && dienGiai.valid, 'has-error' : f.submitted && !dienGiai.valid}">
                                         <input autofocus type="text" class="form-control" name="dienGiai" [(ngModel)]="DinhMucNuocEdit.dienGiai" #dienGiai="ngModel"/>
-                                        <!--<span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" style="padding-left:8%;" [ngClass]="{'glyphicon-ok ': dienGiai.valid, 'glyphicon-remove' : !dienGiai.valid}"></span>
-                                        <span *ngIf="showValidationErrors && f.submitted && !dienGiai.valid" class="errorMessage">
-                                            Vui lòng nhập Diễn Giải!
-                                        </span>-->
                                     </div>
                                 </div>
                             </div>
@@ -74,7 +70,7 @@
                                 <hr class="edit-last-separator-hr" />
                             </div>
                             <div class="form-group actionBtn-form-group">
-                                <div class="col-sm-12" style="padding-left:0;padding-right:3%;">
+                                <div class="col-sm-12" style="padding-left:0;padding-right:4.5%;">
                                     <div class="pull-right" style="display:flex;">
                                         <button type="button" (click)="cancel()" class="btn btn-danger col-sm-5" style="margin-right:5%;" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
                                         <button type="submit" class="btn btn-primary col-sm-7" [disabled]="isSaving">
@@ -111,7 +107,8 @@
                                     <td>{{ list.dienGiai }}</td>
                                     <td>
                                         <a class="btn btn-func btn-primary" href="javascript:;" (click)="editDinhMucNuoc(list)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                        <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDinhMucNuoc(list)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                        <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDinhMucNuoc(list)" title="Xóa" *ngIf="list.soCuoi == max"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                        <!--<a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDinhMucNuoc(list)" title="Xóa" *ngShow="list.soCuoi != max"><i class="fa fa-trash-o" aria-hidden="true"></i></a>-->
                                     </td>
                                 </tr>
                             </tbody>

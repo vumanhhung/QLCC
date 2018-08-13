@@ -79,4 +79,12 @@ export class TheXeEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.deleteTheXe(id));
             });
     }
+
+    checkExist<T>(id?: number): Observable<T> {
+        let endpointUrl = `${this.thexeUrl}/Exist/${id}`;
+        return this.http.get(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.checkExist(id));
+            });
+    }
 }

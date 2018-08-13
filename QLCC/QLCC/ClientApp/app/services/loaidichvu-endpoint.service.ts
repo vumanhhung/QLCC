@@ -73,34 +73,50 @@ export class LoaiDichVuEndpoint extends EndpointFactory {
     }
 
     dequy<T>() {
-        let enpointUrl = `${this.loaidichvuUrl}/GetDeQuy`;
-        return this.http.get(enpointUrl, this.getRequestHeaders())
+        let endpointUrl = `${this.loaidichvuUrl}/GetDeQuy`;
+        return this.http.get(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.dequy());
             })
     }
 
     filterStatus<T>(status?: number) {
-        let enpointUrl = `${this.loaidichvuUrl}/FilterByStatus/${status}`;
-        return this.http.get(enpointUrl, this.getRequestHeaders())
+        let endpointUrl = `${this.loaidichvuUrl}/FilterByStatus/${status}`;
+        return this.http.get(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.filterStatus());
             })
     }
 
     listDV<T>(id?: number): Observable<T> {
-        let enpointUrl = `${this.loaidichvuUrl}/ListDV/${id}`;
-        return this.http.get(enpointUrl, this.getRequestHeaders())
+        let endpointUrl = `${this.loaidichvuUrl}/ListDV/${id}`;
+        return this.http.get(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.listDV());
             })
     }
 
     listDVCB<T>(): Observable<T> {
-        let enpointUrl = `${this.loaidichvuUrl}/ListDVCB`;
-        return this.http.get(enpointUrl, this.getRequestHeaders())
+        let endpointUrl = `${this.loaidichvuUrl}/ListDVCB`;
+        return this.http.get(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.listDVCB());
+            })
+    }
+
+    test<T>(): Observable<T> {
+        let endpointUrl = `${this.loaidichvuUrl}/Test`;
+        return this.http.get(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.test());
+            })
+    }
+
+    expand<T>(id?: number): Observable<T> {
+        let endpointUrl = `${this.loaidichvuUrl}/Expand/${id}`;
+        return this.http.get(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.expand(id));
             })
     }
 }

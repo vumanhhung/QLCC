@@ -169,11 +169,18 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
 
         this.loaidichvuService.deleteLoaiDichVu(row.loaiDichVuId)
             .subscribe(results => {
-                this.alertService.stopLoadingMessage();
-                this.loadingIndicator = false;
-                this.rowsCache = this.rowsCache.filter(item => item !== row)
-                this.rows = this.rows.filter(item => item !== row)
-                this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
+                if (results == "Exist") {
+                    this.alertService.stopLoadingMessage();
+                    this.loadingIndicator = false;
+                    this.showErrorAlert("Xóa lỗi", "Không thể xóa danh mục " + row.tenLoaiDichVu + " do có danh mục con");
+                } else {
+                    this.alertService.stopLoadingMessage();
+                    this.loadingIndicator = false;
+                    this.rowsCache = this.rowsCache.filter(item => item !== row)
+                    this.rows = this.rows.filter(item => item !== row)
+                    this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
+                    this.loadData(0);
+                }
             },
                 error => {
                     this.alertService.stopLoadingMessage();
@@ -181,6 +188,10 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
                     this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
                         MessageSeverity.error, error);
                 });
+    }
+
+    private showErrorAlert(caption: string, message: string) {
+        this.alertService.showMessage(caption, message, MessageSeverity.error);
     }
 
     editLoaiDichVu(row: LoaiDichVu) {

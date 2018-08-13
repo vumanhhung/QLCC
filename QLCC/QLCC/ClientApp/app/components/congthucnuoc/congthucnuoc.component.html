@@ -7,7 +7,7 @@
         <div class="col-xs-12">
             <div style="margin-bottom:1%" class="col-sm-6">
                 <div class="row">
-                    <search-box (searchChange)="onSearchChanged($event)" placeholder="Tìm kiếm">></search-box>
+                    <search-box (searchChange)="onSearchChanged($event)" placeholder="Tìm kiếm theo tên, diễn giải">></search-box>
                 </div>
             </div>
             <div style="margin-bottom:1%;" align="right" class="col-sm-6">
@@ -23,6 +23,14 @@
                 <div class="box-body">
                     <div>
                         <div class="dataTables_length">
+                            <label>
+                                Trạng thái
+                                <select class="form-control input-sm" #drStatus (change)="SelectedStatusValue(drStatus.value)" [(ngModel)]="selectedGropup">
+                                    <option value="0">---Tất cả---</option>
+                                    <option value="1">Đang hoạt động</option>
+                                    <option value="2">Dừng hoạt động</option>
+                                </select>
+                            </label>
                             <label>
                                 Hiển thị
                                 <select class="form-control input-sm" #drSelected (change)="SelectedValue(drSelected.value)">
@@ -46,8 +54,8 @@
                                        [columnMode]="'force'">
                         </ngx-datatable>
                         <ng-template #statusTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <span *ngIf="row.status == true" class="status">Đang hoạt động</span>
-                            <span *ngIf="row.status == false" class="status">Dừng hoạt động</span>
+                            <span *ngIf="row.status == true" class="status" style="color: green">Đang hoạt động</span>
+                            <span *ngIf="row.status == false" class="status" style="color: red">Dừng hoạt động</span>
                         </ng-template>
                         <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
                             <a class="btn btn-func btn-primary" href="javascript:;" (click)="editCongThucNuoc(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>

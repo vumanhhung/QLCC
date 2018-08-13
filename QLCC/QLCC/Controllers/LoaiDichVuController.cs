@@ -74,10 +74,8 @@ namespace QLCC.Controllers
             var userId = Utilities.GetUserId(this.User);
             loaidichvu.NgaySua = DateTime.Now;
             loaidichvu.NguoiSua = user;
-            var checkten = await _context.LoaiDichVus.SingleOrDefaultAsync(r => r.TenLoaiDichVu == loaidichvu.TenLoaiDichVu && r.LoaiDichVuId != id);
-            var checkvitri = await _context.LoaiDichVus.SingleOrDefaultAsync(v => v.ViTri == loaidichvu.ViTri && v.LoaiDichVuId != id && v.MaLoaiDichVuCha == loaidichvu.MaLoaiDichVuCha);
-
-            if (checkten == null && checkvitri == null)
+            var checkten = await _context.LoaiDichVus.SingleOrDefaultAsync(r => r.MaLoaiDichVuCha == loaidichvu.MaLoaiDichVuCha && r.TenLoaiDichVu == loaidichvu.TenLoaiDichVu && r.LoaiDichVuId != id);
+            if (checkten == null)
             {
                 _context.Entry(loaidichvu).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
@@ -90,10 +88,6 @@ namespace QLCC.Controllers
                 {
                     ldv = "Exist";
 
-                }
-                if (checkvitri != null)
-                {
-                    ldv = "0";
                 }
                 return Ok(ldv);
             }
@@ -112,9 +106,8 @@ namespace QLCC.Controllers
             var userId = Utilities.GetUserId(this.User);
             loaidichvu.NgayNhap = DateTime.Now;
             loaidichvu.NguoiNhap = user;
-            var checkten = await _context.LoaiDichVus.SingleOrDefaultAsync(r => r.TenLoaiDichVu == loaidichvu.TenLoaiDichVu);
-            var checkvitri = await _context.LoaiDichVus.SingleOrDefaultAsync(v => v.ViTri == loaidichvu.ViTri && v.MaLoaiDichVuCha == loaidichvu.MaLoaiDichVuCha);
-            if (checkten == null && checkvitri == null)
+            var checkten = await _context.LoaiDichVus.SingleOrDefaultAsync(r => r.MaLoaiDichVuCha == loaidichvu.MaLoaiDichVuCha && r.TenLoaiDichVu == loaidichvu.TenLoaiDichVu);
+            if (checkten == null)
             {
                 _context.LoaiDichVus.Add(loaidichvu);
                 await _context.SaveChangesAsync();
@@ -128,10 +121,6 @@ namespace QLCC.Controllers
                     ldv.TenLoaiDichVu = "Exist";
 
                 }
-                if (checkvitri != null)
-                {
-                    ldv.ViTri = 0;
-                }
                 return Ok(ldv);
             }
         }
@@ -144,17 +133,25 @@ namespace QLCC.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            var loaidichvu = await _context.LoaiDichVus.SingleOrDefaultAsync(m => m.LoaiDichVuId == id);
-            if (loaidichvu == null)
+            var checkMacha = await _context.LoaiDichVus.SingleOrDefaultAsync(m => m.MaLoaiDichVuCha == id);
+            if(checkMacha == null)
             {
-                return NotFound();
+                var loaidichvu = await _context.LoaiDichVus.SingleOrDefaultAsync(m => m.LoaiDichVuId == id);
+                if (loaidichvu == null)
+                {
+                    return NotFound();
+                }
+
+                _context.LoaiDichVus.Remove(loaidichvu);
+                await _context.SaveChangesAsync();
+
+                return Ok(loaidichvu);
+            }else
+            {
+                var check = "Exist";
+                return Ok(check);
             }
-
-            _context.LoaiDichVus.Remove(loaidichvu);
-            await _context.SaveChangesAsync();
-
-            return Ok(loaidichvu);
+            
         }
 
         private bool LoaiDichVuExists(int id)

@@ -78,4 +78,12 @@ export class CongThucNuocEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.checkstatus());
             });
     }
+
+    filterStatus<T>(status?: boolean): Observable<T> {
+        let endpointUrl = `${this.congthucnuocUrl}/FilterByStatus/${status}`;
+        return this.http.get(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.filterStatus(status));
+            });
+    }
 }

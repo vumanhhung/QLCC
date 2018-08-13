@@ -123,9 +123,8 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
             { prop: 'soChungTu', name: gT('Số chứng từ') },
             { prop: 'matBangs.tenMatBang', name: gT('Tên mặt bằng') },
             { prop: 'khachHangs.ten', name: gT('Tên khách hàng') },
+            { name: gT('Ngày chứng từ'), cellTemplate: this.startTemplate },
             { name: gT('Tổng thanh toán'), cellTemplate: this.priceTemplate },
-            { name: gT('Ngày bắt đầu'), cellTemplate: this.startTemplate },
-            { name: gT('Ngày hết hạn'), cellTemplate: this.endTemplate },
             { prop: 'lapLai', name: gT('Lặp lại'), cellTemplate: this.nameTemplate },
             { prop: 'trangThai', name: gT('Trạng thái'), cellTemplate: this.descriptionTemplate },
             { name: gT('matbang.qlmb_chucnang'), width: 100, cellTemplate: this.actionsTemplate, canAutoResize: false, sortable: false, draggable: false }
@@ -233,13 +232,10 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     loadData(tanglauId: number, loaidichvuId: number, status: number, date: Date) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        if (tanglauId > 0 || loaidichvuId > 0 || status > 0) {
-            this.dichvucobanService.getItemByFilter(tanglauId, loaidichvuId, status, date.getMonth(), date.getFullYear()).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
-        } 
         if (tanglauId == 0 && loaidichvuId == 0 && status == 0) {
             this.dichvucobanService.filterByDate(date.getMonth(), date.getFullYear()).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
-        }
-
+        } else
+            this.dichvucobanService.getItemByFilter(tanglauId, loaidichvuId, status, date.getMonth(), date.getFullYear()).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
     }
 
     onDataLoadSuccessful(obj: DichVuCoBan[]) {
@@ -265,8 +261,8 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     newDichVuCoBan() {
         this.editingRowName = null;
         this.sourcedichvucoban = null;
+        this.DichVuCoBanEditor.tanglau = this.tanglau;
         this.DichVuCoBanEditor.khachHang = this.khachHang;
-        this.DichVuCoBanEditor.matBang = this.matBang;
         this.DichVuCoBanEditor.loaiDichVu = this.loaiDichVu;
         this.DichVuCoBanEditor.loaiTien = this.loaiTien;
         this.DichVuCoBanEditor.donViTinh = this.donViTinh;
@@ -280,7 +276,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     }
 
     onSearchChanged(value: string) {
-        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.dichVuCoBanId, r.soChungTu, r.ngayChungTu, r.matBangId, r.khachHangId, r.loaiDichVuId, r.donViTinhId, r.donGia, r.soLuong, r.thanhTien, r.ngayThanhToan, r.kyThanhToan, r.tienThanhToan, r.tienTTQuyDoi, r.loaiTienId, r.tyGia, r.tuNgay, r.denNgay, r.dienGiai, r.lapLai, r.trangThai, r.ngayNhap, r.nguoiNhap, r.ngaySua, r.nguoiSua));
+        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.soChungTu, r.matBangs.tenMatBang, r.khachHangs.ten, r.thanhTien));
     }
 
     deleteDichVuCoBan(row: DichVuCoBan) {

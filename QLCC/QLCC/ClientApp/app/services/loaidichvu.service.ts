@@ -63,4 +63,12 @@ export class LoaiDichVuService {
     listDVCB(id?: number) {
         return this.loaidichvuEndpoint.listDVCB<LoaiDichVu[]>();
     }
+
+    test() {
+        return this.loaidichvuEndpoint.test<LoaiDichVu[]>();
+    }
+
+    expand(id?: number) {
+        return this.loaidichvuEndpoint.expand<LoaiDichVu[]>(id);
+    }
 }

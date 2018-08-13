@@ -70,4 +70,12 @@ export class MatBangEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.deleteMatBang(id));
             });
     }
+
+    getMatBangByTangLau<T>(id?: number): Observable<T> {
+        let endpointUrl = `${this.matbangUrl}/GetMatBangByTangLau/${id}`;
+        return this.http.get(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getMatBangByTangLau(id));
+            })
+    }
 }

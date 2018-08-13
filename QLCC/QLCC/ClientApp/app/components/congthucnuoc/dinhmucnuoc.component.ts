@@ -18,6 +18,7 @@ import { last } from 'rxjs/operators';
 export class DinhMucNuocComponent implements OnInit {
     public isNew = false;
     private isSaving = false;
+    public isDisabled = false;
     private checkbox: boolean = false;
     columns: any[] = [];
     private showValidationErrors: boolean = false;
@@ -36,6 +37,7 @@ export class DinhMucNuocComponent implements OnInit {
     public changesCancelledCallback: () => void;
     gia: string = "0";
     list: DinhMucNuoc[] = [];
+    max: number;
 
     @Input()
     isViewOnly: boolean;
@@ -156,6 +158,7 @@ export class DinhMucNuocComponent implements OnInit {
         this.showValidationErrors = true;
         this.gvService.getMax(this.rowCongthucnuoc.congThucNuocId).subscribe(result => 
         {
+            this.max = result;
             if (result == null) {
                 this.DinhMucNuocEdit.soDau = 0;
             } else {

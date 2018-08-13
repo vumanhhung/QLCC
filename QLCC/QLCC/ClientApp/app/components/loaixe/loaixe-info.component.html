@@ -1,6 +1,6 @@
 ﻿<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+        <div class="modal-content" style="width: 550px;margin-top: 15%; margin-left: 22%;">
             <div *ngIf="!isViewDetails" class="EditForm">
                 <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="LoaiXeInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
                       (!tenLoaiXe.valid && showErrorAlert('Tên loại xe không được để trống', 'Vui lòng nhập tên loại xe!'));
@@ -16,7 +16,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="form-group has-feedback">
-                                <label class="control-label col-md-2" for="tenLoaiXe-{{uniqueId}}">Tên Loại Xe</label>
+                                <label class="control-label col-md-4" for="tenLoaiXe-{{uniqueId}}">Tên Loại Xe</label>
                                 <div class="col-md-5" [ngClass]="{'has-success': f.submitted && tenLoaiXe.valid, 'has-error' : f.submitted && !tenLoaiXe.valid}">
                                     <input autofocus type="text" class="form-control" name="tenLoaiXe" [(ngModel)]="LoaiXeEdit.tenLoaiXe" required #tenLoaiXe="ngModel" />
                                     <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tenLoaiXe.valid, 'glyphicon-remove' : !tenLoaiXe.valid}"></span>
@@ -26,7 +26,7 @@
                                 </div>
                             </div>
                             <div class="form-group has-feedback">
-                                <label class="control-label col-md-2" for="kyHieu-{{uniqueId}}">Ký Hiệu</label>
+                                <label class="control-label col-md-4" for="kyHieu-{{uniqueId}}">Ký Hiệu</label>
                                 <div class="col-md-5" [ngClass]="{'has-success': f.submitted && kyHieu.valid, 'has-error' : f.submitted && !kyHieu.valid}">
                                     <input autofocus type="text" class="form-control" name="kyHieu" [(ngModel)]="LoaiXeEdit.kyHieu" required #kyHieu="ngModel" />
                                     <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': kyHieu.valid, 'glyphicon-remove' : !kyHieu.valid}"></span>
@@ -40,7 +40,7 @@
                                 <hr class="edit-last-separator-hr" />
                             </div>
                             <div class="form-group actionBtn-form-group">
-                                <div class="col-sm-7">
+                                <div class="col-sm-8">
                                     <div class="pull-right">
                                         <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
                                         <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
@@ -56,53 +56,58 @@
                     </div>
                 </form>
             </div>
-        </div>
-    </div>
-
-
-    <div *ngIf="isViewDetails" class="ViewForm">
-        <div class="modal-header">
-            <p class="modal-title pull-left"><i class="fa fa-eye"></i> Chi tiết loại xe <span>{{tenloaixe}}</span> </p>
-            <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div>
-                <form #f="ngForm">
-                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
-                        <table class="table table-bordered">
-                            <tbody>
-                                <tr>
-                                    <td class="boldText">Tên Loại Xe:</td>
-                                    <td>{{LoaiXeEdit.tenLoaiXe}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="boldText">Ký Hiệu:</td>
-                                    <td>{{LoaiXeEdit.kyHieu}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="boldText">Ngày Nhập:</td>
-                                    <td>{{LoaiXeEdit.ngayNhap | date:'dd/MM/yyyy'}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="boldText">Ngày Sửa:</td>
-                                    <td>{{LoaiXeEdit.ngaySua | date: 'dd/MM/yyyy'}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
+            <div *ngIf="isViewDetails" class="ViewForm">
+                <div class="modal-header">
+                    <p class="modal-title pull-left"><i class="fa fa-eye"></i> Chi tiết loại xe <span>{{tenloaixe}}</span> </p>
+                    <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <form #f="ngForm">
+                            <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td class="boldText">Tên Loại Xe:</td>
+                                            <td>{{LoaiXeEdit.tenLoaiXe}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Ký Hiệu:</td>
+                                            <td>{{LoaiXeEdit.kyHieu}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Ngày Nhập:</td>
+                                            <td>{{LoaiXeEdit.ngayNhap | date:'dd/MM/yyyy'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Người Nhập:</td>
+                                            <td>{{LoaiXeEdit.nguoiNhap}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Ngày Nhập:</td>
+                                            <td>{{LoaiXeEdit.ngayNhap | date:'dd/MM/yyyy'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Người Sửa:</td>
+                                            <td>{{LoaiXeEdit.nguoiSua}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="clearfix"></div>
+                        </form>
                     </div>
-                    <div class="clearfix"></div>
-                </form>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <div class="actionBtn-form-group">
-                <div class="col-sm-7">
-                    <div class="pull-right">
-                        <button type="button" (click)="moveToEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
-                        <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                </div>
+                <div class="modal-footer">
+                    <div class="actionBtn-form-group">
+                        <div class="col-sm-8">
+                            <div class="pull-right">
+                                <button type="button" (click)="moveToEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                                <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

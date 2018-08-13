@@ -16,6 +16,9 @@ import { BangGiaDichVuCoBan } from '../../models/banggiadichvucoban.model';
 import { BangGiaDichVuCoBanService } from '../../services/banggiadichvucoban.service';
 import { KhachHangService } from '../../services/khachhang.service';
 import { MatBangService } from '../../services/matbang.service';
+import { TangLau } from '../../models/tanglau.model';
+import { NguoiDungToaNha } from '../../models/nguoidungtoanha.model';
+import { NguoiDungToaNhaService } from '../../services/nguoidungtoanha.service';
 
 @Component({
     selector: "dichvucoban-info",
@@ -44,6 +47,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
     public tienthanhtoan: string = "0";
     public tienquydoi: string = "0";
 
+    ChktangLau: boolean;
     ChkmatBang: boolean;
     ChkkhachHang: boolean;
     ChkloaiDichVu: boolean;
@@ -55,7 +59,9 @@ export class DichVuCoBanInfoComponent implements OnInit {
     loaiDichVu: LoaiDichVu[] = [];
     loaiTien: LoaiTien[] = [];
     donViTinh: DonViTinh[] = [];
+    tanglau: TangLau[] = [];
     banggiadichvucoban: BangGiaDichVuCoBan[] = [];
+    objNDTN: NguoiDungToaNha = new NguoiDungToaNha();
 
     public formResetToggle = true;
     private isEditMode = false;
@@ -76,7 +82,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
     @ViewChild('editorModal')
     editorModal: ModalDirective;
 
-    constructor(private alertService: AlertService, private gvService: DichVuCoBanService, private banggiadichvucobanservice: BangGiaDichVuCoBanService, private loaitienservice: LoaiTienService, private khachhangservice: KhachHangService, private matbangservice: MatBangService, private datePipe: DatePipe) {
+    constructor(private alertService: AlertService, private gvService: DichVuCoBanService, private nguoidungtoanhaService: NguoiDungToaNhaService, private banggiadichvucobanservice: BangGiaDichVuCoBanService, private loaitienservice: LoaiTienService, private khachhangservice: KhachHangService, private matbangservice: MatBangService, private datePipe: DatePipe) {
     }
 
     ngOnInit() {
@@ -128,29 +134,21 @@ export class DichVuCoBanInfoComponent implements OnInit {
     }
 
     private save() {
-        if (this.ChkdonViTinh == false || this.ChkkhachHang == false || this.ChkloaiDichVu == false || this.ChkloaiTien == false || this.ChkmatBang == false) {
-            return false;
-        } else if (this.DichVuCoBanEdit.soLuong == 0) {
-            this.showErrorAlert("Lỗi nhập liệu", "Vui lòng nhập số lượng > 0!");
-            this.alertService.stopLoadingMessage();
-            this.isSaving = false;
-        } else if (this.dongia == "0") {
-            this.showErrorAlert("Lỗi nhập liệu", "Vui lòng nhập đơn giá > 0!");
-            this.alertService.stopLoadingMessage();
+        if (this.ChkloaiDichVu == false || this.ChkmatBang == false) {
             this.isSaving = false;
         } else {
             this.isSaving = true;
             this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
-            this.DichVuCoBanEdit.donGia = Number(this.dongia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
-            this.DichVuCoBanEdit.thanhTien = Number(this.thanhtien.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
-            this.DichVuCoBanEdit.tienThanhToan = Number(this.tienthanhtoan.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
-            this.DichVuCoBanEdit.tyGia = Number(this.tygia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
-            this.DichVuCoBanEdit.tienTTQuyDoi = Number(this.tienquydoi.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
-            this.DichVuCoBanEdit.denNgay = this.valueDenNgay;
-            this.DichVuCoBanEdit.tuNgay = this.valueTuNgay;
-            this.DichVuCoBanEdit.ngayChungTu = this.valueNgayChungTu;
-            this.DichVuCoBanEdit.ngayThanhToan = this.valueNgayThanhToan;
             if (this.isNew) {
+                this.DichVuCoBanEdit.donGia = Number(this.dongia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
+                this.DichVuCoBanEdit.thanhTien = Number(this.thanhtien.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
+                this.DichVuCoBanEdit.tienThanhToan = Number(this.tienthanhtoan.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
+                this.DichVuCoBanEdit.tyGia = Number(this.tygia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
+                this.DichVuCoBanEdit.tienTTQuyDoi = Number(this.tienquydoi.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
+                this.DichVuCoBanEdit.denNgay = this.valueDenNgay;
+                this.DichVuCoBanEdit.tuNgay = this.valueTuNgay;
+                this.DichVuCoBanEdit.ngayChungTu = this.valueNgayChungTu;
+                this.DichVuCoBanEdit.ngayThanhToan = this.valueNgayThanhToan;
                 this.gvService.addnewDichVuCoBan(this.DichVuCoBanEdit).subscribe(results => {
                     if (results.soChungTu == "Exist") {
                         this.showErrorAlert("Lỗi nhập liệu", "Số chứng từ " + this.DichVuCoBanEdit.soChungTu + " đã tồn tại trên hệ thống, vui lòng chọn tên khác");
@@ -177,10 +175,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
         this.showValidationErrors = true;
         this.editingRowName = null;
         this.ChkmatBang = false;
-        this.ChkkhachHang = false;
         this.ChkloaiDichVu = false;
-        this.ChkdonViTinh = false;
-        this.ChkloaiTien = false;
         this.isEdit = false;
         this.DichVuCoBanEdit = new DichVuCoBan();
         this.DichVuCoBanEdit.matBangId = 0;
@@ -305,12 +300,10 @@ export class DichVuCoBanInfoComponent implements OnInit {
         }
     }
 
-    khachHangChk(id: number) {
-        if (id > 0) {
-            this.ChkkhachHang = true;
-        } else {
-            this.ChkkhachHang = false;
-        }
+    tangLauChk(id: number) {
+        this.matbangservice.getMatBangByTangLau(id).subscribe(results => {
+            this.matBang = results;
+        }, error => { });
     }
 
     loaiDichVuChk(id: number) {
@@ -329,28 +322,46 @@ export class DichVuCoBanInfoComponent implements OnInit {
                     change = Number(pS) * Number(this.tygia);
                     this.tienquydoi = this.formatPrice(change.toString());
                 })
-            }, error => { })
+            }, error => {
+                this.tygia = "0";
+                this.DichVuCoBanEdit.donViTinhId = 0;
+                this.DichVuCoBanEdit.loaiTienId = 0;
+                this.dongia = "0";
+                this.thanhtien = "0";
+                this.tienthanhtoan = "0";
+                this.tienquydoi = "0";
+            });
             this.ChkloaiDichVu = true;
         } else {
             this.ChkloaiDichVu = false;
+            this.tygia = "0";
+            this.DichVuCoBanEdit.donViTinhId = 0;
+            this.DichVuCoBanEdit.loaiTienId = 0;
+            this.dongia = "0";
+            this.thanhtien = "0";
+            this.tienthanhtoan = "0";
+            this.tienquydoi = "0";
         }
     }
 
     loaiTienChk(id: number) {
-        if (id > 0) {            
-            this.ChkloaiTien = true;
-        } else {
-            this.ChkloaiTien = false;
-        }
+        this.ChkloaiTien = true;
+        var change = 0;
+        this.loaitienservice.getLoaiTienByID(id).subscribe(results => {
+            this.tygia = this.formatPrice(results.tyGia.toString());
+            var pS = this.tienthanhtoan.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+            change = Number(pS) * Number(this.tygia);
+            this.tienquydoi = this.formatPrice(change.toString());
+        }, error => {
+            this.tygia = "0";
+            this.tienquydoi = "0";
+        })
     }
 
     donViTinhChk(id: number) {
-        if (id > 0) {
-            this.ChkdonViTinh = true;
-        } else {
-            this.ChkdonViTinh = false;
-        }
+        this.ChkdonViTinh = true;
     }
+
     formatPrice(price: string): string {
         if (price) {
             var pN = Number(price);
@@ -367,7 +378,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
     }
 
     closeModal() {
-        this.editorModal.hide(); 
+        this.editorModal.hide();
     }
 
     printOnly() {

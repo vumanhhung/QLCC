@@ -55,4 +55,8 @@ export class CongThucNuocService {
     checkStatus() {
         return this.congthucnuocEndpoint.checkstatus();
     }
+
+    filter(status?: boolean) {
+        return this.congthucnuocEndpoint.filterStatus<CongThucNuoc[]>(status);
+    }
 }

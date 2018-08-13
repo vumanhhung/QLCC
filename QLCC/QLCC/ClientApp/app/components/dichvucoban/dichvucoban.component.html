@@ -7,14 +7,14 @@
         <div class="col-xs-12">
             <div style="margin-bottom:1%" class="col-sm-6">
                 <div class="row">
-                    <search-box (searchChange)="onSearchChanged($event)" placeholder="Tìm kiếm">></search-box>
+                    <search-box (searchChange)="onSearchChanged($event)" placeholder="Tìm kiếm theo số chứng từ, tên mặt bằng, tên khách hàng, ...">></search-box>
                 </div>
             </div>
             <div style="margin-bottom:1%;" align="right" class="col-sm-6">
                 <div class="row">
                     <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newDichVuCoBan()"><i class="fa fa-plus"></i></a>
-                    <a class="btn btn-primary" href="javascript://" title="In tất cả các bản ghi" (click)="printDiv(selected)"><i class="fa fa-print"></i></a>
-                    <a class="btn btn-primary" href="javascript://" tooltip="Import dịch vụ cơ bản" (click)="importDichVuCoBan()"><i class="fa fa-download"></i></a>
+                    <a class="btn btn-primary" href="javascript://" title="In tất cả các bản ghi" (click)="printDiv(selected)" disabled><i class="fa fa-print"></i></a>
+                    <a class="btn btn-primary" href="javascript://" tooltip="Import dịch vụ cơ bản" (click)="importDichVuCoBan()" disabled><i class="fa fa-download"></i></a>
                     <a class="btn btn-primary" href="javascript://" tooltip="Export dịch vụ cơ bản" (click)="excelexport.save()">
                         <i class="fa fa-upload"></i>
                         <kendo-excelexport [data]="rows" fileName="DichVuCoBanExPort-{{randomString}}.xlsx" #excelexport [headerPaddingCellOptions]="headerPaddingCells">
@@ -95,10 +95,10 @@
                                     </select>
                                 </label>
                                 <label style="margin-right: 1%;">
-                                    Ngày chứng từ
-                                    <kendo-datepicker style="margin-top:-4px; height: 30px; line-height: 30px;" 
-                                                      [format]="'MM/yyyy'" 
-                                                      [(value)]="valueDate" 
+                                    Lọc theo tháng
+                                    <kendo-datepicker style="margin-top:-4px; height: 30px; line-height: 30px;"
+                                                      [format]="'MM/yyyy'"
+                                                      [(value)]="valueDate"
                                                       [bottomView]="'year'"
                                                       [topView]="'decade'"
                                                       [navigation]="false"
@@ -134,10 +134,7 @@
                             <p>{{formatPrice(row.thanhTien)}}</p>
                         </ng-template>
                         <ng-template #startTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <p>{{row.tuNgay | date: 'dd/MM/yyyy'}}</p>
-                        </ng-template>
-                        <ng-template #endTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <p>{{row.denNgay | date: 'dd/MM/yyyy'}}</p>
+                            <p>{{row.ngayChungTu | date: 'dd/MM/yyyy'}}</p>
                         </ng-template>
                         <ng-template #nameTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
                             <p *ngIf="row.lapLai == true" class="status">Có</p>

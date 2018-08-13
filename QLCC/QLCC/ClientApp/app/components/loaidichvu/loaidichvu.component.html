@@ -7,7 +7,7 @@
         <div class="col-xs-12">
             <div style="margin-bottom:1%" class="col-sm-6">
                 <div class="row">
-                    <search-box (searchChange)="onSearchChanged($event)" placeholder="Tìm kiếm">></search-box>
+                    <search-box (searchChange)="onSearchChanged($event)" placeholder="Tìm kiếm theo tên, mô tả, vị trí">></search-box>
                 </div>
             </div>
             <div style="margin-bottom:1%;" align="right" class="col-sm-6">
@@ -31,9 +31,6 @@
                                         <option value="0">---Tất cả---</option>
                                         <option value="1">Đang hoạt động</option>
                                         <option value="2">Dừng hoạt động</option>
-                                        <!--<option *ngFor="let o of listDichVu" [value]="o.trangThai">
-                                            {{o.tenNhomKhachHang}}
-                                        </option>-->
                                     </select>
                                 </label>
                             </div>

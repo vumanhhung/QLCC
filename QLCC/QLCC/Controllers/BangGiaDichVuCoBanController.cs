@@ -147,23 +147,5 @@ namespace QLCC.Controllers
         {                        
             return _context.BangGiaDichVuCoBans.Any(e => e.BangGiaDichVuCoBanId == id);
         }
-
-        [HttpGet("GetLoaiDichVu/{id}")]
-        public async Task<IActionResult> GetBangGiaDichVuCoBanByLoaiDichVuId([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var banggiadichvucoban = await _context.BangGiaDichVuCoBans.SingleOrDefaultAsync(m => m.LoaiDichVuId == id);
-
-            if (banggiadichvucoban == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(banggiadichvucoban);
-        }
     }    
 }

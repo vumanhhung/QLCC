@@ -62,6 +62,9 @@ namespace DAL
         public DbSet<CongThucNuoc> CongThucNuocs { get; set; }
         public DbSet<DinhMucNuoc> DinhMucNuocs { get; set; }
         public DbSet<DichVuCoBan> DichVuCoBans { get; set; }
+        public DbSet<TheXe> TheXes { get; set; }
+        public DbSet<PhieuThu> PhieuThus { get; set; }
+        public DbSet<PhieuThuChiTiet> PhieuThuChiTiets { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions options) : base(options)

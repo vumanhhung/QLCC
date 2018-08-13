@@ -224,5 +224,11 @@ namespace QLCC.Controllers
         {                        
             return _context.MatBangs.Any(e => e.MatBangId == id);
         }
+
+        [HttpGet("GetMatBangByTangLau/{id}")]
+        public IEnumerable<MatBang> getMatBangByTangLau([FromRoute] int id)
+        {
+            return _context.MatBangs.Where(r => r.TangLauId == id).ToList();
+        }
     }    
 }

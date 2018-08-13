@@ -49,5 +49,9 @@ export class MatBangService {
     deleteMatBang(id: number) {
         return this.matbangEndpoint.deleteMatBang(id);
     }
+
+    getMatBangByTangLau(id?: number) {
+        return this.matbangEndpoint.getMatBangByTangLau<MatBang[]>(id);
+    }
     
 }

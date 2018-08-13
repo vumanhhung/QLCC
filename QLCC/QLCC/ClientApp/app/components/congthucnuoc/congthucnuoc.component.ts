@@ -29,6 +29,7 @@ export class CongThucNuocComponent implements OnInit, AfterViewInit {
     dinhmucnuocEdit: DinhMucNuoc;
     sourcedinhmucnuoc: DinhMucNuoc;
     editingRowName: { name: string };
+    public selectedGropup: number = 0;
 
     @ViewChild('f')
     private form;
@@ -68,7 +69,7 @@ export class CongThucNuocComponent implements OnInit, AfterViewInit {
             { name: '', width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
 
-        this.loadData();
+        this.loadData(0);
     }
     
     ngAfterViewInit() {
@@ -93,7 +94,7 @@ export class CongThucNuocComponent implements OnInit, AfterViewInit {
     }
     
     addNewToList() {
-        this.loadData();
+        this.loadData(0);
         if (this.sourcecongthucnuoc) {
             Object.assign(this.sourcecongthucnuoc, this.congthucnuocEdit);
             this.congthucnuocEdit = null;
@@ -116,11 +117,19 @@ export class CongThucNuocComponent implements OnInit, AfterViewInit {
             this.rows.splice(0, 0, objCongThucNuoc);
         }
     }
-    
-    loadData() {        
+
+    loadData(value: number) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.congthucnuocService.getAllCongThucNuoc().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        if (value > 0) {
+            if (value == 1) {
+                this.congthucnuocService.filter(true).subscribe(results => this.onDataLoadSuccessful(results), errors => this.onDataLoadFailed(errors));
+            } else if (value == 2) {
+                this.congthucnuocService.filter(false).subscribe(results => this.onDataLoadSuccessful(results), errors => this.onDataLoadFailed(errors));
+            }
+        } else if (value == 0){
+            this.congthucnuocService.getAllCongThucNuoc().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        }
     }
     
     onDataLoadSuccessful(obj: CongThucNuoc[]) {
@@ -160,7 +169,7 @@ export class CongThucNuocComponent implements OnInit, AfterViewInit {
     }
     
     onSearchChanged(value: string) {
-        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.tenCongThucNuoc, r.dienGiai, r.status));
+        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.tenCongThucNuoc, r.dienGiai));
     }
 
     deleteCongThucNuoc(row: CongThucNuoc) {
@@ -206,4 +215,8 @@ export class CongThucNuocComponent implements OnInit, AfterViewInit {
         this.DinhMucNuocEditor.isNew = true;
         this.DinhMucNuocEditor.dinhmucModal.show();
     }  
+
+    SelectedStatusValue(status: number) {
+        this.loadData(status);
+    }
 }

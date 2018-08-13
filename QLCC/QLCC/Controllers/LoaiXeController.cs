@@ -1,4 +1,5 @@
 ﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -144,7 +145,6 @@ namespace QLCC.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             var loaixe = await _context.LoaiXes.SingleOrDefaultAsync(m => m.LoaiXeId == id);
             if (loaixe == null)
             {

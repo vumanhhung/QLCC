@@ -103,12 +103,7 @@ export class LoaiDichVuInfoComponent implements OnInit {
                     this.showErrorAlert("Lỗi nhập liệu", "Loại dịch vụ: " + this.LoaiDichVuEdit.tenLoaiDichVu + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");
                     this.alertService.stopLoadingMessage();
                     this.isSaving = false;
-                } else if (results.viTri == 0) {
-                    this.showErrorAlert("Lỗi nhập liệu", "Vị trí: " + this.LoaiDichVuEdit.viTri + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");
-                    this.alertService.stopLoadingMessage();
-                    this.isSaving = false;
-                }
-                else this.saveSuccessHelper();
+                }else this.saveSuccessHelper();
             }, error => this.saveFailedHelper(error));
         }
         else {
@@ -117,12 +112,7 @@ export class LoaiDichVuInfoComponent implements OnInit {
                     this.showErrorAlert("Lỗi nhập liệu", "Loại dịch vụ: " + this.LoaiDichVuEdit.tenLoaiDichVu + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");
                     this.alertService.stopLoadingMessage();
                     this.isSaving = false;
-                } else if (response == "0") {
-                    this.showErrorAlert("Lỗi nhập liệu", "Vị trí: " + this.LoaiDichVuEdit.viTri + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");
-                    this.alertService.stopLoadingMessage();
-                    this.isSaving = false;
-                }
-                else this.saveSuccessHelper();
+                } else this.saveSuccessHelper();
             }, error => this.saveFailedHelper(error));
         }
     }

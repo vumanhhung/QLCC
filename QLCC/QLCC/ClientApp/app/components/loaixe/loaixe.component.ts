@@ -7,6 +7,7 @@ import { Utilities } from "../../services/utilities";
 import { LoaiXeService } from "../../services/loaixe.service";
 import { LoaiXe } from "../../models/loaixe.model";
 import { LoaiXeInfoComponent } from "./loaixe-info.component";
+import { TheXeService } from '../../services/thexe.service';
 
 @Component({
     selector: "loaixe",
@@ -45,7 +46,7 @@ export class LoaiXeComponent implements OnInit, AfterViewInit {
 
     @ViewChild('loaixeEditor')
     LoaiXeEditor: LoaiXeInfoComponent;
-    constructor(private alertService: AlertService, private translationService: AppTranslationService, private loaixeService: LoaiXeService) {
+    constructor(private alertService: AlertService, private translationService: AppTranslationService, private loaixeService: LoaiXeService, private thexeservice: TheXeService) {
     }
 
     ngOnInit() {
@@ -55,10 +56,6 @@ export class LoaiXeComponent implements OnInit, AfterViewInit {
             { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
             { prop: 'tenLoaiXe', name: gT('Tên Loại Xe') },
             { prop: 'kyHieu', name: gT('Ký Hiệu') },
-            //{ prop: 'nguoiNhap', name: gT('Người Nhập') },
-            { name: gT('Ngày Nhập'), cellTemplate: this.datetimeTemplate },
-            //{ prop: 'nguoiSua', name: gT('Người Sửa') },
-            //{ name: gT('Ngày Sửa'), cellTemplate: this.datetimeTemplate },
             { name: gT('matbang.qlmb_chucnang'), width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
 
@@ -79,6 +76,7 @@ export class LoaiXeComponent implements OnInit, AfterViewInit {
     }
 
     addNewToList() {
+        this.loadData();
         if (this.sourceloaixe) {
             Object.assign(this.sourceloaixe, this.loaixeEdit);
             this.loaixeEdit = null;
@@ -146,7 +144,11 @@ export class LoaiXeComponent implements OnInit, AfterViewInit {
     }
 
     deleteLoaiXe(row: LoaiXe) {
-        this.alertService.showDialog('Bạn có chắc chắn muốn xóa bản ghi này?', DialogType.confirm, () => this.deleteHelper(row));
+        console.log(row.loaiXeId);
+        this.thexeservice.checkExist(row.loaiXeId).subscribe(results => {
+            console.log(results);
+        })
+        //this.alertService.showDialog('Bạn có chắc chắn muốn xóa bản ghi này?', DialogType.confirm, () => this.deleteHelper(row));
     }
 
     deleteHelper(row: LoaiXe) {
@@ -160,6 +162,7 @@ export class LoaiXeComponent implements OnInit, AfterViewInit {
                 this.rowsCache = this.rowsCache.filter(item => item !== row)
                 this.rows = this.rows.filter(item => item !== row)
                 this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
+                this.loadData();
             },
                 error => {
                     this.alertService.stopLoadingMessage();
@@ -187,5 +190,9 @@ export class LoaiXeComponent implements OnInit, AfterViewInit {
 
     viewname() {
         console.log(this.loaixeService.getName());
+    }
+
+    private showErrorAlert(caption: string, message: string) {
+        this.alertService.showMessage(caption, message, MessageSeverity.error);
     }
 }

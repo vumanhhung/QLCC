@@ -129,17 +129,25 @@ namespace QLCC.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            var dinhmucnuoc = await _context.DinhMucNuocs.SingleOrDefaultAsync(m => m.CongThucNuocId == id);
-            if (dinhmucnuoc == null)
+            var checkMax = await _context.DinhMucNuocs.Where(r => r.CongThucNuocId == id).MaxAsync(r => r.SoCuoi);
+            var check = await _context.DinhMucNuocs.SingleOrDefaultAsync(r => r.SoCuoi == checkMax);
+            if(check == null)
             {
-                return NotFound();
+                return Ok("false");
             }
+            else
+            {
+                var dinhmucnuoc = await _context.DinhMucNuocs.SingleOrDefaultAsync(m => m.DinhMucNuocId == id);
+                if (dinhmucnuoc == null)
+                {
+                    return NotFound();
+                }
 
-            _context.DinhMucNuocs.Remove(dinhmucnuoc);
-            await _context.SaveChangesAsync();
+                _context.DinhMucNuocs.Remove(dinhmucnuoc);
+                await _context.SaveChangesAsync();
 
-            return Ok(dinhmucnuoc);
+                return Ok(dinhmucnuoc);
+            }            
         }
 
         [HttpGet("Max/{id}")]

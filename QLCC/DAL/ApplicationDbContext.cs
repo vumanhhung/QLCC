@@ -139,6 +139,7 @@ namespace DAL
             builder.Entity<CongThucNuoc>().ToTable($"tbl_CongThucNuoc"); 
             builder.Entity<DinhMucNuoc>().ToTable($"tbl_DinhMucNuoc"); 
             builder.Entity<DichVuCoBan>().ToTable($"tbl_DichVuCoBan"); 
+            builder.Entity<TheXe>().ToTable($"tbl_TheXe");
         }
 
         public override int SaveChanges()

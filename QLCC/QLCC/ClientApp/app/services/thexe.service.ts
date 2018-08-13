@@ -55,8 +55,4 @@ export class TheXeService {
     deleteTheXes(thexe?: TheXe[]) {
         return this.thexeEndpoint.deleteTheXes(thexe);
     }
-
-    checkExist(id?: number) {
-        return this.thexeEndpoint.checkExist<TheXe>(id);
-    }
 }

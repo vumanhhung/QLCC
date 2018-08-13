@@ -145,10 +145,13 @@ export class LoaiXeComponent implements OnInit, AfterViewInit {
 
     deleteLoaiXe(row: LoaiXe) {
         console.log(row.loaiXeId);
-        this.thexeservice.checkExist(row.loaiXeId).subscribe(results => {
-            console.log(results);
+        this.loaixeService.checkExist(row.loaiXeId).subscribe(results => {
+            if (results != null) {
+                this.showErrorAlert("Lỗi hệ thống", "Tên loại xe " + row.tenLoaiXe + " đang được sử dụng, vui lòng xóa loại xe khác!");
+                return false
+            } else 
+                this.alertService.showDialog('Bạn có chắc chắn muốn xóa bản ghi này?', DialogType.confirm, () => this.deleteHelper(row));
         })
-        //this.alertService.showDialog('Bạn có chắc chắn muốn xóa bản ghi này?', DialogType.confirm, () => this.deleteHelper(row));
     }
 
     deleteHelper(row: LoaiXe) {

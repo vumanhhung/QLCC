@@ -16,27 +16,27 @@ namespace QLCC.Controllers
     public class DinhMucNuocsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        
+
         public DinhMucNuocsController(ApplicationDbContext context)
         {
             _context = context;
         }
-        
+
         // PUT: api/DinhMucNuocs/getItems/5/5/x
         [HttpPut("getItems/{start}/{count}/{orderby}")]
         public IEnumerable<DinhMucNuoc> GetItems([FromRoute] int start, int count, string orderBy, [FromBody] string whereClause)
-        {            
+        {
             orderBy = orderBy != "x" ? orderBy : "";
             return _context.Set<DinhMucNuoc>().FromSql($"tbl_DinhMucNuoc_GetItemsByRange {start},{count},{whereClause},{orderBy}").ToList<DinhMucNuoc>();
         }
-        
+
         // GET: api/DinhMucNuocs
         [HttpGet("List/{id}")]
         public IEnumerable<DinhMucNuoc> GetDinhMucNuocs([FromRoute] int id)
         {
             return _context.DinhMucNuocs.Where(m => m.CongThucNuocId == id);
         }
-        
+
         // GET: api/DinhMucNuocs/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDinhMucNuoc([FromRoute] int id)
@@ -55,7 +55,7 @@ namespace QLCC.Controllers
 
             return Ok(dinhmucnuoc);
         }
-        
+
         // PUT: api/DinhMucNuocs/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDinhMucNuoc([FromRoute] int id, [FromBody] DinhMucNuoc dinhmucnuoc)
@@ -90,10 +90,10 @@ namespace QLCC.Controllers
                 return Ok(warn);
             }
         }
-        
+
         // POST: api/DinhMucNuocs
         [HttpPost]
-        public async Task<IActionResult> PostDinhMucNuoc([FromBody] DinhMucNuoc dinhmucnuoc,[FromRoute] int id)
+        public async Task<IActionResult> PostDinhMucNuoc([FromBody] DinhMucNuoc dinhmucnuoc, [FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -120,7 +120,7 @@ namespace QLCC.Controllers
                 return Ok(warn);
             }
         }
-        
+
         // DELETE: api/DinhMucNuocs/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDinhMucNuoc([FromRoute] int id)
@@ -129,25 +129,16 @@ namespace QLCC.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var checkMax = await _context.DinhMucNuocs.Where(r => r.CongThucNuocId == id).MaxAsync(r => r.SoCuoi);
-            var check = await _context.DinhMucNuocs.SingleOrDefaultAsync(r => r.SoCuoi == checkMax);
-            if(check == null)
+            var dinhmucnuoc = await _context.DinhMucNuocs.SingleOrDefaultAsync(m => m.DinhMucNuocId == id);
+            if (dinhmucnuoc == null)
             {
-                return Ok("false");
+                return NotFound();
             }
-            else
-            {
-                var dinhmucnuoc = await _context.DinhMucNuocs.SingleOrDefaultAsync(m => m.DinhMucNuocId == id);
-                if (dinhmucnuoc == null)
-                {
-                    return NotFound();
-                }
 
-                _context.DinhMucNuocs.Remove(dinhmucnuoc);
-                await _context.SaveChangesAsync();
+            _context.DinhMucNuocs.Remove(dinhmucnuoc);
+            await _context.SaveChangesAsync();
 
-                return Ok(dinhmucnuoc);
-            }            
+            return Ok(dinhmucnuoc);
         }
 
         [HttpGet("Max/{id}")]
@@ -165,10 +156,10 @@ namespace QLCC.Controllers
             //}
             //return Ok(check);
         }
-        
+
         private bool DinhMucNuocExists(int id)
-        {                        
+        {
             return _context.DinhMucNuocs.Any(e => e.DinhMucNuocId == id);
         }
-    }    
+    }
 }

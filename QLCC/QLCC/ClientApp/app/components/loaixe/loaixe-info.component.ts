@@ -30,6 +30,8 @@ export class LoaiXeInfoComponent implements OnInit {
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
 
+    checkTen: boolean = false;
+
     @Input()
     isViewOnly: boolean;
 
@@ -102,6 +104,7 @@ export class LoaiXeInfoComponent implements OnInit {
                 if (results.tenLoaiXe == "ten") {
                     this.showErrorAlert("Lỗi nhập liệu", "Loại xe: " + this.LoaiXeEdit.tenLoaiXe + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");
                     this.alertService.stopLoadingMessage();
+                    this.checkTen = false;
                     this.isSaving = false;
                 } else if (results.kyHieu == "kyhieu") {
                     this.showErrorAlert("Lỗi nhập liệu", "Ký hiệu: " + this.LoaiXeEdit.kyHieu + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");

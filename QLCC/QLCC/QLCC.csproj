@@ -107,8 +107,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="ClientApp\appsettings.Development.json" />
-    <Content Include="ClientApp\appsettings.json" />
     <Content Include="ClientApp\app\assets\locale\ar.json" />
     <Content Include="ClientApp\app\assets\locale\de.json" />
     <Content Include="ClientApp\app\assets\locale\vi.json" />

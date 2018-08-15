@@ -232,10 +232,11 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     loadData(tanglauId: number, loaidichvuId: number, status: number, date: Date) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        if (tanglauId == 0 && loaidichvuId == 0 && status == 0) {
-            this.dichvucobanService.filterByDate(date.getMonth(), date.getFullYear()).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
-        } else
-            this.dichvucobanService.getItemByFilter(tanglauId, loaidichvuId, status, date.getMonth(), date.getFullYear()).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        this.dichvucobanService.getAllDichVuCoBan().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        //if (tanglauId == 0 && loaidichvuId == 0 && status == 0) {
+        //    this.dichvucobanService.filterByDate(date.getMonth(), date.getFullYear()).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        //} else
+        //    this.dichvucobanService.getItemByFilter(tanglauId, loaidichvuId, status, date.getMonth(), date.getFullYear()).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
     }
 
     onDataLoadSuccessful(obj: DichVuCoBan[]) {

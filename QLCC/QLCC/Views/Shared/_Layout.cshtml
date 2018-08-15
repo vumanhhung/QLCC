@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/js/jquery.mCustomScrollbar.css" />
+    <script src="~/js/jquery-1.9.1.min.js"></script>
+    <script src="~/js/jquery.mCustomScrollbar.concat.min"></script>
+    <script src="~/js/jquery.mCustomScrollbar.js"></script>
+    @*<script src="https://cdn.ckeditor.com/4.5.11/full/ckeditor.js"></script>
+        <script src="~/js/jquery-1.9.1.min.js"></script>
+        <script src="~/js/site.js"></script>*@
+    @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
+</head>
+<body>
+    @RenderBody()
+    @RenderSection("scripts", required: false)
+</body>
+</html>

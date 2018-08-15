@@ -1,0 +1,133 @@
+﻿
+<section class="content-header">
+    <h1>Quản lý thẻ xe</h1>
+    <commonroad></commonroad>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <!--<div style="margin-bottom:1%;" align="right" class="col-sm-6">
+                <div class="row">
+                    <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newTheXe()"><i class="fa fa-plus"></i></a>
+                </div>
+            </div>-->
+
+            <div class="box box-info">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Danh sách mặt bằng</label>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-md-6">
+                                    <label>
+                                        <select class="form-control input-sm" #ddlTangLau (change)="SelectedTangLauValue(ddlTangLau.value)">
+                                            <option value="0">-Chọn tầng lầu-</option>
+                                            <option *ngFor="let o of tanglaus" [value]="o.tangLauId">
+                                                {{o.tenTangLau}}
+                                            </option>
+                                        </select>
+                                    </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <search-box (searchChange)="onSearchChanged($event)" placeholder="Tìm kiếm"></search-box>
+                                </div>
+                                <div class="clearfix">
+                                </div>
+                                <div class="col-md-12">
+                                    <ngx-datatable class="material colored-header sm table table-striped table-hover matbang-table"
+                                                   [loadingIndicator]="loadingIndicator"
+                                                   [rows]="matbangs"
+                                                   [rowHeight]="45"
+                                                   [headerHeight]="45"
+                                                   [footerHeight]="45"
+                                                   [columns]="mbcolumns"
+                                                   [limit]="10"
+                                                   [selectionType]="'single'"
+                                                   [columnMode]="'force'" (select)="onSelect($event)">
+                                    </ngx-datatable>
+                                    <!--<ng-template #actionsMBTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                                        <a class="btn btn-func btn-success viewTheXe" href="javascript:;" title="Xem danh sách xe" (click)="getTheXe(row)"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                    </ng-template>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="box-body">
+                            <div>
+                                <div class="dataTables_length">
+                                    <label>
+                                        Danh sách xe thuộc mặt bằng: {{matbangObj.tenMatBang}}
+                                    </label>
+                                    <div class="clearfix" style="margin-bottom:5px;">
+                                        <search-box (searchChange)="onSearchTheXeChanged($event)" placeholder="Tìm kiếm thẻ xe" style="width:30%"></search-box>
+                                    </div>
+                                </div>
+                                <div class="DTTT_container">
+                                    <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="Thêm xe" (click)="newTheXe()"><i class="fa fa-plus"></i></a>
+                                    <a *ngIf="rowsDelete.length>0" class="btn btn-danger" data-toggle="tooltip" href="javascript://" title="Thùng rác" (click)="thungrac()"><i class="fa fa-trash-o" aria-hidden="true"></i> Thùng rác</a>
+                                    <a class="btn btn-primary menubar" href="javascript:;" title="Danh mục">
+                                        <i class="fa fa-bars"></i>
+                                        <ul class="nav navbar-nav child-menu">
+                                            <li><a href="javascript:;" routerLink="/loaixe">Loại xe</a></li>
+                                            <li><a href="javascript:;" routerLink="/banggiaxe">Bảng giá xe</a></li>
+                                        </ul>
+                                    </a>
+                                </div>
+                                <div class="clearfix"></div>
+                                <ngx-datatable class="material colored-header sm table table-striped table-hover "
+                                               [loadingIndicator]="loadingIndicator"
+                                               [rows]="rows"
+                                               [rowHeight]="45"
+                                               [headerHeight]="45"
+                                               [footerHeight]="45"
+                                               [columns]="columns"
+                                               [limit]="limit"
+                                               [columnMode]="'force'">
+                                </ngx-datatable>
+                                <ng-template #trangthaiTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                                    <div style="background:#ff0000;text-align:center;color:#ffffff;font-style:italic" *ngIf="row.trangThai==0">Ngưng sử dụng</div>
+                                    <div style="background:#18891e;text-align:center;color:#ffffff;" *ngIf="row.trangThai==1">Đang sử dụng</div>
+                                </ng-template>
+                                <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                                    <a *ngIf="row.trangThai==0" class="btn btn-func btn-flat" title="Sử dụng" href="javascript:;" (click)="editStatus(row)">
+                                        <i class="fa fa-level-up" aria-hidden="true"></i>
+                                    </a>
+                                    <a *ngIf="row.trangThai==1" class="btn btn-func btn-danger" title="Ngừng sử dụng" href="javascript:;" (click)="editStatus(row)">
+                                        <i class="fa fa-level-down" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="btn btn-func btn-primary" href="javascript:;" (click)="editTheXe(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteTheXe(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                </ng-template>
+                                <div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title pull-left"><i class="glyphicon glyphicon-plus-sign"></i> Chi tiết thẻ xe </h4>
+                                                <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <thexe-info #thexeEditor [isGeneralEditor]="true"></thexe-info>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="DTTT_container">
+                                <a *ngIf="rows.length>0" class="btn btn-danger" data-toggle="tooltip" href="javascript://" title="Thu phí gửi xe" (click)="newPhieuThu()"><i class="fa fa-money" aria-hidden="true"></i> Thu phí gửi xe</a>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<phieuthu-info #phieuthuEditor></phieuthu-info>
+<thexe-thungrac #thexethungracEditor></thexe-thungrac>

@@ -1,0 +1,178 @@
+﻿<section class="content-header">
+    <h1>{{'matbang.qlmb_tieude' | translate}}</h1>
+    <commonroad></commonroad>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div style="margin-bottom:1%" class="col-sm-6">
+                <div class="row">
+                    <search-box (searchChange)="onSearchChanged($event)" placeholder="{{'matbang.qlmb_timkiem' | translate}}">></search-box>
+                </div>
+            </div>
+            <div style="margin-bottom:1%;" align="right" class="col-sm-6">
+                <div class="row">
+                    <a class="btn btn-primary" href="javascript://" tooltip="{{'matbang.qlmb_themmoi' | translate}}" (click)="newMatBang()"><i class="fa fa-plus"></i></a>
+                    <a class="btn btn-primary" href="javascript://" tooltip="{{'matbang.qlmb_import' | translate}}" (click)="importMatBang()"><i class="fa fa-upload"></i></a>
+                    <a class="btn btn-primary" href="javascript://" tooltip="{{'matbang.qlmb_export' | translate}}" (click)="excelexport.save()" (mouseenter)="changeRandomString()">
+                        <i class="fa fa-download"></i>
+                        <kendo-excelexport [data]="rows" fileName="MatBangExPort-{{randomString}}.xlsx" #excelexport [headerPaddingCellOptions]="headerPaddingCells" >                            
+                            <kendo-excelexport-column field="index" [locked]="true" title="STT" [width]="50" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b',fontweight:'bold' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="cumtoanha.tenCumToaNha" title="Cụm tòa nhà" [width]="120" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="toanha.tenKhoiNha" title="Tòa nhà" [width]="120" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="tanglau.tenTangLau" title="Tầng (lầu)" [width]="120" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b',bordercolor:'#000' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="loaimatbang.tenLoaiMatBang" title="Loại mặt bằng" [width]="200" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="maMatBang" title="Mã mặt bằng" [width]="120" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="tenMatBang" title="Tên mặt bằng" [width]="120" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="dienTich" title="Diện tích" [width]="120" [cellOptions]="{ format: '#,##0.00' }" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="giaThue" title="Giá thuê" [width]="120" [cellOptions]="{ format: '#,##0.00' }" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="loaiTien" title="Loại tiền" [width]="50" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="caNhan" title="Hình thức sở hữu" [width]="50" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="giaoChiaKhoa" title="Đã bàn giao chìa khóa" [width]="50" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="ngaybanGiao" title="Ngày bàn giao" [width]="200" [cellOptions]="{ format: 'd-mmm-yy' }" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="dienGiai" title="Ghi chú" [width]="550" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="chuSoHuu" title="Chủ sở hữu" [width]="120" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="khachThue" title="Khách thuê" [width]="120" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                            <kendo-excelexport-column field="trangthai.tenTrangThai" title="Trạng thái" [width]="200" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            </kendo-excelexport-column>
+                        </kendo-excelexport>
+                    </a>
+                    <a class="btn btn-primary" href="javascript://" tooltip="{{'matbang.qlmb_xemtongthe' | translate}}" (click)="viewtotalMatBang()"><i class="fa fa-eye-slash"></i></a>
+                    <!--<a class="btn btn-primary" href="javascript://" tooltip="{{'matbang.qlmb_cauhinh' | translate}}" (click)="configflour"><i class="fa fa-cog"></i></a>-->
+                    <a class="btn btn-primary menubar" href="javascript:;" tooltip="Danh mục">
+                        <i class="fa fa-bars"></i>
+                        <ul class="nav navbar-nav child-menu">
+                            <li><a href="javascript:;" routerLink="/khuvuc">{{'Khu vực' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/trangthai">{{'Trạng thái MB' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/donvitinh">{{'Đơn vị tính' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/loaimatbang">{{'Loại mặt bằng' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/nhacungcap">{{'Nhà cung cấp' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/loaigiathue">{{'Loại giá thuê' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/nganhang">{{'Ngân hàng' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/taikhoannganhang">{{'Tài khoản NH' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/loaitien">{{'Loại tiền' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/quoctich">{{'Quốc tịch' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/chucvu">{{'Chức vụ' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/phongban">{{'Phòng ban' | translate}}</a></li>
+                        </ul>
+                    </a>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="box box-info" #myBounds>
+                <div class="box-body">
+                    <div>
+                        <div class="dataTables_length">
+                            <!--<label>
+                                Cụm
+                                <select class="form-control input-sm" #drGroup (change)="SelectedGroupValue(drTangLau.value,drItem.value,drGroup.value)">
+                                    <option value="0">---Tất cả---</option>
+                                    <option *ngFor="let o of groups" [value]="o.cumToaNhaId">
+                                        {{o.tenCumToaNha}}
+                                    </option>
+                                </select>
+                            </label>
+                            <label>
+                                Tòa nhà
+                                <select class="form-control input-sm" #drItem (change)="SelectedItemValue(drTangLau.value,drItem.value,drGroup.value)">
+                                    <option value="0">---Tất cả---</option>
+                                    <option *ngFor="let o of items" [value]="o.toaNhaId">
+                                        {{o.tenKhoiNha}}
+                                    </option>
+                                </select>
+                            </label>-->
+                            <label>
+                                Tầng (lầu)
+                                <select class="form-control input-sm" #drTangLau (change)="SelectedTangLauValue(drTangLau.value)">
+                                    <option value="0">---Tất cả---</option>
+                                    <option *ngFor="let o of tanglau" [value]="o.tangLauId">
+                                        {{o.tenTangLau}}
+                                    </option>
+                                </select>
+                            </label>
+                        </div>
+                        <div *ngIf="hidden == 0" class="DTTT_container">
+                            <label>
+                                Hiển thị
+                                <select class="form-control input-sm" #drSelected (change)="SelectedValue(drSelected.value)">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> bản ghi
+                            </label>
+                        </div>
+                        <div *ngIf="hidden == 1" class="DTTT_container" style="position:relative;z-index:1">
+                            <i (click)="openBox()" class="fa fa-question-circle" aria-hidden="true" style="font-size:18px;cursor:pointer;padding:0 30px;color:#337ab7" tooltip="Click để xem danh sách trạng thái"></i>
+                            <div class="box-status-list" *ngIf="isCloseBox">
+                                <div class="itemStatus" *ngFor="let r of trangthai" (click)="setDisibleBox(r.mauNen)" [class.active]="maunenThayDoi == r.mauNen">
+                                    <div class="colorStatus" [ngStyle]="{'background-color':r.mauNen}"></div>
+                                    <div class="textStatus">{{r.tenTrangThai}}</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div *ngIf="hidden == 0" style="overflow-x:auto">
+                            <div style="min-width:1000px">
+                                <ngx-datatable class="material colored-header sm table table-striped table-hover"
+                                               [loadingIndicator]="loadingIndicator"
+                                               [rows]="rows"
+                                               [rowHeight]="45"
+                                               [headerHeight]="45"
+                                               [footerHeight]="45"
+                                               [limit]="limit"
+                                               [columns]="columns"
+                                               [scrollbarV]="false"
+                                               [columnMode]="'force'">
+                                </ngx-datatable>
+                            </div>
+                        </div>
+                        <div *ngIf="hidden == 1" class="TotlaMB row01">
+                            <div class="col-md-1" *ngFor="let r of rows" [class.isActiveViewStatus]="isActiveViewStatus">
+                                <div (click)="ViewMatBang(r)" [class.nonedisibleBox]="maunenThayDoi == r.trangthai.mauNen" class="item-md" [ngStyle]="{'background-color':r.trangthai.mauNen}" tooltip="{{r.trangthai.tenTrangThai}}"><i class="fa fa-building"></i><span class="clearfix"></span><span class="number-room"><span>P: {{r.tenMatBang}}</span><span class="brother">Tòa: {{r.toanha.tenKhoiNha}}</span><span class="brother">{{r.cumtoanha.tenCumToaNha}}</span></span></div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <ng-template #BackGroundTemplate let-row="row" let-value="value" let-i="index" style="text-align:center;">
+                            <div [ngStyle]="SetBackground(row)">{{row.trangthai.tenTrangThai}}</div>
+                        </ng-template>
+                        <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index">
+                            <div>
+                                <a class="btn btn-func btn-success" href="javascript:;" tooltip="Chi tiết" (click)="ViewMatBang(row)"><i class="fa fa-eye"></i></a>
+                                <a class="btn btn-func btn-primary" href="javascript:;" (click)="editMatBang(row)" tooltip=" {{'users.management.Edit' | translate}}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteMatBang(row)" tooltip=" {{'users.management.Delete' | translate}}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                <a class="btn btn-func btn-flat" href="javascript:;" (click)="buiding(row)" tooltip=" {{'matbang.qlmb_thuhoi' | translate}}"><i class="fa fa-retweet" aria-hidden="true"></i></a>
+                                <a class="btn btn-func btn-primary" href="javascript:;" (click)="buiding(row)" tooltip=" {{'matbang.qlmb_chuyenquyensudung' | translate}}"><i class="fa fa-exchange" aria-hidden="true"></i></a>
+                                <a class="btn btn-func btn-success" href="javascript:;" (click)="buiding(row)" tooltip=" {{'matbang.qlmb_chothue' | translate}}"><i class="fa fa-money" aria-hidden="true"></i></a>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+            <!--Modal chi tiết-->
+            <matbang-info #matbangEditor [isGeneralEditor]="true"></matbang-info>
+            <!--End modal-->
+            <!--Modal import Excel-->
+            <import-excel #importexcel></import-excel>
+            <!--EndModal-->
+        </div>
+    </div>
+</section>

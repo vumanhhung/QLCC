@@ -1,0 +1,62 @@
+﻿<div>
+    <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="BangGiaDichVuCoBanInfoForm" #f="ngForm" novalidate (ngSubmit)="save();">
+        <div class="form-group has-feedback">
+            <label class="control-label col-md-2" for="loaiDichVuId-{{uniqueId}}">Loại dịch vụ</label>
+            <div class="col-md-10" [ngClass]="{'has-success': f.submitted, 'has-error' : f.submitted && loaiDichVuId.value == 0}">
+                <select name="loaiDichVuId" [(ngModel)]="BangGiaDichVuCoBanEdit.loaiDichVuId" #loaiDichVuId="ngModel" class="form-control" required>
+                    <option *ngFor="let o of loaidichvus" value="{{o.loaiDichVuId}}">
+                        {{o.tenLoaiDichVu}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group has-feedback">
+            <label class="control-label col-md-2" for="loaiTienId-{{uniqueId}}">Loại tiền</label>
+            <div class="col-md-10" [ngClass]="{'has-success': f.submitted, 'has-error' : f.submitted && loaiTienId.value == 0}">
+                <select name="loaiTienId" [(ngModel)]="BangGiaDichVuCoBanEdit.loaiTienId" #loaiTienId="ngModel" class="form-control" required>
+                    <option *ngFor="let o of loaitiens" value="{{o.loaiTienId}}">
+                        {{o.tenLoaiTien}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group has-feedback">
+            <label class="control-label col-md-2" for="donViTinhId-{{uniqueId}}">Đơn vị tính</label>
+            <div class="col-md-10" [ngClass]="{'has-success': f.submitted, 'has-error' : f.submitted && donViTinhId.value == 0}">
+                <select name="donViTinhId" [(ngModel)]="BangGiaDichVuCoBanEdit.donViTinhId" #donViTinhId="ngModel" class="form-control" required>
+                    <option *ngFor="let o of donvitinhs" value="{{o.donViTinhId}}">
+                        {{o.tenDonViTinh}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group has-feedback">
+            <label class="control-label col-md-2" for="donGia-{{uniqueId}}">Đơn giá</label>
+            <div class="col-md-10" [ngClass]="{'has-success': f.submitted && donGia > 0, 'has-error' : f.submitted && (donGia == 0 || donGia == '')}">
+                <input OnlyNumber="true" autofocus type="text" class="form-control" name="donGia" [(ngModel)]="donGia" required (ngModelChange)="donGiaChange($event)"/>                
+            </div>
+        </div>
+        <div class="form-group has-feedback">
+            <label class="control-label col-md-2" for="dienGiai-{{uniqueId}}">Mô tả</label>
+            <div class="col-md-10">
+                <input autofocus type="text" class="form-control" name="dienGiai" [(ngModel)]="BangGiaDichVuCoBanEdit.dienGiai" #dienGiai="ngModel" />
+            </div>
+        </div>
+        <div class="col-md-12">
+            <hr class="edit-last-separator-hr" />
+        </div>
+        <div class="form-group actionBtn-form-group">
+            <div class="col-sm-7">
+                <div class="pull-right">
+                    <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                    <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                    <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
+                    <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
+                        <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>

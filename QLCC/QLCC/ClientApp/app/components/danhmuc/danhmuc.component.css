@@ -1,0 +1,98 @@
+﻿
+.bg-aqua, .callout.callout-info, .alert-info, .label-info, .modal-info .modal-body {
+    background-color: #00c0ef;
+}
+.bg-red, .bg-yellow, .bg-aqua, .bg-blue, .bg-light-blue, .bg-green, .bg-navy, .bg-teal, .bg-olive, .bg-lime, .bg-orange, .bg-fuchsia, .bg-purple, .bg-maroon, .bg-black, .bg-red-active, .bg-yellow-active, .bg-aqua-active, .bg-blue-active, .bg-light-blue-active, .bg-green-active, .bg-navy-active, .bg-teal-active, .bg-olive-active, .bg-lime-active, .bg-orange-active, .bg-fuchsia-active, .bg-purple-active, .bg-maroon-active, .bg-black-active, .callout.callout-danger, .callout.callout-warning, .callout.callout-info, .callout.callout-success, .alert-success, .alert-danger, .alert-error, .alert-warning, .alert-info, .label-danger, .label-info, .label-waring, .label-primary, .label-success, .modal-primary .modal-body, .modal-primary .modal-header, .modal-primary .modal-footer, .modal-warning .modal-body, .modal-warning .modal-header, .modal-warning .modal-footer, .modal-info .modal-body, .modal-info .modal-header, .modal-info .modal-footer, .modal-success .modal-body, .modal-success .modal-header, .modal-success .modal-footer, .modal-danger .modal-body, .modal-danger .modal-header, .modal-danger .modal-footer {
+    color: #fff !important;
+}
+#categoryManage .small-box {
+    border-radius: 2px;
+    position: relative;
+    display: block;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+    #categoryManage .small-box > .inner {
+        padding: 10px;
+    }
+    #categoryManage .small-box h3 {
+        font-size: 22px;
+        font-weight: bold;
+        margin: 0 0 20px 0;
+        white-space: nowrap;
+        padding: 0;
+    }
+
+    #categoryManage .small-box .icon {
+        position: absolute;
+        top: -20px;
+        right: 10px;
+        z-index: 0;
+        font-size: 90px;
+        color: rgba(0, 0, 0, 0.15);
+    }
+        #categoryManage .small-box .icon img {
+            -moz-transition: -moz-transform 0.5s ease-in;
+            -webkit-transition: -webkit-transform 0.5s ease-in;
+            -o-transition: -o-transform 0.5s ease-in;
+        }
+    #categoryManage .small-box > .small-box-footer {
+        position: relative;
+        text-align: center;
+        padding: 3px 0;
+        color: #fff;
+        display: block;
+        z-index: 10;
+        background: rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+    }
+    #categoryManage .small-box:hover img {
+        font-size: 95px;
+        -moz-transform: scale(1.2);
+        -webkit-transform: scale(1.2);
+        -o-transform: scale(1.2);
+    }
+
+
+
+
+
+@media screen and (max-width: 640px) {
+    #categoryManage .small-box h3 {
+        font-size: 16px
+    }
+}
+
+
+
+
+
+    @media screen and (max-width: 330px) {
+        .bg-aqua > div > p {white-space:nowrap;text-overflow:ellipsis}
+}
+
+
+
+
+.bottom-space {
+    margin-bottom: 40px;
+}
+
+.no-bottom-space {
+    margin-bottom: 0;
+}
+
+.statistics-close-btn {
+}
+
+.todo-close-btn {
+    margin: 0 10px -25px 0;
+    position: relative;
+    z-index: 1;
+}
+
+.banner-close-btn {
+    margin: 0 10px -25px 0;
+    position: relative;
+    z-index: 1;
+}

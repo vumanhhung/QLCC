@@ -1,0 +1,65 @@
+﻿<div  *ngIf="!isViewDetails"  class="EditForm">
+    <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="LoaiMatBangInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
+          (!tenLoaiMatBang.valid && showErrorAlert('TenLoaiMatBang không được để trống', 'Vui lòng nhập TenLoaiMatBang!'));
+">
+        <div class="has-feedback">
+            <label class="control-label" for="tenLoaiMatBang-{{uniqueId}}">Tên loại mặt bằng</label>
+            <div class="control" [ngClass]="{'has-success': f.submitted && tenLoaiMatBang.valid, 'has-error' : f.submitted && !tenLoaiMatBang.valid}">
+                <input autofocus type="text" class="form-control" name="tenLoaiMatBang" [(ngModel)]="LoaiMatBangEdit.tenLoaiMatBang" #tenLoaiMatBang="ngModel" required />
+                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tenLoaiMatBang.valid, 'glyphicon-remove' : !tenLoaiMatBang.valid}"></span>
+                <span *ngIf="showValidationErrors && f.submitted && !tenLoaiMatBang.valid" class="errorMessage">
+                    Vui lòng nhập tên loại mặt bằng!
+                </span>
+            </div>
+        </div>
+        <div class="has-feedback">
+            <label class="control-label" for="dienGiai-{{uniqueId}}">Giới thiệu</label>
+            <div class="control">
+                <textarea style="height:150px" autofocus type="text" class="form-control" name="dienGiai" [(ngModel)]="LoaiMatBangEdit.dienGiai" #dienGiai="ngModel"></textarea>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <hr class="edit-last-separator-hr" />
+        </div>
+        <div class="actionBtn-form-group">
+            <div class="col-sm-7">
+                <div class="pull-right">
+                    <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                    <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                    <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
+                        <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
+                    </button>
+                    <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>
+
+<div *ngIf="isViewDetails" class="ViewForm">
+    <form #f="ngForm">
+        <div>
+            <div class="col-sm-2 rowCustom title">Loại mặt bằng: </div>
+            <div class="col-sm-10 rowCustom text">{{LoaiMatBangEdit.tenLoaiMatBang}}</div>
+            <div class="clearfix h4"></div>
+            <div class="col-sm-2 rowCustom title">Giới thiệu: </div>
+            <div class="col-sm-10 rowCustom text">{{LoaiMatBangEdit.dienGiai}}</div>
+            <div class="clearfix h4"></div>
+            <div class="col-md-12">
+                <hr class="edit-last-separator-hr" />
+            </div>
+            <div class="actionBtn-form-group">
+                <div class="col-sm-7">
+                    <div class="pull-right">
+                        <button type="button" (click)="moveToEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                        <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>

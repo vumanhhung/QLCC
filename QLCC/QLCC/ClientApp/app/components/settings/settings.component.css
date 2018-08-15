@@ -1,0 +1,17 @@
+.side-menu {
+    min-width: 150px;
+    padding:0
+}
+
+.separator-hr {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+[hidden] {
+    display: none;
+}
+.box.box-info {
+    border-top-color: #048b8b;
+    min-height: 470px
+}

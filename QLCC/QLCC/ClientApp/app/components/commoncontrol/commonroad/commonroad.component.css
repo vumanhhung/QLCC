@@ -1,0 +1,15 @@
+﻿.breadcrumb {
+    float: right;
+    background: transparent;
+    margin-top: 0px;
+    margin-bottom: 0;
+    font-size: 12px;
+    padding:0 5px 7px 5px;
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    border-radius: 2px;
+}
+@media screen and (max-width: 640px) {
+    .breadcrumb{display:none}
+}

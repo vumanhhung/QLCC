@@ -1,0 +1,32 @@
+﻿<div>
+    <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="NhomKhachHangInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
+          (!tenNhomKhachHang.valid && showErrorAlert('Tên nhóm không được để trống', 'Vui lòng nhập tên nhóm!'));
+">
+        <div class="form-group has-feedback">
+            <label class="control-label col-md-2" for="tenNhomKhachHang-{{uniqueId}}">Tên nhóm</label>
+            <div class="col-md-10" [ngClass]="{'has-success': f.submitted && tenNhomKhachHang.valid, 'has-error' : f.submitted && !tenNhomKhachHang.valid}">
+                <input autofocus type="text" class="form-control" name="tenNhomKhachHang" [(ngModel)]="NhomKhachHangEdit.tenNhomKhachHang" #tenNhomKhachHang="ngModel" required />
+                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tenNhomKhachHang.valid, 'glyphicon-remove' : !tenNhomKhachHang.valid}"></span>
+                <span *ngIf="showValidationErrors && f.submitted && !tenNhomKhachHang.valid" class="errorMessage">
+                    Vui lòng nhập tên nhóm!
+                </span>
+            </div>
+        </div>      
+        <div class="col-md-12">
+            <hr class="edit-last-separator-hr" />
+        </div>
+        <div class="form-group actionBtn-form-group">
+            <div class="col-sm-7">
+                <div class="pull-right">
+                    <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                    <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                    <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
+                    <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
+                        <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>

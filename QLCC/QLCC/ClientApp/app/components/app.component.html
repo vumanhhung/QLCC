@@ -1,0 +1,94 @@
+﻿<!--<div id="app_container" class="{{configurations.theme | lowercase}}-theme" [class.main-sidebar-mini]="isDisplayMenuMini" (window:resize)="onResize($event)" (window:scroll)="onScroll($event)">-->
+<div id="app_container" class="{{configurations.theme | lowercase}}-theme" [class.main-sidebar-mini]="isDisplayMenuMini" (window:resize)="onResize($event)">
+    <ng2-toasty></ng2-toasty>
+    <div class='wrapper'>
+        <nav id="header" class="app-component navbar navbar-inner navbar-fixed-top" [class.z10000]="isClickUserConfig">
+            <nav class="main-header">
+                <div class="navbar-header">
+                    <a class="app-component navbar-brand" routerLink="/">
+                        <div class="logo dn" id="logoPage"><img [src]="appLogo" alt="logo"></div>
+                        <span class="app-component appTitle">
+                            <!--{{appTitle}}-->
+                            VINASINCO
+                        </span>
+                    </a>
+                </div>
+                <div *ngIf="isUserLoggedIn" class="menuItemsContainer navbar navbar-static-top" role="navigation">
+                    <a href="javascript://" class="sidebar-toggle" (click)="ToggleClick()" data-toggle="offcanvas" role="button"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+                    <div class="app-component navbar-text navbar-right nav-user-bar" id="userBox" (click)="clickUser($event)">
+                        <div class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <i class="fa fa-user fa-lg"></i> <span class="hidden-xs">{{userName}}</span> </a>
+                            <ul class="dropdown-menu">
+                                <!-- User image -->
+                                <li class="user-header">
+                                    <img src="http://sakosys.com/temp/apartment-management-system/assets/img/user.png" class="img-circle" alt="User Image">
+                                    <p>
+                                        {{userName}}
+                                    </p>
+                                </li>
+                                <!-- Menu Body -->
+                                <!-- Menu Footer-->
+                                <li class="user-footer">
+                                    <div class="pull-left" routerLinkActive="active"><a routerLink="/settings" class="btn btn-success btn-flat">{{'mainMenu.Profile' | translate}}</a></div>
+                                    <div class="pull-right" (click)="logout()"> <a href="javascript:;" class="btn btn-danger btn-flat">{{'mainMenu.Logout' | translate}}</a> </div>
+                                    <div class="clearfix"></div>
+                                </li>
+                            </ul>
+                        </div>
+                        <p class="notifications-popup">
+                            <a style="position:relative;z-index:1;overflow:unset" class="app-component navbar-link user-name" [popover]="popTemplate" placement="bottom" [popoverTitle]="notificationsTitle" href="javascript:;" triggers="focus">
+                                <i class="fa fa-bell"></i>
+                                <span *ngIf="newNotificationCount > 0" class="badge">{{newNotificationCount}}</span>
+                            </a>
+                        </p>
+                    </div>
+                    <h1 class="master-title">PHẦN MỀM QUẢN LÝ TÒA NHÀ <nguoidungtoanha #nguoidungtoanha></nguoidungtoanha></h1>
+                    <div class=" navbar-right">
+                        <div class="clock"><span class="text">{{clock | async | date:'dd/MM/yyyy'}}</span><span class="text">{{clock | async | date:'mediumTime'}}</span></div>
+                    </div>
+                    <ng-template #popTemplate>
+                        <notifications-viewer [isViewOnly]="true"></notifications-viewer>
+                    </ng-template>
+                </div>
+                <div *ngIf="!isUserLoggedIn && router.isActive('/about', false)" class="app-component collapse navbar-collapse menuItemsContainer">
+                    <ul class="app-component nav navbar-nav nav-pills navBarPadding" style="float:right!important">
+                        <li routerLinkActive="active"><a routerLink="/login"><span class="glyphicon glyphicon-log-in"></span></a></li>
+                    </ul>
+                </div>
+                <div *ngIf="!isUserLoggedIn && router.isActive('/login', false) || false" class="app-component collapse navbar-collapse menuItemsContainer">
+                    <ul class="app-component nav navbar-nav nav-pills navBarPadding" style="float:right!important">
+                        <li routerLinkActive="active"><a routerLink="/about"><span class="glyphicon glyphicon-info-sign"></span></a></li>
+                    </ul>
+                </div>
+            </nav>
+        </nav>
+
+        <div id="pre-bootstrap" *ngIf="!removePrebootScreen" [class.prebootShow.app-component]="!isAppLoaded" class="app-component prebootStep">
+            <div class="messaging">
+                <h1>
+                    Truy cập hệ thống!
+                </h1>
+                <p>
+                    Quản lý chung cư
+                </p>
+
+            </div>
+        </div>
+
+        <aside class="main-sidebar" id="menuLeft" #menuLeft [class.menuLeft-notlogin]="!isUserLoggedIn">
+            <menuleft #leftMenu></menuleft>
+        </aside>
+
+        <div #mainContent id="mainContent" class="app-component" [class.margin-mainContent]="!isUserLoggedIn" [class.zIndexfullScreen]="isFullScreen">
+            <router-outlet></router-outlet>
+        </div>
+        <footerControl [class.margin-mainContent]="!isUserLoggedIn"></footerControl>
+    </div>
+</div>
+
+<div *ngIf="shouldShowLoginModal" class="modal fade" bsModal #loginModal="bs-modal" (onShown)="onLoginModalShown()" (onHidden)="onLoginModalHidden()" (onHide)="onLoginModalHide()"
+     [config]="{backdrop: 'static'}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <app-login #loginControl isModal="true"></app-login>
+    </div>
+</div>

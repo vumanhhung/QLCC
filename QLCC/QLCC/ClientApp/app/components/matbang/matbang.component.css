@@ -1,0 +1,17 @@
+﻿.TotlaMB {}
+.TotlaMB .item-md {cursor:pointer;margin:5px 0;min-height: 90px;border: 1px solid #ccc;background: #fff;color: #000;font-size:13px;text-align:center;font-weight:normal;padding:10px 0;line-height:18px}
+.TotlaMB .active {border: 1px solid #0a4b4b;background: #027FF4;color: #fff}
+.TotlaMB .item-md:hover {border: 1px solid #0a4b4b;background: #f8f3f3;color: #000}
+.TotlaMB .fa-building{font-size:24px}
+.TotlaMB .col-md-1{padding:0 10px}
+.row01{margin:0 -10px}
+.TotlaMB .number-room > span {display: block;text-align: center}
+.TotlaMB .number-room > span.brother {color: #000;font-style: italic}
+.TotlaMB .active .number-room span.brother {
+    color: #fff
+}
+.TotlaMB .active:hover {
+    border: 1px solid #0a4b4b;
+    background: #027FF4;
+    color: #fff
+}

@@ -1,0 +1,120 @@
+﻿<div class="modal fade" bsModal #dinhmucModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="EditForm">
+                <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="DinhMucNuocForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
+(!tenDinhMucNuoc.valid && showErrorAlert('Tên định mức nước không được để trống', 'Vui lòng nhập Tên định mức nước!'));
+(!soCuoi.valid && showErrorAlert('Số Cuối không được để trống', 'Vui lòng nhập Số Cuối!'));
+">
+                    <div class="modal-header">
+                        <p class="modal-title pull-left">
+                            <i class="fa fa-cog"></i> Định mức công thức nước - {{tenCongThucNuoc}}
+                        </p>
+                        <button type="button" class="close pull-right" title="Close" (click)="dinhmucModal.hide()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12" style="margin-bottom:10px;">
+                                <div class="col-md-5">
+                                    <label class="control-label col-md-5" for="tenDinhMucNuoc-{{uniqueId}}">Tên công thức nước</label>
+                                    <div class="col-md-7">
+                                        <span class="form-control" style="border: none;">{{tenCongThucNuoc}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="control-label col-md-5" for="tenDinhMucNuoc-{{uniqueId}}">Tên định mức nước</label>
+                                    <div class="col-md-7" [ngClass]="{'has-success': f.submitted && tenDinhMucNuoc.valid, 'has-error' : f.submitted && !tenDinhMucNuoc.valid}">
+                                        <input autofocus type="text" class="form-control" name="tenDinhMucNuoc" [(ngModel)]="DinhMucNuocEdit.tenDinhMucNuoc" #tenDinhMucNuoc="ngModel" required />
+                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" style="padding-left:8%;" [ngClass]="{'glyphicon-ok ': tenDinhMucNuoc.valid, 'glyphicon-remove' : !tenDinhMucNuoc.valid}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted && !tenDinhMucNuoc.valid" class="errorMessage">
+                                            Vui lòng nhập Tên định mức nước!
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" style="margin-bottom:10px;">
+                                <div class="col-md-5">
+                                    <label class="control-label col-md-5" for="soDau-{{uniqueId}}">Số Đầu</label>
+                                    <div class="col-md-7" [ngClass]="{'has-success': f.submitted && soDau.valid, 'has-error' : f.submitted && !soDau.valid}">
+                                        <input autofocus type="number" min="0" class="form-control" name="soDau" [(ngModel)]="DinhMucNuocEdit.soDau" #soDau="ngModel" required disabled/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="control-label col-md-5" for="soCuoi-{{uniqueId}}">Số Cuối</label>
+                                    <div class="col-md-7" [ngClass]="{'has-success': f.submitted && soCuoi.valid, 'has-error' : f.submitted && !soCuoi.valid}">
+                                        <input autofocus type="number" min="0" class="form-control" name="soCuoi" [(ngModel)]="DinhMucNuocEdit.soCuoi" #soCuoi="ngModel" required />
+                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" style="padding-left:8%;" [ngClass]="{'glyphicon-ok ': soCuoi.valid, 'glyphicon-remove' : !soCuoi.valid}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted && !soCuoi.valid" class="errorMessage">
+                                            Vui lòng nhập Số Cuối!
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-5">
+                                    <label class="control-label col-md-5" for="gia-{{uniqueId}}">Giá</label>
+                                    <div class="col-md-7">
+                                        <input OnlyNumber="true" autofocus type="text" class="form-control" name="gia" [(ngModel)]="gia" (ngModelChange)="giaChange($event)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="control-label col-md-5" for="dienGiai-{{uniqueId}}">Diễn Giải</label>
+                                    <div class="col-md-7" [ngClass]="{'has-success': f.submitted && dienGiai.valid, 'has-error' : f.submitted && !dienGiai.valid}">
+                                        <input autofocus type="text" class="form-control" name="dienGiai" [(ngModel)]="DinhMucNuocEdit.dienGiai" #dienGiai="ngModel"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <hr class="edit-last-separator-hr" />
+                            </div>
+                            <div class="form-group actionBtn-form-group">
+                                <div class="col-sm-12" style="padding-left:0;padding-right:4.5%;">
+                                    <div class="pull-right" style="display:flex;">
+                                        <button type="button" (click)="cancel()" class="btn btn-danger col-sm-5" style="margin-right:5%;" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
+                                        <button type="submit" class="btn btn-primary col-sm-7" [disabled]="isSaving">
+                                            <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
+
+                <div style="height: auto;padding:5px 2% 2% 2%;">
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table class='table' *ngIf="list">
+                            <thead>
+                                <tr  style="background-color:#048b8b;" >
+                                    <th>Tên định mức nước</th>
+                                    <th>Số đầu</th>
+                                    <th>Số cuối</th>
+                                    <th>Giá</th>
+                                    <th>Diễn giải</th>
+                                    <th>Chức năng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let list of list">
+                                    <td>{{ list.tenDinhMucNuoc }}</td>
+                                    <td>{{ list.soDau }}</td>
+                                    <td>{{ list.soCuoi }}</td>
+                                    <td>{{formatPrice(list.gia)}}</td>
+                                    <td>{{ list.dienGiai }}</td>
+                                    <td>
+                                        <a class="btn btn-func btn-primary" href="javascript:;" (click)="editDinhMucNuoc(list)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                        <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDinhMucNuoc(list)" title="Xóa" *ngIf="list.soCuoi == max"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

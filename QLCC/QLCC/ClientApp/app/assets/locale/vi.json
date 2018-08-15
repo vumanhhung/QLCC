@@ -1,0 +1,181 @@
+﻿{
+  "app": {
+    "Welcome": "Xin Chào",
+    "Notifications": "Thông báo",
+    "New": "Mới"
+  },
+  "mainMenu": {
+    "Appointments": "Appointments",
+    "Customers": "Khách hàng",
+    "Products": "Sản phẩm",
+    "Orders": "Đơn đặt hàng",
+    "About": "Giới thiệu",
+    "Logout": "Đăng xuất"
+  },
+  "pageHeader": {
+    "Dashboard": "Bảng điều khiển",
+    "Customers": "Khách hàng",
+    "Products": "Sản phẩm",
+    "Orders": "Đơn đặt hàng",
+    "NotFound": "Không tìm thấy",
+    "About": "Giới thiệu",
+    "Settings": "Cấu hình hệ thống"
+  },
+  "home": {
+    "NoWidgets1": "Bạn không có widget hiển thị. Bấm vào đây",
+    "NoWidgets2": "để cấu hình các widget có sẵn",
+    "StatisticsTitle": "Một số nội dung quan trọng"
+  },
+  "notFound": {
+    "404": "404",
+    "pageNotFound": "Trang bạn đang tìm kiếm không tồn tại",
+    "backToHome": "Quay lại trang chủ"
+  },
+  "settings": {
+    "tab": {
+      "Profile": "Hồ sơ",
+      "Preferences": "Sở thích",
+      "Users": "Người dùng",
+      "Roles": "Vai trò và quyền"
+    },
+    "header": {
+      "UserProfile": "Hồ sơ người dùng",
+      "UserPreferences": "Sở thích của người sử dụng",
+      "UserDepartments": "Bộ phận người dùng",
+      "UsersManagements": "Quản lý người dùng",
+      "RolesManagement": "Quản lý vai trò"
+    }
+  },
+  "preferences": {
+    "ReloadPreferences": "Ưu tiên tải lại:",
+    "ReloadPreferencesHint": "Tải các ưu đãi mặc định (thay đổi cục bộ sẽ bị loại bỏ)",
+    "Language": "Language:",
+    "English": "English",
+    "French": "French",
+    "German": "German",
+    "Portuguese": "Portuguese",
+    "Arabic": "Arabic",
+    "Korean": "Korean",
+    "LanguageHint": "Chọn ngôn ngữ ưa thích cho tài khoản của bạn",
+    "HomePage": "Trang chủ:",
+    "Dashboard": "Bảng điều khiển",
+    "Customers": "Khách hàng",
+    "Products": "Sản phẩm",
+    "Orders": "Đơn đặt hàng",
+    "About": "Giới thiệu",
+    "Settings": "Câu hình",
+    "HomePageHint": "Chọn trang mặc định để điều hướng đến khi đăng nhập",
+    "Theme": "Giao diện:",
+    "DefaultColor": "<span class='default-theme-option'>Mặc định</span>",
+    "RedColor": "<span class='red-theme-option'>Red</span>",
+    "OrangeColor": "<span class='orange-theme-option'>Orange</span>",
+    "GreenColor": "<span class='green-theme-option'>Green</span>",
+    "GrayColor": "<span class='gray-theme-option'>Gray</span>",
+    "BlackColor": "<span class='black-theme-option'>Black</span>",
+    "ThemeHint": "Chọn chủ đề màu mặc định cho tài khoản của bạn",
+    "DashboardStatistics": "Thống kê bảng điều khiển:",
+    "DashboardStatisticsHint": "Hiển thị tiện ích biểu đồ minh họa trên trang tổng quan",
+    "DashboardNotifications": "Bảng điều khiển thông báo:",
+    "DashboardNotificationsHint": "Hiển thị thông báo về ứng dụng trên bảng điều khiển",
+    "DashboardTodo": "Bảng điều khiển Todo:",
+    "DashboardTodoHint": "Hiển thị tiện ích todo giới thiệu trên trang tổng quan",
+    "DashboardBanner": "Bảng điều khiển biểu ngữ:",
+    "DashboardBannerHint": "Hiển thị nội dung biểu ngữ thông tin trình diễn trên trang tổng quan",
+    "ResetDefault": "Trở lại chế độ mặc định",
+    "SetDefault": "Đặt làm mặc định"
+  },
+  "users": {
+    "management": {
+      "Search": "Tìm kiếm người dùng...",
+      "NewUser": "Thêm người dùng",
+      "Edit": "Sửa",
+      "Delete": "Xóa",
+      "EditUser": "Sửa người dùng: \"{{name}}\"",
+      "Title": "Tiêu đề",
+      "UserName": "Tên đăng nhập",
+      "FullName": "Họ và tên",
+      "Email": "Email",
+      "Roles": "Vai trò",
+      "PhoneNumber": "Điện thoại"
+    },
+    "editor": {
+      "JobTitle": "Chức danh: ",
+      "UserName": "Tên đăng nhập:",
+      "UserNameRequired": "Tên người dùng là bắt buộc (tối thiểu là 2 và tối đa là 200 ký tự)",
+      "Password": "Mật khẩu:",
+      "PasswordHint": "Mật khẩu của bạn là bắt buộc khi thay đổi tên người dùng",
+      "CurrentPasswordRequired": "Mật khẩu hiện tại là bắt buộc",
+      "Email": "Email:",
+      "EmailRequired": "Địa chỉ email là bắt buộc (tối đa là 200 ký tự)",
+      "InvalidEmail": "Email xác định không hợp lệ",
+      "ChangePassword": "Thay đổi mật khẩu",
+      "CurrentPassword": "Mật khẩu hiện tại:",
+      "NewPassword": "Mật khẩu mới:",
+      "NewPasswordRequired": "Mật khẩu mới là bắt buộc (tối thiểu là 6 ký tự)",
+      "ConfirmPassword": "Xác nhận mật khẩu:",
+      "ConfirmationPasswordRequired": "Yêu cầu xác nhận mật khẩu",
+      "PasswordMismatch": "Mật khẩu mới và mật khẩu xác nhận không khớp",
+      "Roles": "Vai trò:",
+      "FullName": " Họ và tên:",
+      "RoleRequired": " Vai trò là bắt buộc",
+      "PhoneNumber": "Điện thoại #:",
+      "Enabled": "Đã bật",
+      "Unblock": "Mở khóa",
+      "Close": "Đóng",
+      "Edit": "Sửa",
+      "Cancel": "Hủy",
+      "Save": "Ghi nhận",
+      "Saving": "Đang thực hiện ghi nhận..."
+    }
+  },
+  "roles": {
+    "management": {
+      "Search": "Tìm kiếm vai trò...",
+      "NewRole": "Thêm vai trò",
+      "Edit": "Sửa",
+      "Details": "Thông tin chi tiết",
+      "Delete": "Xóa",
+      "RoleDetails": "Thông tin vai trò",
+      "EditRole": "Sửa vai trò: \"{{name}}\"",
+      "Name": "Tên",
+      "Description": "Mô tả",
+      "Users": "Người dùng"
+    },
+    "editor": {
+      "Name": "Tên:",
+      "Description": "Mô tả:",
+      "RoleNameRequired": "Tên vai trò là bắt buộc (tối thiểu là 2 và tối đa là 200 ký tự)",
+      "SelectAll": "Chọn tất cả",
+      "SelectNone": "Lựa chọn một",
+      "Close": "Đóng",
+      "Cancel": "Hủy",
+      "Save": "Ghi nhận",
+      "Saving": "Đang thực hiện ghi nhận..."
+    }
+  },
+  "notifications": {
+    "Delete": "Xóa thông báo",
+    "Pin": "Ghim thông báo",
+    "Date": "Ngày",
+    "Notification": "Thông báo"
+  },
+  "todoDemo": {
+    "management": {
+      "Search": "Tìm kiếm công việc ...",
+      "HideCompleted": "Ẩn hoàn thành",
+      "AddTask": "Thêm công việc",
+      "Delete": "Xóa công việc",
+      "Important": "Đánh dấu là quan trọng",
+      "Task": "công việc",
+      "Description": "Mô tả"
+    },
+    "editor": {
+      "NewTask": "Thêm mới nhiệm vụ",
+      "Name": "Tên",
+      "TaskNameRequired": "Tên công việc là bắt buộc",
+      "Description": "Mô tả",
+      "Important": "Đánh dấu là quan trọng",
+      "AddTask": "Thêm công việc"
+    }
+  }
+}

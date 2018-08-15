@@ -1,0 +1,9 @@
+﻿.consoleLog{background:#ececec;border:1px solid #808080;padding:15px 5px;box-sizing:border-box;width:100%;height:250px;position:relative;z-index:1;margin-top:15px}
+.consoleLog .logTitle {font-size: 13px;font-weight: 900;position: absolute;top: -10px;left: 5px;background: linear-gradient(to bottom, #ffffff 50%, #ececec 50%);padding:0 3px}
+.listLog {font-size:12px;height:220px}
+.listLog .first, .listLog .complete {font-weight:900}
+.listLog .status, .listLog .complete {color: #048b8b}
+.listLog .nameItem{font-style:italic}
+.mCustomScrollBox {
+    width: 100%
+}

@@ -1,0 +1,474 @@
+﻿<div id="homepage">
+    <section class="content-header">
+        <h1 style="font-size:16px">
+            Thống kê chung - Tiện ích nhanh
+            <!--{{'preferences.TitleHome' | translate}}
+            <small>Chung cư VINASINCO</small>-->
+        </h1>
+        <commonroad></commonroad>
+    </section>
+    <section class="content">
+        <!-- /.row start -->
+        <div class="row home_dash_box">
+            <div class="col-sm-8 col-xs-12" style="padding:0" id="colLeftHomepage">
+                <div class="col-md-4" style="padding-right:0">
+                    <div class="widget widget-stats bg-gradient-green">
+                        <div class="stats-icon stats-icon-lg"><i class="fa fa-dollar fa-fw"></i></div>
+                        <div class="stats-content">
+                            <div class="stats-title">Tiền thu được trong ngày</div>
+                            <div class="stats-number">180,200</div>
+                            <div class="stats-progress progress">
+                                <div class="progress-bar" style="width: 40.5%;"></div>
+                            </div>
+                            <div class="stats-desc">Nhiều hơn hôm qua (40.5%)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" style="padding-right:0">
+                    <div class="widget widget-stats bg-gradient-blue">
+                        <div class="stats-icon stats-icon-lg"><i class="fa fa-money fa-fw"></i></div>
+                        <div class="stats-content">
+                            <div class="stats-title">Tổng công nợ trong tháng</div>
+                            <div class="stats-number">180,200</div>
+                            <div class="stats-progress progress">
+                                <div class="progress-bar" style="width: 60.5%;"></div>
+                            </div>
+                            <div class="stats-desc">Nhiều hơn tuần trước (60.5%)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" style="padding-right:0">
+                    <div class="widget widget-stats bg-gradient-purple">
+                        <div class="stats-icon stats-icon-lg"><i class="fa fa-usd fa-fw"></i></div>
+                        <div class="stats-content">
+                            <div class="stats-title">Dịch vụ đăng ký trong ngày</div>
+                            <div class="stats-number">20</div>
+                            <div class="stats-progress progress">
+                                <div class="progress-bar" style="width: 90.5%;"></div>
+                            </div>
+                            <div class="stats-desc">Nhiều hơn hôm qua (90.5%)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-sm-12" style="padding-right:0">
+                    <div class="panel panel-inverse" [class.panel-expand]="isFullScreen == 'yeucau'" data-sortable-id="index-1" data-init="true">
+                        <div class="panel-heading ui-sortable-handle">
+                            <h4 class="panel-title">
+                                Danh sách yêu cầu
+                                <span class="panel-heading-btn">
+                                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" (click)="toggleFullScreen('yeucau',$event)"><i class="glyphicon" [class.glyphicon-fullscreen]="!isFullScreen" [class.glyphicon-resize-small]="isFullScreen"></i></a>
+                                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" (click)="reloadData()"><i class="glyphicon glyphicon-repeat" style="color:#fff"></i></a>
+                                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" (click)="Togglechild('yeucau',$event)"><i class="fa fa-minus" style="color:#fff"></i></a>
+                                </span>
+                            </h4>
+                        </div>
+                        <div class="list-group dsyc dsycHead">
+                            <ul class="todolist">
+                                <li [class.active]="isActivetodo == 1">
+                                    <a href="javascript:;" class="todolist-container" (click)="todolist(1,$event)">
+                                        <div class="todolist-input" style="color:#000;font-size:12px">STT</div>
+                                        <div class="todolist-mb">Phòng</div>
+                                        <div class="todolist-title">Yêu cầu</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="list-group dsyc dsycBody" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [class.hiddenBox]="ishiddenBox == 'yeucau'">
+                            <ul class="todolist">
+                                <li [class.active]="isActivetodo == 1">
+                                    <a href="javascript:;" class="todolist-container active" (click)="todolist(1,$event)">
+                                        <div class="todolist-input"><i class="fa fa-square"></i></div>
+                                        <div class="todolist-mb">Phòng 201.</div>
+                                        <div class="todolist-title">Yêu cầu lắp đặt mạng phòng 901.</div>
+                                    </a>
+                                </li>
+                                <li [class.active]="isActivetodo == 2">
+                                    <a href="javascript:;" class="todolist-container" (click)="todolist(2,$event)">
+                                        <div class="todolist-input"><i class="fa fa-square"></i></div>
+                                        <div class="todolist-mb">Phòng 202.</div>
+                                        <div class="todolist-title">Yêu cầu sửa chữa đường điện phòng 202.</div>
+                                    </a>
+                                </li>
+                                <li [class.active]="isActivetodo == 3">
+                                    <a href="javascript:;" class="todolist-container" data-click="todolist(3,$event)">
+                                        <div class="todolist-input"><i class="fa fa-square"></i></div>
+                                        <div class="todolist-mb">Phòng 203.</div>
+                                        <div class="todolist-title">Yêu cầu xây dựng khu tập thể cho hội phụ nữ chung cư.</div>
+                                    </a>
+                                </li>
+                                <li class="active">
+                                    <a href="javascript:;" class="todolist-container" data-click="todolist(4,$event)">
+                                        <div class="todolist-input"><i class="fa fa-square"></i></div>
+                                        <div class="todolist-mb">Phòng 204.</div>
+                                        <div class="todolist-title">Yêu cầu mở cửa sớm hơn 10 phút sáng chủ nhật.</div>
+                                    </a>
+                                </li>
+                                <li class="active">
+                                    <a href="javascript:;" class="todolist-container" data-click="todolist(5,$event)">
+                                        <div class="todolist-input"><i class="fa fa-square"></i></div>
+                                        <div class="todolist-mb">Phòng 205.</div>
+                                        <div class="todolist-title">Yêu cầu của khách hàng phòng 501 về việc kiểm tra phòng.</div>
+                                    </a>
+                                </li>
+                                <li class="active">
+                                    <a href="javascript:;" class="todolist-container" data-click="todolist(6,$event)">
+                                        <div class="todolist-input"><i class="fa fa-square"></i></div>
+                                        <div class="todolist-mb">Phòng 206.</div>
+                                        <div class="todolist-title">Ban thanh tra an toàn cháy nổ yêu cầu kiểm tra phòng chay chữa cháy.</div>
+                                    </a>
+                                </li>
+                                <li class="active">
+                                    <a href="javascript:;" class="todolist-container active" data-click="todolist(7,$event)">
+                                        <div class="todolist-input"><i class="fa fa-square"></i></div>
+                                        <div class="todolist-mb">Phòng 207.</div>
+                                        <div class="todolist-title">Yêu cầu của cư dân tòa nhà đảm bảo an ninh buổi tối.</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="col-sm-4  col-xs-12">
+                <div class="panel panel-inverse" [class.panel-expand]="isFullScreen == 'thongbao'" data-sortable-id="index-1" data-init="true">
+                    <div class="panel-heading ui-sortable-handle">
+                        <h4 class="panel-title">
+                            Thông báo
+                            <span class="panel-heading-btn">
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" title="Xem toàn màn hình" (click)="toggleFullScreen('thongbao',$event)"><i class="glyphicon" [class.glyphicon-fullscreen]="!isFullScreen" [class.glyphicon-resize-small]="isFullScreen"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" title="Làm mới dữ liệu" (click)="reloadData()"><i class="glyphicon glyphicon-repeat" style="color:#fff"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" title="Thêm nhanh thông báo" (click)="Togglechild('thongbao',$event)"><i class="fa fa-plus" style="color:#fff"></i></a>
+                            </span>
+                        </h4>
+                    </div>
+                    <div class="list-group tb" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [class.hiddenBox]="ishiddenBox == 'thongbao'">
+                        <span class="pull-right label bg-gradient-green">4 thông báo mới</span>
+                        <a href="javascript:;" class="list-group-item list-group-item-inverse d-flex justify-content-between align-items-center newlist">
+                            <span class="icoNws">&nbsp;</span>
+                            1. Thông báo đóng tiền điện tháng 6
+                        </a>
+                        <a href="javascript:;" class="list-group-item list-group-item-inverse d-flex justify-content-between align-items-center newlist">
+                            <span class="icoNws">&nbsp;</span>
+                            2. Thông báo đóng tiền nước tháng 6
+                        </a>
+                        <a href="javascript:;" class="list-group-item list-group-item-inverse d-flex justify-content-between align-items-center newlist">
+                            <span class="icoNws">&nbsp;</span>
+                            3. Thông báo đóng tiền mạng tháng 6
+                        </a>
+                        <a href="javascript:;" class="list-group-item list-group-item-inverse d-flex justify-content-between align-items-center newlist">
+                            <span class="icoNws">&nbsp;</span>
+                            4. Thông báo cắt điện ngày 22/05/2018
+                        </a>
+                        <a href="javascript:;" class="list-group-item list-group-item-inverse d-flex justify-content-between align-items-center ">
+                            5. Thông báo kiểm tra phòng cháy chữa cháy
+                        </a>
+                        <a href="javascript:;" class="list-group-item list-group-item-inverse d-flex justify-content-between align-items-center ">
+                            6. Thông báo giữ gìn vệ sinh chung của tòa nhà
+                        </a>
+                        <a href="javascript:;" class="list-group-item list-group-item-inverse d-flex justify-content-between align-items-center ">
+                            7. Thông báo đóng tiền gửi xe tháng 6
+                        </a>
+                        <a href="javascript:;" class="list-group-item list-group-item-inverse d-flex justify-content-between align-items-center ">
+                            8. Thông báo đăng ký sử dụng phòng tập gym của tòa nhà
+                        </a>
+                        <a href="javascript:;" class="list-group-item list-group-item-inverse d-flex justify-content-between align-items-center ">
+                            9. Thông báo đăng ký tạm trú tạm vắng
+                        </a>
+                        <a href="javascript:;" class="list-group-item list-group-item-inverse d-flex justify-content-between align-items-center ">
+                            10. Thông báo bảo trì khuôn viên trước tòa nhà từ 00h00 đến 6h00 ngày 29/05/2018
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-sm-12 fast-service panel-inverse">
+                <div class="panel-heading ui-sortable-handle" style="margin-left:-15px;margin-right:-15px">
+                    <h4 class="panel-title">
+                        Tiện ích nhanh
+                        <!--<span class="panel-heading-btn">
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" (click)="toggleFullScreen('tienichnhanh',$event)"><i class="glyphicon" [class.glyphicon-fullscreen]="!isFullScreen" [class.glyphicon-resize-small]="isFullScreen"></i></a>
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" (click)="reloadData()"><i class="glyphicon glyphicon-repeat" style="color:#fff"></i></a>
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" (click)="Togglechild('tienichnhanh',$event)"><i class="fa fa-minus" style="color:#fff"></i></a>
+                        </span>-->
+                    </h4>
+                </div>
+                <div class="list-icon">
+                    <div class="col-lg-2 col-sm-2 feature-item" routerLink="/" (click)="reloadData()">
+                        <div class="thumb-img"><img src="../../../../wwwroot/icon/icon-04.png" /></div>
+                        <p>Thu phí dịch vụ</p>
+                    </div>
+                    <div class="col-lg-2 col-sm-2 feature-item" routerLink="/" (click)="reloadData()">
+                        <div class="thumb-img"><img src="../../../../wwwroot/icon/icon-03.png" /></div>
+                        <p>Thu phí điện,nước</p>
+                    </div>
+                    <div class="col-lg-2 col-sm-2 feature-item" routerLink="/" (click)="reloadData()">
+                        <div class="thumb-img"><img src="../../../../wwwroot/icon/icon-02.png" /></div>
+                        <p>Thu phí xe</p>
+                    </div>
+                    <div class="col-lg-2 col-sm-2 feature-item" routerLink="/" (click)="reloadData()">
+                        <div class="thumb-img"><img src="../../../../wwwroot/icon/icon-01.png" /></div>
+                        <p>Thu phí vệ sinh</p>
+                    </div>
+                    <div class="col-lg-2 col-sm-2 feature-item" routerLink="/" (click)="reloadData()">
+                        <div class="thumb-img"><img src="../../../../wwwroot/icon/icon-01.png" /></div>
+                        <p>Thu phí mạng</p>
+                    </div>
+                    <div class="col-lg-2 col-sm-2 feature-item" routerLink="/" (click)="reloadData()">
+                        <div class="thumb-img"><img src="../../../../wwwroot/icon/icon-01.png" /></div>
+                        <p>Thu phí khác</p>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- col start -->
+            <!--<div class="col-lg-3 col-xs-6">
+                <a class="small-box bg-aqua" routerLink="/toanha">
+                    <div class="inner">
+                        <h3>{{tongToaNha}}</h3>
+                        <p>Tổng tòa nhà</p>
+                    </div>
+                    <div class="icon"> <img src="../../../../wwwroot/icon/floor.png" width="80" height="80"> </div>
+                    <span class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></span>
+                </a>
+            </div>
+            <!-- ./col end -->
+            <!-- col start -->
+            <!--<div class="col-lg-3 col-xs-6">
+                <a class="small-box bg-aqua" routerLink="/quanlymatbang">
+                    <div class="inner">
+                        <h3>{{tongMatBang}}</h3>
+                        <p>Tổng số phòng</p>
+                    </div>
+                    <div class="icon"> <img src="../../../../wwwroot/icon/room.png" width="80" height="80"> </div>
+                    <span class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></span>
+                </a>
+            </div>-->
+            <!-- ./col end -->
+            <!-- col start -->
+            <!--<div class="col-lg-3 col-xs-6">
+                <a class="small-box bg-aqua" routerLink="/">
+                    <div class="inner">
+                        <h3>100</h3>
+                        <p>Tổng số chủ hộ</p>
+                    </div>
+                    <div class="icon"> <img src="../../../../wwwroot/icon/owner.png" width="80" height="80"> </div>
+                    <span class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></span>
+                </a>
+            </div>-->
+            <!-- ./col end -->
+            <!-- col start -->
+            <!--<div class="col-lg-3 col-xs-6">
+                <a class="small-box bg-aqua" routerLink="/">
+                    <div class="inner">
+                        <h3>100</h3>
+                        <p>Tổng người thuê</p>
+                    </div>
+                    <div class="icon"> <img src="../../../../wwwroot/icon/rented.png" width="80" height="80"> </div>
+                    <span  class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></span>
+                </a>
+            </div>-->
+            <!-- ./col end -->
+            <!-- col start -->
+            <!--<div class="col-lg-3 col-xs-6">
+                <a class="small-box bg-aqua" routerLink="/">
+                    <div class="inner">
+                        <h3>10</h3>
+                        <p>Tổng nhân viên</p>
+                    </div>
+                    <div class="icon"> <img src="../../../../wwwroot/icon/employee.png" width="80" height="80"> </div>
+                    <span  class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></span>
+                </a>
+            </div>-->
+            <!-- ./col end -->
+            <!-- ./col end -->
+            <!--<div class="col-lg-3 col-xs-6">
+                <a class="small-box bg-aqua" routerLink="/">
+                    <div class="inner">
+                        <h3>2</h3>
+                        <p>Tổng số hội</p>
+                    </div>
+                    <div class="icon"> <img src="../../../../wwwroot/icon/comittee.png" width="80" height="80"> </div>
+                    <span  class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></span>
+                </a>
+            </div>-->
+            <!-- ./col end -->
+            <!-- col start -->
+            <!--<div class="col-lg-3 col-xs-6">
+                <a class="small-box bg-aqua" routerLink="/">
+                    <div class="inner">
+                        <h3>$22000.00</h3>
+                        <p>Tổng tiền vé xe</p>
+                    </div>
+                    <div class="icon"> <img src="../../../../wwwroot/icon/fair.png" width="80" height="80"> </div>
+                    <span class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></span>
+                </a>
+            </div>-->
+            <!-- ./col end -->
+            <!-- col start -->
+            <!--<div class="col-lg-3 col-xs-6">
+                <a class="small-box bg-aqua" routerLink="/">
+                    <div class="inner">
+                        <h3>$15000.00</h3>
+                        <p>Tổng tiền bảo trì</p>
+                    </div>
+                    <div class="icon"> <img src="../../../../wwwroot/icon/maintenance.png" width="80" height="80"> </div>
+                    <span class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></span>
+                </a>
+            </div>-->
+            <!-- ./col end -->
+            <!-- col start -->
+            <!-- col start -->
+            <!--<div class="col-lg-3 col-xs-6">
+                <a class="small-box bg-aqua" routerLink="/">
+                    <div class="inner">
+                        <h3>$10000.00</h3>
+                        <p>Tổng quỹ</p>
+                    </div>
+                    <div class="icon"> <img src="../../../../wwwroot/icon/fund.png" width="80" height="80"> </div>
+                    <span  class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></span>
+                </a>
+            </div>-->
+            <!-- col start -->
+            <!--<div class="col-lg-3 col-xs-6">
+                <a class="small-box bg-aqua" routerLink="/">
+                    <div class="inner">
+                        <h3>$3000.00</h3>
+                        <p>Tổng tiền dịch vụ</p>
+                    </div>
+                    <div class="icon"> <img src="../../../../wwwroot/icon/utility.png" width="80" height="80"> </div>
+                    <span class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></span>
+                </a>
+            </div>-->
+            <!-- ./col end -->
+            <!-- col start -->
+            <!--<div class="col-lg-3 col-xs-6">
+                <a class="small-box bg-aqua" routerLink="/">
+                    <div class="inner">
+                        <h3>
+                            Báo cáo
+                        </h3>
+                        <p>&nbsp;</p>
+                    </div>
+                    <div class="icon"> <img src="../../../../wwwroot/icon/report.png" width="80" height="80"> </div>
+                    <span class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></span>
+                </a>
+            </div>-->
+            <!-- ./col end -->
+            <!-- col start -->
+            <!--<div class="col-lg-3 col-xs-6">
+                <a class="small-box bg-aqua" routerLink="/">
+                    <div class="inner">
+                        <h3>Cài đặt hệ thống</h3>
+                        <p>&nbsp;</p>
+                    </div>
+                    <div class="icon"> <img src="../../../../wwwroot/icon/setting.png" width="80" height="80"> </div>
+                    <span class="small-box-footer">Chi tiết <i class="fa fa-arrow-circle-right"></i></span>
+                </a>
+            </div>-->
+            <!-- ./col end -->
+        </div>
+        <!-- /.row end -->
+    </section>
+</div>
+
+
+<!--<div class="container">
+    <header class="pageHeader">
+        <h3><i class="fa fa-tachometer fa-lg page-caption" aria-hidden="true"></i> {{'pageHeader.Dashboard' | translate}}</h3>
+    </header>
+
+    <div [@fadeInOut]>
+        <div *ngIf="!configurations.showDashboardStatistics && !configurations.showDashboardNotifications && !configurations.showDashboardTodo && !configurations.showDashboardBanner" class="well well-lg">
+            <h4 class="text-muted text-center">
+                {{'home.NoWidgets1' | translate}} <a routerLink="/settings" fragment="preferences"><i class="fa fa-sliders"></i> {{'settings.tab.Preferences' | translate}}</a>
+                {{'home.NoWidgets2' | translate}}
+            </h4>
+        </div>
+
+        <div *ngIf="configurations.showDashboardStatistics" class="row bottom-space well well-sm">
+            <h4 class="text-muted inline-block">{{'home.StatisticsTitle' | translate}}</h4>
+            <button type="button" class="close pull-right statistics-close-btn" aria-label="Close" title="Close" (click)="configurations.showDashboardStatistics = false">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="clearfix"></div>
+            <statistics-demo></statistics-demo>
+        </div>
+
+        <div *ngIf="configurations.showDashboardNotifications" class="row bottom-space">
+            <button type="button" class="close pull-right todo-close-btn" aria-label="Close" title="Close" (click)="configurations.showDashboardNotifications = false">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="clearfix"></div>
+            <notifications-viewer></notifications-viewer>
+        </div>
+
+        <div *ngIf="configurations.showDashboardTodo" class="row bottom-space">
+            <button type="button" class="close pull-right todo-close-btn" aria-label="Close" title="Close" (click)="configurations.showDashboardTodo = false">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="clearfix"></div>
+            <todo-demo></todo-demo>
+        </div>
+
+        <div *ngIf="configurations.showDashboardBanner" class="row no-bottom-space">
+            <button type="button" class="close pull-right banner-close-btn" aria-label="Close" title="Close" (click)="configurations.showDashboardBanner = false">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="clearfix"></div>
+            <banner-demo></banner-demo>
+        </div>
+    </div>
+</div>-->

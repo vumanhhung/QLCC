@@ -1,0 +1,79 @@
+﻿<section class="content-header">
+    <h1>Quản lý Loại Dịch Vụ</h1>
+    <commonroad></commonroad>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div style="margin-bottom:1%" class="col-sm-6">
+                <div class="row">
+                    <search-box (searchChange)="onSearchChanged($event)" placeholder="Tìm kiếm theo tên, mô tả, vị trí">></search-box>
+                </div>
+            </div>
+            <div style="margin-bottom:1%;" align="right" class="col-sm-6">
+                <div class="row">
+                    <goback></goback>
+                    <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newLoaiDichVu()"><i class="fa fa-plus"></i></a>
+                    <!--<a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.Settings' | translate}}" (click)="configLoaiDichVu"><i class="fa fa-cog"></i></a>-->
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+            <div class="box box-info">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div>
+                        <div class="dataTables_length">
+                            <div class="dataTables_length" style="margin-right:10px;">
+                                <label>
+                                    Trạng thái
+                                    <select class="form-control input-sm" #drStatus (change)="SelectedStatusValue(drStatus.value)" [(ngModel)]="selectedGropup">
+                                        <option value="0">---Tất cả---</option>
+                                        <option value="1">Đang hoạt động</option>
+                                        <option value="2">Dừng hoạt động</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <label>
+                                Hiển thị
+                                <select class="form-control input-sm" #drSelected (change)="SelectedValue(drSelected.value)">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> bản ghi
+                            </label>
+                        </div>
+                        <!--<div class="DTTT_container">
+                            <a class="DTTT_button DTTT_button_print" title="{{'preferences.Print' | translate}}" tabindex="0">
+                                <span>{{'preferences.Print' | translate}}</span>
+                            </a>
+                        </div>-->
+                        <div class="clearfix"></div>
+                        <ngx-datatable class="material colored-header sm table table-striped table-hover "
+                                       [loadingIndicator]="loadingIndicator"
+                                       [rows]="rows"
+                                       [rowHeight]="45"
+                                       [headerHeight]="45"
+                                       [footerHeight]="45"
+                                       [columns]="columns"
+                                       [limit]="limit"
+                                       [columnMode]="'force'">
+                        </ngx-datatable>
+                        <ng-template #statusTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <span *ngIf="row.trangThai == 1" class="status">Đang hoạt động</span>
+                            <span *ngIf="row.trangThai == 2" class="status">Dừng hoạt động</span>
+                        </ng-template>
+                        <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <a class="btn btn-func btn-success" href="javascript:;" (click)="viewDetailLoaiDichVu(row)" title="Chi tiết"><i class="fa fa-eye"></i></a>
+                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editLoaiDichVu(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                            <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteLoaiDichVu(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        </ng-template>
+                        <loaidichvu-info #loaidichvuEditor [isGeneralEditor]="true"></loaidichvu-info>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,124 @@
+﻿
+<section class="content-header">
+    <h1>Quản lý cư dân</h1>
+    <commonroad></commonroad>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div style="margin-bottom:1%" class="col-sm-6">
+                <div class="row">
+                    <search-box (searchChange)="onSearchChanged($event)" placeholder="Tìm kiếm">></search-box>
+                </div>
+            </div>
+            <div style="margin-bottom:1%;" align="right" class="col-sm-6">
+                <div class="row">
+                    <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newCuDan()"><i class="fa fa-plus"></i></a>
+                    <a class="btn btn-primary" href="javascript://" tooltip="Import khách hàng cá nhân" (click)="importCuDan()"><i class="fa fa-download"></i></a>
+                    <a class="btn btn-primary" href="javascript://" tooltip="Export khách hàng cá nhân">
+                        <i class="fa fa-upload"></i>
+                    </a>
+                    <a class="btn btn-primary menubar" href="javascript:;" tooltip="Danh mục">
+                        <i class="fa fa-bars"></i>
+                        <ul class="nav navbar-nav child-menu">
+                            <li><a href="javascript:;" routerLink="/nhomkhachhang">QL Nhóm khách hàng</a></li>
+                            <li><a href="javascript:;" routerLink="/trangthaicudan">QL Trạng thái cư dân</a></li>
+                            <li><a href="javascript:;" routerLink="/trangthaiyeucau">QL Trạng thái yêu cầu</a></li>
+                            <li><a href="javascript:;" routerLink="/mucdouutien">QL Mức độ ưu tiên</a></li>
+                            <li><a href="javascript:;" routerLink="/nguontiepnhan">QL Nguồn tiếp nhận</a></li>
+                            <li><a href="javascript:;" routerLink="/quanhechuho">QL Quan hệ chủ hộ</a></li>
+                        </ul>
+                    </a>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+            <div class="box box-info">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div>
+                        <div class="dataTables_length">
+                            <!--<label>
+                                Cụm
+                                <select class="form-control input-sm" #dCumToaNha (change)="SelectedCumToaNha(drMatBang.value,drTangLau.value,drToaNha.value,dCumToaNha.value)">
+                                    <option value="0">---Tất cả---</option>
+                                    <option *ngFor="let o of cums" [value]="o.cumToaNhaId">
+                                        {{o.tenCumToaNha}}
+                                    </option>
+                                </select>
+                            </label>
+                            <label>
+                                Tòa nhà
+                                <select class="form-control input-sm" #drToaNha (change)="SelectedToaNha(drMatBang.value,drTangLau.value,drToaNha.value,dCumToaNha.value)">
+                                    <option value="0">---Tất cả---</option>
+                                    <option *ngFor="let o of toas" [value]="o.toaNhaId">
+                                        {{o.tenKhoiNha}}
+                                    </option>
+                                </select>
+                            </label>-->
+                            <label>
+                                Tầng (lầu)
+                                <select class="form-control input-sm" #drTangLau (change)="SelectedTangLauValue(drMatBang.value,drTangLau.value,drToaNha.value,dCumToaNha.value)">
+                                    <option value="0">---Tất cả---</option>
+                                    <option *ngFor="let o of tang" [value]="o.tangLauId">
+                                        {{o.tenTangLau}}
+                                    </option>
+                                </select>
+                            </label>
+                            <label>
+                                Phòng
+                                <select class="form-control input-sm" #drMatBang (change)="SelectedMatBang(drMatBang.value,drTangLau.value,drToaNha.value,dCumToaNha.value)">
+                                    <option value="0">---Tất cả---</option>
+                                    <option *ngFor="let o of matbangs" [value]="o.matBangId">
+                                        {{o.tenMatBang}}
+                                    </option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="DTTT_container">
+                            <label>
+                                Hiển thị
+                                <select class="form-control input-sm" #drSelected (change)="SelectedValue(drSelected.value)">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> bản ghi
+                            </label>
+                        </div>
+                        <div class="clearfix"></div>
+                        <ngx-datatable class="material colored-header sm table table-striped table-hover "
+                                       [loadingIndicator]="loadingIndicator"
+                                       [rows]="rows"
+                                       [rowHeight]="45"
+                                       [headerHeight]="45"
+                                       [footerHeight]="45"
+                                       [columns]="columns"
+                                       [limit]="limit"
+                                       [columnMode]="'force'">
+                        </ngx-datatable>
+                        <ng-template #ngayDenTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <p>{{row.ngayChuyenDen | date: 'dd/MM/yyyy'}}</p>
+                        </ng-template>
+                        <ng-template #ngayDiTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <p>{{row.ngayDi | date: 'dd/MM/yyyy'}}</p>
+                        </ng-template>
+                        <ng-template #TrangThaiTamTruTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <p *ngIf="row.trangThaiTamTru==1">Đã đăng ký tạm trú</p>
+                            <p *ngIf="row.trangThaiTamTru==2">Chưa đăng ký tạm trú</p>
+                        </ng-template>
+                        <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <a class="btn btn-func btn-success" href="javascript:;" title="Chi tiết" (click)="viewCuDan(row)"><i class="fa fa-eye"></i></a>
+                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editCuDan(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                            <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteCuDan(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        </ng-template>
+                        <!--modal-->
+                        <cudan-info #cudanEditor [isGeneralEditor]="true"></cudan-info>
+                        <!--modal-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

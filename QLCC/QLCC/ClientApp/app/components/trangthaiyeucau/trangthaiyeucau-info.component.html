@@ -1,0 +1,43 @@
+﻿<div>
+    <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="TrangThaiYeuCauInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
+          (!tenTrangThaiYeuCau.valid && showErrorAlert('Tên trạng thái không được để trống', 'Vui lòng nhập tên trạng thái!'));
+(!mauNen.valid && showErrorAlert('Màu nền không được để trống', 'Vui lòng chọn màu nền!'));
+">
+        <div class="form-group has-feedback">
+            <label class="control-label col-md-2" for="tenTrangThaiYeuCau-{{uniqueId}}">Tên trạng thái</label>
+            <div class="col-md-10" [ngClass]="{'has-success': f.submitted && tenTrangThaiYeuCau.valid, 'has-error' : f.submitted && !tenTrangThaiYeuCau.valid}">
+                <input autofocus type="text" class="form-control" name="tenTrangThaiYeuCau" [(ngModel)]="TrangThaiYeuCauEdit.tenTrangThaiYeuCau" #tenTrangThaiYeuCau="ngModel" required />
+                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tenTrangThaiYeuCau.valid, 'glyphicon-remove' : !tenTrangThaiYeuCau.valid}"></span>
+                <span *ngIf="showValidationErrors && f.submitted && !tenTrangThaiYeuCau.valid" class="errorMessage">
+                    Vui lòng nhập tên trạng thái!
+                </span>
+            </div>
+        </div>
+        <div class="form-group has-feedback">
+            <label class="control-label col-md-2" for="mauNen-{{uniqueId}}">Màu nền</label>
+            <div class="col-md-10" [ngClass]="{'has-success': f.submitted && mauNen.valid, 'has-error' : f.submitted && !mauNen.valid}">
+                <input autofocus type="color" class="form-control color" name="mauNen" [(ngModel)]="TrangThaiYeuCauEdit.mauNen" #mauNen="ngModel" required />
+                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': mauNen.valid, 'glyphicon-remove' : !mauNen.valid}"></span>
+                <span *ngIf="showValidationErrors && f.submitted && !mauNen.valid" class="errorMessage">
+                    Vui lòng chọn màu nền!
+                </span>
+            </div>
+        </div>   
+        <div class="col-md-12">
+            <hr class="edit-last-separator-hr" />
+        </div>
+        <div class="form-group actionBtn-form-group">
+            <div class="col-sm-7">
+                <div class="pull-right">
+                    <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                    <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                    <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
+                    <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
+                        <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>

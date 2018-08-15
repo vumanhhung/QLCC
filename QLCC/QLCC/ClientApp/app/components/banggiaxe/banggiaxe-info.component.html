@@ -1,0 +1,66 @@
+﻿<div>
+    <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="BangGiaXeInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
+(!chkLoaiXe && showErrorAlert('Loại xe không được để trống', 'Vui lòng chọn loại xe!'));
+(!dinhMuc.valid && showErrorAlert('Định mức không được để trống', 'Vui lòng nhập định mức!'));
+">
+        <div class="form-group has-feedback">
+            <label class="control-label col-md-2" for="loaiXeId-{{uniqueId}}">Loại xe</label>
+            <div class="col-md-10" [ngClass]="{'has-success': f.submitted && chkLoaiXe, 'has-error' : f.submitted && !chkLoaiXe}">
+                <select name="loaiXeId" [(ngModel)]="BangGiaXeEdit.loaiXeId" #loaiXeId="ngModel" class="form-control" (change)="loaiXeIdChange(loaiXeId.value)">
+                    <option value="0">--- Chọn loại xe ---</option>
+                    <option *ngFor="let o of loaixes" value="{{o.loaiXeId}}">
+                        {{o.tenLoaiXe}}
+                    </option>
+                </select>
+                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': chkLoaiXe, 'glyphicon-remove' : !chkLoaiXe}"></span>
+                <span *ngIf="showValidationErrors && f.submitted && !chkLoaiXe" class="errorMessage">
+                    Vui lòng chọn loại xe!
+                </span>
+            </div>
+        </div>
+        <div class="form-group has-feedback">
+            <label class="control-label col-md-2" for="dinhMuc-{{uniqueId}}">Định mức</label>
+            <div class="col-md-10" [ngClass]="{'has-success': f.submitted && dinhMuc.valid, 'has-error' : f.submitted && !dinhMuc.valid}">
+                <input autofocus type="number" class="form-control" name="dinhMuc" [(ngModel)]="BangGiaXeEdit.dinhMuc" #dinhMuc="ngModel" required />
+                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': dinhMuc.valid, 'glyphicon-remove' : !dinhMuc.valid}"></span>
+                <span *ngIf="showValidationErrors && f.submitted && !dinhMuc.valid" class="errorMessage">
+                    Vui lòng nhập định mức!
+                </span>
+            </div>
+        </div>
+        <div class="form-group has-feedback">
+            <label class="control-label col-md-2">Giá tháng</label>
+            <div class="col-md-10">
+                <input OnlyNumber="true" autofocus type="text" class="form-control" name="giaThang" [(ngModel)]="giaThang" (ngModelChange)="giaThangChange($event)"/>                
+            </div>
+        </div>
+        <div class="form-group has-feedback">
+            <label class="control-label col-md-2" for="giaNgay-{{uniqueId}}">Giá ngày</label>
+            <div class="col-md-10">
+                <input OnlyNumber="true" autofocus type="text" class="form-control" name="giaNgay" [(ngModel)]="giaNgay" (ngModelChange)="giaNgayChange($event)" />
+            </div>
+        </div>
+        <div class="form-group has-feedback">
+            <label class="control-label col-md-2" for="dienGiai-{{uniqueId}}">Ghi chú</label>
+            <div class="col-md-10" [ngClass]="{'has-success': f.submitted && dienGiai.valid, 'has-error' : f.submitted && !dienGiai.valid}">
+                <input autofocus type="text" class="form-control" name="dienGiai" [(ngModel)]="BangGiaXeEdit.dienGiai" #dienGiai="ngModel" />
+            </div>
+        </div>
+        <div class="col-md-12">
+            <hr class="edit-last-separator-hr" />
+        </div>
+        <div class="form-group actionBtn-form-group">
+            <div class="col-sm-7">
+                <div class="pull-right">
+                    <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                    <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                    <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
+                    <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
+                        <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>

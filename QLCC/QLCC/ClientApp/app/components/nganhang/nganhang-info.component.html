@@ -1,0 +1,44 @@
+﻿<div class="EditForm">
+    <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="NganHangInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
+          (!tenNganHang.valid && showErrorAlert('Tên ngân hàng không được để trống', 'Vui lòng nhập Tên ngân hàng!'));
+(!diaChi.valid && showErrorAlert('Địa chỉ không được để trống', 'Vui lòng nhập Địa chỉ!'));
+">
+        <div class="has-feedback">
+            <label class="control-label" for="tenNganHang-{{uniqueId}}">Tên ngân hàng</label>
+            <div class="control" [ngClass]="{'has-success': f.submitted && tenNganHang.valid, 'has-error' : f.submitted && !tenNganHang.valid}">
+                <input autofocus type="text" class="form-control" name="tenNganHang" [(ngModel)]="NganHangEdit.tenNganHang" #tenNganHang="ngModel" required />
+                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tenNganHang.valid, 'glyphicon-remove' : !tenNganHang.valid}"></span>
+                <span *ngIf="showValidationErrors && f.submitted && !tenNganHang.valid" class="errorMessage">
+                    Vui lòng nhập tên ngân hàng!
+                </span>
+            </div>
+        </div>
+        <div class="has-feedback">
+            <label class="control-label" for="diaChi-{{uniqueId}}">Địa chỉ</label>
+            <div class="control" [ngClass]="{'has-success': f.submitted && diaChi.valid, 'has-error' : f.submitted && !diaChi.valid}">
+                <textarea style="height:200px" type="text" class="form-control" name="diaChi" [(ngModel)]="NganHangEdit.diaChi" #diaChi="ngModel" required maxlength="500"></textarea>
+                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': diaChi.valid, 'glyphicon-remove' : !diaChi.valid}"></span>
+                <span *ngIf="showValidationErrors && f.submitted && !diaChi.valid" class="errorMessage">
+                    Vui lòng nhập địa chỉ!
+                </span>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <hr class="edit-last-separator-hr" />
+        </div>
+        <div class="actionBtn-form-group">
+            <div class="col-sm-7">
+                <div class="pull-right">
+                    <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                    <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                    <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
+                    <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
+                        <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>

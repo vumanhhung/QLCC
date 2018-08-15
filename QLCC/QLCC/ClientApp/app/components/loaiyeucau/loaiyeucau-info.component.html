@@ -1,0 +1,50 @@
+﻿<div class="EditForm">
+    <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="LoaiYeuCauInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
+          (!tenLoaiYeuCau.valid && showErrorAlert('TenLoaiYeuCau không được để trống', 'Vui lòng nhập TenLoaiYeuCau!'));
+(!kyHieu.valid && showErrorAlert('KyHieu không được để trống', 'Vui lòng nhập KyHieu!'));
+">
+        <div class="has-feedback col-sm-8">
+            <label class="control-label" for="tenLoaiYeuCau-{{uniqueId}}">Tên loại yêu cầu</label>
+            <div class="control" [ngClass]="{'has-success': f.submitted && tenLoaiYeuCau.valid, 'has-error' : f.submitted && !tenLoaiYeuCau.valid}">
+                <input autofocus type="text" class="form-control" name="tenLoaiYeuCau" [(ngModel)]="LoaiYeuCauEdit.tenLoaiYeuCau" #tenLoaiYeuCau="ngModel" required />
+                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tenLoaiYeuCau.valid, 'glyphicon-remove' : !tenLoaiYeuCau.valid}"></span>
+                <span *ngIf="showValidationErrors && f.submitted && !tenLoaiYeuCau.valid" class="errorMessage">
+                    Vui lòng nhập tên loại yêu cầu!
+                </span>
+            </div>
+        </div>
+        <div class="has-feedback col-sm-4">
+            <label class="control-label" for="kyHieu-{{uniqueId}}">Ký hiệu</label>
+            <div class="control" [ngClass]="{'has-success': f.submitted && kyHieu.valid, 'has-error' : f.submitted && !kyHieu.valid}">
+                <input autofocus type="text" class="form-control" name="kyHieu" [(ngModel)]="LoaiYeuCauEdit.kyHieu" #kyHieu="ngModel" required />
+                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': kyHieu.valid, 'glyphicon-remove' : !kyHieu.valid}"></span>
+                <span *ngIf="showValidationErrors && f.submitted && !kyHieu.valid" class="errorMessage">
+                    Vui lòng nhập ký hiệu!
+                </span>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="has-feedback col-sm-12">
+            <label class="control-label" for="dienGiai-{{uniqueId}}">Mô tả</label>
+            <div class="control">
+                <textarea style="height:150px" type="text" class="form-control" name="dienGiai" [(ngModel)]="LoaiYeuCauEdit.dienGiai" #dienGiai="ngModel" ></textarea>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <hr class="edit-last-separator-hr" />
+        </div>
+        <div class="actionBtn-form-group">
+            <div class="col-sm-7">
+                <div class="pull-right">
+                    <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                    <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                    <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
+                        <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
+                    </button>
+                    <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>

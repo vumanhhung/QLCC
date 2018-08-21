@@ -93,7 +93,7 @@ namespace QLCC.Controllers
 
         // POST: api/DinhMucNuocs
         [HttpPost]
-        public async Task<IActionResult> PostDinhMucNuoc([FromBody] DinhMucNuoc dinhmucnuoc, [FromRoute] int id)
+        public async Task<IActionResult> PostDinhMucNuoc([FromBody] DinhMucNuoc dinhmucnuoc)
         {
             if (!ModelState.IsValid)
             {
@@ -103,7 +103,7 @@ namespace QLCC.Controllers
             var userId = Utilities.GetUserId(this.User);
             dinhmucnuoc.NgayNhap = DateTime.Now;
             dinhmucnuoc.NguoiNhap = user;
-            var checkten = await _context.DinhMucNuocs.SingleOrDefaultAsync(r => r.TenDinhMucNuoc == dinhmucnuoc.TenDinhMucNuoc && r.CongThucNuocId == id);
+            var checkten = await _context.DinhMucNuocs.SingleOrDefaultAsync(r => r.CongThucNuocId == dinhmucnuoc.CongThucNuocId && r.TenDinhMucNuoc == dinhmucnuoc.TenDinhMucNuoc);
             if (checkten == null)
             {
                 _context.DinhMucNuocs.Add(dinhmucnuoc);
@@ -113,10 +113,7 @@ namespace QLCC.Controllers
             else
             {
                 var warn = new DinhMucNuoc();
-                if (checkten != null)
-                {
-                    warn.TenDinhMucNuoc = "Exist";
-                }
+                warn.TenDinhMucNuoc = "Exist";
                 return Ok(warn);
             }
         }
@@ -141,20 +138,11 @@ namespace QLCC.Controllers
             return Ok(dinhmucnuoc);
         }
 
-        [HttpGet("Max/{id}")]
-        public async Task<int?> checkMax(int id)
+        [HttpGet("GetLastRecord/{id}")]
+        public async Task<IActionResult> getLastRecord([FromRoute]int id)
         {
-            return await _context.DinhMucNuocs.Where(r => r.CongThucNuocId == id).MaxAsync(r => r.SoCuoi);
-            //var check = "";
-            //if(max == 0)
-            //{
-            //    check = "0";
-            //}
-            //else
-            //{
-            //    check = "1";
-            //}
-            //return Ok(check);
+            var lastRecord = await _context.DinhMucNuocs.LastOrDefaultAsync(r => r.CongThucNuocId == id);
+            return Ok(lastRecord);
         }
 
         private bool DinhMucNuocExists(int id)

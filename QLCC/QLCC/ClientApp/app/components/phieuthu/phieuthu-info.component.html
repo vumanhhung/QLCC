@@ -4,40 +4,22 @@
             <div class="EditForm">
                 <!--<form class="form-horizontal" #f="ngForm">-->
                 <div class="modal-header">
-                    <p class="modal-title pull-left"><i class="fa fa-plus"></i> Xuất phiếu thu - Phí gửi xe - Căn hộ: {{matbangObj.tenMatBang}}</p>
+                    <p class="modal-title pull-left">
+                        <i class="fa fa-plus"></i> Xuất phiếu thu - Phí gửi xe - Căn hộ: {{matbangObj.tenMatBang}}<span *ngIf="maPhieuThu!=''"> - Mã phiếu thu: #{{maPhieuThu}} - Ngày xuất phiếu thu: {{ngayLapPhieuThu | date: 'dd/MM/yyyy'}}</span>
+                    </p>
                     <button type="button" class="close pull-right" title="Close" (click)="phieuthuModal.hide()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" style="max-height:500px">
                     <div class="row">
-                        <div style="width:50%; margin:0 auto">
-                            <div class="col-md-4" style="text-align:center">
-                                <div class="control">
-                                    <span style="text-align:left;display:block">Kỳ hạn tháng </span>
-                                    <input type="text" value="{{kyHan}}" class="form-control" readonly="readonly" />
-                                </div>
-                            </div>
-                            <div class="col-md-4" style="text-align:center">
-                                <div class="control">
-                                    <span style="text-align:left;display:block">Thời hạn từ </span>
-                                    <kendo-datepicker [(value)]="fromMonth" [format]="'dd/MM/yyyy'" [bottomView]="'year'" [topView]="'decade'" [readonly]="true" class="form-control"></kendo-datepicker>
-                                </div>
-                            </div>
-                            <div class="col-md-4" style="text-align:center">
-                                <div class="control">
-                                    <span style="text-align:left;display:block">đến </span>
-                                    <kendo-datepicker [(value)]="toMonth" [format]="'dd/MM/yyyy'" [bottomView]="'year'" [topView]="'decade'" [readonly]="true" class="form-control"></kendo-datepicker>
-                                </div>
-                            </div>
-                        </div>
                         <div class="clearfix"></div>
                         <div class="col-md-12 table-item">
                             <table class="table">
                                 <tr>
                                     <th>Mã thẻ xe</th>
                                     <th>Biển số</th>
-                                    <th>Kỳ hạn (Số tháng)</th>
+                                    <th width="87">Kỳ hạn (Số tháng)</th>
                                     <th>Từ ngày</th>
                                     <th>Đến ngày</th>
                                     <th align="right">Đơn giá/tháng (đ)</th>
@@ -47,8 +29,8 @@
                                     <td>{{obj.maTheXe}}</td>
                                     <td>{{obj.bienSoXe}}</td>
                                     <td>
-                                        <select name="kyThanhToan" [(ngModel)]="obj.kyThanhToan" #kyThanhToan="ngModel" class="form-control" style="width:50%"
-                                                (change)="kyThanhToanChange()">
+                                        <select name="kyThanhToan" [(ngModel)]="obj.kyThanhToan" #kyThanhToan="ngModel" class="form-control" style="width:100%;height:20px;padding:0"
+                                                (change)="kyThanhToanChange(obj,kyThanhToan.value)">
                                             <option value="1">1</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -62,10 +44,9 @@
                                             <option value="11">11</option>
                                             <option value="12">12</option>
                                         </select>
-                                        <!--{{obj.kyThanhToan}}-->
                                     </td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{obj.hanTuNgay | date: 'dd/MM/yyyy'}}</td>
+                                    <td>{{obj.hanDenNgay | date: 'dd/MM/yyyy'}}</td>
                                     <td align="right">{{getFormatPrice(obj.phiGuiXe)}}</td>
                                     <td align="right">{{getFormatPrice(obj.kyThanhToan * obj.phiGuiXe)}}</td>
                                 </tr>
@@ -91,9 +72,10 @@
                     <div class="form-group actionBtn-form-group" style="margin-bottom:0">
                         <div class="col-sm-12" style="text-align:center">
                             <div class="center-block">
-                                <button type="button" (click)="cancel()" class="btn btn-danger"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
-                                <button type="submit" class="btn btn-success"><i class='fa fa-money'></i> Xuất & In phiếu thu</button>
-                                <button type="submit" (click)="save()" class="btn btn-primary"><i class='fa fa-save'></i> Xuất phiếu thu</button>
+                                <button *ngIf="isNew" type="button" (click)="cancel()" class="btn btn-danger"><i class='fa fa-times'></i> Hủy</button>
+                                <button *ngIf="!isNew" type="button" (click)="cancel()" class="btn btn-danger"><i class='fa fa-times'></i> Thoát</button>
+                                <!--<button type="submit" class="btn btn-success"><i class='fa fa-money'></i> Xuất & In phiếu thu</button>-->
+                                <button *ngIf="isNew" type="submit" (click)="save()" class="btn btn-primary"><i class='fa fa-save'></i> Xuất phiếu thu</button>
                             </div>
                         </div>
                     </div>

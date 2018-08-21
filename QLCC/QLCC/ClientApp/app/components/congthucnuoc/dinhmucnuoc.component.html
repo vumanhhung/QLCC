@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="EditForm">
                 <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="DinhMucNuocForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
-(!tenDinhMucNuoc.valid && showErrorAlert('Tên định mức nước không được để trống', 'Vui lòng nhập Tên định mức nước!'));
+(!checkTen && showErrorAlert('Tên định mức nước không được để trống', 'Vui lòng nhập Tên định mức nước!'));
 (!soCuoi.valid && showErrorAlert('Số Cuối không được để trống', 'Vui lòng nhập Số Cuối!'));
 ">
                     <div class="modal-header">
@@ -23,12 +23,12 @@
                                         <span class="form-control" style="border: none;">{{tenCongThucNuoc}}</span>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 has-feedback">
                                     <label class="control-label col-md-5" for="tenDinhMucNuoc-{{uniqueId}}">Tên định mức nước</label>
-                                    <div class="col-md-7" [ngClass]="{'has-success': f.submitted && tenDinhMucNuoc.valid, 'has-error' : f.submitted && !tenDinhMucNuoc.valid}">
-                                        <input autofocus type="text" class="form-control" name="tenDinhMucNuoc" [(ngModel)]="DinhMucNuocEdit.tenDinhMucNuoc" #tenDinhMucNuoc="ngModel" required />
-                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" style="padding-left:8%;" [ngClass]="{'glyphicon-ok ': tenDinhMucNuoc.valid, 'glyphicon-remove' : !tenDinhMucNuoc.valid}"></span>
-                                        <span *ngIf="showValidationErrors && f.submitted && !tenDinhMucNuoc.valid" class="errorMessage">
+                                    <div class="col-md-7" [ngClass]="{'has-success': f.submitted && checkTen, 'has-error' : f.submitted && !checkTen}">
+                                        <input autofocus type="text" class="form-control" name="tenDinhMucNuoc" [ngClass]="{'valid-required': checkTen, 'valid-not-required': !checkTen }" [(ngModel)]="DinhMucNuocEdit.tenDinhMucNuoc" #tenDinhMucNuoc="ngModel" required (change)="tenChk(tenCongThucNuoc.value)"/>
+                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" style="padding-left:8%;" [ngClass]="{'glyphicon-ok ': checkTen, 'glyphicon-remove' : !checkTen}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted && !checkTen" class="errorMessage">
                                             Vui lòng nhập Tên định mức nước!
                                         </span>
                                     </div>
@@ -37,11 +37,11 @@
                             <div class="col-md-12" style="margin-bottom:10px;">
                                 <div class="col-md-5">
                                     <label class="control-label col-md-5" for="soDau-{{uniqueId}}">Số Đầu</label>
-                                    <div class="col-md-7" [ngClass]="{'has-success': f.submitted && soDau.valid, 'has-error' : f.submitted && !soDau.valid}">
-                                        <input autofocus type="number" min="0" class="form-control" name="soDau" [(ngModel)]="DinhMucNuocEdit.soDau" #soDau="ngModel" required disabled/>
+                                    <div class="col-md-7">
+                                        <input autofocus type="number" min="0" class="form-control" style="background-color: #fff" name="soDau" [(ngModel)]="DinhMucNuocEdit.soDau" #soDau="ngModel" required disabled/>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 has-feedback">
                                     <label class="control-label col-md-5" for="soCuoi-{{uniqueId}}">Số Cuối</label>
                                     <div class="col-md-7" [ngClass]="{'has-success': f.submitted && soCuoi.valid, 'has-error' : f.submitted && !soCuoi.valid}">
                                         <input autofocus type="number" min="0" class="form-control" name="soCuoi" [(ngModel)]="DinhMucNuocEdit.soCuoi" #soCuoi="ngModel" required />
@@ -59,7 +59,7 @@
                                         <input OnlyNumber="true" autofocus type="text" class="form-control" name="gia" [(ngModel)]="gia" (ngModelChange)="giaChange($event)" />
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 has-feedback">
                                     <label class="control-label col-md-5" for="dienGiai-{{uniqueId}}">Diễn Giải</label>
                                     <div class="col-md-7" [ngClass]="{'has-success': f.submitted && dienGiai.valid, 'has-error' : f.submitted && !dienGiai.valid}">
                                         <input autofocus type="text" class="form-control" name="dienGiai" [(ngModel)]="DinhMucNuocEdit.dienGiai" #dienGiai="ngModel"/>
@@ -102,11 +102,12 @@
                                 <tr *ngFor="let list of list">
                                     <td>{{ list.tenDinhMucNuoc }}</td>
                                     <td>{{ list.soDau }}</td>
-                                    <td>{{ list.soCuoi }}</td>
+                                    <td *ngIf="list.soCuoi != null">{{ list.soCuoi }}</td>
+                                    <td *ngIf="list.soCuoi == null">trở lên</td>
                                     <td>{{formatPrice(list.gia)}}</td>
                                     <td>{{ list.dienGiai }}</td>
                                     <td>
-                                        <a class="btn btn-func btn-primary" href="javascript:;" (click)="editDinhMucNuoc(list)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                        <a class="btn btn-func btn-primary" href="javascript:;" (click)="editDinhMucNuoc(list)" title="Sửa" *ngIf="list.soCuoi == max"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                         <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDinhMucNuoc(list)" title="Xóa" *ngIf="list.soCuoi == max"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                                     </td>
                                 </tr>

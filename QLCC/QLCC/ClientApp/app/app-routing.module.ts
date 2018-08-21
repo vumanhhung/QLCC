@@ -56,7 +56,12 @@ import { LoaiDichVuComponent } from './components/loaidichvu/loaidichvu.componen
 import { TheXeComponent } from './components/thexe/thexe.component';
 import { DichVuCoBanComponent } from './components/dichvucoban/dichvucoban.component';
 import { CongThucNuocComponent } from './components/congthucnuoc/congthucnuoc.component';
-
+import { PhieuThuLichSuComponent } from './components/phieuthu/phieuthu-lichsu.component';
+import { HopDongComponent } from './components/hopdong/hopdong.component';
+import { HopDongInfoComponent } from './components/hopdong/hopdong-info.component';
+import { DichVuNuocComponent } from './components/dichvunuoc/dichvunuoc.component';
+import { HangSanXuatComponent } from './components/hangsanxuat/hangsanxuat.component';
+import { LoaiHangComponent } from './components/loaihang/loaihang.component';
 
 @NgModule({
     imports: [
@@ -98,9 +103,15 @@ import { CongThucNuocComponent } from './components/congthucnuoc/congthucnuoc.co
             { path: "banggiadichvucoban", component: BangGiaDichVuCoBanComponent, canActivate: [AuthGuard], data: { title: "Bảng giá dịch vụ cơ bản" } },
             { path: "loaidichvu", component: LoaiDichVuComponent, canActivate: [AuthGuard], data: { title: "Loại dịch vụ" } },
             { path: "thexe", component: TheXeComponent, canActivate: [AuthGuard], data: { title: "Quản lý trông giữ xe" } },
-            { path: "dvcb", component: DichVuCoBanComponent, canActivate: [AuthGuard], data: { title: "Dịch vụ cơ bản" } },
-            { path: "congthucnuoc", component: CongThucNuocComponent, canActivate: [AuthGuard], data: { title: "Dịch vụ cơ bản" } },
-            //{ path: "role/:id", component: RoleEditorComponent},
+            { path: "dvcb", component: DichVuCoBanComponent, canActivate: [AuthGuard], data: { title: "Quản lý thu phí dịch vụ cơ bản " } },
+            { path: "loaidichvu", component: LoaiDichVuComponent, canActivate: [AuthGuard], data: { title: "Quản lý loại dịch vụ " } },
+            { path: "hopdong", component: HopDongComponent, canActivate: [AuthGuard], data: { title: "Quản lý hợp đồng" } },
+            { path: "themhopdong", component: HopDongInfoComponent, canActivate: [AuthGuard], data: { title: "Quản lý hợp đồng" } },
+            { path: "congthucnuoc", component: CongThucNuocComponent, canActivate: [AuthGuard], data: { title: "Quản lý công thức nước " } },
+            { path: "dichvunuoc", component: DichVuNuocComponent, canActivate: [AuthGuard], data: { title: "Quản lý thu phí nước " } },
+            { path: "hangsanxuat", component: HangSanXuatComponent, canActivate: [AuthGuard], data: { title: "Quản lý thu phí nước " } },
+            { path: "loaihang", component: LoaiHangComponent, canActivate: [AuthGuard], data: { title: "Quản lý thu phí nước " } },
+            { path: "phieuthulichsu/:matbangid", component: PhieuThuLichSuComponent, canActivate: [AuthGuard], data: { title: "Lịch sử thu phí gửi xe " } },
             { path: "settings", component: SettingsComponent, canActivate: [AuthGuard], data: { title: "Cấu hình" } },
             { path: "about", component: AboutComponent, data: { title: "Giới thiệu" } },
             { path: "home", redirectTo: "/", pathMatch: "full" },

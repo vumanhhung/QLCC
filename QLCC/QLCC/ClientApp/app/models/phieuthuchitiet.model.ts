@@ -1,4 +1,6 @@
-﻿export class PhieuThuChiTiet {
+﻿import { PhieuThu } from "./phieuthu.model";
+
+export class PhieuThuChiTiet {
     public phieuThuChiTietId: number;
     public phieuThuId: number;
     public matBangId: number;
@@ -14,6 +16,7 @@
     public nguoiLap: string;
     public ngayLap: Date;
     public kyCuoi: boolean;
+    public phieuThu: PhieuThu;
 
     constructor(phieuThuChiTietId?: number, phieuThuId?: number, matBangId?: number, loaiDichVu?: number, theXeId?: number, tongSoTien?: number, ngayNop?: Date, hanTuNgay?: Date, hanDenNgay?: Date, ghiChu?: string, thang?: number, nam?: number, nguoiLap?: string, ngayLap?: Date, kyCuoi?: boolean) {
         this.phieuThuChiTietId = phieuThuChiTietId;

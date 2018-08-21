@@ -4,6 +4,7 @@ import { TrangThai } from "./trangthai.model";
 import { TangLau } from "./tanglau.model";
 import { LoaiMatBang } from "./loaimatbang.model";
 import { KhachHang } from "./khachhang.model";
+import { DichVuNuoc } from "./dichvunuoc.model";
 
 
 export class MatBang {
@@ -34,6 +35,7 @@ export class MatBang {
     public tanglau: TangLau;
     public loaimatbang: LoaiMatBang;
     public khacHangs: KhachHang;
+    public dichVuNuoc: DichVuNuoc;
 
     constructor(matBangId?: number, cumToaNhaId?: number, toaNhaId?: number, tangLauId?: number, trangThaiId?: number, loaiMatBangId?: number, maMatBang?: string, tenMatBang?: string, dienTich?: number, giaThue?: number, loaiTien?: string, caNhan?: number, giaoChiaKhoa?: number, ngaybanGiao?: Date, dienGiai?: string, khachHangId?: number, khachThue?: number, nguoiNhap?: string, ngayNhap?: Date, nguoiSua?: string, ngaySua?: Date) {
         this.matBangId = matBangId;

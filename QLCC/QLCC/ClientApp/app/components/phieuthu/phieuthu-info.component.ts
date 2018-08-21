@@ -19,17 +19,16 @@ import { elementAt } from 'rxjs/operator/elementAt';
 
 export class PhieuThuInfoComponent implements OnInit {
     public changesSavedCallback: () => void;
-    public changesFailedCallback: () => void;
-    public changesCancelledCallback: () => void;
+    public changesFailedCallback: () => void;    
     public scrollbarOptions = { axis: 'y', theme: 'minimal-dark' };
     public formResetToggle = true;
     matbangObj: MatBang = new MatBang();
-    thexes: TheXe[] = [];
-    fromMonth: Date;
-    toMonth: Date;
-    tongTien: string = "0";
-    kyHan: number = 1;
+    thexes: TheXe[] = [];    
+    tongTien: string = "0";    
     ghiChu: string = "";
+    isNew: boolean = false;
+    maPhieuThu: string = "";
+    ngayLapPhieuThu: Date = new Date();
 
     //@ViewChild('f')
     //private form;
@@ -50,10 +49,7 @@ export class PhieuThuInfoComponent implements OnInit {
         this.resetForm(true);
     }
 
-    resetForm(replace = false) {
-        this.fromMonth = null;
-        this.toMonth = null;
-
+    resetForm(replace = false) {     
         if (!replace) {
             // cancel button click
             //this.form.reset();            
@@ -73,82 +69,69 @@ export class PhieuThuInfoComponent implements OnInit {
         this.alertService.showMessage("Hủy thao tác", "Thao tác bị hủy bởi người dùng", MessageSeverity.default);
         this.alertService.resetStickyMessage();
         this.resetForm();
-        if (this.changesCancelledCallback)
-            this.changesCancelledCallback();
+        if (this.changesSavedCallback)
+            this.changesSavedCallback();
         this.phieuthuModal.hide();
     }
 
     newPhieuThu(thexes: TheXe[]) {
         if (thexes.length > 0) {
-            //this.kyHan = thexes[0].kyThanhToan;
-            //var hanchot = thexes[0].ngayThanhToan;
-
-            //this.phieuthuchitietService.getItems(0, 1, "TheXeId = " + thexes[0].theXeId, "Nam DESC, Thang DESC").subscribe(results => {
-            //    var cMonth = new Date().getMonth();
-            //    let cDate = new Date();
-            //    if (results.length == 0 || (results.length > 0 && results[0].nam < cDate.getFullYear())) {
-            //        if (hanchot < cDate.getDate()) {
-            //            var fm = new Date();
-            //            fm.setMonth(cMonth + 1);
-            //            fm.setDate(1);
-            //            this.fromMonth = fm;
-
-            //            var tm = new Date();
-            //            tm.setMonth(cMonth + thexes[0].kyThanhToan + 1);
-            //            tm.setDate(0);
-            //            this.toMonth = tm;
-            //        } else {
-            //            var fm = new Date();
-            //            fm.setDate(1);
-            //            this.fromMonth = fm;
-
-            //            var tm = new Date();
-            //            tm.setMonth(cMonth + thexes[0].kyThanhToan);
-            //            tm.setDate(0);
-            //            this.toMonth = tm;
-            //        }
-            //    } else {
-
-            //    }
-            //}, error => {
-            //    this.alertService.showStickyMessage("Lỗi truy suất dữ liệu", `Không thể lấy dữ liệu từ vào máy chủ.\r\nErrors: "${Utilities.getHttpResponseMessage(error)}"`,
-            //        MessageSeverity.error, error);
-            //});
-
-            let cDate = new Date();
-            for (var i = 0; i < thexes.length; i++) {
-                if (thexes[i].phieuThuChiTiets.hanDenNgay != null || (thexes[i].phieuThuChiTiets.hanDenNgay != null && thexes[i].phieuThuChiTiets.nam < cDate.getFullYear())) {
-                    if (thexes[i].ngayThanhToan < cDate.getDate()) {
-                        //var fm = new Date();
-                        //fm.setMonth(cMonth + 1);
-                        //fm.setDate(1);
-                        //this.fromMonth = fm;
-
-                        //var tm = new Date();
-                        //tm.setMonth(cMonth + thexes[0].kyThanhToan + 1);
-                        //tm.setDate(0);
-                        //this.toMonth = tm;
-                    } else {
-                        //var fm = new Date();
-                        //fm.setDate(1);
-                        //this.fromMonth = fm;
-
-                        //var tm = new Date();
-                        //tm.setMonth(cMonth + thexes[0].kyThanhToan);
-                        //tm.setDate(0);
-                        //this.toMonth = tm;
-                    }
-                } else {
-
-                }
-            }
-
-
+            this.isNew = true;
             this.thexes = thexes;
+            let cDate = new Date();
+            let cMonth = new Date().getMonth();
             var thanhtien = 0;
             var tongtienthanhtoan = 0;
-            for (var i = 0; i < thexes.length; i++) {
-                thanhtien = thexes[i].kyThanhToan * thexes[i].phiGuiXe;
+            for (var i = 0; i < this.thexes.length; i++) {
+                if (this.thexes[i].phieuThuChiTiets == null || (this.thexes[i].phieuThuChiTiets != null && this.thexes[i].phieuThuChiTiets.nam < cDate.getFullYear())
+                    || (this.thexes[i].phieuThuChiTiets.nam == cDate.getFullYear() && this.thexes[i].phieuThuChiTiets.thang < (cMonth + 1))) {
+                    if (this.thexes[i].ngayThanhToan < cDate.getDate()) {
+                        var fm = new Date();
+                        fm.setMonth(cMonth + 1);
+                        fm.setDate(1);
+                        this.thexes[i].hanTuNgay = fm;
+
+                        var tm = new Date();
+                        tm.setMonth(cMonth + this.thexes[i].kyThanhToan + 1);
+                        tm.setDate(0);
+                        this.thexes[i].hanDenNgay = tm;
+                    } else {
+                        var fm = new Date();
+                        fm.setDate(1);
+                        this.thexes[i].hanTuNgay = fm;
+
+                        var tm = new Date();                        
+                        tm.setMonth(cMonth + this.thexes[i].kyThanhToan);
+                        tm.setDate(0);
+                        this.thexes[i].hanDenNgay = tm;
+                    }
+                } else if (this.thexes[i].phieuThuChiTiets.nam == cDate.getFullYear() && this.thexes[i].phieuThuChiTiets.thang == (cMonth + 1)) {
+                    // nộp đúng hạn
+                    var fm = new Date();
+                    fm.setMonth(cMonth + 1);
+                    fm.setDate(1);
+                    this.thexes[i].hanTuNgay = fm;
+
+                    var tm = new Date();
+                    tm.setMonth(cMonth + this.thexes[i].kyThanhToan + 1);
+                    tm.setDate(0);
+                    this.thexes[i].hanDenNgay = tm;
+                } else if (this.thexes[i].phieuThuChiTiets.nam == cDate.getFullYear() && this.thexes[i].phieuThuChiTiets.thang > (cMonth + 1) || this.thexes[i].phieuThuChiTiets.nam > cDate.getFullYear()) {
+                    // nộp trước
+                    var fm = new Date();
+                    fm.setFullYear(this.thexes[i].phieuThuChiTiets.nam);
+                    fm.setMonth(this.thexes[i].phieuThuChiTiets.thang);
+                    fm.setDate(1);
+                    this.thexes[i].hanTuNgay = fm;
+
+                    var tm = new Date();
+                    tm.setFullYear(this.thexes[i].phieuThuChiTiets.nam);
+                    tm.setMonth(this.thexes[i].phieuThuChiTiets.thang + this.thexes[i].kyThanhToan);
+                    tm.setDate(0);
+                    this.thexes[i].hanDenNgay = tm;
+                }
+
+                thanhtien = this.thexes[i].kyThanhToan * this.thexes[i].phiGuiXe;
                 tongtienthanhtoan += thanhtien;
             }
             this.tongTien = Utilities.formatNumber(tongtienthanhtoan);
@@ -159,8 +142,7 @@ export class PhieuThuInfoComponent implements OnInit {
         return Utilities.formatNumber(price);
     }
 
-    private save() {
-        console.log(this.thexes);
+    private save() {        
         this.alertService.startLoadingMessage("Đang thực hiện lưu dữ liệu...");
         var phieuthu = new PhieuThu();
         phieuthu.matBangId = this.matbangObj.matBangId;
@@ -172,25 +154,30 @@ export class PhieuThuInfoComponent implements OnInit {
         phieuthu.ngayLap = new Date();
 
         this.gvService.addnewPhieuThu(phieuthu).subscribe(results => {
+            this.isNew = false;
+            this.maPhieuThu = results.maPhieuThu;
+            this.ngayLapPhieuThu = results.ngayLap;
+
             var phieuthuId = results.phieuThuId;
             var phieuthuChiTiets: PhieuThuChiTiet[] = [];
 
             for (var i = 0; i < this.thexes.length; i++) {
-                if (this.kyHan > 1) {
-                    for (var j = 1; j <= this.kyHan; j++) {
+                if (this.thexes[i].kyThanhToan > 1) {
+                    for (var j = 1; j <= this.thexes[i].kyThanhToan; j++) {
                         let chitiet = new PhieuThuChiTiet();
+                        chitiet.ngayNop = new Date();
                         chitiet.phieuThuId = phieuthuId;
                         chitiet.matBangId = this.matbangObj.matBangId;
                         chitiet.loaiDichVu = 1;
                         chitiet.theXeId = this.thexes[i].theXeId;
                         chitiet.tongSoTien = this.thexes[i].phiGuiXe;
-                        if (this.fromMonth.getMonth() + j > 12) {
-                            chitiet.thang = this.fromMonth.getMonth() + j - 12;
-                            chitiet.nam = this.fromMonth.getFullYear() + 1;
+                        if (this.thexes[i].hanTuNgay.getMonth() + j > 12) {
+                            chitiet.thang = this.thexes[i].hanTuNgay.getMonth() + j - 12;
+                            chitiet.nam = this.thexes[i].hanTuNgay.getFullYear() + 1;
                         }
                         else {
-                            chitiet.thang = this.fromMonth.getMonth() + j;
-                            chitiet.nam = this.fromMonth.getFullYear();
+                            chitiet.thang = this.thexes[i].hanTuNgay.getMonth() + j;
+                            chitiet.nam = this.thexes[i].hanTuNgay.getFullYear();
                         }
 
                         phieuthuChiTiets.push(chitiet);
@@ -198,15 +185,16 @@ export class PhieuThuInfoComponent implements OnInit {
                     }
                 } else {
                     var chitiet = new PhieuThuChiTiet();
+                    chitiet.ngayNop = new Date();
                     chitiet.phieuThuId = phieuthuId;
                     chitiet.matBangId = this.matbangObj.matBangId;
                     chitiet.loaiDichVu = 1;
                     chitiet.theXeId = this.thexes[i].theXeId;
                     chitiet.tongSoTien = this.thexes[i].phiGuiXe;
-                    chitiet.hanTuNgay = this.fromMonth;
-                    chitiet.hanDenNgay = this.toMonth;
-                    chitiet.thang = this.fromMonth.getMonth() + 1;
-                    chitiet.nam = this.fromMonth.getFullYear();
+                    chitiet.hanTuNgay = this.thexes[i].hanTuNgay;
+                    chitiet.hanDenNgay = this.thexes[i].hanDenNgay;
+                    chitiet.thang = this.thexes[i].hanTuNgay.getMonth() + 1;
+                    chitiet.nam = this.thexes[i].hanTuNgay.getFullYear();
                     phieuthuChiTiets.push(chitiet);
                 }
             }
@@ -215,20 +203,22 @@ export class PhieuThuInfoComponent implements OnInit {
                 this.alertService.stopLoadingMessage();
                 this.alertService.showMessage("Thành công", `Thực hiện xuất phiếu thu thành công`, MessageSeverity.success);
                 this.resetForm();
-                this.phieuthuModal.hide();
-                if (this.changesSavedCallback)
-                    this.changesSavedCallback();
+                
+                //this.phieuthuModal.hide();
+                //if (this.changesSavedCallback)
+                //    this.changesSavedCallback();
+               
             }, error => this.onDataLoadFailed(error));
         }, error => { this.onDataLoadFailed(error) });
     }
 
-    getFromDateInput(num: number): Date {
-        var date = this.fromMonth;
-        var cMonth = this.fromMonth.getMonth();
-        var m = cMonth + num - 1;
-        date.setMonth(m, 1);
-        return date;
-    }
+    //getFromDateInput(num: number): Date {
+    //    var date = this.fromMonth;
+    //    var cMonth = this.fromMonth.getMonth();
+    //    var m = cMonth + num - 1;
+    //    date.setMonth(m, 1);
+    //    return date;
+    //}
 
     onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
@@ -236,7 +226,62 @@ export class PhieuThuInfoComponent implements OnInit {
             MessageSeverity.error, error);
     }
 
-    kyThanhToanChange() {
+    kyThanhToanChange(thexe: TheXe, num: string) {
+        let cDate = new Date();
+        let cMonth = new Date().getMonth();
+        thexe.hanTuNgay = new Date();
+        thexe.hanDenNgay = new Date();
+
+        if (thexe.phieuThuChiTiets == null || (thexe.phieuThuChiTiets != null && thexe.phieuThuChiTiets.nam < cDate.getFullYear())
+            || (thexe.phieuThuChiTiets.nam == cDate.getFullYear() && thexe.phieuThuChiTiets.thang < (cMonth + 1))) {
+            if (thexe.ngayThanhToan < cDate.getDate()) {
+                var fm = new Date();
+                fm.setMonth(cMonth + 1);
+                fm.setDate(1);
+                thexe.hanTuNgay = fm;
+
+                var tm = new Date();
+                tm.setMonth(cMonth + Number(num) + 1);
+                tm.setDate(0);
+                thexe.hanDenNgay = tm;
+            } else {
+                var fm = new Date();
+                fm.setDate(1);
+                thexe.hanTuNgay = fm;
+
+                var tm = new Date();                
+                tm.setMonth(cMonth + Number(num));
+                tm.setDate(0);
+                thexe.hanDenNgay = tm;                
+            }
+        } else if (thexe.phieuThuChiTiets.nam == cDate.getFullYear() && thexe.phieuThuChiTiets.thang == (cMonth + 1)) {
+            // nộp đúng hạn
+            var fm = new Date();
+            fm.setMonth(cMonth + 1);
+            fm.setDate(1);
+            thexe.hanTuNgay = fm;
+
+            var tm = new Date();
+            tm.setMonth(cMonth + Number(num) + 1);
+            tm.setDate(0);
+            thexe.hanDenNgay = tm;
+        } else if (thexe.phieuThuChiTiets.nam == cDate.getFullYear() && thexe.phieuThuChiTiets.thang > (cMonth + 1) || thexe.phieuThuChiTiets.nam > cDate.getFullYear()) {
+            // nộp trước
+            var fm = new Date();
+            fm.setFullYear(thexe.phieuThuChiTiets.nam);
+            fm.setMonth(thexe.phieuThuChiTiets.thang);
+            fm.setDate(1);
+            thexe.hanTuNgay = fm;
+
+            var tm = new Date();
+            tm.setFullYear(thexe.phieuThuChiTiets.nam);
+            tm.setMonth(thexe.phieuThuChiTiets.thang + Number(num));
+            tm.setDate(0);
+            thexe.hanDenNgay = tm;
+        }
+
+        //thexe.hanDenNgay = new Date();
+
         var thanhtien = 0;
         var tongtienthanhtoan = 0;
         for (var i = 0; i < this.thexes.length; i++) {

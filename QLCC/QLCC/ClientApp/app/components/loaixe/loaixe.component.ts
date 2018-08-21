@@ -144,14 +144,7 @@ export class LoaiXeComponent implements OnInit, AfterViewInit {
     }
 
     deleteLoaiXe(row: LoaiXe) {
-        console.log(row.loaiXeId);
-        this.loaixeService.checkExist(row.loaiXeId).subscribe(results => {
-            if (results != null) {
-                this.showErrorAlert("Lỗi hệ thống", "Tên loại xe " + row.tenLoaiXe + " đang được sử dụng, vui lòng xóa loại xe khác!");
-                return false
-            } else 
-                this.alertService.showDialog('Bạn có chắc chắn muốn xóa bản ghi này?', DialogType.confirm, () => this.deleteHelper(row));
-        })
+        this.alertService.showDialog('Bạn có chắc chắn muốn xóa bản ghi này?', DialogType.confirm, () => this.deleteHelper(row));
     }
 
     deleteHelper(row: LoaiXe) {
@@ -160,14 +153,18 @@ export class LoaiXeComponent implements OnInit, AfterViewInit {
 
         this.loaixeService.deleteLoaiXe(row.loaiXeId)
             .subscribe(results => {
-                this.alertService.stopLoadingMessage();
-                this.loadingIndicator = false;
-                this.rowsCache = this.rowsCache.filter(item => item !== row)
-                this.rows = this.rows.filter(item => item !== row)
-                this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
-                this.loadData();
-            },
-                error => {
+                if (results == "Use") {
+                    this.showErrorAlert("Xóa lỗi", "Loại xe " + row.tenLoaiXe + " đang được sử dụng, vui lòng xóa loại xe khác !");
+                    this.alertService.stopLoadingMessage();
+                } else {
+                    this.alertService.stopLoadingMessage();
+                    this.loadingIndicator = false;
+                    this.rowsCache = this.rowsCache.filter(item => item !== row)
+                    this.rows = this.rows.filter(item => item !== row)
+                    this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
+                    this.loadData();
+                }
+            },error => {
                     this.alertService.stopLoadingMessage();
                     this.loadingIndicator = false;
                     this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
@@ -180,6 +177,8 @@ export class LoaiXeComponent implements OnInit, AfterViewInit {
         this.sourceloaixe = row;
         this.loaixeEdit = this.LoaiXeEditor.editLoaiXe(row);
         this.LoaiXeEditor.isViewDetails = false;
+        this.LoaiXeEditor.checkTen = true;
+        this.LoaiXeEditor.checkKyHieu = true;
         this.LoaiXeEditor.editorModal.show();
     }
 

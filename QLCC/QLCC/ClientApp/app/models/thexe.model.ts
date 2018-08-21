@@ -23,6 +23,8 @@ export class TheXe {
     public nguoiSua: string;
     public loaiXes: LoaiXe;
     public phieuThuChiTiets: PhieuThuChiTiet;
+    public hanTuNgay: Date;
+    public hanDenNgay: Date;
 
     constructor(theXeId?: number, maTheXe?: string, matBangId?: number, khachHangId?: number, loaiXeId?: number, phiGuiXe?: number, bienSoXe?: string, mauXe?: string, doiXe?: string, ngayDangKy?: Date, soHD?: string, dienGiai?: string, trangThai?: number, ngayNgungSuDung?: Date, ngayThanhToan?: number, kyThanhToan?: number, nguoiNhap?: string, ngaySua?: Date, nguoiSua?: string) {
         this.theXeId = theXeId;
@@ -43,6 +45,6 @@ export class TheXe {
         this.kyThanhToan = kyThanhToan;
         this.nguoiNhap = nguoiNhap;
         this.ngaySua = ngaySua;
-        this.nguoiSua = nguoiSua;
+        this.nguoiSua = nguoiSua;        
     }
 }

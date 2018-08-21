@@ -16,65 +16,71 @@ namespace QLCC.Controllers
     public class MatBangsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        
+
         public MatBangsController(ApplicationDbContext context)
         {
             _context = context;
         }
-        
+
         // GET: api/MatBangs
         [HttpGet]
         public IEnumerable<MatBang> GetMatBangs()
         {
-            return _context.MatBangs.Include(m=>m.cumtoanha).Include(m => m.toanha).Include(m=>m.trangthai).Include(m=>m.tanglau).Include(m=>m.loaimatbang);
+            return _context.MatBangs.Include(m => m.cumtoanha).Include(m => m.toanha).Include(m => m.trangthai).Include(m => m.tanglau).Include(m => m.loaimatbang);
         }
 
-        // PUT: api/LoaiGiaThues/getItems/5/5/x
+        // PUT: api/MatBang/getItems/5/5/x
         [HttpPut("getItems/{start}/{count}/{orderby}")]
-        public IEnumerable<LoaiGiaThue> GetItems([FromRoute] int start, int count, string orderBy, [FromBody] string whereClause)
+        public IEnumerable<MatBang> GetItems([FromRoute] int start, int count, string orderBy, [FromBody] string whereClause)
         {
             orderBy = orderBy != "x" ? orderBy : "";
-            return _context.Set<LoaiGiaThue>().FromSql($"tbl_LoaiGiaThue_GetItemsByRange {start},{count},{whereClause},{orderBy}").ToList<LoaiGiaThue>();
+            var list = _context.Set<MatBang>().FromSql($"tbl_MatBang_GetItemsByRange {start},{count},{whereClause},{orderBy}").ToList<MatBang>();
+            foreach (var item in list)
+            {
+                DichVuNuoc dvn = _context.DichVuNuocs.Where(o => o.MatBangId == item.MatBangId).OrderByDescending(o => o.Nam).OrderByDescending(o => o.Thang).FirstOrDefault();
+                item.DichVuNuoc = dvn;
+            }
+            return list;
         }
 
         // GET: api/ToaNhas/getToaNhaByCum/5,5
         [HttpGet("getMatBangByToaNha/{tangLauId}/{toaNhaId}/{cumToaNhaId}")]
-        public IEnumerable<MatBang> getMatBangByToaNha([FromRoute] int tangLauId, int toaNhaId,int cumToaNhaId)
+        public IEnumerable<MatBang> getMatBangByToaNha([FromRoute] int tangLauId, int toaNhaId, int cumToaNhaId)
         {
-            if (tangLauId != 0 && toaNhaId == 0 && cumToaNhaId ==0)
+            if (tangLauId != 0 && toaNhaId == 0 && cumToaNhaId == 0)
             {
-                var matbangs = _context.MatBangs.Include(m => m.cumtoanha).Include(m => m.toanha).Include(m => m.trangthai).Include(m => m.tanglau).Include(m => m.loaimatbang).Where(m => m.TangLauId == tangLauId);
+                var matbangs = _context.MatBangs.Include(m => m.cumtoanha).Include(m => m.toanha).Include(m => m.trangthai).Include(m => m.tanglau).Include(m => m.loaimatbang).Where(m => m.TangLauId == tangLauId).Include(o => o.KhachHangs);
                 return matbangs;
             }
             else if (tangLauId != 0 && toaNhaId != 0 && cumToaNhaId == 0)
             {
-                var matbangs = _context.MatBangs.Include(m => m.cumtoanha).Include(m => m.toanha).Include(m => m.trangthai).Include(m => m.tanglau).Include(m => m.loaimatbang).Where(m => m.TangLauId == tangLauId).Where(m => m.ToaNhaId == toaNhaId);
+                var matbangs = _context.MatBangs.Include(m => m.cumtoanha).Include(m => m.toanha).Include(m => m.trangthai).Include(m => m.tanglau).Include(m => m.loaimatbang).Where(m => m.TangLauId == tangLauId).Where(m => m.ToaNhaId == toaNhaId).Include(o => o.KhachHangs);
                 return matbangs;
             }
             else if (tangLauId != 0 && toaNhaId != 0 && cumToaNhaId != 0)
             {
-                var matbangs = _context.MatBangs.Include(m => m.cumtoanha).Include(m => m.toanha).Include(m => m.trangthai).Include(m => m.tanglau).Include(m => m.loaimatbang).Where(m => m.TangLauId == tangLauId).Where(m => m.ToaNhaId == toaNhaId).Where(m=>m.CumToaNhaId == cumToaNhaId);
+                var matbangs = _context.MatBangs.Include(m => m.cumtoanha).Include(m => m.toanha).Include(m => m.trangthai).Include(m => m.tanglau).Include(m => m.loaimatbang).Where(m => m.TangLauId == tangLauId).Where(m => m.ToaNhaId == toaNhaId).Where(m => m.CumToaNhaId == cumToaNhaId).Include(o => o.KhachHangs);
                 return matbangs;
             }
 
             else if (tangLauId == 0 && toaNhaId != 0 && cumToaNhaId == 0)
             {
-                var matbangs = _context.MatBangs.Include(m => m.cumtoanha).Include(m => m.toanha).Include(m => m.trangthai).Include(m => m.tanglau).Include(m => m.loaimatbang).Where(m => m.ToaNhaId == toaNhaId);
+                var matbangs = _context.MatBangs.Include(m => m.cumtoanha).Include(m => m.toanha).Include(m => m.trangthai).Include(m => m.tanglau).Include(m => m.loaimatbang).Where(m => m.ToaNhaId == toaNhaId).Include(o => o.KhachHangs);
                 return matbangs;
             }
             else if (tangLauId == 0 && toaNhaId != 0 && cumToaNhaId != 0)
             {
-                var matbangs = _context.MatBangs.Include(m => m.cumtoanha).Include(m => m.toanha).Include(m => m.trangthai).Include(m => m.tanglau).Include(m => m.loaimatbang).Where(m => m.ToaNhaId == toaNhaId).Where(m => m.CumToaNhaId == cumToaNhaId);
+                var matbangs = _context.MatBangs.Include(m => m.cumtoanha).Include(m => m.toanha).Include(m => m.trangthai).Include(m => m.tanglau).Include(m => m.loaimatbang).Where(m => m.ToaNhaId == toaNhaId).Where(m => m.CumToaNhaId == cumToaNhaId).Include(o => o.KhachHangs);
                 return matbangs;
             }
             if (tangLauId != 0 && toaNhaId == 0 && cumToaNhaId != 0)
             {
-                var matbangs = _context.MatBangs.Include(m => m.cumtoanha).Include(m => m.toanha).Include(m => m.trangthai).Include(m => m.tanglau).Include(m => m.loaimatbang).Where(m => m.CumToaNhaId == cumToaNhaId).Where(m => m.TangLauId == tangLauId);
+                var matbangs = _context.MatBangs.Include(m => m.cumtoanha).Include(m => m.toanha).Include(m => m.trangthai).Include(m => m.tanglau).Include(m => m.loaimatbang).Where(m => m.CumToaNhaId == cumToaNhaId).Where(m => m.TangLauId == tangLauId).Include(o => o.KhachHangs);
                 return matbangs;
             }
             else
             {
-                var matbangs = _context.MatBangs.Include(m => m.cumtoanha).Include(m => m.toanha).Include(m => m.trangthai).Include(m => m.tanglau).Include(m => m.loaimatbang).Where(m => m.CumToaNhaId == cumToaNhaId);
+                var matbangs = _context.MatBangs.Include(m => m.cumtoanha).Include(m => m.toanha).Include(m => m.trangthai).Include(m => m.tanglau).Include(m => m.loaimatbang).Where(m => m.CumToaNhaId == cumToaNhaId).Include(o => o.KhachHangs);
                 return matbangs;
             }
         }
@@ -96,7 +102,7 @@ namespace QLCC.Controllers
 
             return Ok(matbang);
         }
-        
+
         // PUT: api/MatBangs/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMatBang([FromRoute] int id, [FromBody] MatBang matbang)
@@ -134,7 +140,7 @@ namespace QLCC.Controllers
 
             return NoContent();
         }
-        
+
         // POST: api/MatBangs
         [HttpPost]
         public async Task<IActionResult> PostMatBang([FromBody] MatBang matbang)
@@ -177,10 +183,10 @@ namespace QLCC.Controllers
             }
             var user = User.Identity.Name;
             var userId = Utilities.GetUserId(this.User);
-            foreach(var mb in matbang)
+            foreach (var mb in matbang)
             {
                 mb.LoaiTien = "VND";
-                mb.KhachHangId = 2;
+                //mb.KhachHangId = 2;
                 mb.KhachThue = 2;
                 mb.GiaoChiaKhoa = 1;
                 mb.CaNhan = 2;
@@ -219,9 +225,9 @@ namespace QLCC.Controllers
 
             return Ok(matbang);
         }
-        
+
         private bool MatBangExists(int id)
-        {                        
+        {
             return _context.MatBangs.Any(e => e.MatBangId == id);
         }
 
@@ -230,5 +236,5 @@ namespace QLCC.Controllers
         {
             return _context.MatBangs.Where(r => r.TangLauId == id).ToList();
         }
-    }    
+    }
 }

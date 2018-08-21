@@ -13,7 +13,7 @@
             <div style="margin-bottom:1%;" align="right" class="col-sm-6">
                 <div class="row">
                     <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newDichVuCoBan()"><i class="fa fa-plus"></i></a>
-                    <a class="btn btn-primary" href="javascript://" title="In tất cả các bản ghi" (click)="printDiv(selected)" disabled><i class="fa fa-print"></i></a>
+                    <a class="btn btn-primary" href="javascript://" title="In tất cả các bản ghi" (click)="printDiv(selected)"><i class="fa fa-print"></i></a>
                     <a class="btn btn-primary" href="javascript://" tooltip="Import dịch vụ cơ bản" (click)="importDichVuCoBan()" disabled><i class="fa fa-download"></i></a>
                     <a class="btn btn-primary" href="javascript://" tooltip="Export dịch vụ cơ bản" (click)="excelexport.save()">
                         <i class="fa fa-upload"></i>
@@ -40,11 +40,9 @@
                             </kendo-excelexport-column>
                             <kendo-excelexport-column field="thanhTien" title="Thành tiền" [width]="100" [cellOptions]="{format: '#,##'}" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
-                            <kendo-excelexport-column field="ngayThanhToan" title="Ngày thanh toán" [width]="160" [cellOptions]="{ format: 'dd-MM-yy' }" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
+                            <kendo-excelexport-column field="ngayThanhToan" title="Ngày thanh toán" [width]="160" [cellOptions]="{ format: 'dd-Mon-yyyy' }" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
                             <kendo-excelexport-column field="kyThanhToan" title="Kỳ thanh toán" [width]="100" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
-                            </kendo-excelexport-column>
-                            <kendo-excelexport-column field="tienThanhToan" title="Tiền thanh toán" [width]="120" [cellOptions]="{format: '#,##'}" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
                             <kendo-excelexport-column field="tienTTQuyDoi" title="Tiền thanh toán quy đổi" [width]="200" [cellOptions]="{format: '#,##'}" [headerCellOptions]="{ textAlign: 'center',background:'#048b8b' }">
                             </kendo-excelexport-column>
@@ -58,6 +56,13 @@
                             </kendo-excelexport-column>
                         </kendo-excelexport>
                     </a>
+                    <a class="btn btn-primary menubar" href="javascript:;" tooltip="Danh mục">
+                        <i class="fa fa-bars"></i>
+                        <ul class="nav navbar-nav child-menu">
+                            <li><a href="javascript:;" routerLink="/loaidichvu">QL loại dịch vụ</a></li>
+                            <li><a href="javascript:;" routerLink="/banggiadichvucoban">QL Bảng giá loại dịch vụ</a></li>
+                        </ul>
+                    </a>
                 </div>
             </div>
 
@@ -68,35 +73,35 @@
                     <div>
                         <div class="dataTables_length">
                             <div (change)="SelectedTangLauValue(drTangLau.value,drloaiDV.value,drStatus.value, valueDate)">
-                                <label style="margin-right:1%;">
+                                <label style="width: 20%;">
                                     Tầng lầu
-                                    <select class="form-control input-sm" #drTangLau [(ngModel)]="selectedTangLau">
+                                    <select style="width:80%;" class="form-control input-sm" #drTangLau [(ngModel)]="selectedTangLau">
                                         <option value="0">---Tất cả---</option>
                                         <option *ngFor="let o of tanglau" [value]="o.tangLauId">
                                             {{o.tenTangLau}}
                                         </option>
                                     </select>
                                 </label>
-                                <label style="margin-right:1%;">
+                                <label style="width: 20%;">
                                     Loại dịch vụ
-                                    <select class="form-control input-sm" #drloaiDV [(ngModel)]="selectedLoaiDV">
+                                    <select style="width:80%;" class="form-control input-sm" #drloaiDV [(ngModel)]="selectedLoaiDV">
                                         <option value="0">---Tất cả---</option>
                                         <option *ngFor="let o of loaiDichVu" [value]="o.loaiDichVuId">
                                             {{o.tenLoaiDichVu}}
                                         </option>
                                     </select>
                                 </label>
-                                <label style="margin-right: 1%;">
+                                <label style="width: 20%;">
                                     Trạng thái
-                                    <select class="form-control input-sm" #drStatus [(ngModel)]="selectedTrangThai">
+                                    <select style="width:80%;" class="form-control input-sm" #drStatus [(ngModel)]="selectedTrangThai">
                                         <option value="0">---Tất cả---</option>
                                         <option value="1">Đang sử dụng</option>
                                         <option value="2">Dừng sử dụng</option>
                                     </select>
                                 </label>
-                                <label style="margin-right: 1%;">
-                                    Lọc theo tháng
-                                    <kendo-datepicker style="margin-top:-4px; height: 30px; line-height: 30px;"
+                                <label style="width: 20%;">
+                                    Tháng Chứng từ
+                                    <kendo-datepicker style="height: 30px; line-height: 30px;"
                                                       [format]="'MM/yyyy'"
                                                       [(value)]="valueDate"
                                                       [bottomView]="'year'"
@@ -104,15 +109,17 @@
                                                       [navigation]="false"
                                                       (valueChange)="SelectedTangLauValue(drTangLau.value,drloaiDV.value,drStatus.value,$event)"></kendo-datepicker>
                                 </label>
-                                <label>
+                                <label style="width: 15%;margin-left: 3%;">
                                     Hiển thị
-                                    <select class="form-control input-sm" #drSelected (change)="SelectedValue(drSelected.value)">
-                                        <option value="10">10</option>
-                                        <option value="20">20</option>
-                                        <option value="30">30</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select> bản ghi
+                                    <div  style="width:80%;">
+                                        <select class="form-control input-sm" #drSelected (change)="SelectedValue(drSelected.value)">
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select> bản ghi
+                                    </div>                                    
                                 </label>
                             </div>                            
                         </div>

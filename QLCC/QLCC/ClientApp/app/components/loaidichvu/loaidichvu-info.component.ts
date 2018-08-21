@@ -30,6 +30,7 @@ export class LoaiDichVuInfoComponent implements OnInit {
     public changesSavedCallback: () => void;
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
+    checkTen: boolean;
 
     @Input()
     isViewOnly: boolean;
@@ -47,12 +48,12 @@ export class LoaiDichVuInfoComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (this.isGeneralEditor) {
+        if (!this.isGeneralEditor) {
             this.loadData();
         }
     }
 
-    loadData() {
+    loadData() {        
         this.alertService.startLoadingMessage();
         this.gvService.getLoaiDichVuByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
     }
@@ -103,6 +104,7 @@ export class LoaiDichVuInfoComponent implements OnInit {
                     this.showErrorAlert("Lỗi nhập liệu", "Loại dịch vụ: " + this.LoaiDichVuEdit.tenLoaiDichVu + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");
                     this.alertService.stopLoadingMessage();
                     this.isSaving = false;
+                    this.checkTen = false;
                 }else this.saveSuccessHelper();
             }, error => this.saveFailedHelper(error));
         }
@@ -112,6 +114,7 @@ export class LoaiDichVuInfoComponent implements OnInit {
                     this.showErrorAlert("Lỗi nhập liệu", "Loại dịch vụ: " + this.LoaiDichVuEdit.tenLoaiDichVu + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");
                     this.alertService.stopLoadingMessage();
                     this.isSaving = false;
+                    this.checkTen = false;
                 } else this.saveSuccessHelper();
             }, error => this.saveFailedHelper(error));
         }
@@ -227,5 +230,12 @@ export class LoaiDichVuInfoComponent implements OnInit {
         } else {
             this.chDichVu = false;
         }
+    }
+
+    tenChk(ten: string) {
+        if (ten != "") {
+            this.checkTen = true;
+        } else
+            this.checkTen = false;
     }
 }

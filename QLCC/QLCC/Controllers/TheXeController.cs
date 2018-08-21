@@ -77,7 +77,9 @@ namespace QLCC.Controllers
             }
 
             _context.Entry(thexe).State = EntityState.Modified;
-
+            var user = this.User.Identity.Name;
+            thexe.NgaySua = DateTime.Now;
+            thexe.NguoiSua = user;
             try
             {
                 await _context.SaveChangesAsync();
@@ -107,7 +109,7 @@ namespace QLCC.Controllers
             }
             for (int i = 0; i < thexes.Count(); i++)
             {
-                _context.Entry(thexes[i]).State = EntityState.Modified;
+                _context.Entry(thexes[i]).State = EntityState.Modified;                
             }
 
             try
@@ -130,7 +132,10 @@ namespace QLCC.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            var user = this.User.Identity.Name;
+            thexe.NguoiNhap = thexe.NguoiSua = user;
+            thexe.NgayDangKy = DateTime.Now;
+            thexe.NgaySua = DateTime.Now;
             _context.TheXes.Add(thexe);
             await _context.SaveChangesAsync();
 

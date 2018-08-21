@@ -1,0 +1,174 @@
+﻿<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="EditForm">
+                <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="DichVuNuocInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid? save() :
+                    (!tuNgayChk && showErrorAlert('Từ ngày không được để trống', 'Vui lòng chọn từ ngày!'));
+                    (!denNgayChk && showErrorAlert('Đến ngày không được để trống', 'Vui lòng nhập đến ngày!'));
+                    (!ssNgayChk && showErrorAlert('Lỗi: đến ngày nhỏ hơn từ ngày', 'Vui lòng nhập đến ngày lớn hơn từ ngày!'));
+                    (!DichVuNuocEdit.chiSoMoi && showErrorAlert('Chỉ số mới không được để trống', 'Vui lòng nhập chỉ số mới!'));
+                    (!chisomoiChk && showErrorAlert('Lỗi chỉ số mới', 'Vui lòng nhập chỉ số mới lớn hơn 0 và lớn hơn hoặc bằng chỉ số cũ!'));
+                  ">
+                    <div class="modal-header">
+                        <h4 class="modal-title pull-left"><i class="glyphicon glyphicon-plus-sign"></i> Thu phí nước </h4>
+                        <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" style="max-height:520px!important">
+                        <div class="col-sm-3">
+                            <label class="control-label" for="matBangId-{{uniqueId}}">Mặt bằng</label>
+                            <div class="control" [ngClass]="{'has-success': f.submitted && mbChk, 'has-error' : f.submitted && !mbChk}">
+                                <kendo-combobox class="form-control"
+                                                [data]="matbangsFilter" [placeholder]="'Mặt bằng'"
+                                                [textField]="'tenMatBang'"
+                                                [valueField]="'matBangId'"
+                                                [(ngModel)]="matbangSelected" name="matBang"
+                                                (valueChange)="matbangChange($event)"
+                                                [filterable]="true"
+                                                (filterChange)="matbangfilterChange($event)">
+                                    <ng-template kendoDropDownListNoDataTemplate>
+                                        <p><span class="k-icon k-i-warning" style="font-size:30px"></span><br /><br /> Không tìm thấy kết quả nào</p>
+                                    </ng-template>
+                                </kendo-combobox>
+                                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': mbChk, 'glyphicon-remove' : !mbChk}"></span>
+                                <span *ngIf="showValidationErrors && f.submitted && !mbChk" class="errorMessage">
+                                    Mặt bằng không được để trống!
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="control-label" for="matBangId-{{uniqueId}}">Mặt bằng</label>
+                            <div class="control">
+                                <select name="sthang" [(ngModel)]="sthang" class="form-control" (change)="sthangChange()">
+                                    <option value="1">Tháng 1</option>
+                                    <option value="2">Tháng 2</option>
+                                    <option value="3">Tháng 3</option>
+                                    <option value="4">Tháng 4</option>
+                                    <option value="5">Tháng 5</option>
+                                    <option value="6">Tháng 6</option>
+                                    <option value="7">Tháng 7</option>
+                                    <option value="8">Tháng 8</option>
+                                    <option value="9">Tháng 9</option>
+                                    <option value="10">Tháng 10</option>
+                                    <option value="11">Tháng 11</option>
+                                    <option value="12">Tháng 12</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <label class="control-label" for="tuNgay-{{uniqueId}}">Từ ngày</label>
+                            <div class="control" [ngClass]="{'has-success': f.submitted && tuNgayChk, 'has-error' : f.submitted && !tuNgayChk}">
+                                <kendo-datepicker [(value)]="tuNgay" [format]="'dd/MM/yyyy'" class="form-control" (valueChange)="tungayChange($event)"></kendo-datepicker>
+                                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tuNgayChk, 'glyphicon-remove' : !tuNgayChk}"></span>
+                                <span *ngIf="showValidationErrors && f.submitted && !tuNgayChk" class="errorMessage">
+                                    Từ ngày không được để trống!
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="control-label" for="denNgay-{{uniqueId}}">Đến ngày</label>
+                            <div class="control" [ngClass]="{'has-success': f.submitted && denNgayChk && ssNgayChk, 'has-error' : f.submitted && (!denNgayChk || !ssNgayChk)}">
+                                <kendo-datepicker [(value)]="denNgay" [format]="'dd/MM/yyyy'" class="form-control" (valueChange)="denngayChange($event)"></kendo-datepicker>
+                                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': (denNgayChk && ssNgayChk), 'glyphicon-remove' : (!denNgayChk || !ssNgayChk)}"></span>
+                                <span *ngIf="showValidationErrors && f.submitted && !denNgayChk" class="errorMessage">
+                                    Đến ngày không được để trống!
+                                </span>
+
+                                <span *ngIf="showValidationErrors && f.submitted && !ssNgayChk" class="errorMessage">
+                                    Vui lòng chọn đến ngày lớn hơn từ ngày!
+                                </span>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-sm-4">
+                            <label class="control-label" for="chiSoCu-{{uniqueId}}">Chỉ số cũ</label>
+                            <div class="control">
+                                <input autofocus type="text" class="form-control" name="chiSoCu" [(ngModel)]="DichVuNuocEdit.chiSoCu" #chiSoCu="ngModel" readonly="readonly" />
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="control-label" for="chiSoMoi-{{uniqueId}}">Chỉ số mới</label>
+                            <div class="control" [ngClass]="{'has-success': f.submitted && (DichVuNuocEdit.chiSoMoi && chisomoiChk), 'has-error' : f.submitted && (!DichVuNuocEdit.chiSoMoi || !chisomoiChk)}">
+                                <input autofocus OnlyNumber="true" type="text" class="form-control" name="chiSoMoi" [(ngModel)]="DichVuNuocEdit.chiSoMoi" #chiSoMoi="ngModel" (ngModelChange)="chisomoiChange($event)" />
+                                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': (DichVuNuocEdit.chiSoMoi && chisomoiChk), 'glyphicon-remove' : (!DichVuNuocEdit.chiSoMoi || !chisomoiChk)}"></span>
+                                <span *ngIf="showValidationErrors && f.submitted && !DichVuNuocEdit.chiSoMoi" class="errorMessage">
+                                    Chỉ số mới không được để trống!
+                                </span>
+                                <span *ngIf="showValidationErrors && f.submitted && !chisomoiChk" class="errorMessage">
+                                    Vui lòng nhập chỉ số mới >= chỉ số cũ!
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="control-label" for="soTieuThu-{{uniqueId}}">Số tiêu thụ</label>
+                            <div class="control">
+                                <input autofocus type="text" class="form-control" name="soTieuThu" [(ngModel)]="DichVuNuocEdit.soTieuThu" #soTieuThu="ngModel" readonly="readonly" />
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-md-12 table-item" *ngIf="DichVuNuocEdit.soTieuThu != null">
+                            <table class="table">
+                                <tr>
+                                    <th>Bậc</th>
+                                    <th align="center">Định mức tiêu thụ</th>
+                                    <th>Số tính phí</th>
+                                    <th>Giá</th>
+                                    <th>Thành tiền</th>
+                                </tr>
+                                <tr *ngFor="let obj of tiennuocs">
+                                    <td align="center">{{obj.bac}}</td>
+                                    <td align="center">{{obj.dinhMuc}}</td>
+                                    <td align="center">{{formatNumberToString(obj.soTinhPhi)}}</td>
+                                    <td align="right">{{formatNumberToString(obj.gia)}}</td>
+                                    <td align="right">{{formatNumberToString(obj.thanhTien)}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Cộng:</td>
+                                    <td align="center">{{formatNumberToString(DichVuNuocEdit.soTieuThu)}}</td>
+                                    <td align="right" colspan="2">{{formatNumberToString(tongtien)}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Thuế suất GTGT: 5%</td>
+                                    <td>Tiền thuế GTGT:</td>
+                                    <td align="right">{{formatNumberToString(vat)}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Phí BVMT: 10%</td>
+                                    <td>Tiền phí BVMT:</td>
+                                    <td align="right">{{formatNumberToString(bvmt)}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">Tổng tiền thanh toán:</td>
+                                    <td align="right">{{formatNumberToString(thanhtoan)}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div style="width:60%; margin:0 auto">
+                            <label class="control-label">Ghi chú</label>
+                            <div class="control">
+                                <textarea type="text" class="form-control" name="dienGiai" [(ngModel)]="DichVuNuocEdit.dienGiai" #dienGiai="ngModel"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="actionBtn-form-group">
+                            <div class="row">
+                                <div class="col-sm-12" style="text-align:center">
+                                    <!--<button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                                    <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>-->
+
+                                    <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
+                                    <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
+                                        <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

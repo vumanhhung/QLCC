@@ -1,0 +1,152 @@
+﻿<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div *ngIf="!isViewDetails" class="EditForm">
+                <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="HangSanXuatInfoForm"  #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
+                      (!checkTen && showErrorAlert('Tên hãng sản xuất không được để trống', 'Vui lòng nhập Tên hãng sản xuất!'));
+(!kyHieu.valid && showErrorAlert('Ký hiệu không được để trống', 'Vui lòng nhập ký hiệu!'));
+">
+                    <div class="modal-header">
+                        <p *ngIf="isNew" class="modal-title pull-left">
+                            <i class="fa fa-plus"></i> Thêm mới hãng sản xuất
+                        </p>
+                        <p *ngIf="isEdit" class="modal-title pull-left">
+                            <i class="fa fa-pencil-square-o"></i> Chỉnh sửa thông tin hãng sản xuất
+                        </p>
+                        <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="has-feedback col-md-3">
+                                <label class="control-label" for="tenHangSanXuat-{{uniqueId}}">Tên hãng sản xuất</label>
+                                <div [ngClass]="{'has-success': f.submitted && checkTen, 'has-error' : f.submitted && !checkTen}">
+                                    <input autofocus type="text" class="form-control" [ngClass]="{'valid-required ': checkTen, 'valid-not-required' : !checkTen}" name="tenHangSanXuat" [(ngModel)]="HangSanXuatEdit.tenHangSanXuat" #tenHangSanXuat="ngModel" required (change)="tenChk(tenHangSanXuat.value)" />
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': checkTen, 'glyphicon-remove' : !checkTen}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !checkTen" class="errorMessage">
+                                        Vui lòng nhập tên hãng sản xuất!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="has-feedback col-md-3">
+                                <label class="control-label" for="kyHieu-{{uniqueId}}">Ký hiệu</label>
+                                <div [ngClass]="{'has-success': f.submitted && kyHieu.valid, 'has-error' : f.submitted && !kyHieu.valid}">
+                                    <input autofocus type="text" class="form-control" name="kyHieu" [(ngModel)]="HangSanXuatEdit.kyHieu" #kyHieu="ngModel" required />
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': kyHieu.valid, 'glyphicon-remove' : !kyHieu.valid}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !kyHieu.valid" class="errorMessage">
+                                        Vui lòng nhập ký hiệu!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label" for="trangThai-{{uniqueId}}">Trạng thái</label>
+                                <div>
+                                    <div style="float: left;margin-right: 40px;margin-top: 10px">
+                                        <input type="radio" id="r_dang" [value]="true" name="trangThai" class="k-radio" checked [(ngModel)]="HangSanXuatEdit.trangThai" #trangThai="ngModel" />
+                                        <label class="k-radio-label" for="r_dang">Đang hoạt động</label>
+                                        <br />
+                                    </div>
+                                    <div style="float: left;margin-right: 40px;margin-top: 10px">
+                                        <input type="radio" id="r_dung" [value]="false" name="trangThai" class="k-radio" [(ngModel)]="HangSanXuatEdit.trangThai" #trangThai="ngModel" />
+                                        <label class="k-radio-label" for="r_dung">Dừng hoạt động</label>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="control-label" for="dienGiai-{{uniqueId}}">Diễn giải</label>
+                                <div>
+                                    <input autofocus type="text" class="form-control" name="dienGiai" [(ngModel)]="HangSanXuatEdit.dienGiai" #dienGiai="ngModel"/>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <hr class="edit-last-separator-hr" />
+                            </div>
+                            <div class="form-group actionBtn-form-group">
+                                <div class="col-sm-7">
+                                    <div class="pull-right">
+                                        <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                                        <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                                        <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
+                                            <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
+                                        </button>
+                                        <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div *ngIf="isViewDetails" class="ViewForm">
+            <div class="modal-header">
+                <p class="modal-title pull-left">
+                    <i class="fa fa-eye"></i> Chi tiết hãng sản xuất
+                    <span>{{tenHangSanXuat}}</span>
+                </p>
+                <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form #f="ngForm">
+                        <div>
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td class="boldText">Tên Loại dịch vụ:</td>
+                                        <td>{{HangSanXuatEdit.tenHangSanXuat}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="boldText">Ký hiệu:</td>
+                                        <td>{{HangSanXuatEdit.kyHieu}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="boldText">Diễn giải:</td>
+                                        <td>{{HangSanXuatEdit.dienGiai}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="boldText">Trạng thái:</td>
+                                        <td *ngIf="HangSanXuatEdit.trangThai == true">Đang hoạt động</td>
+                                        <td *ngIf="HangSanXuatEdit.trangThai == false">Dừng hoạt động</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="boldText">Ngày Nhập:</td>
+                                        <td>{{HangSanXuatEdit.ngayNhap | date:'dd/MM/yyyy'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="boldText">Người Nhập:</td>
+                                        <td>{{HangSanXuatEdit.nguoiNhap}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="boldText">Ngày Sửa:</td>
+                                        <td>{{HangSanXuatEdit.ngaySua | date: 'dd/MM/yyyy'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="boldText">Người Sửa:</td>
+                                        <td>{{HangSanXuatEdit.nguoiSua}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="actionBtn-form-group">
+                    <div class="col-sm-7">
+                        <div class="pull-right">
+                            <button type="button" (click)="movetoEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                            <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

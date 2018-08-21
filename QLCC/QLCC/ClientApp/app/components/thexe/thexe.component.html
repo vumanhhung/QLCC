@@ -1,6 +1,6 @@
 ﻿
 <section class="content-header">
-    <h1>Quản lý thẻ xe</h1>
+    <h1>Quản lý thu phí xe</h1>
     <commonroad></commonroad>
 </section>
 <section class="content">
@@ -42,15 +42,13 @@
                                                    [rows]="matbangs"
                                                    [rowHeight]="45"
                                                    [headerHeight]="45"
-                                                   [footerHeight]="45"
+                                                   [footerHeight]="30"
                                                    [columns]="mbcolumns"
                                                    [limit]="10"
                                                    [selectionType]="'single'"
+                                                   [selected]="matbangSelected"
                                                    [columnMode]="'force'" (select)="onSelect($event)">
                                     </ngx-datatable>
-                                    <!--<ng-template #actionsMBTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                                        <a class="btn btn-func btn-success viewTheXe" href="javascript:;" title="Xem danh sách xe" (click)="getTheXe(row)"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                    </ng-template>-->
                                 </div>
                             </div>
                         </div>
@@ -60,7 +58,7 @@
                             <div>
                                 <div class="dataTables_length">
                                     <label>
-                                        Danh sách xe thuộc mặt bằng: {{matbangObj.tenMatBang}}
+                                        Danh sách xe thuộc căn hộ: {{matbangObj.tenMatBang}}
                                     </label>
                                     <div class="clearfix" style="margin-bottom:5px;">
                                         <search-box (searchChange)="onSearchTheXeChanged($event)" placeholder="Tìm kiếm thẻ xe" style="width:30%"></search-box>
@@ -83,16 +81,24 @@
                                                [rows]="rows"
                                                [rowHeight]="45"
                                                [headerHeight]="45"
-                                               [footerHeight]="45"
+                                               [footerHeight]="30"
                                                [columns]="columns"
                                                [limit]="limit"
                                                [columnMode]="'force'">
                                 </ngx-datatable>
+                                <ng-template #hanthanhtoanTemplate let-row="row" let-value="value" let-i="index">
+                                    <div *ngIf="row.phieuThuChiTiets!=null" style="font-size:12px;text-align:center;">Đến ngày: {{row.phieuThuChiTiets.hanDenNgay | date: 'dd/MM/yyyy'}}</div>
+                                    <div *ngIf="row.phieuThuChiTiets==null" style="font-size:12px;background:#ff0000;text-align:center;color:#ffffff;font-style:italic">Xe chưa nộp phí</div>
+                                </ng-template>
+                                <ng-template #phiguixeTemplate let-row="row" let-value="value" let-i="index">
+                                    {{getFormatPrice(row.phiGuiXe)}}
+                                </ng-template>
                                 <ng-template #trangthaiTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
                                     <div style="background:#ff0000;text-align:center;color:#ffffff;font-style:italic" *ngIf="row.trangThai==0">Ngưng sử dụng</div>
                                     <div style="background:#18891e;text-align:center;color:#ffffff;" *ngIf="row.trangThai==1">Đang sử dụng</div>
                                 </ng-template>
                                 <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                                    <a *ngIf="row.trangThai==1" class="btn btn-func btn-success" href="javascript:;" (click)="newPhieuThu1(row)"><i class="fa fa-money" aria-hidden="true"></i></a>
                                     <a *ngIf="row.trangThai==0" class="btn btn-func btn-flat" title="Sử dụng" href="javascript:;" (click)="editStatus(row)">
                                         <i class="fa fa-level-up" aria-hidden="true"></i>
                                     </a>
@@ -120,8 +126,11 @@
                             </div>
                             <div class="clearfix"></div>
                             <div class="DTTT_container">
-                                <a *ngIf="rows.length>0" class="btn btn-danger" data-toggle="tooltip" href="javascript://" title="Thu phí gửi xe" (click)="newPhieuThu()"><i class="fa fa-money" aria-hidden="true"></i> Thu phí gửi xe</a>                                
+                                <a *ngIf="rows.length>0" class="btn btn-success" data-toggle="tooltip" href="javascript://" title="Thu phí gửi xe" (click)="newPhieuThu()"><i class="fa fa-money" aria-hidden="true"></i> Thu phí gửi xe</a>
+                                <a *ngIf="rows.length>0" routerLink="/phieuthulichsu/{{matbangObj.matBangId}}" class="btn btn-success" data-toggle="tooltip" href="javascript://" title="Lịch sử thu phí gửi xe">Lịch sử thu phí xe</a>
+                                <!--<a (click)="print()" class="btn btn-success" data-toggle="tooltip" href="javascript://" title="IN">In</a>-->
                             </div>
+                            <div class="clearfix"></div>
                         </div>
                     </div>
                 </div>
@@ -129,5 +138,9 @@
         </div>
     </div>
 </section>
+<!--<div id="print-section" style="display:none">
+    213123123
+    <a onclick="window.print();" class="btn btn-success" data-toggle="tooltip" href="javascript://" title="IN">In</a>
+</div>-->
 <phieuthu-info #phieuthuEditor></phieuthu-info>
 <thexe-thungrac #thexethungracEditor></thexe-thungrac>

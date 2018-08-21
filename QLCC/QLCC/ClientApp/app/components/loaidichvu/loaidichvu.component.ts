@@ -76,7 +76,7 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.LoaiDichVuEditor.changesSavedCallback = () => {
             this.addNewToList();
-            this.LoaiDichVuEditor.editorModal.hide();            
+            this.LoaiDichVuEditor.editorModal.hide();
         };
 
         this.LoaiDichVuEditor.changesCancelledCallback = () => {
@@ -119,7 +119,6 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         } else if (status > 0) {
             this.loaidichvuService.filterStatus(status).subscribe(results => this.onDataLoadSuccessful(results), errors => this.onDataLoadFailed(errors));
         }
-        
     }
 
     onDataLoadSuccessful(obj: LoaiDichVu[]) {
@@ -166,28 +165,36 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
     deleteHelper(row: LoaiDichVu) {
         this.alertService.startLoadingMessage("Đang thực hiện xóa...");
         this.loadingIndicator = true;
-
-        this.loaidichvuService.deleteLoaiDichVu(row.loaiDichVuId)
-            .subscribe(results => {
-                if (results == "Exist") {
-                    this.alertService.stopLoadingMessage();
-                    this.loadingIndicator = false;
-                    this.showErrorAlert("Xóa lỗi", "Không thể xóa danh mục " + row.tenLoaiDichVu + " do có danh mục con");
-                } else {
-                    this.alertService.stopLoadingMessage();
-                    this.loadingIndicator = false;
-                    this.rowsCache = this.rowsCache.filter(item => item !== row)
-                    this.rows = this.rows.filter(item => item !== row)
-                    this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
-                    this.loadData(0);
-                }
-            },
-                error => {
-                    this.alertService.stopLoadingMessage();
-                    this.loadingIndicator = false;
-                    this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
-                        MessageSeverity.error, error);
-                });
+            this.loaidichvuService.deleteLoaiDichVu(row.loaiDichVuId)
+                .subscribe(results => {
+                    console.log(results);
+                    if (results == "BangGia") {
+                        this.alertService.stopLoadingMessage();
+                        this.loadingIndicator = false;
+                        this.showErrorAlert("Xóa lỗi", "Không thể xóa danh mục " + row.tenLoaiDichVu + " do đang được sử dụng trong Bảng giá dịch vụ !");
+                    } else if (results == "DVCB") {
+                        this.alertService.stopLoadingMessage();
+                        this.loadingIndicator = false;
+                        this.showErrorAlert("Xóa lỗi", "Không thể xóa danh mục " + row.tenLoaiDichVu + " do đang được sử dụng trong Dịch vụ cơ bản !");
+                    } else if (results == "Con") {
+                        this.alertService.stopLoadingMessage();
+                        this.loadingIndicator = false;
+                        this.showErrorAlert("Xóa lỗi", "Không thể xóa danh mục " + row.tenLoaiDichVu + " do có danh mục con");
+                    } else {
+                        this.alertService.stopLoadingMessage();
+                        this.loadingIndicator = false;
+                        this.rowsCache = this.rowsCache.filter(item => item !== row)
+                        this.rows = this.rows.filter(item => item !== row)
+                        this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
+                        this.loadData(0);
+                    }
+                },
+                    error => {
+                        this.alertService.stopLoadingMessage();
+                        this.loadingIndicator = false;
+                        this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
+                            MessageSeverity.error, error);
+                    });
     }
 
     private showErrorAlert(caption: string, message: string) {
@@ -199,7 +206,8 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
         this.sourceloaidichvu = row;
         this.loaidichvuEdit = this.LoaiDichVuEditor.editLoaiDichVu(row);
         this.LoaiDichVuEditor.isViewDetails = false;
-        this.loaidichvuService.listDV(row.loaiDichVuId).subscribe(results => {this.LoaiDichVuEditor.listDichVu = results});        
+        this.LoaiDichVuEditor.checkTen = true;
+        this.loaidichvuService.listDV(row.loaiDichVuId).subscribe(results => { this.LoaiDichVuEditor.listDichVu = results });
         this.LoaiDichVuEditor.editorModal.show();
     }
 

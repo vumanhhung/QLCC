@@ -103,20 +103,4 @@ export class LoaiDichVuEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.listDVCB());
             })
     }
-
-    test<T>(): Observable<T> {
-        let endpointUrl = `${this.loaidichvuUrl}/Test`;
-        return this.http.get(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.test());
-            })
-    }
-
-    expand<T>(id?: number): Observable<T> {
-        let endpointUrl = `${this.loaidichvuUrl}/Expand/${id}`;
-        return this.http.get(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.expand(id));
-            })
-    }
 }

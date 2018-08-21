@@ -45,20 +45,27 @@
             <li class="treeview " (click)="toggleNavigationSub('dvcb',$event)" [class.active]="isActiveMenu == 'dvcb'">
                 <a href="javascript://" routerLink="/dvcb"> <i class="fa fa-cogs"></i> <span>Dịch vụ</span><i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li class=""><a href="javascript:;" routerLink="/loaixe"><i class="fa fa-arrow-circle-right"></i>QL Loại xe</a></li>
-                    <li class=""><a href="javascript:;" routerLink="/banggiaxe"><i class="fa fa-arrow-circle-right"></i>QL bảng giá xe</a></li>
-                    <li class=""><a href="javascript:;" routerLink="/thexe"><i class="fa fa-arrow-circle-right"></i>Thu phí xe</a></li>
-                    <li class=""><a href="javascript:;" routerLink="/nuoc"><i class="fa fa-arrow-circle-right"></i>Thu phí nước</a></li>
-                    <!--<li class=""><a href="javascript:;" routerLink="/loaixe"><i class="fa fa-arrow-circle-right"></i>QL Loại xe</a></li>
-                    <li class=""><a href="javascript:;" routerLink="/banggiaxe"><i class="fa fa-arrow-circle-right"></i>QL bảng giá xe</a></li>-->
+                    <li class=""><a href="javascript:;" routerLink="/dvcb"><i class="fa fa-arrow-circle-right"></i>QL dịch vụ cơ bản</a></li>
+                    <li class=""><a href="javascript:;" routerLink="/hopdong"><i class="fa fa-arrow-circle-right"></i>Quản lý hợp đồng</a></li>
+                    <li class=""><a href="javascript:;" routerLink="/dichvunuoc"><i class="fa fa-arrow-circle-right"></i>Quản lý thu phí nước</a></li>
                 </ul>
             </li>
-            <li class=""><a href="javascript://" routerLink="/congthucnuoc"> <i class="fa fa-fa fa-bath"></i> <span>Công thức nước</span></a></li>
-            <li class=""><a href="javascript://" routerLink="/dvcb"> <i class="fa fa-fa fa-bath"></i> <span>Dịch Vụ Cơ bản</span></a></li>
-            <li class=""><a href="javascript://" routerLink="/loaixe"> <i class="fa fa-fa fa-bath"></i> <span>Loại Xe</span></a></li>
-            <li class=""><a href="javascript://" routerLink="/loaidichvu"> <i class="fa fa-fa fa-bath"></i> <span>Loại Dịch Vụ</span></a></li>
+            <li class="treeview " (click)="toggleNavigationSub('taisan',$event)" [class.active]="isActiveMenu == 'taisan'">
+                <a href="javascript://" routerLink="/taisan"> <i class="fa fa-fa fa-bath"></i> <span>Vật tư</span><i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li class=""><a href="javascript:;" routerLink="/hangsanxuat"><i class="fa fa-arrow-circle-right"></i>QL hãng sản xuất</a></li>
+                    <li class=""><a href="javascript:;" routerLink="/loaihang"><i class="fa fa-arrow-circle-right"></i>QL loại hàng</a></li>
+                    <li class=""><a href="javascript:;" routerLink="/danhmucvattu"><i class="fa fa-arrow-circle-right"></i>QL danh mục vật tư</a></li>
+                    <li class=""><a href="javascript:;" routerLink="/dexuat"><i class="fa fa-arrow-circle-right"></i>Quản lý đề xuất</a></li>
+                    <li class=""><a href="javascript:;" routerLink="/dathang"><i class="fa fa-arrow-circle-right"></i>Quản lý đặt hàng/ báo giá</a></li>
+                    <li class=""><a href="javascript:;" routerLink="/muahang"><i class="fa fa-arrow-circle-right"></i>Quản lý mua hàng</a></li>
+                    <li class=""><a href="javascript:;" routerLink="/nhapkho"><i class="fa fa-arrow-circle-right"></i>Quản lý nhập kho</a></li>
+                    <li class=""><a href="javascript:;" routerLink="/xuatkho"><i class="fa fa-arrow-circle-right"></i>Quản lý xuất kho</a></li>
+                    <li class=""><a href="javascript:;" routerLink="/taisan"><i class="fa fa-arrow-circle-right"></i>Quản lý tài sản</a></li>
+                </ul>
+            </li>
             <li class=""><a href="javascript://" (click)="building()"> <i class="fa fa-bar-chart"></i> <span>Thống kê - báo cáo</span></a></li>
-            <li class=""><a href="javascript://" (click)="building()"> <i class="fa fa-question-circle"></i> <span>Trợ giúp</span></a></li>
+            <li class=""><a href="javascript://" (click)="building()"> <i class="fa fa-question-circle"></i> <span>Trợ giúp</span></a></li>-->
         </ul>
     </div>
 </section>

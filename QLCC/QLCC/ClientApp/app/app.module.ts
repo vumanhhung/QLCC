@@ -22,6 +22,10 @@ import { DatePickerModule } from '@progress/kendo-angular-dateinputs';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { ExcelExportModule } from '@progress/kendo-angular-excel-export';
 import { ComboBoxModule } from '@progress/kendo-angular-dropdowns';
+import { registerLocaleData } from '@angular/common';
+//import localeVn from '@progress/kendo-angular-intl/locales/vi';
+import localeVn from '@angular/common/locales/vi';
+registerLocaleData(localeVn);
 import 'bootstrap';
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -165,10 +169,23 @@ import { LoaiDichVuEndpoint } from './services/loaidichvu-endpoint.service';
 import { TheXeService } from './services/thexe.service';
 import { TheXeEndpoint } from './services/thexe-endpoint.service';
 
+import { CongThucNuocService } from "./services/congthucnuoc.service";
+import { CongThucNuocEndpoint } from "./services/congthucnuoc-endpoint.service";
+import { DinhMucNuocService } from "./services/dinhmucnuoc.service";
+import { DinhMucNuocEndpoint } from "./services/dinhmucnuoc-endpoint.service";
+import { DichVuCoBanService } from "./services/dichvucoban.service";
+import { DichVuCoBanEndpoint } from "./services/dichvucoban-endpoint.service";
+
 import { PhieuThuService } from './services/phieuthu.service';
 import { PhieuThuEndpoint } from './services/phieuthu-endpoint.service';
 import { PhieuThuChiTietService } from './services/phieuthuchitiet.service';
 import { PhieuThuChiTietEndpoint } from './services/phieuthuchitiet-endpoint.service';
+
+import { HopDongService } from './services/hopdong.service';
+import { HopDongEndpoint } from './services/hopdong-endpoint.service';
+
+import { DichVuNuocService } from './services/dichvunuoc.service';
+import { DichVuNuocEndpoint } from './services/dichvunuoc-endpoint.service';
 
 //KHAI BÁO COMPONENT
 import { CumToaNhaComponent } from "./components/cumtoanha/cumtoanha.component";
@@ -241,20 +258,28 @@ import { TheXeComponent } from "./components/thexe/thexe.component";
 import { TheXeInfoComponent } from "./components/thexe/thexe-info.component";
 import { PhieuThuInfoComponent } from "./components/phieuthu/phieuthu-info.component";
 import { TheXeThungRacComponent } from "./components/thexe/thexe-thungrac.component";
+import { PhieuThuLichSuComponent } from "./components/phieuthu/phieuthu-lichsu.component";
 
 import { CongThucNuocComponent } from "./components/congthucnuoc/congthucnuoc.component";
 import { CongThucNuocInfoComponent } from "./components/congthucnuoc/congthucnuoc-info.component";
 import { DinhMucNuocComponent } from "./components/congthucnuoc/dinhmucnuoc.component";
 import { DichVuCoBanComponent } from "./components/dichvucoban/dichvucoban.component";
 import { DichVuCoBanInfoComponent } from "./components/dichvucoban/dichvucoban-info.component";
-import { CongThucNuocService } from "./services/congthucnuoc.service";
-import { CongThucNuocEndpoint } from "./services/congthucnuoc-endpoint.service";
-import { DinhMucNuocService } from "./services/dinhmucnuoc.service";
-import { DinhMucNuocEndpoint } from "./services/dinhmucnuoc-endpoint.service";
-import { DichVuCoBanService } from "./services/dichvucoban.service";
-import { DichVuCoBanEndpoint } from "./services/dichvucoban-endpoint.service";
 import { DichVuCoBanImportComponent } from "./components/dichvucoban/dichvucoban-import.component";
 import { DatePipe } from "@angular/common";
+
+import { HopDongComponent } from "./components/hopdong/hopdong.component";
+import { HopDongInfoComponent } from "./components/hopdong/hopdong-info.component";
+import { DichVuNuocComponent } from "./components/dichvunuoc/dichvunuoc.component";
+import { DichVuNuocInfoComponent } from "./components/dichvunuoc/dichvunuoc-info.component";
+import { HangSanXuatService } from "./services/hangsanxuat.service";
+import { HangSanXuatEndpoint } from "./services/hangsanxuat-endpoint.service";
+import { HangSanXuatComponent } from "./components/hangsanxuat/hangsanxuat.component";
+import { HangSanXuatInfoComponent } from "./components/hangsanxuat/hangsanxuat-info.component";
+import { LoaiHangComponent } from "./components/loaihang/loaihang.component";
+import { LoaiHangInfoComponent } from "./components/loaihang/loaihang-info.component";
+import { LoaiHangService } from "./services/loaihang.service";
+import { LoaiHangEndpoint } from "./services/loaihang-endpoint.service";
 
 @NgModule({
     imports: [
@@ -406,7 +431,16 @@ import { DatePipe } from "@angular/common";
         DichVuCoBanComponent,
         DichVuCoBanInfoComponent,
         DichVuCoBanImportComponent,
-        DanhMucComponent
+        PhieuThuLichSuComponent,
+        DanhMucComponent,
+        HopDongComponent,
+        HopDongInfoComponent,
+        DichVuNuocComponent,
+        DichVuNuocInfoComponent,
+        HangSanXuatComponent,
+        HangSanXuatInfoComponent,
+        LoaiHangComponent,
+        LoaiHangInfoComponent
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },
@@ -495,11 +529,15 @@ import { DatePipe } from "@angular/common";
         DinhMucNuocEndpoint,
         DichVuCoBanService,
         DichVuCoBanEndpoint,
-        DatePipe
-        //MenuLeftComponent,
-        //FooterComponent,
-        //commonroadComponent,
-        //FloursComponent
+        DatePipe,
+        HopDongService,
+        HopDongEndpoint,
+        DichVuNuocService,
+        DichVuNuocEndpoint,
+        HangSanXuatService,
+        HangSanXuatEndpoint,
+        LoaiHangService,
+        LoaiHangEndpoint
     ],
     bootstrap: [AppComponent]
 })

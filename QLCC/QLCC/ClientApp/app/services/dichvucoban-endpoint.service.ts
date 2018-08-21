@@ -91,4 +91,12 @@ export class DichVuCoBanEndpoint extends EndpointFactory {
             return this.handleError(error, () => this.filterByDate());
         })
     }
+
+    lastRecord<T>(): Observable<T> {
+        let endpointUrl = `${this.dichvucobanUrl}/LastRecord`;
+        return this.http.get(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.lastRecord());
+            })
+    }
 }

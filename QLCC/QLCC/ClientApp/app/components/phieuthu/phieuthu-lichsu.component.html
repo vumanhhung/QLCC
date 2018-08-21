@@ -1,0 +1,110 @@
+﻿<section class="content-header">
+    <h1>Lịch sử thu phí gửi xe - Căn hộ: {{matbangObj.tenMatBang}}</h1>
+    <commonroad></commonroad>
+    <!--<a onclick="window.print();">In</a>-->
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Danh sách xe thuộc mặt bằng</label>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-md-12">
+                                    <label style="width:100%">
+                                        <search-box (searchChange)="onSearchChanged($event)" placeholder="Tìm kiếm xe theo mã thẻ/biển số" style="width:100%"></search-box>
+                                    </label>
+                                </div>
+                                <div class="clearfix">
+                                </div>
+                                <div class="col-md-12">
+                                    <ngx-datatable class="material colored-header sm table table-striped table-hover matbang-table"
+                                                   [rows]="thexes"
+                                                   [rowHeight]="45"
+                                                   [headerHeight]="45"
+                                                   [footerHeight]="30"
+                                                   [columns]="columns"
+                                                   [limit]="10"
+                                                   [selectionType]="'single'"
+                                                   [columnMode]="'force'" (select)="onSelect($event)">
+                                    </ngx-datatable>
+                                    <ng-template #trangthaiTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                                        <div style="background:#ff0000;text-align:center;color:#ffffff;font-style:italic" *ngIf="row.trangThai==-1">Trong thùng rác</div>
+                                        <div style="background:#ff0000;text-align:center;color:#ffffff;font-style:italic" *ngIf="row.trangThai==0">Ngưng sử dụng</div>
+                                        <div style="background:#18891e;text-align:center;color:#ffffff;" *ngIf="row.trangThai==1">Đang sử dụng</div>
+                                    </ng-template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Lịch sử thu phí xe</label>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-md-12">
+                                    <label style="width:100%">
+                                        Năm
+                                        <select name="snam" [(ngModel)]="snam" class="form-control" style="width:100px;height:30px" (change)="snamChange(snam.value)">
+                                            <option *ngFor="let o of nams" [value]="o">
+                                                {{o}}
+                                            </option>
+                                        </select>
+                                        Tháng
+                                        <select name="sthang" [(ngModel)]="sthang" class="form-control" style="width:100px;height:30px" (change)="sthangChange(sthang.value)">
+                                            <option value="0">-Cả năm-</option>
+                                            <option value="1">Tháng 1</option>
+                                            <option value="2">Tháng 2</option>
+                                            <option value="3">Tháng 3</option>
+                                            <option value="4">Tháng 4</option>
+                                            <option value="5">Tháng 5</option>
+                                            <option value="6">Tháng 6</option>
+                                            <option value="7">Tháng 7</option>
+                                            <option value="8">Tháng 8</option>
+                                            <option value="9">Tháng 9</option>
+                                            <option value="10">Tháng 10</option>
+                                            <option value="11">Tháng 11</option>
+                                            <option value="12">Tháng 12</option>
+                                        </select>
+                                    </label>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-md-12">
+                                    <ngx-datatable class="material colored-header sm table table-striped table-hover"
+                                                   [rows]="phieuthuchitiets"
+                                                   [rowHeight]="45"
+                                                   [headerHeight]="45"
+                                                   [footerHeight]="30"
+                                                   [columns]="columnsPT"
+                                                   [limit]="10"
+                                                   [columnMode]="'force'">
+                                    </ngx-datatable>
+                                    <ng-template #phieuthuTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                                        #{{row.phieuThu.maPhieuThu}}
+                                    </ng-template>
+                                    <ng-template #namthangTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                                        {{row.thang}}/{{row.nam}}
+                                    </ng-template>
+                                    <ng-template #sotienTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                                        {{getFormatPrice(row.tongSoTien)}}
+                                    </ng-template>
+                                    <ng-template #ngaynopTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                                        {{row.ngayNop | date: 'dd/MM/yyyy'}}
+                                    </ng-template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

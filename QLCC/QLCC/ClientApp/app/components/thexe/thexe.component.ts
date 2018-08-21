@@ -44,6 +44,7 @@ export class TheXeComponent implements OnInit, AfterViewInit {
     loaixes: LoaiXe[] = [];
     matbangObj: MatBang = new MatBang();
     date: Date = new Date();
+    matbangSelected: MatBang[] = [];
 
     @ViewChild('f')
     private form;
@@ -66,6 +67,12 @@ export class TheXeComponent implements OnInit, AfterViewInit {
     @ViewChild('trangthaiTemplate')
     trangthaiTemplate: TemplateRef<any>;
 
+    @ViewChild('phiguixeTemplate')
+    phiguixeTemplate: TemplateRef<any>;
+
+    @ViewChild('hanthanhtoanTemplate')
+    hanthanhtoanTemplate: TemplateRef<any>;
+
     @ViewChild('editorModal')
     editorModal: ModalDirective;
 
@@ -82,30 +89,24 @@ export class TheXeComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        //console.log(this.date.toISOString());
-        //var cM = this.date.getMonth();
-        //this.date.setMonth(cM + 1);
-        //console.log(" | " + this.date.toISOString());
-
         let gT = (key: string) => this.translationService.getTranslation(key);
 
         this.mbcolumns = [
             { prop: "index", name: '#', width: 40, resizeable: false, canAutoResize: false },
-            //{ name: '', width: 50, cellTemplate: this.actionsMBTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false, cellClass: "boxViewTheXe" },
-            { prop: 'tenMatBang', width: 80, name: 'Căn hộ', resizeable: false, canAutoResize: false },
-            { prop: 'khachHangs.tenDayDu', name: 'Chủ hộ', resizeable: false, canAutoResize: false }
+            { prop: 'tenMatBang', width: 80, name: 'Căn hộ' },
+            { prop: 'khachHangs.tenDayDu', width: 160, name: 'Chủ hộ' }
         ];
 
         this.columns = [
             { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
-            { prop: 'maTheXe', name: gT('Mã thẻ') },
-            { prop: 'loaiXes.tenLoaiXe', name: gT('Loại xe') },
-            { prop: 'phiGuiXe', name: gT('Phí gửi xe') },
-            { prop: 'bienSoXe', name: gT('Biển số') },
-            { prop: 'mauXe', name: gT('Màu xe') },
-            { name: 'Trạng thái', cellTemplate: this.trangthaiTemplate },
-            { prop: 'kyThanhToan', name: gT('Kỳ thanh toán') },
-            { name: '', width: 100, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
+            { prop: 'maTheXe', name: gT('Mã thẻ'), width: 100 },
+            { prop: 'loaiXes.tenLoaiXe', name: gT('Loại xe'), width: 120 },
+            { name: 'Phí gửi xe', cellTemplate: this.phiguixeTemplate, width: 100 },
+            { prop: 'bienSoXe', name: gT('Biển số'), width: 100 },
+            { prop: 'kyThanhToan', name: gT('Kỳ TT'), width: 80 },
+            { name: 'Trạng thái', cellTemplate: this.trangthaiTemplate, width: 110 },
+            { name: 'Hạn gửi xe', cellTemplate: this.hanthanhtoanTemplate, width: 130 },
+            { name: 'Chức năng', width: 120, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
 
         if (this.authService.currentUser) {
@@ -154,7 +155,7 @@ export class TheXeComponent implements OnInit, AfterViewInit {
         }, error => this.onDataLoadFailed(error));
         this.rows = this.rowsCache = [];
     }
-    
+
     ngAfterViewInit() {
         this.TheXeEditor.changesSavedCallback = () => {
             this.addNewToList();
@@ -168,11 +169,7 @@ export class TheXeComponent implements OnInit, AfterViewInit {
         };
 
         this.PhieuThuEditor.changesSavedCallback = () => {
-            //sau khi save phiếu thu            
-        };
-
-        this.PhieuThuEditor.changesCancelledCallback = () => {
-            //hủy phiếu thu            
+            this.loadXe(this.matbangObj.matBangId);
         };
 
         this.TheXeThungRacEditor.changesSavedCallback = () => {
@@ -187,9 +184,15 @@ export class TheXeComponent implements OnInit, AfterViewInit {
         this.sourcethexe = null;
     }
 
-    loadXe(matBangId: number) {     
+    loadXe(matBangId: number) {
+        this.matbangObj = this.matbangsCache.find(o => o.matBangId == matBangId);
+        this.matbangSelected = [];
+        this.matbangSelected.push(this.matbangObj);
         var where = "MatBangId = " + matBangId + " AND (TrangThai = 0 or TrangThai = 1)";
         this.thexeService.getItems(0, 0, where, "x").subscribe(results => {
+            results.forEach((item, index, results) => {
+                (<any>item).index = index + 1;
+            });
             this.rows = results;
             this.rowsCache = results;
         }, error => this.onDataLoadFailed(error));
@@ -252,7 +255,12 @@ export class TheXeComponent implements OnInit, AfterViewInit {
 
     editStatus(row: TheXe) {
         this.alertService.showDialog('Bạn có chắc chắn muốn cập nhật trạng thái xe này?', DialogType.confirm, () => {
-            if (row.trangThai == 1) row.trangThai = 0; else row.trangThai = 1;
+            if (row.trangThai == 1) {
+                row.trangThai = 0;
+                row.ngayNgungSuDung = new Date();
+            }
+            else row.trangThai = 1;
+
             this.thexeService.updateTheXe(row.theXeId, row).subscribe(response => {
                 this.alertService.showMessage("Thành công", `Thực hiện cập nhật trạng thái thành công`, MessageSeverity.success);
             }, error => {
@@ -282,6 +290,12 @@ export class TheXeComponent implements OnInit, AfterViewInit {
 
     }
 
+    newPhieuThu1(thexe: TheXe) {
+        this.PhieuThuEditor.phieuthuModal.show();
+        this.PhieuThuEditor.matbangObj = this.matbangObj;
+        this.PhieuThuEditor.newPhieuThu(this.rows.filter(o => o.trangThai == 1 && o.theXeId == thexe.theXeId));
+    }
+
     thungrac() {
         this.TheXeThungRacEditor.thexes = this.rowsDelete;
         this.TheXeThungRacEditor.thexesCache = this.rowsDelete;
@@ -291,16 +305,34 @@ export class TheXeComponent implements OnInit, AfterViewInit {
 
     onSelect({ selected }) {
         var row: MatBang = selected[0];
-        this.matbangObj = this.matbangsCache.find(o => o.matBangId == row.matBangId);       
+        this.matbangObj = this.matbangsCache.find(o => o.matBangId == row.matBangId);
         this.loadAllTheXe();
     }
 
     loadAllTheXe() {
         var where = "MatBangId = " + this.matbangObj.matBangId;
         this.thexeService.getItems(0, 0, where, "x").subscribe(results => {
+            let r1 = results.filter(o => o.trangThai == 0 || o.trangThai == 1);
+            results.forEach((item, index, r1) => {
+                (<any>item).index = index + 1;
+            });
+            this.rowsCache = [...r1];
+            this.rows = r1;
             this.rowsDelete = results.filter(o => o.trangThai == -1);
-            this.rows = results.filter(o => o.trangThai == 0 || o.trangThai == 1);
-            this.rowsCache = results.filter(o => o.trangThai == 0 || o.trangThai == 1);
         }, error => this.onDataLoadFailed(error));
+    }
+
+    getFormatPrice(price: number): string {
+        return Utilities.formatNumber(price);
+    }
+
+    print() {
+        let printContents, popupWin;
+        printContents = document.getElementById('print-section').innerHTML;
+        popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
+        popupWin.document.open();
+        popupWin.document.write(printContents);        
+        popupWin.print();
+        popupWin.document.close();
     }
 }

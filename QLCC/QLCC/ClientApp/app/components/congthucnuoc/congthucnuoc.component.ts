@@ -190,10 +190,7 @@ export class CongThucNuocComponent implements OnInit, AfterViewInit {
                 this.loadingIndicator = false;
                 this.rowsCache = this.rowsCache.filter(item => item !== row)
                 this.rows = this.rows.filter(item => item !== row)
-                this.dinhmucnuocService.deleteDinhMucNuoc(row.congThucNuocId).subscribe(result => {
-                    console.log(result);
-                    this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
-                })
+                this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
             },
             error => {
                 this.alertService.stopLoadingMessage();

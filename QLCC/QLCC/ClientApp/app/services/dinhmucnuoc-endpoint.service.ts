@@ -41,7 +41,7 @@ export class DinhMucNuocEndpoint extends EndpointFactory {
             });
     }
     
-    addnewDinhMucNuoc<T>(dinhmucnuocObject?: any, id?: number): Observable<T> {
+    addnewDinhMucNuoc<T>(dinhmucnuocObject?: any): Observable<T> {
         let body = JSON.stringify(dinhmucnuocObject);
         return this.http.post(this.dinhmucnuocUrl, body, this.getRequestHeaders()).catch(error => {
             return this.handleError(error, () => this.addnewDinhMucNuoc(dinhmucnuocObject));
@@ -64,11 +64,11 @@ export class DinhMucNuocEndpoint extends EndpointFactory {
             });
     }
 
-    getMax<T>(id: number): Observable<T> {
-        let endpointUrl = `${this.dinhmucnuocUrl}/Max/${id}`;
+    getLastRecord<T>(id: number): Observable<T> {
+        let endpointUrl = `${this.dinhmucnuocUrl}/GetLastRecord/${id}`;
         return this.http.get(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getMax(id));
+                return this.handleError(error, () => this.getLastRecord(id));
             })
     }
 }

@@ -6,7 +6,7 @@
 // ======================================
 
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 
@@ -16,7 +16,8 @@ import { Router } from '@angular/router';
     styleUrls: ['./commonroad.component.css']
 })
 export class commonroadComponent {
-    constructor(private _router: Router) {
+    matBangId: number = 0;
+    constructor(private route: ActivatedRoute, private _router: Router) {
         this.router = _router;
     }
     public router: Router;
@@ -24,6 +25,8 @@ export class commonroadComponent {
     public isDisplayRoad: boolean = false;
     ngOnInit() {
         this.routerName = this.router.url.toString();
+        if (this.route.snapshot.paramMap.get('matbangid') != "")
+            this.matBangId = Number(this.route.snapshot.paramMap.get('matbangid'));
     }
 }
 

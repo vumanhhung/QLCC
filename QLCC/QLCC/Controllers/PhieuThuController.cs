@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using DAL.Models;
+using QLCC.Helpers;
 
 namespace QLCC.Controllers
 {
@@ -98,10 +99,13 @@ namespace QLCC.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             _context.PhieuThus.Add(phieuthu);
             await _context.SaveChangesAsync();
-
+            var user = this.User.Identity.Name;
+            //var userId = Utilities.GetUserId(this.User);
+            phieuthu.NguoiLap = user;
+            phieuthu.MaPhieuThu = "PT" + phieuthu.PhieuThuId;
+            await _context.SaveChangesAsync();
             return CreatedAtAction("GetPhieuThu", new { id = phieuthu.PhieuThuId }, phieuthu);
         }
         

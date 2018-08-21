@@ -146,15 +146,23 @@ namespace QLCC.Controllers
                 return BadRequest(ModelState);
             }
             var loaixe = await _context.LoaiXes.SingleOrDefaultAsync(m => m.LoaiXeId == id);
-            if (loaixe == null)
+            var checkUse = _context.TheXes.Where(r => r.LoaiXeId == id);
+            if (checkUse.Count() == 0)
             {
-                return NotFound();
+                if (loaixe == null)
+                {
+                    return NotFound();
+                }
+
+                _context.LoaiXes.Remove(loaixe);
+                await _context.SaveChangesAsync();
+                return Ok(loaixe);
             }
-
-            _context.LoaiXes.Remove(loaixe);
-            await _context.SaveChangesAsync();
-
-            return Ok(loaixe);
+            else
+            {
+                var check = "Use";
+                return Ok(check);
+            }
         }
 
 
@@ -167,13 +175,6 @@ namespace QLCC.Controllers
         private bool LoaiXeExists(int id)
         {
             return _context.LoaiXes.Any(e => e.LoaiXeId == id);
-        }
-
-        [HttpGet("Exist/{id}")]
-        public async Task<IActionResult> checkTheXe([FromRoute] int id)
-        {
-            var check = await _context.LoaiXes.SingleOrDefaultAsync(r => r.thexes.LoaiXeId == id);
-            return Ok(check);
         }
     }
 }

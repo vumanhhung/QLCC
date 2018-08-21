@@ -27,7 +27,12 @@ namespace QLCC.Controllers
         public IEnumerable<PhieuThuChiTiet> GetItems([FromRoute] int start, int count, string orderBy, [FromBody] string whereClause)
         {
             orderBy = orderBy != "x" ? orderBy : "";
-            return _context.Set<PhieuThuChiTiet>().FromSql($"tbl_PhieuThuChiTiet_GetItemsByRange {start},{count},{whereClause},{orderBy}").ToList<PhieuThuChiTiet>();
+            var ptct = _context.Set<PhieuThuChiTiet>().FromSql($"tbl_PhieuThuChiTiet_GetItemsByRange {start},{count},{whereClause},{orderBy}").ToList<PhieuThuChiTiet>();
+            for (int i = 0; i < ptct.Count(); i++)
+            {
+                ptct[i].PhieuThu = _context.PhieuThus.SingleOrDefault(o => o.PhieuThuId == ptct[i].PhieuThuId);
+            }
+            return ptct;
         }
 
         // GET: api/PhieuThuChiTiets
@@ -126,7 +131,7 @@ namespace QLCC.Controllers
                 }
                 phieuthuchitiets[i].NgayLap = DateTime.Now;
                 var user = this.User.Identity.Name;
-                var userId = Utilities.GetUserId(this.User);
+                //var userId = Utilities.GetUserId(this.User);
                 phieuthuchitiets[i].NgayLap = DateTime.Now;
                 phieuthuchitiets[i].NguoiLap = user;
                 _context.PhieuThuChiTiets.Add(phieuthuchitiets[i]);

@@ -26,6 +26,7 @@ import { AuthService } from '../../services/auth.service';
 import { NguoiDungToaNhaService } from '../../services/nguoidungtoanha.service';
 import { BangGiaDichVuCoBan } from '../../models/banggiadichvucoban.model';
 import { BangGiaDichVuCoBanService } from '../../services/banggiadichvucoban.service';
+import { format } from '@telerik/kendo-intl';
 
 @Component({
     selector: "dichvucoban",
@@ -120,10 +121,10 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         this.columns = [
             { headerTemplate: this.checkAllTemplate, width: 50, cellTemplate: this.checkTemplate, canAutoResize: false, sortable: false, draggable: false },
             { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
-            { prop: 'soChungTu', name: gT('Số chứng từ') },
+            { prop: 'soChungTu', name: gT('Số CT') },
             { prop: 'matBangs.tenMatBang', name: gT('Tên mặt bằng') },
             { prop: 'khachHangs.ten', name: gT('Tên khách hàng') },
-            { name: gT('Ngày chứng từ'), cellTemplate: this.startTemplate },
+            { name: gT('Ngày CT'), cellTemplate: this.startTemplate },
             { name: gT('Tổng thanh toán'), cellTemplate: this.priceTemplate },
             { prop: 'lapLai', name: gT('Lặp lại'), cellTemplate: this.nameTemplate },
             { prop: 'trangThai', name: gT('Trạng thái'), cellTemplate: this.descriptionTemplate },
@@ -232,11 +233,11 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     loadData(tanglauId: number, loaidichvuId: number, status: number, date: Date) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.dichvucobanService.getAllDichVuCoBan().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
-        //if (tanglauId == 0 && loaidichvuId == 0 && status == 0) {
-        //    this.dichvucobanService.filterByDate(date.getMonth(), date.getFullYear()).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
-        //} else
-        //    this.dichvucobanService.getItemByFilter(tanglauId, loaidichvuId, status, date.getMonth(), date.getFullYear()).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        //this.dichvucobanService.getAllDichVuCoBan().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        if (tanglauId == 0 && loaidichvuId == 0 && status == 0) {
+            this.dichvucobanService.filterByDate(date.getMonth(), date.getFullYear()).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        } else
+            this.dichvucobanService.getItemByFilter(tanglauId, loaidichvuId, status, date.getMonth(), date.getFullYear()).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
     }
 
     onDataLoadSuccessful(obj: DichVuCoBan[]) {
@@ -307,11 +308,13 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     editDichVuCoBan(row: DichVuCoBan) {
         //this.editingRowName = { name: row.tenichVuCoBan };
         this.sourcedichvucoban = row;        
+        this.DichVuCoBanEditor.tanglau = this.tanglau;
         this.DichVuCoBanEditor.khachHang = this.khachHang;
         this.DichVuCoBanEditor.matBang = this.matBang;
         this.DichVuCoBanEditor.loaiDichVu = this.loaiDichVu;
         this.DichVuCoBanEditor.loaiTien = this.loaiTien;
         this.DichVuCoBanEditor.donViTinh = this.donViTinh;
+        this.DichVuCoBanEditor.ChktangLau = true;
         this.dichvucobanEdit = this.DichVuCoBanEditor.editDichVuCoBan(row);
         try {
             this.DichVuCoBanEditor.valueTuNgay = new Date(row.tuNgay.toString());
@@ -357,22 +360,34 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     printDiv(selected: any[]) {
         var myWindow = window.open('', '', 'width=200,height=100');
         for (let item of selected) {
-            myWindow.document.write("<div style='padding-top: 10px;'><p><span style='font-weight: bold;font-size: 14px;'>Số chứng từ: </span>" + item.soChungTu + "</p>")
-            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày chứng từ: </span>" + this.datePipe.transform(item.ngayChungTu, 'dd/MM/yyyy') + "</p>");
-            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Mặt bằng: </span>" + item.matBangs.tenMatBang + "</p>");
-            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Khách hàng: </span>" + item.khachHangs.hoDem + " " + item.khachHangs.ten + "</p>");
-            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Loại dịch vụ: </span>" + item.loaiDichVus.tenLoaiDichVu + "</p>");
-            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Đơn vị tính: </span>" + item.donViTinhs.tenDonViTinh + "</p>");
-            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Diễn giải: </span>" + item.dienGiai + "</p>");
-            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Đơn giá: </span>" + this.formatPrice(item.donGia.toString()) + "</p>");
-            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Số lượng: </span>" + item.soLuong + "</p>");
-            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Thành tiền: </span>" + this.formatPrice(item.thanhTien.toString()) + "</p>");
-            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày thanh toán: </span>" + this.datePipe.transform(item.ngayThanhToan, 'dd/MM/yyyy') + "</p>");
-            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày bắt đầu: </span>" + this.datePipe.transform(item.tuNgay, 'dd/MM/yyyy') + "</p>");
-            myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày hết hạn: </span>" + this.datePipe.transform(item.denNgay, 'dd/MM/yyyy') + "</p></div>");
+            console.log(item);
+            myWindow.document.write("<div style='font-size: 1em; padding: 4% 5%; height: 45%;'><div style='width: 100%; display: flex;'>");
+            myWindow.document.write("<div style='width: 45%; margin-left: 5%; text-align: center'>");
+            myWindow.document.write("<div style='font-weight: bold;'>CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ DỊCH VỤ ĐÔ THỊ VIỆT NAM VINASINCO</div><div>Số chứng từ: " + item.soChungTu + "</div>");
+            myWindow.document.write("</div>");
+            myWindow.document.write("<div style='width: 45%; margin-left: 5%; text-align: center'>");
+            myWindow.document.write("<div style='text-transform: uppercase; font-size: 24px; font-weight: bold;'>Phiếu thu tiền</div><br/>");
+            myWindow.document.write("<div>Từ ngày: " + this.datePipe.transform(item.tuNgay, 'dd/MM/yyyy') + " - " + this.datePipe.transform(item.denNgay, 'dd/MM/yyyy') + "</div>");
+            myWindow.document.write("</div></div>");
+            myWindow.document.write("<br/>");
+            myWindow.document.write("<div><p>Khách hàng: " + item.khachHangs.hoDem + " " + item.khachHangs.ten + "</p><p><span style='padding-right:15px;'>Địa chỉ:  tòa nhà " + item.matBangs.toanha.tenVietTat + " - tầng lầu " + item.matBangs.tanglau.tenTangLau + "</span><span>Căn hộ: " + item.matBangs.tenMatBang + "</span></p></div>");
+            myWindow.document.write("<div class='clearfix'></div>");
+            myWindow.document.write("<table style='border-collapse: collapse;border: 1px solid black; text-align: center;' width='100%'>");
+            myWindow.document.write("<tr><td style='border: 1px solid black; width: 25%'>Loại dịch vụ</td><td style='border: 1px solid black; width: 20%'>Đơn giá</td><td style='border: 1px solid black; width: 13%'>Số lượng</td><td style ='border: 1px solid black; width: 17%'>Kỳ thanh toán</td><td style ='border: 1px solid black; width: 25%'>Thành tiền</td></tr>");
+            myWindow.document.write("<tr><td style='border: 1px solid black;'>" + item.loaiDichVus.tenLoaiDichVu + "</td><td style='border: 1px solid black;'>" + this.formatPrice(item.donGia.toString()) + "</td><td style='border: 1px solid black;'>" + item.soLuong + "</td><td style='border: 1px solid black;'>" + item.kyThanhToan + "</td><td style='border: 1px solid black;'>" + this.formatPrice(item.thanhTien.toString()) + "</td></tr>");
+            myWindow.document.write("<tr><td colspan='4' style='border: 1px solid black;text-align: right; padding-right: 10px;'>Tổng:</td><td style='border: 1px solid black;'></td></tr>");
+            myWindow.document.write("<tr><td colspan='6' style='border: 1px solid black;text-align: left; padding-left: 25px;'>Bằng chữ: </td></tr>");
+            myWindow.document.write("</table>");
+            myWindow.document.write("<br/>");
+            myWindow.document.write("<div style='display: flex; width: 100%'>");
+            myWindow.document.write("<div style='text-transform: uppercase; font-weight: bold; width: 45%; text-align: center;'>Người nộp tiền</div>");
+            myWindow.document.write("<div style='text-transform: uppercase; font-weight: bold; width: 45%; margin-left: 5%; text-align: center;'>Người thu tiền</div>");
+            myWindow.document.write("</div>");
+            myWindow.document.write("<br/><br/><br/><br/>");
             myWindow.document.write("<hr/>");
-        }
-        myWindow.focus();
+            myWindow.document.write("</div>");
+        }        
+        myWindow.document.close();
         myWindow.print();
         myWindow.close();
     }

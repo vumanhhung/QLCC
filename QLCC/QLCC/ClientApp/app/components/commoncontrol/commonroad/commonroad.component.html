@@ -142,4 +142,7 @@
     <li *ngIf="routerName == '/loaidichvu'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
     <li *ngIf="routerName == '/loaidichvu'" class="active"><a href="javascript://" routerLink="/banggiadichvucoban">Bảng giá dịch vụ</a></li>
     <li *ngIf="routerName == '/loaidichvu'" class="active"><a href="javascript://" routerLink="/loaidichvu">Loại Dịch Vụ</a></li>
+    <!--Lịch sử thu phí-->
+    <li *ngIf="matBangId != 0"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="matBangId != 0"><a href="javascript://" routerLink="/thexe">Quản lý thu phí xe</a></li>
 </ol>

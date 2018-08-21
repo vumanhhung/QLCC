@@ -63,4 +63,8 @@ export class DichVuCoBanService {
     filterByDate(month?: number, year?: number) {
         return this.dichvucobanEndpoint.filterByDate<DichVuCoBan[]>(month, year);
     }
+
+    lastRecord() {
+        return this.dichvucobanEndpoint.lastRecord<DichVuCoBan>();
+    }
 }

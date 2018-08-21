@@ -1,0 +1,136 @@
+﻿<ol id="commonroad" class="breadcrumb">
+    <!--Home Road-->
+    <li *ngIf="routerName == '/'"><a routerLink="/"><i class="fa fa-dashboard"></i>  {{'preferences.HomePage' | translate}}</a></li>
+    <!--Setting Road-->
+    <li *ngIf="routerName == '/settings'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/settings'" class="active"><a href="javascript://" routerLink="/settings">{{'preferences.Settings' | translate}}</a></li>
+    <!---->
+    <!--cumtoanha Road-->
+    <li *ngIf="routerName == '/cumtoanha'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/cumtoanha'" class="active"><a href="javascript://" routerLink="/quanlymatbang">{{'matbang.qlmb_road' | translate}}</a></li>
+    <li *ngIf="routerName == '/cumtoanha'" class="active"><a href="javascript://" routerLink="/cumtoanha">{{'cumtoanha.title' | translate}}</a></li>
+    <!---->
+    <!--toa nha Road-->
+    <li *ngIf="routerName == '/toanha'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/toanha'" class="active"><a href="javascript://" routerLink="/quanlymatbang">{{'matbang.qlmb_road' | translate}}</a></li>
+    <li *ngIf="routerName == '/toanha'" class="active"><a href="javascript://" routerLink="/cumtoanha">{{'cumtoanha.title' | translate}}</a></li>
+    <li *ngIf="routerName == '/toanha'" class="active"><a href="javascript://" routerLink="/toanha">{{'toanha.title' | translate}}</a></li>
+    <!--tanglau Road-->
+    <li *ngIf="routerName == '/tanglau'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/tanglau'" class="active"><a href="javascript://" routerLink="/quanlymatbang">{{'matbang.qlmb_road' | translate}}</a></li>
+    <li *ngIf="routerName == '/tanglau'" class="active"><a href="javascript://" routerLink="/cumtoanha">{{'cumtoanha.title' | translate}}</a></li>
+    <li *ngIf="routerName == '/tanglau'" class="active"><a href="javascript://" routerLink="/toanha">{{'toanha.title' | translate}}</a></li>
+    <li *ngIf="routerName == '/tanglau'" class="active"><a href="javascript://" routerLink="/tanglau">{{'tanglau.title' | translate}}</a></li>
+    <!---->
+    <!--Quản lý mặt bằng-->
+    <li *ngIf="routerName == '/quanlymatbang'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/quanlymatbang'" class="active"><a href="javascript://" routerLink="/quanlymatbang">{{'matbang.qlmb_road' | translate}}</a></li>
+    <!--Quản lý danh mục-->
+    <li *ngIf="routerName == '/quanlydanhmuc'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/quanlydanhmuc'" class="active"><a href="javascript://" routerLink="/quanlymatbang">Quản lý mặt bằng</a></li>
+    <li *ngIf="routerName == '/quanlydanhmuc'" class="active"><a href="javascript://" routerLink="/quanlydanhmuc">Quản lý danh mục</a></li>
+    <!--Chức vụ-->
+    <li *ngIf="routerName == '/chucvu'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/chucvu'" class="active"><a href="javascript://" routerLink="/quanlymatbang">Quản lý mặt bằng</a></li>
+    <li *ngIf="routerName == '/chucvu'" class="active"><a href="javascript://" routerLink="/quanlydanhmuc">Quản lý danh mục</a></li>
+    <li *ngIf="routerName == '/chucvu'" class="active"><a href="javascript://" routerLink="/chucvu">Chức vụ</a></li>
+    <!--Ngân hàng-->
+    <li *ngIf="routerName == '/nganhang'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/nganhang'" class="active"><a href="javascript://" routerLink="/quanlymatbang">Quản lý mặt bằng</a></li>
+    <li *ngIf="routerName == '/nganhang'" class="active"><a href="javascript://" routerLink="/quanlydanhmuc">Quản lý danh mục</a></li>
+    <li *ngIf="routerName == '/nganhang'" class="active"><a href="javascript://" routerLink="/nganhang">Ngân hàng</a></li>
+    <!--Trạng thái-->
+    <li *ngIf="routerName == '/trangthai'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/trangthai'" class="active"><a href="javascript://" routerLink="/quanlymatbang">Quản lý mặt bằng</a></li>
+    <li *ngIf="routerName == '/trangthai'" class="active"><a href="javascript://" routerLink="/quanlydanhmuc">Quản lý danh mục</a></li>
+    <li *ngIf="routerName == '/trangthai'" class="active"><a href="javascript://" routerLink="/trangthai">Trạng thái</a></li>
+    <!--Tài khoản ngân hàng-->
+    <li *ngIf="routerName == '/taikhoannganhang'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/taikhoannganhang'" class="active"><a href="javascript://" routerLink="/quanlymatbang">Quản lý mặt bằng</a></li>
+    <li *ngIf="routerName == '/taikhoannganhang'" class="active"><a href="javascript://" routerLink="/quanlydanhmuc">Quản lý danh mục</a></li>
+    <li *ngIf="routerName == '/taikhoannganhang'" class="active"><a href="javascript://" routerLink="/taikhoannganhang">Tài khoản ngân hàng</a></li>
+    <!--Nhà cung cấp-->
+    <li *ngIf="routerName == '/nhacungcap'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/nhacungcap'" class="active"><a href="javascript://" routerLink="/quanlymatbang">Quản lý mặt bằng</a></li>
+    <li *ngIf="routerName == '/nhacungcap'" class="active"><a href="javascript://" routerLink="/quanlydanhmuc">Quản lý danh mục</a></li>
+    <li *ngIf="routerName == '/nhacungcap'" class="active"><a href="javascript://" routerLink="/nhacungcap">Nhà cung cấp</a></li>
+    <!--Quốc tịch-->
+    <li *ngIf="routerName == '/quoctich'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/quoctich'" class="active"><a href="javascript://" routerLink="/quanlymatbang">Quản lý mặt bằng</a></li>
+    <li *ngIf="routerName == '/quoctich'" class="active"><a href="javascript://" routerLink="/quanlydanhmuc">Quản lý danh mục</a></li>
+    <li *ngIf="routerName == '/quoctich'" class="active"><a href="javascript://" routerLink="/quoctich">Quốc tịch</a></li>
+    <!--Khu vực-->
+    <li *ngIf="routerName == '/khuvuc'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/khuvuc'" class="active"><a href="javascript://" routerLink="/quanlymatbang">Quản lý mặt bằng</a></li>
+    <li *ngIf="routerName == '/khuvuc'" class="active"><a href="javascript://" routerLink="/quanlydanhmuc">Quản lý danh mục</a></li>
+    <li *ngIf="routerName == '/khuvuc'" class="active"><a href="javascript://" routerLink="/khuvuc">Khu vực</a></li>
+    <!--Đơn vị tính-->
+    <li *ngIf="routerName == '/donvitinh'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/donvitinh'" class="active"><a href="javascript://" routerLink="/quanlymatbang">Quản lý mặt bằng</a></li>
+    <li *ngIf="routerName == '/donvitinh'" class="active"><a href="javascript://" routerLink="/quanlydanhmuc">Quản lý danh mục</a></li>
+    <li *ngIf="routerName == '/donvitinh'" class="active"><a href="javascript://" routerLink="/donvitinh">Đơn vị tính</a></li>
+    <!--Phòng ban-->
+    <li *ngIf="routerName == '/phongban'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/phongban'" class="active"><a href="javascript://" routerLink="/quanlymatbang">Quản lý mặt bằng</a></li>
+    <li *ngIf="routerName == '/phongban'" class="active"><a href="javascript://" routerLink="/quanlydanhmuc">Quản lý danh mục</a></li>
+    <li *ngIf="routerName == '/phongban'" class="active"><a href="javascript://" routerLink="/phongban">Phòng ban</a></li>
+    <!--Phòng ban-->
+    <li *ngIf="routerName == '/loaitien'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/loaitien'" class="active"><a href="javascript://" routerLink="/quanlymatbang">Quản lý mặt bằng</a></li>
+    <li *ngIf="routerName == '/loaitien'" class="active"><a href="javascript://" routerLink="/quanlydanhmuc">Quản lý danh mục</a></li>
+    <li *ngIf="routerName == '/loaitien'" class="active"><a href="javascript://" routerLink="/loaitien">Loại tiền</a></li>
+    <!--Phòng ban-->
+    <li *ngIf="routerName == '/loaigiathue'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/loaigiathue'" class="active"><a href="javascript://" routerLink="/quanlymatbang">Quản lý mặt bằng</a></li>
+    <li *ngIf="routerName == '/loaigiathue'" class="active"><a href="javascript://" routerLink="/quanlydanhmuc">Quản lý danh mục</a></li>
+    <li *ngIf="routerName == '/loaigiathue'" class="active"><a href="javascript://" routerLink="/loaigiathue">Loại giá thuê</a></li>
+    <!--Phòng ban-->
+    <li *ngIf="routerName == '/loaimatbang'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/loaimatbang'" class="active"><a href="javascript://" routerLink="/quanlymatbang">Quản lý mặt bằng</a></li>
+    <li *ngIf="routerName == '/loaimatbang'" class="active"><a href="javascript://" routerLink="/quanlydanhmuc">Quản lý danh mục</a></li>
+    <li *ngIf="routerName == '/loaimatbang'" class="active"><a href="javascript://" routerLink="/loaimatbang">Loại mặt bằng</a></li>
+    <!--Phòng ban-->
+    <li *ngIf="routerName == '/loaiyeucau'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/loaiyeucau'" class="active"><a href="javascript://" routerLink="/khachhangcanhan">Quản lý khách hàng</a></li>
+    <li *ngIf="routerName == '/loaiyeucau'" class="active"><a href="javascript://" routerLink="/loaiyeucau">Loại yêu cầu</a></li>
+    <!--Phòng ban-->
+    <li *ngIf="routerName == '/khachhangcanhan'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/khachhangcanhan'" class="active"><a href="javascript://" routerLink="/khachhangcanhan">Khác hàng - cá nhân</a></li>
+    <!--Phòng ban-->
+    <li *ngIf="routerName == '/khachhangdoanhnghiep'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/khachhangdoanhnghiep'" class="active"><a href="javascript://" routerLink="/khachhangdoanhnghiep">Khách hàng - doanh nghiệp</a></li>
+    <!--Phòng ban-->
+    <li *ngIf="routerName == '/cudan'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/cudan'" class="active"><a href="javascript://" routerLink="/khachhangcanhan">Quản lý khách hàng</a></li>
+    <li *ngIf="routerName == '/cudan'" class="active"><a href="javascript://" routerLink="/cudan">Cư dân</a></li>
+
+    <li *ngIf="routerName == '/nhomkhachhang'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/nhomkhachhang'" class="active"><a href="javascript://" routerLink="/khachhangcanhan">Quản lý khách hàng</a></li>
+    <li *ngIf="routerName == '/nhomkhachhang'" class="active"><a href="javascript://" routerLink="/nhomkhachhang">Nhóm khách hàng</a></li>
+
+    <li *ngIf="routerName == '/trangthaicudan'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/trangthaicudan'" class="active"><a href="javascript://" routerLink="/khachhangcanhan">Quản lý khách hàng</a></li>
+    <li *ngIf="routerName == '/trangthaicudan'" class="active"><a href="javascript://" routerLink="/trangthaicudan">Trạng thái cư dân</a></li>
+
+    <li *ngIf="routerName == '/mucdouutien'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/mucdouutien'" class="active"><a href="javascript://" routerLink="/khachhangcanhan">Quản lý khách hàng</a></li>
+    <li *ngIf="routerName == '/mucdouutien'" class="active"><a href="javascript://" routerLink="/mucdouutien">Mức độ ưu tiên</a></li>
+
+    <li *ngIf="routerName == '/trangthaiyeucau'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/trangthaiyeucau'" class="active"><a href="javascript://" routerLink="/khachhangcanhan">Quản lý khách hàng</a></li>
+    <li *ngIf="routerName == '/trangthaiyeucau'" class="active"><a href="javascript://" routerLink="/trangthaiyeucau">Trạng thái yêu cầu</a></li>
+
+    <li *ngIf="routerName == '/nguontiepnhan'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/nguontiepnhan'" class="active"><a href="javascript://" routerLink="/khachhangcanhan">Quản lý khách hàng</a></li>
+    <li *ngIf="routerName == '/nguontiepnhan'" class="active"><a href="javascript://" routerLink="/nguontiepnhan">Nguồn tiếp nhận</a></li>
+
+    <li *ngIf="routerName == '/quanhechuho'"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="routerName == '/quanhechuho'" class="active"><a href="javascript://" routerLink="/khachhangcanhan">Quản lý khách hàng</a></li>
+    <li *ngIf="routerName == '/quanhechuho'" class="active"><a href="javascript://" routerLink="/quanhechuho">Quan hệ chủ hộ</a></li>
+
+
+
+    <!--Lịch sử thu phí-->
+    <li *ngIf="matBangId != 0"><a href="javascript://" routerLink="/"><i class="fa fa-dashboard"></i> {{'preferences.HomePage' | translate}}</a></li>
+    <li *ngIf="matBangId != 0"><a href="javascript://" routerLink="/thexe">Quản lý thu phí xe</a></li>
+</ol>

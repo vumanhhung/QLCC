@@ -33,7 +33,7 @@ namespace DAL
         public DbSet<MatBang> MatBangs { get; set; }
         public DbSet<TrangThai> TrangThais { get; set; }
         public DbSet<NhaCungCap> NhaCungCaps { get; set; }
-        public DbSet<ChucVu> ChucVus { get; set; }        
+        public DbSet<ChucVu> ChucVus { get; set; }
         public DbSet<DonViTinh> DonViTinhs { get; set; }
         public DbSet<KhuVuc> KhuVucs { get; set; }
         public DbSet<LoaiGiaThue> LoaiGiaThues { get; set; }
@@ -59,12 +59,25 @@ namespace DAL
         public DbSet<BangGiaXe> BangGiaXes { get; set; }
         public DbSet<LoaiDichVu> LoaiDichVus { get; set; }
         public DbSet<LoaiXe> LoaiXes { get; set; }
+        public DbSet<TheXe> TheXes { get; set; }
+
+        public DbSet<PhieuThu> PhieuThus { get; set; }
+        public DbSet<PhieuThuChiTiet> PhieuThuChiTiets { get; set; }
+
         public DbSet<CongThucNuoc> CongThucNuocs { get; set; }
         public DbSet<DinhMucNuoc> DinhMucNuocs { get; set; }
         public DbSet<DichVuCoBan> DichVuCoBans { get; set; }
-        public DbSet<TheXe> TheXes { get; set; }
-        public DbSet<PhieuThu> PhieuThus { get; set; }
-        public DbSet<PhieuThuChiTiet> PhieuThuChiTiets { get; set; }
+
+        public DbSet<HopDong> HopDongs { get; set; }
+        public DbSet<HopDongDichVu> HopDongDichVus { get; set; }
+        public DbSet<HopDongLSChinhGia> HopDongLSChinhGias { get; set; }
+        public DbSet<HopDongMatBang> HopDongMatBangs { get; set; }
+        public DbSet<HopDongPhuLuc> HopDongPhuLucs { get; set; }
+        public DbSet<HopDongThanhToan> HopDongThanhToans { get; set; }
+
+        public DbSet<DichVuNuoc> DichVuNuocs { get; set; }
+        public DbSet<HangSanXuat> HangSanXuats { get; set; }
+        public DbSet<LoaiHang> LoaiHangs { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
@@ -135,11 +148,23 @@ namespace DAL
             builder.Entity<BangGiaDichVuCoBan>().ToTable($"tbl_BangGiaDichVuCoBan");
             builder.Entity<BangGiaXe>().ToTable($"tbl_BangGiaXe");
             builder.Entity<LoaiDichVu>().ToTable($"tbl_LoaiDichVu");
-            builder.Entity<LoaiXe>().ToTable($"tbl_LoaiXe"); 
-            builder.Entity<CongThucNuoc>().ToTable($"tbl_CongThucNuoc"); 
-            builder.Entity<DinhMucNuoc>().ToTable($"tbl_DinhMucNuoc"); 
-            builder.Entity<DichVuCoBan>().ToTable($"tbl_DichVuCoBan"); 
+            builder.Entity<LoaiXe>().ToTable($"tbl_LoaiXe");
             builder.Entity<TheXe>().ToTable($"tbl_TheXe");
+            builder.Entity<PhieuThu>().ToTable($"tbl_PhieuThu");
+            builder.Entity<PhieuThuChiTiet>().ToTable($"tbl_PhieuThuChiTiet");
+
+            builder.Entity<CongThucNuoc>().ToTable($"tbl_CongThucNuoc");
+            builder.Entity<DinhMucNuoc>().ToTable($"tbl_DinhMucNuoc");
+            builder.Entity<DichVuCoBan>().ToTable($"tbl_DichVuCoBan");
+            builder.Entity<HopDong>().ToTable($"tbl_HopDong");
+            builder.Entity<HopDongDichVu>().ToTable($"tbl_HopDongDichVu");
+            builder.Entity<HopDongLSChinhGia>().ToTable($"tbl_HopDongLSChinhGia");
+            builder.Entity<HopDongMatBang>().ToTable($"tbl_HopDongMatBang");
+            builder.Entity<HopDongPhuLuc>().ToTable($"tbl_HopDongPhuLuc");
+            builder.Entity<HopDongThanhToan>().ToTable($"tbl_HopDongThanhToan");
+            builder.Entity<DichVuNuoc>().ToTable($"tbl_DichVuNuoc");
+            builder.Entity<HangSanXuat>().ToTable($"tbl_HangSanXuat");
+            builder.Entity<LoaiHang>().ToTable($"tbl_LoaiHang");
         }
 
         public override int SaveChanges()

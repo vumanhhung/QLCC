@@ -136,9 +136,13 @@ namespace QLCC.Controllers
                 return NotFound();
             }
 
-            _context.CongThucNuocs.Remove(congthucnuoc);
+            _context.CongThucNuocs.Remove(congthucnuoc);            
+            var dinhmucnuoc = _context.DinhMucNuocs.Where(m => m.CongThucNuocId == id).ToList();
+            foreach(DinhMucNuoc item in dinhmucnuoc)
+            {
+                _context.DinhMucNuocs.Remove(item);
+            }
             await _context.SaveChangesAsync();
-
             return Ok(congthucnuoc);
         }
         
@@ -177,6 +181,12 @@ namespace QLCC.Controllers
                 stringcheck = "exist";
             }
             return Ok(stringcheck);
+        }
+
+        [HttpGet("FilterByStatus/{status}")]
+        public IEnumerable<CongThucNuoc> filterStatus([FromRoute] bool status)
+        {
+            return _context.CongThucNuocs.Where(r => r.Status == status).ToList();
         }
     }    
 }

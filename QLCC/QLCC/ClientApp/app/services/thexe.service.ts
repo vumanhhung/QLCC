@@ -55,4 +55,5 @@ export class TheXeService {
     deleteTheXes(thexe?: TheXe[]) {
         return this.thexeEndpoint.deleteTheXes(thexe);
     }
+    
 }

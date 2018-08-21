@@ -1,32 +1,50 @@
-use QLCC
+USE [QLCC]
+GO
 
-INSERT INTO tbl_LoaiDichVu VALUES ('A','A',1,0,'true',1,null, null,null,null)
-INSERT INTO tbl_LoaiDichVu VALUES ('B','B',2,0,'true',1,null, null,null,null)
-INSERT INTO tbl_LoaiDichVu VALUES ('C','C',3,0,'true',1,null, null,null,null)
+/****** Object:  Table [dbo].[tbl_HangSanXuat]    Script Date: 21/08/2018 05:11:13 ******/
+SET ANSI_NULLS ON
+GO
 
-INSERT INTO tbl_LoaiDichVu VALUES ('A1','A1',1,1,'true',1,null, null,null,null)
-INSERT INTO tbl_LoaiDichVu VALUES ('A2','A2',2,1,'true',1,null, null,null,null)
-INSERT INTO tbl_LoaiDichVu VALUES ('A3','A3',3,1,'true',1,null, null,null,null)
+SET QUOTED_IDENTIFIER ON
+GO
 
-INSERT INTO tbl_LoaiDichVu VALUES ('B1','B1',1,2,'true',1,null, null,null,null)
-INSERT INTO tbl_LoaiDichVu VALUES ('B2','B2',2,2,'true',1,null, null,null,null)
-INSERT INTO tbl_LoaiDichVu VALUES ('C1','C1',1,3,'true',1,null, null,null,null)
-INSERT INTO tbl_LoaiDichVu VALUES ('C1_1','C1_1',1,9,'true',1,null, null,null,null)
+CREATE TABLE [dbo].[tbl_HangSanXuat](
+	[HangSanXuatId] [int] NOT NULL,
+	[TenHangSanXuat] [nvarchar](250) NULL,
+	[KyHieu] [varchar](20) NULL,
+	[DienGiai] [nvarchar](500) NULL,
+	[TrangThai] [bit] NULL,
+	[NguoiNhap] [varchar](150) NULL,
+	[NgayNhap] [datetime] NULL,
+	[NguoiSua] [varchar](150) NULL,
+	[NgaySua] [datetime] NULL,
+ CONSTRAINT [PK_tbl_HangSanXuat] PRIMARY KEY CLUSTERED 
+(
+	[HangSanXuatId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
 
 
-select * from tbl_LoaiDichVu where MaLoaiDichVuCha = 0
+SET ANSI_NULLS ON
+GO
 
-select * from tbl_LoaiDichVu where MaLoaiDichVuCha = 1
+SET QUOTED_IDENTIFIER ON
+GO
 
-
-select b.LoaiDichVuId, a.TenLoaiDichVu as TenLoaiDichVuCha,  b.TenLoaiDichVu from tbl_LoaiDichVu as a 
-join tbl_LoaiDichVu as b on a.LoaiDichVuId = b.MaLoaiDichVuCha
-where b.MaLoaiDichVuCha = a.LoaiDichVuId
-
-SELECT t1.LoaiDichVuId, t2.TenLoaiDichVu, t2.MaLoaiDichVuCha FROM tbl_LoaiDichVu t1
-join tbl_LoaiDichVu t2 on t1.LoaiDichVuId = t2.MaLoaiDichVuCha
-order by t1.TenLoaiDichVu, t2.TenLoaiDichVu
-
-select * from tbl_LoaiDichVu
-
-select COUNT(tbl_LoaiDichVu) 
+CREATE TABLE [dbo].[tbl_LoaiHang](
+	[LoaiHangId] [int] NOT NULL,
+	[TenLoaiHang] [nvarchar](250) NULL,
+	[KyHieu] [varchar](20) NULL,
+	[DienGiai] [nvarchar](500) NULL,
+	[TrangThai] [bit] NULL,
+	[NguoiNhap] [varchar](150) NULL,
+	[NgayNhap] [datetime] NULL,
+	[NguoiSua] [varchar](150) NULL,
+	[NgaySua] [datetime] NULL,
+ CONSTRAINT [PK_tbl_LoaiHang] PRIMARY KEY CLUSTERED 
+(
+	[LoaiHangId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO

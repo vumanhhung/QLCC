@@ -8,9 +8,9 @@ export class LoaiXe {
     public ngayNhap: Date;
     public nguoiSua: string;
     public ngaySua: Date;
-    public thexes: TheXe;
+    //public thexes: TheXe;
 
-    constructor(loaiXeId?: number, tenLoaiXe?: string, kyHieu?: string, nguoiNhap?: string, ngayNhap?: Date, nguoiSua?: string, ngaySua?: Date, thexe?: TheXe) {
+    constructor(loaiXeId?: number, tenLoaiXe?: string, kyHieu?: string, nguoiNhap?: string, ngayNhap?: Date, nguoiSua?: string, ngaySua?: Date) {
         this.loaiXeId = loaiXeId;
         this.tenLoaiXe = tenLoaiXe;
         this.kyHieu = kyHieu;
@@ -18,6 +18,6 @@ export class LoaiXe {
         this.ngayNhap = ngayNhap;
         this.nguoiSua = nguoiSua;
         this.ngaySua = ngaySua;
-        this.thexes = thexe;
+        //this.thexes = thexe;
     }
 }

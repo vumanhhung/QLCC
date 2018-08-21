@@ -70,7 +70,7 @@ export class BangGiaDichVuCoBanComponent implements OnInit, AfterViewInit {
             { prop: 'loaiDichVu.tenLoaiDichVu', name: gT('Loại dịch vụ') },
             { prop: 'loaiTien.tenLoaiTien', name: gT('Loaị tiền') },
             { prop: 'donViTinh.tenDonViTinh', name: gT('Đơn vị tính') },
-            { prop: 'donGia', name: gT('Dơn giá') },
+            { prop: 'donGia', name: gT('Đơn giá') },
             { prop: 'dienGiai', name: gT('Mô tả') },
             { name: 'Chức năng', width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];

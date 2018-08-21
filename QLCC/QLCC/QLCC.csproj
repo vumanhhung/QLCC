@@ -76,7 +76,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\app\components\dichvucoban\dichvucoban-import.component.ts" />
     <None Remove="Logs\log-20180108.log" />
     <None Remove="Logs\log-20180118.log" />
     <None Remove="Logs\log-20180122.log" />
@@ -133,9 +132,5 @@
     <None Include="wwwroot\dist\vendor.js" />
     <None Include="wwwroot\js\jquery-1.9.1.min.js" />
     <None Include="wwwroot\js\site.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\app\components\dichvucoban\dichvucoban-import.component.ts" />
   </ItemGroup>
 </Project>

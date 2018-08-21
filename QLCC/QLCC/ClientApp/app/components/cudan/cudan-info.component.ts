@@ -101,6 +101,7 @@ export class CuDanInfoComponent implements OnInit {
         this.alertService.startLoadingMessage();
         this.gvService.getCuDanByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
     }
+
     onEditorModalHidden() {
         this.editingRowName = null;
         this.resetForm(true);

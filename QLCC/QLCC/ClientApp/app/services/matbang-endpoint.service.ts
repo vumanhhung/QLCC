@@ -14,6 +14,15 @@ export class MatBangEndpoint extends EndpointFactory {
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
         super(http, configurations, injector);
     }
+
+    getItems<T>(start: number, count: number, whereClause: string, orderBy: string): Observable<T> {
+        let url = `${this.matbangUrl}/getItems/${start}/${count}/${orderBy}`;
+        let body = JSON.stringify(whereClause);
+        return this.http.put(url, body, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getItems(start, count, whereClause, orderBy));
+            });
+    }
     
     getAllMatBang<T>(): Observable<T> {
         return this.http.get(this.matbangUrl, this.getRequestHeaders())

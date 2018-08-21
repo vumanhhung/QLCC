@@ -27,14 +27,21 @@ namespace QLCC.Controllers
         public IEnumerable<LoaiDichVu> GetItems([FromRoute] int start, int count, string orderBy, [FromBody] string whereClause)
         {
             orderBy = orderBy != "x" ? orderBy : "";
-            return _context.Set<LoaiDichVu>().FromSql($"tbl_LoaiDichVu_GetItemsByRange {start},{count},{whereClause},{orderBy}").ToList<LoaiDichVu>();
+            var list = _context.Set<LoaiDichVu>().FromSql($"tbl_LoaiDichVu_GetItemsByRange {start},{count},{whereClause},{orderBy}").ToList<LoaiDichVu>();
+            return list;
         }
 
         // GET: api/LoaiDichVus
         [HttpGet]
         public IEnumerable<LoaiDichVu> GetLoaiDichVus()
         {
-            return _context.LoaiDichVus.OrderBy(r => r.TenLoaiDichVu).ThenByDescending(r => r.MaLoaiDichVuCha);
+            var list = _context.Set<LoaiDichVu>().FromSql("select * from tbl_LoaiDichVu").ToList<LoaiDichVu>();
+            //foreach (LoaiDichVu obj in list)
+            //{
+            //    obj.BangGiaDichVuCoBans = _context.BangGiaDichVuCoBans.Where(r => r.LoaiDichVuId == obj.LoaiDichVuId).ToList();
+            //    obj.DichVuCoBans = _context.DichVuCoBans.Where(r => r.LoaiDichVuId == obj.LoaiDichVuId).ToList();
+            //}
+            return list;
         }
 
         // GET: api/LoaiDichVus/5
@@ -134,7 +141,9 @@ namespace QLCC.Controllers
                 return BadRequest(ModelState);
             }
             var checkMacha = await _context.LoaiDichVus.SingleOrDefaultAsync(m => m.MaLoaiDichVuCha == id);
-            if(checkMacha == null)
+            var checkBangGia = _context.BangGiaDichVuCoBans.Where(m => m.LoaiDichVuId == id).ToList();
+            var checkDVCB = _context.DichVuCoBans.Where(m => m.LoaiDichVuId == id).ToList();
+            if (checkBangGia.Count() == 0 && checkDVCB.Count() == 0 && checkMacha == null)
             {
                 var loaidichvu = await _context.LoaiDichVus.SingleOrDefaultAsync(m => m.LoaiDichVuId == id);
                 if (loaidichvu == null)
@@ -146,12 +155,22 @@ namespace QLCC.Controllers
                 await _context.SaveChangesAsync();
 
                 return Ok(loaidichvu);
-            }else
-            {
-                var check = "Exist";
+            } else {
+                var check = "";
+                if (checkBangGia.Count() > 0)
+                {
+                    check = "BangGia";
+                }
+                if (checkDVCB.Count() > 0)
+                {
+                    check = "DVCB";
+                }
+                if (checkMacha != null)
+                {
+                    check = "Con";
+                }
                 return Ok(check);
             }
-            
         }
 
         private bool LoaiDichVuExists(int id)
@@ -176,6 +195,8 @@ namespace QLCC.Controllers
                 LoaiDichVu obj = new LoaiDichVu();
                 obj = ldv[i];
                 obj.TenLoaiDichVu = st + obj.TenLoaiDichVu;
+                //obj.BangGiaDichVuCoBans = _context.BangGiaDichVuCoBans.Where(r => r.LoaiDichVuId == obj.LoaiDichVuId).ToList<BangGiaDichVuCoBan>();
+                //obj.DichVuCoBans = _context.DichVuCoBans.Where(r => r.LoaiDichVuId == obj.LoaiDichVuId).ToList();
                 list.Add(obj);
                 DeQuy(list, obj.LoaiDichVuId, st + "|=> ");
             }
@@ -185,11 +206,11 @@ namespace QLCC.Controllers
         public IEnumerable<LoaiDichVu> getAllByStatus([FromRoute] int status)
         {
             List<LoaiDichVu> list = new List<LoaiDichVu>();
-            DeQuyByStatus(list, 0,status, "");
+            DeQuyByStatus(list, 0, status, "");
             return list;
         }
 
-        void DeQuyByStatus(List<LoaiDichVu> list, int parentid,int status, string st)
+        void DeQuyByStatus(List<LoaiDichVu> list, int parentid, int status, string st)
         {
             List<LoaiDichVu> ldv = new List<LoaiDichVu>();
             ldv = _context.LoaiDichVus.Where(r => r.TrangThai == status && r.MaLoaiDichVuCha == parentid).OrderBy(m => m.TenLoaiDichVu).ToList<LoaiDichVu>();
@@ -234,7 +255,7 @@ namespace QLCC.Controllers
         }
         void DeQuyListDVCB(List<LoaiDichVu> list, int parentid, string st)
         {
-           
+
             List<LoaiDichVu> ldv = new List<LoaiDichVu>();
             ldv = _context.LoaiDichVus.Where(r => r.TrangThai != 2 && r.MaLoaiDichVuCha == parentid).OrderBy(m => m.TenLoaiDichVu).ToList<LoaiDichVu>();
             for (int i = 0; i < ldv.Count; i++)

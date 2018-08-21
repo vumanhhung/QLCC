@@ -36,7 +36,7 @@ export class DinhMucNuocService {
         }
     }
 
-    addnewDinhMucNuoc(dinhmucnuoc?: DinhMucNuoc, id?: number) {
+    addnewDinhMucNuoc(dinhmucnuoc?: DinhMucNuoc) {
         return this.dinhmucnuocEndpoint.addnewDinhMucNuoc<DinhMucNuoc>(dinhmucnuoc);
     }    
 
@@ -48,7 +48,7 @@ export class DinhMucNuocService {
         return this.dinhmucnuocEndpoint.deleteDinhMucNuoc(id);
     }
 
-    getMax(id: number) {
-        return this.dinhmucnuocEndpoint.getMax<number>(id);
+    getLastRecord(id: number) {
+        return this.dinhmucnuocEndpoint.getLastRecord<DinhMucNuoc>(id);
     }
 }

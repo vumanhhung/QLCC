@@ -30,7 +30,8 @@ export class LoaiXeInfoComponent implements OnInit {
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
 
-    checkTen: boolean = false;
+    checkTen: boolean;
+    checkKyHieu: boolean;
 
     @Input()
     isViewOnly: boolean;
@@ -99,7 +100,6 @@ export class LoaiXeInfoComponent implements OnInit {
         this.isSaving = true;
         this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
         if (this.isNew) {
-            this.LoaiXeEdit.ngayNhap = this.valueNgayNhap;
             this.gvService.addnewLoaiXe(this.LoaiXeEdit).subscribe(results => {
                 if (results.tenLoaiXe == "ten") {
                     this.showErrorAlert("Lỗi nhập liệu", "Loại xe: " + this.LoaiXeEdit.tenLoaiXe + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");
@@ -110,21 +110,23 @@ export class LoaiXeInfoComponent implements OnInit {
                     this.showErrorAlert("Lỗi nhập liệu", "Ký hiệu: " + this.LoaiXeEdit.kyHieu + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");
                     this.alertService.stopLoadingMessage();
                     this.isSaving = false;
+                    this.checkKyHieu = false;
                 }
                 else this.saveSuccessHelper();
             }, error => this.saveFailedHelper(error));
         }
         else {
-            this.LoaiXeEdit.ngaySua = this.valueNgaySua;
             this.gvService.updateLoaiXe(this.LoaiXeEdit.loaiXeId, this.LoaiXeEdit).subscribe(response => {
                 if (response == "ten") {
                     this.showErrorAlert("Lỗi nhập liệu", "Loại xe: " + this.LoaiXeEdit.tenLoaiXe + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");
                     this.alertService.stopLoadingMessage();
                     this.isSaving = false;
+                    this.checkTen = false;
                 } else if (response == "kyhieu") {
                     this.showErrorAlert("Lỗi nhập liệu", "Ký hiệu: " + this.LoaiXeEdit.kyHieu + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");
                     this.alertService.stopLoadingMessage();
                     this.isSaving = false;
+                    this.checkKyHieu = false;
                 }
                 else this.saveSuccessHelper();
             }, error => this.saveFailedHelper(error));
@@ -223,5 +225,17 @@ export class LoaiXeInfoComponent implements OnInit {
     private onEditorModalHidden() {
         this.editingRowName = null;
         this.resetForm(true);
+    }
+
+    tenChk(ten: string) {
+        if (ten != "") {
+            this.checkTen = true;
+        } else this.checkTen = false;
+    }
+
+    kyHieuChk(kyHieu: string) {
+        if (kyHieu != "") {
+            this.checkKyHieu = true;
+        } else this.checkKyHieu = false;
     }
 }

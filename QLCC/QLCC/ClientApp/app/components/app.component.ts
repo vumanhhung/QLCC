@@ -10,7 +10,6 @@ import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChildren, AfterVie
 import { Router, NavigationStart } from '@angular/router';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-
 import { AlertService, AlertDialog, DialogType, AlertMessage, MessageSeverity } from '../services/alert.service';
 import { NotificationService } from "../services/notification.service";
 import { AppTranslationService } from "../services/app-translation.service";

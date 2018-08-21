@@ -147,5 +147,12 @@ namespace QLCC.Controllers
         {                        
             return _context.BangGiaDichVuCoBans.Any(e => e.BangGiaDichVuCoBanId == id);
         }
+
+        [HttpGet("GetLoaiDichVu/{id}/")]
+        public async Task<IActionResult> getBangGiaByLoaiDichVu([FromRoute] int id)
+        {
+            var check = await _context.BangGiaDichVuCoBans.Include(r => r.LoaiDichVu).SingleOrDefaultAsync(r => r.LoaiDichVuId == id);
+            return Ok(check);
+        }
     }    
 }

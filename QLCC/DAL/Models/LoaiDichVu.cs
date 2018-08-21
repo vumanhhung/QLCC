@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,5 +18,8 @@ namespace DAL.Models
 		public DateTime? NgayNhap { get; set; }
 		public string NguoiSua { get; set; }
 		public DateTime? NgaySua { get; set; }
+        //public List<DichVuCoBan> DichVuCoBans { get; set; }
+        //public List<BangGiaDichVuCoBan> BangGiaDichVuCoBans { get; set; }
+        //public ICollection<BangGiaDichVuCoBan> BangGiaDichVuCoBans { get; set; }
     }
 }

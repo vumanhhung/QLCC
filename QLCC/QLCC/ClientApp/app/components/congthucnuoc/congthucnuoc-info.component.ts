@@ -28,6 +28,8 @@ export class CongThucNuocInfoComponent implements OnInit {
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
 
+    checkTen: boolean;
+
     @Input()
     isViewOnly: boolean;
 
@@ -100,6 +102,7 @@ export class CongThucNuocInfoComponent implements OnInit {
                     this.showErrorAlert("Lỗi nhập liệu", "Tên công thức nước: " + this.CongThucNuocEdit.tenCongThucNuoc + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");
                     this.alertService.stopLoadingMessage();
                     this.isSaving = false;
+                    this.checkTen = false;
                 } else {
                     if (results.status == true) {
                         this.gvService.changeStatus(results.congThucNuocId).subscribe(result => this.saveSuccessHelper(), error => { });
@@ -115,6 +118,7 @@ export class CongThucNuocInfoComponent implements OnInit {
                     this.showErrorAlert("Lỗi nhập liệu", "Tên công thức nước: " + this.CongThucNuocEdit.tenCongThucNuoc + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");
                     this.alertService.stopLoadingMessage();
                     this.isSaving = false;
+                    this.checkTen = false;
                 } else {
                     if (this.CongThucNuocEdit.status == true) {
                         this.gvService.changeStatus(this.CongThucNuocEdit.congThucNuocId).subscribe(result => this.saveSuccessHelper(), error => { });
@@ -223,5 +227,12 @@ export class CongThucNuocInfoComponent implements OnInit {
     onEditorModalHidden() {
         this.editingRowName = null;
         this.resetForm(true);
+    }
+
+    tenChk(ten: string) {
+        if (ten != "") {
+            this.checkTen = true;
+        } else
+            this.checkTen = false;
     }
 }

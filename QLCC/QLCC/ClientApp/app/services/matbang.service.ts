@@ -17,6 +17,10 @@ export class MatBangService {
     constructor(private router: Router, private http: HttpClient, private matbangEndpoint: MatBangEndpoint, private authService: AuthService) {
 
     }
+
+    getItems(start: number, count: number, whereClause: string, orderBy: string) {
+        return this.matbangEndpoint.getItems<MatBang[]>(start, count, whereClause, orderBy);
+    }
     
     getAllMatBang() {
         return this.matbangEndpoint.getAllMatBang<MatBang[]>();

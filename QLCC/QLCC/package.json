@@ -26,7 +26,6 @@
     "@ngx-translate/core": "9.0.1",
     "@progress/kendo-angular-dropdowns": "^3.0.2",
     "@progress/kendo-angular-l10n": "^1.2.0",
-    "@progress/kendo-angular-intl": "^1.4.2",
     "@swimlane/ngx-datatable": "11.1.5",
     "@types/jquery": "3.2.16",
     "@types/webpack-env": "1.13.3",

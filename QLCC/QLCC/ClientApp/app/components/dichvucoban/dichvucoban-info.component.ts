@@ -46,6 +46,8 @@ export class DichVuCoBanInfoComponent implements OnInit {
     public tygia: string = "0";
     public tienthanhtoan: string = "0";
     public tienquydoi: string = "0";
+    public last: string = "";
+    public tanglauids: number = 0;
 
     ChktangLau: boolean;
     ChkmatBang: boolean;
@@ -53,6 +55,8 @@ export class DichVuCoBanInfoComponent implements OnInit {
     ChkloaiDichVu: boolean;
     ChkdonViTinh: boolean;
     ChkloaiTien: boolean;
+    checkTen: boolean;
+    checkLDV: boolean;
 
     matBang: MatBang[] = [];
     khachHang: KhachHang[] = [];
@@ -139,21 +143,23 @@ export class DichVuCoBanInfoComponent implements OnInit {
         } else {
             this.isSaving = true;
             this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
-            if (this.isNew) {
-                this.DichVuCoBanEdit.donGia = Number(this.dongia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
-                this.DichVuCoBanEdit.thanhTien = Number(this.thanhtien.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
-                this.DichVuCoBanEdit.tienThanhToan = Number(this.tienthanhtoan.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
-                this.DichVuCoBanEdit.tyGia = Number(this.tygia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
-                this.DichVuCoBanEdit.tienTTQuyDoi = Number(this.tienquydoi.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
-                this.DichVuCoBanEdit.denNgay = this.valueDenNgay;
-                this.DichVuCoBanEdit.tuNgay = this.valueTuNgay;
-                this.DichVuCoBanEdit.ngayChungTu = this.valueNgayChungTu;
-                this.DichVuCoBanEdit.ngayThanhToan = this.valueNgayThanhToan;
+            this.DichVuCoBanEdit.donGia = Number(this.dongia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
+            this.DichVuCoBanEdit.thanhTien = Number(this.thanhtien.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
+            this.DichVuCoBanEdit.tienThanhToan = Number(this.tienthanhtoan.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
+            this.DichVuCoBanEdit.tyGia = Number(this.tygia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
+            this.DichVuCoBanEdit.tienTTQuyDoi = Number(this.tienquydoi.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
+            this.DichVuCoBanEdit.denNgay = new Date(this.valueDenNgay.getFullYear(), this.valueDenNgay.getMonth() + 1, 1);
+            this.DichVuCoBanEdit.tuNgay = new Date(this.valueTuNgay.getFullYear(), this.valueTuNgay.getMonth(), 2);
+            this.DichVuCoBanEdit.ngayChungTu = this.valueNgayChungTu;
+            this.DichVuCoBanEdit.ngayThanhToan = this.valueNgayThanhToan;
+            this.DichVuCoBanEdit.tienThanhToan = this.DichVuCoBanEdit.thanhTien;
+            if (this.isNew) {                
                 this.gvService.addnewDichVuCoBan(this.DichVuCoBanEdit).subscribe(results => {
                     if (results.soChungTu == "Exist") {
                         this.showErrorAlert("Lỗi nhập liệu", "Số chứng từ " + this.DichVuCoBanEdit.soChungTu + " đã tồn tại trên hệ thống, vui lòng chọn tên khác");
                         this.alertService.stopLoadingMessage();
-                        return false;
+                        this.isSaving = false;
+                        this.checkTen = false;
                     } else this.saveSuccessHelper(results);
                 }, error => this.saveFailedHelper(error));
             }
@@ -162,7 +168,8 @@ export class DichVuCoBanInfoComponent implements OnInit {
                     if (response == "Exist") {
                         this.showErrorAlert("Lỗi nhập liệu", "Số chứng từ " + this.DichVuCoBanEdit.soChungTu + " đã tồn tại trên hệ thống, vui lòng chọn tên khác");
                         this.alertService.stopLoadingMessage();
-                        return false;
+                        this.isSaving = false;
+                        this.checkTen = false;
                     } else this.saveSuccessHelper();
                 }, error => this.saveFailedHelper(error));
             }
@@ -186,8 +193,18 @@ export class DichVuCoBanInfoComponent implements OnInit {
         this.DichVuCoBanEdit.lapLai = false;
         this.DichVuCoBanEdit.trangThai = 1;
         this.DichVuCoBanEdit.soLuong = 1;
-        this.valueTuNgay = new Date(this.valueTuNgay.getFullYear(), this.valueTuNgay.getMonth(), 1);
-        this.valueDenNgay = new Date(this.valueDenNgay.getFullYear(), this.valueDenNgay.getMonth() + 1, 0);
+        this.DichVuCoBanEdit.kyThanhToan = 1;
+        this.gvService.lastRecord().subscribe(results => {
+            var numberLast = results.dichVuCoBanId + 1;
+            var number = 10 - numberLast.toString().length;
+            for (var i = 0; i < number; i++) {
+                this.last += "0";
+            }
+            this.DichVuCoBanEdit.soChungTu = "PT-" + this.last + numberLast;
+        });
+        this.checkLDV = false;
+        this.valueTuNgay = new Date(this.valueNgayChungTu.getFullYear(), this.valueNgayChungTu.getMonth(), 1);
+        this.valueDenNgay = new Date(this.valueNgayChungTu.getFullYear(), this.valueNgayChungTu.getMonth() + 1, 0);
         this.dongia = this.formatPrice("0");
         this.tygia = this.formatPrice("0");
         var result = Number(this.dongia) * this.DichVuCoBanEdit.soLuong;
@@ -245,18 +262,17 @@ export class DichVuCoBanInfoComponent implements OnInit {
             this.ChkdonViTinh = true;
             this.ChkloaiTien = true;
             //this.editingRowName = obj.tenDichVuCoBan;
+            if (obj.loaiDichVus.dichVuCoBan == true) {
+                this.checkLDV = true;
+            } else this.checkLDV = false;
+            this.tanglauids = obj.matBangs.tangLauId;
             this.dongia = this.formatPrice(obj.donGia.toString());
             this.thanhtien = this.formatPrice(obj.thanhTien.toString());
-            this.tienthanhtoan = this.formatPrice(obj.tienThanhToan.toString());
             this.tygia = this.formatPrice(obj.tyGia.toString());
             this.tienquydoi = this.formatPrice(obj.tienTTQuyDoi.toString());
             this.DichVuCoBanEdit = new DichVuCoBan();
             Object.assign(this.DichVuCoBanEdit, obj);
             Object.assign(this.DichVuCoBanEdit, obj);
-            //this.valueNgayChungTu = obj.ngayChungTu;
-            //this.valueNgayThanhToan = obj.ngayThanhToan;
-            //this.valueTuNgay = obj.tuNgay;
-            //this.valueDenNgay = obj.denNgay;
             this.edit();
 
             return this.DichVuCoBanEdit;
@@ -289,6 +305,11 @@ export class DichVuCoBanInfoComponent implements OnInit {
         this.resetForm(true);
     }
 
+    ngayChungTuChange(date: Date) {
+        this.valueTuNgay = new Date(date.getFullYear(), date.getMonth(), 1);
+        this.valueDenNgay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    }
+
     matBangChk(id: number) {
         if (id > 0) {
             this.ChkmatBang = true;
@@ -301,34 +322,54 @@ export class DichVuCoBanInfoComponent implements OnInit {
     }
 
     tangLauChk(id: number) {
-        this.matbangservice.getMatBangByTangLau(id).subscribe(results => {
-            this.matBang = results;
-        }, error => { });
+        if (id > 0) {
+            this.ChktangLau = true;
+            this.matbangservice.getMatBangByTangLau(id).subscribe(results => {
+                this.matBang = results;
+            }, error => { });
+        } else
+            this.ChktangLau = false;
     }
 
     loaiDichVuChk(id: number) {
         if (id > 0) {
             var change = 0;
             this.banggiadichvucobanservice.getBangGiaDichVuCoBanByLoaiDichVuID(id).subscribe(results => {
-                this.DichVuCoBanEdit.donViTinhId = results.donViTinhId;
-                this.DichVuCoBanEdit.loaiTienId = results.loaiTienId;
-                this.dongia = this.formatPrice(results.donGia.toString());
-                var dg = this.dongia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
-                this.thanhtien = this.formatPrice((Number(dg) * Number(this.DichVuCoBanEdit.soLuong)).toString());
-                this.tienthanhtoan = this.thanhtien;
-                this.loaitienservice.getLoaiTienByID(results.loaiTienId).subscribe(result => {
-                    this.tygia = this.formatPrice(result.tyGia.toString());
-                    var pS = this.tienthanhtoan.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
-                    change = Number(pS) * Number(this.tygia);
-                    this.tienquydoi = this.formatPrice(change.toString());
-                })
+                if (results == null) {
+                    this.showErrorAlert("Lỗi hệ thống", "Loại dịch vụ hiện tại chưa được sử dụng trong bảng Bảng Giá Dịch Vụ Cơ Bản. Vui lòng chọn loại dịch vụ khác hoặc nhập dữ liệu Bảng Giá !");
+                    this.tygia = "0";
+                    this.DichVuCoBanEdit.donViTinhId = 0;
+                    this.DichVuCoBanEdit.loaiTienId = 0;
+                    this.dongia = "0";
+                    this.thanhtien = "0";
+                    this.tienquydoi = "0";
+                    this.isSaving = false;
+                    this.ChkloaiDichVu = false;
+                } else {
+                    this.DichVuCoBanEdit.donViTinhId = results.donViTinhId;
+                    this.DichVuCoBanEdit.loaiTienId = results.loaiTienId;
+                    this.dongia = this.formatPrice(results.donGia.toString());
+                    var dg = this.dongia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");                    
+                    if (results.loaiDichVu.dichVuCoBan == true) {     
+                        this.checkLDV = true;
+                        this.thanhtien = this.formatPrice((Number(dg) * Number(this.DichVuCoBanEdit.soLuong) * Number(this.DichVuCoBanEdit.kyThanhToan)).toString());
+                    } else {
+                        this.checkLDV = false;
+                        this.thanhtien = this.formatPrice((Number(dg) * Number(this.DichVuCoBanEdit.soLuong)).toString());
+                    }
+                    this.loaitienservice.getLoaiTienByID(results.loaiTienId).subscribe(result => {
+                        this.tygia = this.formatPrice(result.tyGia.toString());
+                        var pS = this.thanhtien.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+                        change = Number(pS) / Number(result.tyGia.toString());
+                        this.tienquydoi = this.formatPrice(change.toString());
+                    })
+                }
             }, error => {
                 this.tygia = "0";
                 this.DichVuCoBanEdit.donViTinhId = 0;
                 this.DichVuCoBanEdit.loaiTienId = 0;
                 this.dongia = "0";
                 this.thanhtien = "0";
-                this.tienthanhtoan = "0";
                 this.tienquydoi = "0";
             });
             this.ChkloaiDichVu = true;
@@ -339,7 +380,6 @@ export class DichVuCoBanInfoComponent implements OnInit {
             this.DichVuCoBanEdit.loaiTienId = 0;
             this.dongia = "0";
             this.thanhtien = "0";
-            this.tienthanhtoan = "0";
             this.tienquydoi = "0";
         }
     }
@@ -349,8 +389,8 @@ export class DichVuCoBanInfoComponent implements OnInit {
         var change = 0;
         this.loaitienservice.getLoaiTienByID(id).subscribe(results => {
             this.tygia = this.formatPrice(results.tyGia.toString());
-            var pS = this.tienthanhtoan.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
-            change = Number(pS) * Number(this.tygia);
+            var pS = this.thanhtien.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+            change = Number(pS) / Number(results.tyGia.toString());
             this.tienquydoi = this.formatPrice(change.toString());
         }, error => {
             this.tygia = "0";
@@ -360,6 +400,39 @@ export class DichVuCoBanInfoComponent implements OnInit {
 
     donViTinhChk(id: number) {
         this.ChkdonViTinh = true;
+    }
+
+    soLuongChk(id: number) {
+        var dongia = this.dongia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+        this.thanhtien = this.formatPrice((Number(dongia) * Number(id) * Number(this.DichVuCoBanEdit.kyThanhToan)).toString());
+        var thanhtien = this.thanhtien.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+        var tygia = this.tygia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+        this.tienquydoi = this.formatPrice((Number(thanhtien) / Number(tygia)).toString());
+    }
+
+    kyThanhToanChk(id: number) {
+        var dongia = this.dongia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+        this.thanhtien = this.formatPrice((Number(dongia) * Number(this.DichVuCoBanEdit.soLuong) * Number(id)).toString());
+        var thanhtien = this.thanhtien.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+        var tygia = this.tygia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+        this.tienquydoi = this.formatPrice((Number(thanhtien) / Number(tygia)).toString());
+        this.valueDenNgay = new Date(this.valueTuNgay.getFullYear(), this.valueTuNgay.getMonth() + this.DichVuCoBanEdit.kyThanhToan, 0);
+    }
+
+    tenChk(ten: string) {
+        if (ten != "") {
+            this.checkTen = true;
+        } else
+            this.checkTen = false;
+    }
+
+    tuNgayChk(date: Date) {
+        this.valueDenNgay = new Date(date.getFullYear(), date.getMonth() + this.DichVuCoBanEdit.kyThanhToan, 0);
+    }
+
+    private movetoEditForm() {
+        this.isViewDetails = false;
+        this.isEdit = true;
     }
 
     formatPrice(price: string): string {
@@ -372,32 +445,38 @@ export class DichVuCoBanInfoComponent implements OnInit {
         }
     }
 
-    private movetoEditForm() {
-        this.isViewDetails = false;
-        this.isEdit = true;
-    }
-
     closeModal() {
         this.editorModal.hide();
     }
 
     printOnly() {
         var myWindow = window.open('', '', 'width=200,height=100');
-        myWindow.document.write("<div style='padding-top: 15px;padding-bottom: 15px'><p><span style='font-weight: bold;font-size: 14px;'>Số chứng từ: </span>" + this.DichVuCoBanEdit.soChungTu + "</p>")
-        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày chứng từ: </span>" + this.datePipe.transform(this.DichVuCoBanEdit.ngayChungTu, 'dd/MM/yyyy') + "</p>");
-        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Mặt bằng: </span>" + this.DichVuCoBanEdit.matBangs.tenMatBang + "<p>");
-        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Khách hàng: </span>" + this.DichVuCoBanEdit.khachHangs.hoDem + " " + this.DichVuCoBanEdit.khachHangs.ten + "</p>");
-        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Loại dịch vụ: </span>" + this.DichVuCoBanEdit.loaiDichVus.tenLoaiDichVu + "</p>");
-        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Đơn vị tính: </span>" + this.DichVuCoBanEdit.donViTinhs.tenDonViTinh + "</p>");
-        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Diễn giải: </span>" + this.DichVuCoBanEdit.dienGiai + "<p>");
-        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Đơn giá: </span>" + this.formatPrice(this.DichVuCoBanEdit.donGia.toString()) + "</p>");
-        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Số lượng: </span>" + this.DichVuCoBanEdit.soLuong + "<p>");
-        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Thành tiền: </span>" + this.formatPrice(this.DichVuCoBanEdit.thanhTien.toString()) + "</p>");
-        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày thanh toán: </span>" + this.datePipe.transform(this.DichVuCoBanEdit.ngayThanhToan, 'dd/MM/yyyy') + "</p>");
-        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày bắt đầu: </span>" + this.datePipe.transform(this.DichVuCoBanEdit.tuNgay, 'dd/MM/yyyy') + "</p>");
-        myWindow.document.write("<p><span style='font-weight: bold;font-size: 14px;'>Ngày hết hạn: </span>" + this.datePipe.transform(this.DichVuCoBanEdit.denNgay, 'dd/MM/yyyy') + "</p></div>");
+        myWindow.document.write("<div style='font-size: 1em; padding: 5%;'><div style='width: 100%; display: flex;'>");
+        myWindow.document.write("<div style='width: 45%; margin-left: 5%; text-align: center'>");
+        myWindow.document.write("<div style='font-weight: bold;'>CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ DỊCH VỤ ĐÔ THỊ VIỆT NAM VINASINCO</div><div>Số chứng từ: " + this.DichVuCoBanEdit.soChungTu + "</div>");
+        myWindow.document.write("</div>");
+        myWindow.document.write("<div style='width: 45%; margin-left: 5%; text-align: center'>");
+        myWindow.document.write("<div style='text-transform: uppercase; font-size: 24px; font-weight: bold;'>Phiếu thu tiền</div><br/>");
+        myWindow.document.write("<div>Từ ngày: " + this.datePipe.transform(this.DichVuCoBanEdit.tuNgay, 'dd/MM/yyyy') + " - " + this.datePipe.transform(this.DichVuCoBanEdit.denNgay, 'dd/MM/yyyy') + "</div>");
+        myWindow.document.write("</div></div>");
+        myWindow.document.write("<br/>");
+        myWindow.document.write("<div><p>Khách hàng: " + this.DichVuCoBanEdit.khachHangs.hoDem + " " + this.DichVuCoBanEdit.khachHangs.ten + "</p><p><span style='padding-right:15px;'>Tòa nhà: " + this.DichVuCoBanEdit.matBangs.toanha.tenVietTat + "</span><span style='padding-right:15px;'>Tầng lầu: "  + this.DichVuCoBanEdit.matBangs.tanglau.tenTangLau + "</span><span>Địa chỉ: " + this.DichVuCoBanEdit.matBangs.tenMatBang + "</span></p></div>");
+        myWindow.document.write("<div class='clearfix'></div>");
+        myWindow.document.write("<table border='1' style='border: 1px solid black; text-align: center;' width='100%'>");
+        myWindow.document.write("<tr><td style='width: 25%'>Loại dịch vụ</td><td style='width: 20%'>Đơn giá</td><td style='width: 13%'>Số lượng</td><td style ='width: 17%'>Kỳ thanh toán</td><td style ='width: 25%'>Thành tiền</td></tr>");
+        myWindow.document.write("<tr><td>" + this.DichVuCoBanEdit.loaiDichVus.tenLoaiDichVu + "</td><td>" + this.formatPrice(this.DichVuCoBanEdit.donGia.toString()) + "</td><td>" + this.DichVuCoBanEdit.soLuong + "</td><td>" + this.DichVuCoBanEdit.kyThanhToan + "</td><td>" + this.formatPrice(this.DichVuCoBanEdit.thanhTien.toString()) + "</td></tr>");
+        myWindow.document.write("<tr><td colspan='4' style='text-align: right; padding-right: 10px;'>Tổng:</td><td></td></tr>");
+        myWindow.document.write("<tr><td colspan='6' style='text-align: left; padding-left: 25px;'>Bằng chữ: </td></tr>");
+        myWindow.document.write("</table>");
+        myWindow.document.write("<br/>");
+        myWindow.document.write("<div style='display: flex; width: 100%'>");
+        myWindow.document.write("<div style='text-transform: uppercase; font-weight: bold; width: 45%; text-align: center;'>Người nộp tiền</div>");
+        myWindow.document.write("<div style='text-transform: uppercase; font-weight: bold; width: 45%; margin-left: 5%; text-align: center;'>Người thu tiền</div>");
+        myWindow.document.write("</div>");
+        myWindow.document.write("<br/><br/><br/><br/>");
         myWindow.document.write("<hr/>");
-        myWindow.focus();
+        myWindow.document.write("</div>");
+        myWindow.document.close();
         myWindow.print();
         myWindow.close();
     }

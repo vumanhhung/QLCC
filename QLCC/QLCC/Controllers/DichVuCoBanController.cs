@@ -99,6 +99,7 @@ namespace QLCC.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             var user = this.User.Identity.Name;
             var userId = Utilities.GetUserId(this.User);
             dichvucoban.NgayNhap = DateTime.Now;
@@ -108,7 +109,8 @@ namespace QLCC.Controllers
             {
                 _context.DichVuCoBans.Add(dichvucoban);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction("GetDichVuCoBan", new { id = dichvucoban.DichVuCoBanId }, dichvucoban);
+                CreatedAtAction("GetDichVuCoBan", new { id = dichvucoban.DichVuCoBanId }, dichvucoban);
+                return Ok(dichvucoban);
             }
             else
             {
@@ -188,49 +190,56 @@ namespace QLCC.Controllers
         {
             if (tanglauId != 0 && loaidichvuId == 0 && status == 0)
             {
-                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs)
+                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs).Include(r => r.matBangs.tanglau).Include(r => r.matBangs.toanha)
                     .Where(r => r.matBangs.TangLauId == tanglauId && r.MatBangId == r.matBangs.MatBangId).Where(r => r.NgayChungTu.Value.Month == month + 1 && r.NgayChungTu.Value.Year == year);
             }
             else if (tanglauId == 0 && loaidichvuId != 0 && status == 0)
             {
-                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs)
+                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs).Include(r => r.matBangs.tanglau).Include(r => r.matBangs.toanha)
                     .Where(r => r.LoaiDichVuId == loaidichvuId).Where(r => r.NgayChungTu.Value.Month == month + 1 && r.NgayChungTu.Value.Year == year);
             }
             else if (tanglauId == 0 && loaidichvuId == 0 && status != 0)
             {
-                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs)
+                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs).Include(r => r.matBangs.tanglau).Include(r => r.matBangs.toanha)
                     .Where(r => r.TrangThai == status).Where(r => r.NgayChungTu.Value.Month == month + 1 && r.NgayChungTu.Value.Year == year);
             }
             else if (tanglauId != 0 && loaidichvuId != 0 && status == 0)
             {
-                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs)
+                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs).Include(r => r.matBangs.tanglau).Include(r => r.matBangs.toanha)
                     .Where(r => r.matBangs.TangLauId == tanglauId && r.MatBangId == r.matBangs.MatBangId).Where(r => r.LoaiDichVuId == loaidichvuId).Where(r => r.NgayChungTu.Value.Month == month + 1 && r.NgayChungTu.Value.Year == year);
             }
             else if (tanglauId != 0 && loaidichvuId == 0 && status != 0)
             {
-                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs)
+                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs).Include(r => r.matBangs.tanglau).Include(r => r.matBangs.toanha)
                     .Where(r => r.matBangs.TangLauId == tanglauId && r.MatBangId == r.matBangs.MatBangId).Where(r => r.TrangThai == status).Where(r => r.NgayChungTu.Value.Month == month + 1 && r.NgayChungTu.Value.Year == year);
             }
             else if (tanglauId == 0 && loaidichvuId != 0 && status != 0)
             {
-                return _context.DichVuCoBans.Include(r => r.matBangs).Include(r => r.loaiDichVus).Include(m => m.khachHangs).Include(m => m.loaiTiens).Include(m => m.donViTinhs)
+                return _context.DichVuCoBans.Include(r => r.matBangs).Include(r => r.loaiDichVus).Include(m => m.khachHangs).Include(m => m.loaiTiens).Include(m => m.donViTinhs).Include(r => r.matBangs.tanglau).Include(r => r.matBangs.toanha)
                     .Where(r => r.LoaiDichVuId == loaidichvuId).Where(r => r.TrangThai == status).Where(r => r.NgayChungTu.Value.Month == month + 1 && r.NgayChungTu.Value.Year == year);
             }
             else if(tanglauId != 0 && loaidichvuId != 0 && status != 0)
             {
-                return _context.DichVuCoBans.Include(r => r.matBangs).Include(r => r.loaiDichVus).Include(m => m.khachHangs).Include(m => m.loaiTiens).Include(m => m.donViTinhs)
+                return _context.DichVuCoBans.Include(r => r.matBangs).Include(r => r.loaiDichVus).Include(m => m.khachHangs).Include(m => m.loaiTiens).Include(m => m.donViTinhs).Include(r => r.matBangs.tanglau).Include(r => r.matBangs.toanha)
                     .Where(r => r.matBangs.TangLauId == tanglauId && r.MatBangId == r.matBangs.MatBangId).Where(r => r.LoaiDichVuId == loaidichvuId).Where(r => r.TrangThai == status).Where(r => r.NgayChungTu.Value.Month == month + 1 && r.NgayChungTu.Value.Year == year);
             }
             else
             {
-                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs);
+                return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs).Include(r => r.matBangs.tanglau).Include(r => r.matBangs.toanha);
             }
         }
 
         [HttpGet("FilterByDate/{month}/{year}")]
         public IEnumerable<DichVuCoBan> FilterByDate([FromRoute] int month, int year)
         {
-            return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs).Where(r => r.NgayChungTu.Value.Month == month + 1 && r.NgayChungTu.Value.Year == year);
+            return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs).Include(r => r.matBangs.tanglau).Include(r => r.matBangs.toanha).Where(r => r.NgayChungTu.Value.Month == month + 1 && r.NgayChungTu.Value.Year == year);
+        }
+
+        [HttpGet("LastRecord")]
+        public async Task<IActionResult> Test()
+        {
+            var last = await _context.DichVuCoBans.LastOrDefaultAsync();
+            return Ok(last);
         }
     }
 }

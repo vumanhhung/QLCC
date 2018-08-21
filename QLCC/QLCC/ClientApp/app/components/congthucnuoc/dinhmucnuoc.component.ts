@@ -7,7 +7,6 @@ import { DinhMucNuoc } from '../../models/dinhmucnuoc.model';
 import { DinhMucNuocService } from '../../services/dinhmucnuoc.service';
 import { CongThucNuoc } from '../../models/congthucnuoc.model';
 import { AppTranslationService } from '../../services/app-translation.service';
-import { last } from 'rxjs/operators';
 
 @Component({
     selector: "dinhmucnuoc",
@@ -38,6 +37,7 @@ export class DinhMucNuocComponent implements OnInit {
     gia: string = "0";
     list: DinhMucNuoc[] = [];
     max: number;
+    checkTen: boolean;
 
     @Input()
     isViewOnly: boolean;
@@ -156,13 +156,13 @@ export class DinhMucNuocComponent implements OnInit {
         this.isGeneralEditor = true;
         this.isNew = true;
         this.showValidationErrors = true;
-        this.gvService.getMax(this.rowCongthucnuoc.congThucNuocId).subscribe(result => 
+        this.gvService.getLastRecord(this.rowCongthucnuoc.congThucNuocId).subscribe(result => 
         {
-            this.max = result;
             if (result == null) {
                 this.DinhMucNuocEdit.soDau = 0;
             } else {
-                this.DinhMucNuocEdit.soDau = result;
+                this.DinhMucNuocEdit.soDau = result.soCuoi;
+                this.max = result.soCuoi;
             }
         })
         this.gia = this.formatPrice("0");
@@ -210,11 +210,14 @@ export class DinhMucNuocComponent implements OnInit {
             this.DinhMucNuocEdit.gia = Number(this.gia.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
             if (this.isNew == true) {
                 this.DinhMucNuocEdit.congThucNuocId = this.rowCongthucnuoc.congThucNuocId;
-                this.gvService.addnewDinhMucNuoc(this.DinhMucNuocEdit, this.DinhMucNuocEdit.congThucNuocId).subscribe(results => {
+                this.gvService.addnewDinhMucNuoc(this.DinhMucNuocEdit).subscribe(results => {
+                    console.log(results);
+                    console.log(results.tenDinhMucNuoc);
                     if (results.tenDinhMucNuoc == "Exist") {
                         this.showErrorAlert("Lỗi nhập liệu", "Tên định mức: " + this.DinhMucNuocEdit.tenDinhMucNuoc + " đã tồn tại trên hệ thống, vui lòng nhập tên khác!");
                         this.alertService.stopLoadingMessage();
                         this.isSaving = false;
+                        this.checkTen = false;
                     } else {
                         this.saveSuccessHelper(results);
                     }
@@ -315,5 +318,12 @@ export class DinhMucNuocComponent implements OnInit {
                     this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
                         MessageSeverity.error, error);
                 });
+    }
+
+    tenChk(ten: string) {
+        if (ten != "") {
+            this.checkTen = true;
+        } else
+            this.checkTen = false;
     }
 }

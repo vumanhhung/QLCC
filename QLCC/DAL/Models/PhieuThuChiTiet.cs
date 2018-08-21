@@ -21,5 +21,6 @@ namespace DAL.Models
 		public string NguoiLap { get; set; }
 		public DateTime? NgayLap { get; set; }
         public bool? KyCuoi { get; set; }
+        public PhieuThu PhieuThu { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace QLCC.Controllers
         [HttpGet]
         public IEnumerable<CumToaNha> GetCumToaNhas()
         {
-            return _context.CumToaNhas;
+            return _context.CumToaNhas.Include(c => c.NganHang);
         }
         
         // GET: api/CumToaNhas/5
@@ -38,7 +38,7 @@ namespace QLCC.Controllers
                 return BadRequest(ModelState);
             }
 
-            var cumtoanha = await _context.CumToaNhas.SingleOrDefaultAsync(m => m.CumToaNhaId == id);
+            var cumtoanha = await _context.CumToaNhas.Include(c => c.NganHang).SingleOrDefaultAsync(m => m.CumToaNhaId == id);
 
             if (cumtoanha == null)
             {
@@ -113,17 +113,21 @@ namespace QLCC.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            var cumtoanha = await _context.CumToaNhas.SingleOrDefaultAsync(m => m.CumToaNhaId == id);
+            
+            var cumtoanha = await _context.CumToaNhas.SingleOrDefaultAsync(m => m.CumToaNhaId == id);            
             if (cumtoanha == null)
             {
                 return NotFound();
             }
-
-            _context.CumToaNhas.Remove(cumtoanha);
-            await _context.SaveChangesAsync();
-
-            return Ok(cumtoanha);
+            List<ToaNha> ListToaNha = _context.ToaNhas.Where(t => t.CumToaNhaId == cumtoanha.CumToaNhaId).ToList();
+            if (ListToaNha.Count <= 0)
+            {
+                _context.CumToaNhas.Remove(cumtoanha);
+                await _context.SaveChangesAsync();
+                return Ok(cumtoanha);
+            }
+            else
+                return BadRequest("Không xóa được cụm tòa nhà. Do đã được sử dụng!");
         }
         
         private bool CumToaNhaExists(int id)

@@ -245,14 +245,18 @@ export class DichVuNuocComponent implements OnInit, AfterViewInit {
 
     sthangChange(thang: number) {
         if (this.matbangSelected != null) {
-            this.loadData(this.matbangSelected.matBangId);
+            if (this.matbangSelected.matBangId != null)
+                this.loadData(this.matbangSelected.matBangId);
+            else this.alertService.showMessage("Cảnh báo", "Vui lòng chọn căn hộ!", MessageSeverity.warn);
         } else this.alertService.showMessage("Cảnh báo", "Vui lòng chọn căn hộ!", MessageSeverity.warn);
 
     }
 
     snamChange(nam: number) {
         if (this.matbangSelected != null) {
-            this.loadData(this.matbangSelected.matBangId);
+            if (this.matbangSelected.matBangId != null)
+                this.loadData(this.matbangSelected.matBangId);
+            else this.alertService.showMessage("Cảnh báo", "Vui lòng chọn căn hộ!", MessageSeverity.warn);
         } else this.alertService.showMessage("Cảnh báo", "Vui lòng chọn căn hộ!", MessageSeverity.warn);
     }
 }

@@ -1,3 +1,11 @@
-﻿body{
+﻿.boldText {
+    width: 150px
+}
+
+.headView {
+    text-align: center;
+    font-weight: bold;
+    color: #048b8b;
+    background: #ecf0f5
 }
 .noidung-tab{padding:10px 0}

@@ -19,10 +19,10 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="has-feedback col-md-3">
+                            <div class="has-feedback col-md-4">
                                 <label class="control-label" for="tenHangSanXuat-{{uniqueId}}">Tên hãng sản xuất</label>
                                 <div [ngClass]="{'has-success': f.submitted && checkTen, 'has-error' : f.submitted && !checkTen}">
-                                    <input autofocus type="text" class="form-control" [ngClass]="{'valid-required ': checkTen, 'valid-not-required' : !checkTen}" name="tenHangSanXuat" [(ngModel)]="HangSanXuatEdit.tenHangSanXuat" #tenHangSanXuat="ngModel" required (change)="tenChk(tenHangSanXuat.value)" />
+                                    <input autofocus type="text" class="form-control" [ngClass]="{'valid-required': f.submitted && checkTen, 'valid-not-required' : f.submitted && !checkTen}" name="tenHangSanXuat" [(ngModel)]="HangSanXuatEdit.tenHangSanXuat" #tenHangSanXuat="ngModel" required (change)="tenChk(tenHangSanXuat.value)" />
                                     <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': checkTen, 'glyphicon-remove' : !checkTen}"></span>
                                     <span *ngIf="showValidationErrors && f.submitted && !checkTen" class="errorMessage">
                                         Vui lòng nhập tên hãng sản xuất!
@@ -39,7 +39,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <label class="control-label" for="trangThai-{{uniqueId}}">Trạng thái</label>
                                 <div>
                                     <div style="float: left;margin-right: 40px;margin-top: 10px">

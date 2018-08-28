@@ -24,7 +24,6 @@ export class HangSanXuatComponent implements OnInit, AfterViewInit {
     hangsanxuatEdit: HangSanXuat;
     sourcehangsanxuat: HangSanXuat;
     public selectedGropup: number = 0;
-    filterStatus: string;
     editingRowName: { name: string };
 
     @ViewChild('f')
@@ -99,19 +98,18 @@ export class HangSanXuatComponent implements OnInit, AfterViewInit {
         }
     }
     
-    loadData(status?: number) {
+    loadData(status: number) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        if (status == 0) {
-            this.hangsanxuatService.getAllHangSanXuat().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
-        } else if (status > 0) {
+        if (status > 0) {
             if (status == 1) {
                 this.hangsanxuatService.getFilterStatus(true).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
             } else if (status == 2) {
                 this.hangsanxuatService.getFilterStatus(false).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
             }
-        }
-        
+        } else if (status == 0) {
+            this.hangsanxuatService.getAllHangSanXuat().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        }       
     }
     
     onDataLoadSuccessful(obj: HangSanXuat[]) {
@@ -152,7 +150,7 @@ export class HangSanXuatComponent implements OnInit, AfterViewInit {
     }
     
     onSearchChanged(value: string) {
-        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false,r.hangSanXuatId,r.tenHangSanXuat,r.kyHieu,r.dienGiai,r.trangThai,r.nguoiNhap,r.ngayNhap,r.nguoiSua,r.ngaySua));
+        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false,r.tenHangSanXuat,r.kyHieu));
     }
 
     deleteHangSanXuat(row: HangSanXuat) {
@@ -183,6 +181,7 @@ export class HangSanXuatComponent implements OnInit, AfterViewInit {
         this.editingRowName = { name: row.tenHangSanXuat };
         this.sourcehangsanxuat = row;
         this.HangSanXuatEditor.isViewDetails = false;
+        this.HangSanXuatEditor.checkTen = true;
         this.hangsanxuatEdit = this.HangSanXuatEditor.editHangSanXuat(row);
         this.HangSanXuatEditor.editorModal.show();
     }
@@ -190,8 +189,8 @@ export class HangSanXuatComponent implements OnInit, AfterViewInit {
     viewHangSanXuat(row: HangSanXuat) {
         this.editingRowName = { name: row.tenHangSanXuat };
         this.sourcehangsanxuat = row;
-        this.HangSanXuatEditor.isViewDetails = true;
         this.hangsanxuatEdit = this.HangSanXuatEditor.editHangSanXuat(row);
+        this.HangSanXuatEditor.isViewDetails = true;
         this.HangSanXuatEditor.editorModal.show();
     }    
 

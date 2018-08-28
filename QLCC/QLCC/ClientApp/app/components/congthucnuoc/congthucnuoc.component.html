@@ -54,8 +54,8 @@
                                        [columnMode]="'force'">
                         </ngx-datatable>
                         <ng-template #statusTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <span *ngIf="row.status == true" class="status" style="color: green">Đang hoạt động</span>
-                            <span *ngIf="row.status == false" class="status" style="color: red">Dừng hoạt động</span>
+                            <div *ngIf="row.status == true" class="status-use">Đang hoạt động</div>
+                            <div *ngIf="row.status == false" class="status-none">Dừng hoạt động</div>
                         </ng-template>
                         <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
                             <a class="btn btn-func btn-primary" href="javascript:;" (click)="editCongThucNuoc(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>

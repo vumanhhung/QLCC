@@ -232,7 +232,7 @@ namespace QLCC.Controllers
         [HttpGet("FilterByDate/{month}/{year}")]
         public IEnumerable<DichVuCoBan> FilterByDate([FromRoute] int month, int year)
         {
-            return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs).Include(r => r.matBangs.tanglau).Include(r => r.matBangs.toanha).Where(r => r.NgayChungTu.Value.Month == month + 1 && r.NgayChungTu.Value.Year == year);
+            return _context.DichVuCoBans.Include(r => r.matBangs).Include(m => m.khachHangs).Include(r => r.loaiDichVus).Include(m => m.loaiTiens).Include(m => m.donViTinhs).Include(r => r.matBangs.tanglau).Include(r => r.matBangs.toanha).Where(r => r.NgayChungTu.Value.Month == month + 1 && r.NgayChungTu.Value.Year == year || r.LapLai == true);
         }
 
         [HttpGet("LastRecord")]

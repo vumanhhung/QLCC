@@ -3,7 +3,9 @@
 import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { Utilities } from '../../services/utilities';
 import { CumToaNha } from "../../models/cumtoanha.model";
+import { NganHang } from "../../models/nganhang.model";
 import { CumToaNhaService } from "./../../services/cumtoanha.service";
+import { NganHangService } from "./../../services/nganhang.service";
 import * as EmailValidator from 'email-validator';
 import { UploadEvent, SelectEvent, FileInfo } from '@progress/kendo-angular-upload';
 import { CumToaNhaComponent } from './cumtoanha.component';
@@ -17,6 +19,8 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 
 export class CumToaNhaInfoComponent implements OnInit {
     public tencumtoanha: string = "";
+    public scrollbarOptions = { axis: 'y', theme: 'minimal-dark' };
+    heightScroll: number = 430;
     isViewDetails = false;
     isValidateEmail: boolean;
     public stringRandom: string;
@@ -32,10 +36,13 @@ export class CumToaNhaInfoComponent implements OnInit {
     private showValidationErrors: boolean = false;
     private uniqueId: string = Utilities.uniqueId();
     private CumToaNhaEdit: CumToaNha = new CumToaNha();
+    public nganhangsFilter: NganHang[] = [];
+    public nganhangSelected: NganHang = new NganHang();
     public value: Date = new Date();
     public formResetToggle = true;
     private isEditMode = false;
     private editingRowName: string;
+    public nganhangChk: boolean = false;
     public changesSavedCallback: () => void;
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
@@ -52,18 +59,29 @@ export class CumToaNhaInfoComponent implements OnInit {
     CumToaNhaForm: CumToaNhaComponent;
     @ViewChild('editorModal')
     editorModal: ModalDirective;
-    constructor(private alertService: AlertService, private gvService: CumToaNhaService) {
+    constructor(private alertService: AlertService, private gvService: CumToaNhaService, private nganhangService: NganHangService) {
     }
     
     ngOnInit() {
+        this.loadNganhang();
         if (!this.isGeneralEditor) {
             this.loadData();
         }
     }
 
-    loadData() {
+    loadNganhang() {
         this.alertService.startLoadingMessage();
+        this.nganhangService.getAllNganHang().subscribe(result => this.onDataLoadNganhangSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
+    }
+
+    loadData() {
+        this.alertService.startLoadingMessage();        
         this.gvService.getCumToaNhaByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
+    }
+
+    private onDataLoadNganhangSuccessful(obj: NganHang[]) {
+        this.alertService.stopLoadingMessage();
+        this.nganhangsFilter = obj;
     }
     
     private onDataLoadSuccessful(obj: CumToaNha) {
@@ -115,26 +133,31 @@ export class CumToaNhaInfoComponent implements OnInit {
     }
 
     private save() {
-        this.stringRandom = Utilities.RandomText(10);
-        let k_file_name: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("k-file-name") as HTMLCollectionOf<HTMLElement>;
-
-        if (this.isValidateEmail == false) { return; }
-        this.isSaving = true;
-        this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");        
-        if (this.isNew) {
-            if (k_file_name[0] != undefined) {//Nếu ảnh đại diện được chọn. Up ảnh
-                this.CumToaNhaEdit.logo = CumToaNhaInfoComponent.srcDataImg;
+        if (!this.nganhangChk) {
+            this.showErrorAlert('Ngân hàng không được để trống', 'Vui lòng chọn ngân hàng!');
+            return false;
+        } else {
+            this.stringRandom = Utilities.RandomText(10);
+            let k_file_name: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("k-file-name") as HTMLCollectionOf<HTMLElement>;
+            if (this.isValidateEmail == false) { return; }
+            this.isSaving = true;
+            this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
+            this.CumToaNhaEdit.nganHangId = this.nganhangSelected.nganHangId;
+            if (this.isNew) {
+                if (k_file_name[0] != undefined) {//Nếu ảnh đại diện được chọn. Up ảnh
+                    this.CumToaNhaEdit.logo = CumToaNhaInfoComponent.srcDataImg;
+                }
+                else {
+                    this.CumToaNhaEdit.logo = "no_image.gif";
+                }
+                this.gvService.addnewCumToaNha(this.CumToaNhaEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
             }
             else {
-                this.CumToaNhaEdit.logo = "no_image.gif";
+                if (k_file_name[0] != undefined) {//Nếu ảnh đại diện được chọn. Up ảnh
+                    this.CumToaNhaEdit.logo = CumToaNhaInfoComponent.srcDataImg;
+                }
+                this.gvService.updateCumToaNha(this.CumToaNhaEdit.cumToaNhaId, this.CumToaNhaEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
             }
-            this.gvService.addnewCumToaNha(this.CumToaNhaEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
-        }
-        else {
-            if (k_file_name[0] != undefined) {//Nếu ảnh đại diện được chọn. Up ảnh
-                this.CumToaNhaEdit.logo = CumToaNhaInfoComponent.srcDataImg;
-            }
-            this.gvService.updateCumToaNha(this.CumToaNhaEdit.cumToaNhaId, this.CumToaNhaEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
         }
     }
     
@@ -144,6 +167,7 @@ export class CumToaNhaInfoComponent implements OnInit {
         this.isValidateEmail = false;
         this.isNew = true;
         this.isEdit = false;
+        this.nganhangChk = false;
         this.altImageItem = "";
         this.imageData = location.protocol + "//" + location.hostname + ":" + location.port + "/images/no_image.gif";
         this.showValidationErrors = true;
@@ -248,6 +272,7 @@ export class CumToaNhaInfoComponent implements OnInit {
             this.CumToaNhaEdit = new CumToaNha();
             Object.assign(this.CumToaNhaEdit, obj);
             Object.assign(this.CumToaNhaEdit, obj);
+            this.nganhangChk = true;
             this.edit();
             this.cumtoanhaId = obj.cumToaNhaId;
             this.altImageItem = this.CumToaNhaEdit.tenCumToaNha;
@@ -290,8 +315,17 @@ export class CumToaNhaInfoComponent implements OnInit {
         if (this.changesSavedCallback)
             this.changesSavedCallback();
     }  
+
     private moveToEditForm() {
         this.isViewDetails = false;
+        this.nganhangSelected = this.CumToaNhaEdit.nganHang;
         this.isEdit = true;
+    }
+
+    nganhangChange(nganhang: NganHang) {
+        if (nganhang != null) {
+            this.nganhangChk = true;
+        }
+        else this.nganhangChk = false;
     }
 }

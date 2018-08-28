@@ -47,5 +47,8 @@ export class LoaiHangService {
     deleteLoaiHang(id: number) {
         return this.loaihangEndpoint.deleteLoaiHang(id);
     }
-    
+
+    getFilterStatus(status?: boolean) {
+        return this.loaihangEndpoint.getFilterStatus<LoaiHang[]>(status);
+    }
 }

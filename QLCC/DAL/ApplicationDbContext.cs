@@ -78,6 +78,9 @@ namespace DAL
         public DbSet<DichVuNuoc> DichVuNuocs { get; set; }
         public DbSet<HangSanXuat> HangSanXuats { get; set; }
         public DbSet<LoaiHang> LoaiHangs { get; set; }
+        public DbSet<VatTu> VatTus { get; set; }
+        public DbSet<VatTuHinhAnh> VatTuHinhAnhs { get; set; }
+        public DbSet<VatTuTaiLieu> VatTuTaiLieus { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
@@ -165,6 +168,9 @@ namespace DAL
             builder.Entity<DichVuNuoc>().ToTable($"tbl_DichVuNuoc");
             builder.Entity<HangSanXuat>().ToTable($"tbl_HangSanXuat");
             builder.Entity<LoaiHang>().ToTable($"tbl_LoaiHang");
+            builder.Entity<VatTu>().ToTable($"tbl_VatTu");
+            builder.Entity<VatTuHinhAnh>().ToTable($"tbl_VatTuHinhAnh");
+            builder.Entity<VatTuTaiLieu>().ToTable($"tbl_VatTuTaiLieu");
         }
 
         public override int SaveChanges()

@@ -96,10 +96,24 @@ export class HangSanXuatInfoComponent implements OnInit {
         this.isSaving = true;
         this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");        
         if (this.isNew) {
-            this.gvService.addnewHangSanXuat(this.HangSanXuatEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
+            this.gvService.addnewHangSanXuat(this.HangSanXuatEdit).subscribe(results => {
+                if (results.tenHangSanXuat == "Exist") {
+                    this.showErrorAlert("Lỗi nhập liệu", "Hãng sản xuất: " + this.HangSanXuatEdit.tenHangSanXuat + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");
+                    this.alertService.stopLoadingMessage();
+                    this.isSaving = false;
+                    this.checkTen = false;
+                } else this.saveSuccessHelper(results)
+            }, error => this.saveFailedHelper(error));
         }
         else {
-            this.gvService.updateHangSanXuat(this.HangSanXuatEdit.hangSanXuatId, this.HangSanXuatEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
+            this.gvService.updateHangSanXuat(this.HangSanXuatEdit.hangSanXuatId, this.HangSanXuatEdit).subscribe(response => {
+                if (response == "Exist") {
+                    this.showErrorAlert("Lỗi nhập liệu", "Hãng sản xuất: " + this.HangSanXuatEdit.tenHangSanXuat + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");
+                    this.alertService.stopLoadingMessage();
+                    this.isSaving = false;
+                    this.checkTen = false;
+                } else this.saveSuccessHelper()
+            }, error => this.saveFailedHelper(error));
         }
     }
     

@@ -139,10 +139,15 @@ namespace QLCC.Controllers
                 return NotFound();
             }
 
-            _context.TangLaus.Remove(tanglau);
-            await _context.SaveChangesAsync();
-
-            return Ok(tanglau);
+            List<MatBang> listmb = _context.MatBangs.Where(t => t.TangLauId == tanglau.TangLauId).ToList();
+            if (listmb.Count <= 0)
+            {
+                _context.TangLaus.Remove(tanglau);
+                await _context.SaveChangesAsync();
+                return Ok(tanglau);
+            }
+            else
+                return BadRequest("Không thể xóa tầng lầu. Do đã được sử dụng!");
         }
         
         private bool TangLauExists(int id)

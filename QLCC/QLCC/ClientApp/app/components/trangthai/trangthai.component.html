@@ -14,12 +14,22 @@
             <div style="margin-bottom:1%;" align="right" class="col-sm-6">
                 <div class="row">
                     <goback></goback>
-                    <a class="btn btn-primary" href="javascript://" tooltip="{{'preferences.addFlour' | translate}}" (click)="newTrangThai()"><i class="fa fa-plus"></i></a>
-                    <a class="btn btn-primary" href="javascript://" tooltip="{{'preferences.Settings' | translate}}" (click)="configTrangThai"><i class="fa fa-cog"></i></a>
+                    <a class="btn btn-primary" href="javascript://" tooltip="Thêm trạng thái mặt bằng" (click)="newTrangThai()"><i class="fa fa-plus"></i></a>
                     <a class="btn btn-primary menubar" href="javascript:;" tooltip="{{'matbang.qlmb_menu' | translate}}">
                         <i class="fa fa-bars"></i>
                         <ul class="nav navbar-nav child-menu">
-                            <li><a href="javascript:;" routerLink="/">Test</a></li>
+                            <li><a href="javascript:;" routerLink="/khuvuc">{{'Khu vực' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/trangthai">{{'Trạng thái MB' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/donvitinh">{{'Đơn vị tính' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/loaimatbang">{{'Loại mặt bằng' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/nhacungcap">{{'Nhà cung cấp' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/loaigiathue">{{'Loại giá thuê' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/nganhang">{{'Ngân hàng' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/taikhoannganhang">{{'Tài khoản NH' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/loaitien">{{'Loại tiền' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/quoctich">{{'Quốc tịch' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/chucvu">{{'Chức vụ' | translate}}</a></li>
+                            <li><a href="javascript:;" routerLink="/phongban">{{'Phòng ban' | translate}}</a></li>
                         </ul>
                     </a>
                 </div>
@@ -60,10 +70,9 @@
                         <ng-template #BackGroundTemplate let-row="row" let-value="value" let-i="index" style="text-align:center;">
                             <div [ngStyle]="SetBackground(row)">{{row.mauNen}}</div>
                         </ng-template>
-                        <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center;">
-                            <a class="btn btn-func btn-success" href="javascript:;" tooltip="Chi tiết"><i class="fa fa-eye"></i></a>
-                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editTrangThai(row)" tooltip="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                            <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteTrangThai(row)" tooltip="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center;">  
+                                <a class="btn btn-func btn-primary" href="javascript:;" (click)="editTrangThai(row)" tooltip="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteTrangThai(row)" tooltip="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </ng-template>
                         <div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
                             <div class="modal-dialog modal-lg">

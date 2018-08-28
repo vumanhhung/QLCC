@@ -55,7 +55,7 @@ export class LoaiMatBangComponent implements OnInit, AfterViewInit {
         this.columns = [
             { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },              
 			{ prop: 'tenLoaiMatBang', name: gT('Tên loại mặt bằng')},
-			{ prop: 'dienGiai', name: gT('Giới thiệu')},
+			{ prop: 'dienGiai', name: gT('Diễn giải')},
             { name: gT('matbang.qlmb_chucnang'), width: 100, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false, cellClass: "overflow" }
         ];
 

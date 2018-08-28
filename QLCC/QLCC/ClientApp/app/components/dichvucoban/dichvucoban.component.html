@@ -14,7 +14,7 @@
                 <div class="row">
                     <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newDichVuCoBan()"><i class="fa fa-plus"></i></a>
                     <a class="btn btn-primary" href="javascript://" title="In tất cả các bản ghi" (click)="printDiv(selected)"><i class="fa fa-print"></i></a>
-                    <a class="btn btn-primary" href="javascript://" tooltip="Import dịch vụ cơ bản" (click)="importDichVuCoBan()" disabled><i class="fa fa-download"></i></a>
+                    <!--<a class="btn btn-primary" href="javascript://" tooltip="Import dịch vụ cơ bản" (click)="importDichVuCoBan()" disabled><i class="fa fa-download"></i></a>-->
                     <a class="btn btn-primary" href="javascript://" tooltip="Export dịch vụ cơ bản" (click)="excelexport.save()">
                         <i class="fa fa-upload"></i>
                         <kendo-excelexport [data]="rows" fileName="DichVuCoBanExPort-{{randomString}}.xlsx" #excelexport [headerPaddingCellOptions]="headerPaddingCells">
@@ -111,7 +111,7 @@
                                 </label>
                                 <label style="width: 15%;margin-left: 3%;">
                                     Hiển thị
-                                    <div  style="width:80%;">
+                                    <div style="width:80%;">
                                         <select class="form-control input-sm" #drSelected (change)="SelectedValue(drSelected.value)">
                                             <option value="10">10</option>
                                             <option value="20">20</option>
@@ -119,9 +119,9 @@
                                             <option value="50">50</option>
                                             <option value="100">100</option>
                                         </select> bản ghi
-                                    </div>                                    
+                                    </div>
                                 </label>
-                            </div>                            
+                            </div>
                         </div>
                         <div class="clearfix"></div>
                         <ngx-datatable class="material colored-header sm table table-striped table-hover "
@@ -138,18 +138,18 @@
                                        [selected]="selected">
                         </ngx-datatable>
                         <ng-template #priceTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <p>{{formatPrice(row.thanhTien)}}</p>
+                            <p>{{formatPrice(row.thanhTien)}} {{row.loaiTiens.kyHieu}}</p>
                         </ng-template>
-                        <ng-template #startTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <p>{{row.ngayChungTu | date: 'dd/MM/yyyy'}}</p>
+                        <ng-template #customerTemplate let-row="row" let-value="value" let-i="index" style="width: auto">
+                            <p>{{row.khachHangs.hoDem}} {{row.khachHangs.ten}}</p>
                         </ng-template>
                         <ng-template #nameTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
                             <p *ngIf="row.lapLai == true" class="status">Có</p>
                             <p *ngIf="row.lapLai == false" class="status">Không</p>
                         </ng-template>
                         <ng-template #descriptionTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <p *ngIf="row.trangThai == 1" class="status">Đang sử dụng</p>
-                            <p *ngIf="row.trangThai == 2" class="status">Ngừng sử dụng</p>
+                            <div *ngIf="row.trangThai == 1" class="status-use">Đang sử dụng</div>
+                            <div *ngIf="row.trangThai == 2" class="status-none">Ngừng sử dụng</div>
                         </ng-template>
                         <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
                             <a class="btn btn-func btn-success" href="javascript:;" (click)="viewDichVuCoBan(row)" title="Chi tiết"><i class="fa fa-eye"></i></a>

@@ -1,14 +1,18 @@
-﻿<div>
-    <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="HopDongInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
-          (!hopDong.valid && showErrorAlert('HopDong không được để trống', 'Vui lòng nhập HopDong!'));
-            (!soHopDong.valid && showErrorAlert('SoHopDong không được để trống', 'Vui lòng nhập SoHopDong!'));
-            (!khachHangId.valid && showErrorAlert('KhachHangId không được để trống', 'Vui lòng nhập KhachHangId!'));
-            (!ngayKy.valid && showErrorAlert('NgayKy không được để trống', 'Vui lòng nhập NgayKy!'));
-            (!ngayHieuLuc.valid && showErrorAlert('NgayHieuLuc không được để trống', 'Vui lòng nhập NgayHieuLuc!'));
+﻿<section class="content-header">
+    <h1>Thêm mới hợp đồng</h1>
+    <commonroad></commonroad>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div class="box-body">
+                    <form [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="HopDongInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
+            (!hopDong.valid && showErrorAlert('Hợp đồng không được để trống', 'Vui lòng nhập hợp đồng!'));
+            (!soHopDong.valid && showErrorAlert('Số hợp đồng không được để trống', 'Vui lòng nhập số hợp đồng!'));
             (!thoiHan.valid && showErrorAlert('ThoiHan không được để trống', 'Vui lòng nhập ThoiHan!'));
             (!kyThanhToan.valid && showErrorAlert('KyThanhToan không được để trống', 'Vui lòng nhập KyThanhToan!'));
             (!hanThanhToan.valid && showErrorAlert('HanThanhToan không được để trống', 'Vui lòng nhập HanThanhToan!'));
-            (!ngayBanGiao.valid && showErrorAlert('NgayBanGiao không được để trống', 'Vui lòng nhập NgayBanGiao!'));
             (!tyleDCGT.valid && showErrorAlert('TyleDCGT không được để trống', 'Vui lòng nhập TyleDCGT!'));
             (!soNamDCGT.valid && showErrorAlert('SoNamDCGT không được để trống', 'Vui lòng nhập SoNamDCGT!'));
             (!loaiTienId.valid && showErrorAlert('LoaiTienId không được để trống', 'Vui lòng nhập LoaiTienId!'));
@@ -16,182 +20,213 @@
             (!giaThue.valid && showErrorAlert('GiaThue không được để trống', 'Vui lòng nhập GiaThue!'));
             (!tienCoc.valid && showErrorAlert('TienCoc không được để trống', 'Vui lòng nhập TienCoc!'));
             ">
-        <ul bootstrapTab #tab="bootstrap-tab" class="nav nav-tabs">
-            <li class="active">
-                <a id="thongtinTab" [routerLink]="[]" fragment="thongtin" href="#thongtin" data-toggle="tab"><i class="fa fa-drivers-license-o fa-fw" aria-hidden="true"></i> Thông tin hợp đồng</a>
-            </li>
-            <li>
-                <a id="hopdongTab" [routerLink]="[]" fragment="hopdong" href="#hopdong" data-toggle="tab"><i class="fa fa-building fa-fw" aria-hidden="true"></i> Mặt bằng thuê</a>
-            </li>
-            <li>
-                <a id="dichvuTab" [routerLink]="[]" fragment="dichvu" href="#dichvu" data-toggle="tab"><i class="fa fa-list fa-fw" aria-hidden="true"></i> Dịch vụ sử dụng</a>
-            </li>
-        </ul>
-        <div class="modal-body">
-            <div class="tab-content" style="padding:0">
-                <div class="tab-pane active" id="thongtin">
-                    <div class="thongtin-tab" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
-                        <div class="row EditForm" style="margin-top:10px">
+                        <ul bootstrapTab #tab="bootstrap-tab" class="nav nav-tabs">
+                            <li class="active">
+                                <a id="thongtinTab" [routerLink]="[]" fragment="thongtin" href="#thongtin" data-toggle="tab"><i class="fa fa-drivers-license-o fa-fw" aria-hidden="true"></i> Thông tin hợp đồng</a>
+                            </li>
+                            <li>
+                                <a id="hopdongTab" [routerLink]="[]" fragment="hopdong" href="#hopdong" data-toggle="tab"><i class="fa fa-building fa-fw" aria-hidden="true"></i> Mặt bằng thuê</a>
+                            </li>
+                            <li>
+                                <a id="dichvuTab" [routerLink]="[]" fragment="dichvu" href="#dichvu" data-toggle="tab"><i class="fa fa-list fa-fw" aria-hidden="true"></i> Dịch vụ sử dụng</a>
+                            </li>
+                        </ul>
+                        <div class="modal-body">
+                            <div class="tab-content row" style="padding:0">
+                                <div class="tab-pane active" id="thongtin">
+                                    <div class="thongtin-tab" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
+                                        <div class="EditForm">
+                                            <div class="col-sm-5">
+                                                <div class="row">
+                                                    <div class="has-feedback col-sm-6">
+                                                        <label class="control-label" for="khachHangId-{{uniqueId}}">Khách hàng</label>
+                                                        <div class="control" [ngClass]="{'has-success': f.submitted && khachhangChk, 'has-error' : f.submitted && !khachhangChk}">
+                                                            <kendo-combobox class="form-control"
+                                                                            [data]="khachhangsFilter" [placeholder]="'Chọn khách hàng'"
+                                                                            [textField]="'tenDayDu'"
+                                                                            [valueField]="'khachHangId'"
+                                                                            [(ngModel)]="khachhang" name="khachHangId"
+                                                                            (valueChange)="khachhangChange($event)"
+                                                                            [filterable]="true"
+                                                                            (filterChange)="khachhangfilterChange($event)"></kendo-combobox>
+                                                            <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': khachhangChk, 'glyphicon-remove' : !khachhangChk}"></span>
+                                                            <span *ngIf="showValidationErrors && f.submitted && !khachhangChk" class="errorMessage">
+                                                                Khách hàng không được để trống!
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="has-feedback col-sm-6">
+                                                        <label class="control-label" for="soHopDong-{{uniqueId}}">Số hợp đồng</label>
+                                                        <div class="control" [ngClass]="{'has-success': f.submitted && soHopDong.valid, 'has-error' : f.submitted && !soHopDong.valid}">
+                                                            <input autofocus type="text" class="form-control" name="soHopDong" [(ngModel)]="HopDongEdit.soHopDong" #soHopDong="ngModel" required />
+                                                            <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': soHopDong.valid, 'glyphicon-remove' : !soHopDong.valid}"></span>
+                                                            <span *ngIf="showValidationErrors && f.submitted && !soHopDong.valid" class="errorMessage">
+                                                                Vui lòng nhập số hợp đồng!
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="has-feedback col-sm-7">
+                                                <label class="control-label" for="hopDong-{{uniqueId}}">Hợp đồng</label>
+                                                <div class="control" [ngClass]="{'has-success': f.submitted && hopDong.valid, 'has-error' : f.submitted && !hopDong.valid}">
+                                                    <input autofocus type="text" class="form-control" name="hopDong" [(ngModel)]="HopDongEdit.hopDong" #hopDong="ngModel" required />
+                                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': hopDong.valid, 'glyphicon-remove' : !hopDong.valid}"></span>
+                                                    <span *ngIf="showValidationErrors && f.submitted && !hopDong.valid" class="errorMessage">
+                                                        Vui lòng nhập Hợp đồng!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="col-sm-7">
+                                                <div class="row">
+                                                    <div class="has-feedback col-sm-4">
+                                                        <label class="control-label" for="ngayKy-{{uniqueId}}">Ngày ký</label>
+                                                        <kendo-datepicker [(value)]="valueNgayky" class="form-control">
+                                                            <kendo-datepicker-messages today="Hôm nay" toggle="Mở lịch"></kendo-datepicker-messages>
+                                                        </kendo-datepicker>
+                                                    </div>
+                                                    <div class="has-feedback col-sm-4">
+                                                        <label class="control-label" for="ngayHieuLuc-{{uniqueId}}">Ngày hiệu lực</label>
+                                                        <kendo-datepicker [(value)]="valueNgayhieuluc" class="form-control">
+                                                            <kendo-datepicker-messages today="Hôm nay" toggle="Mở lịch"></kendo-datepicker-messages>
+                                                        </kendo-datepicker>
+                                                    </div>
+                                                    <div class="has-feedback col-sm-4">
+                                                        <label class="control-label" for="ngayBanGiao-{{uniqueId}}">Ngày bàn giao</label>
+                                                        <kendo-datepicker [(value)]="valueNgaybangiao" class="form-control">
+                                                            <kendo-datepicker-messages today="Hôm nay" toggle="Mở lịch"></kendo-datepicker-messages>
+                                                        </kendo-datepicker>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label" for="thoiHan-{{uniqueId}}">Thời hạn</label>
+                                                        <div class="control" [ngClass]="{'has-success': f.submitted && thoiHan.valid, 'has-error' : f.submitted && !thoiHan.valid}">
+                                                            <span class="text-display" [class.isHoverChangeInputDate]="!isHoverChangeInputDate"> Tháng</span>
+                                                            <input autofocus type="number" (focus)="focusFunction($event)" (focusout)="focusOutFunction($event)" (mouseenter)="onHovering($event)" (mouseleave)="onUnovering($event)" class="form-control" min="1" max="100" name="thoiHan" [(ngModel)]="HopDongEdit.thoiHan" #thoiHan="ngModel" required style="width:100%" />
+                                                            <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': thoiHan.valid, 'glyphicon-remove' : !thoiHan.valid}"></span>
+                                                            <span *ngIf="showValidationErrors && f.submitted && !thoiHan.valid" class="errorMessage">
+                                                                Vui lòng nhập thời hạn!
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label" for="loaiHopDong-{{uniqueId}}">Loại hợp đồng</label>
+                                                        <select name="loaiHopDong" [(ngModel)]="HopDongEdit.loaiHopDong" #loaiHopDong="ngModel" class="form-control">
+                                                            <option value="1">Hợp đồng ngắn hạn</option>
+                                                            <option value="2">Hợp đồng dài hạn</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="col-sm-3">
+                                                <label class="control-label" for="kyThanhToan-{{uniqueId}}">Kỳ thanh toán</label>
+                                                <div class="control" [ngClass]="{'has-success': f.submitted && kyThanhToan.valid, 'has-error' : f.submitted && !kyThanhToan.valid}">
+                                                    <span class="text-display"> Tháng</span>
+                                                    <input autofocus type="number" (focus)="focusFunction($event)" (focusout)="focusOutFunction($event)" (mouseenter)="onHovering($event)" (mouseleave)="onUnovering($event)" class="form-control" min="1" max="100" name="kyThanhToan" [(ngModel)]="HopDongEdit.kyThanhToan" #kyThanhToan="ngModel" required />
+                                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': kyThanhToan.valid, 'glyphicon-remove' : !kyThanhToan.valid}"></span>
+                                                    <span *ngIf="showValidationErrors && f.submitted && !kyThanhToan.valid" class="errorMessage">
+                                                        Vui lòng nhập kỳ thanh toán!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label class="control-label" for="hanThanhToan-{{uniqueId}}">Hạn thanh toán</label>
+                                                <div class="control" [ngClass]="{'has-success': f.submitted && hanThanhToan.valid, 'has-error' : f.submitted && !hanThanhToan.valid}">
+                                                    <span class="text-display"> Ngày</span>
+                                                    <input autofocus type="number" (focus)="focusFunction($event)" (focusout)="focusOutFunction($event)" (mouseenter)="onHovering($event)" (mouseleave)="onUnovering($event)" min="1" max="1000" class="form-control" name="hanThanhToan" [(ngModel)]="HopDongEdit.hanThanhToan" #hanThanhToan="ngModel" required />
+                                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': hanThanhToan.valid, 'glyphicon-remove' : !hanThanhToan.valid}"></span>
+                                                    <span *ngIf="showValidationErrors && f.submitted && !hanThanhToan.valid" class="errorMessage">
+                                                        Vui lòng nhập hạn thanh toán!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label class="control-label" for="tyleDCGT-{{uniqueId}}">Tỷ lệ ĐCGT / Số năm ĐCGT (%/năm)</label>
+                                                <div class="control" [ngClass]="{'has-success': f.submitted && tyleDCGT.valid, 'has-error' : f.submitted && !tyleDCGT.valid}">
+                                                    <input autofocus type="number" step="0.01" min="0" max="100" class="form-control" name="tyleDCGT" [(ngModel)]="HopDongEdit.tyleDCGT" #tyleDCGT="ngModel" required style="width:47%" />
+                                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tyleDCGT.valid, 'glyphicon-remove' : !tyleDCGT.valid}"></span> /
+                                                    <input autofocus type="number" class="form-control" min="1" max="50" name="soNamDCGT" [(ngModel)]="HopDongEdit.soNamDCGT" #soNamDCGT="ngModel" required style="width:47%" />
+                                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': soNamDCGT.valid, 'glyphicon-remove' : !soNamDCGT.valid}"></span>
+                                                </div>
+                                            </div>
+                                            <div class="has-feedback col-sm-3">
+                                                <label class="control-label" for="loaiTienId-{{uniqueId}}">Loại tiền</label>
+                                                <div class="control" [ngClass]="{'has-success': f.submitted && loaiTienId.valid, 'has-error' : f.submitted && !loaiTienId.valid}">
+                                                    <input autofocus type="text" class="form-control" name="loaiTienId" [(ngModel)]="HopDongEdit.loaiTienId" #loaiTienId="ngModel" required />
+                                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': loaiTienId.valid, 'glyphicon-remove' : !loaiTienId.valid}"></span>
+                                                    <span *ngIf="showValidationErrors && f.submitted && !loaiTienId.valid" class="errorMessage">
+                                                        Vui lòng nhập loại tiền!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="has-feedback col-sm-3">
+                                                <label class="control-label" for="tyGia-{{uniqueId}}">Tỷ giá</label>
+                                                <div class="control" [ngClass]="{'has-success': f.submitted && tyGia.valid, 'has-error' : f.submitted && !tyGia.valid}">
+                                                    <input autofocus type="text" class="form-control" name="tyGia" [(ngModel)]="HopDongEdit.tyGia" #tyGia="ngModel" required />
+                                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tyGia.valid, 'glyphicon-remove' : !tyGia.valid}"></span>
+                                                    <span *ngIf="showValidationErrors && f.submitted && !tyGia.valid" class="errorMessage">
+                                                        Vui lòng nhập tỷ giá!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="has-feedback col-sm-3">
+                                                <label class="control-label" for="giaThue-{{uniqueId}}">Giá thuê</label>
+                                                <div class="control" [ngClass]="{'has-success': f.submitted && giaThue.valid, 'has-error' : f.submitted && !giaThue.valid}">
+                                                    <input autofocus type="text" class="form-control" name="giaThue" [(ngModel)]="HopDongEdit.giaThue" #giaThue="ngModel" required />
+                                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': giaThue.valid, 'glyphicon-remove' : !giaThue.valid}"></span>
+                                                    <span *ngIf="showValidationErrors && f.submitted && !giaThue.valid" class="errorMessage">
+                                                        Vui lòng nhập giá thuê!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="has-feedback col-sm-3">
+                                                <label class="control-label" for="tienCoc-{{uniqueId}}">Tiền cọc</label>
+                                                <div class="control" [ngClass]="{'has-success': f.submitted && tienCoc.valid, 'has-error' : f.submitted && !tienCoc.valid}">
+                                                    <input autofocus type="text" class="form-control" name="tienCoc" [(ngModel)]="HopDongEdit.tienCoc" #tienCoc="ngModel" required />
+                                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tienCoc.valid, 'glyphicon-remove' : !tienCoc.valid}"></span>
+                                                    <span *ngIf="showValidationErrors && f.submitted && !tienCoc.valid" class="errorMessage">
+                                                        Vui lòng nhập tiền cọc!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <hr class="edit-last-separator-hr" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane active" id="hopdong">
+                                    <div class="hopdong-tab" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
+                                        <div class="row" style="margin-top:10px">
 
-                            <div class="has-feedback col-sm-9">
-                                <label class="control-label" for="khachHangId-{{uniqueId}}">Khách hàng</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && khachHangId.valid, 'has-error' : f.submitted && !khachHangId.valid}">
-                                    <input autofocus type="text" class="form-control" name="khachHangId" [(ngModel)]="HopDongEdit.khachHangId" #khachHangId="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': khachHangId.valid, 'glyphicon-remove' : !khachHangId.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !khachHangId.valid" class="errorMessage">
-                                        Vui lòng nhập khách hàng!
-                                    </span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="soHopDong-{{uniqueId}}">Số hợp đồng</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && soHopDong.valid, 'has-error' : f.submitted && !soHopDong.valid}">
-                                    <input autofocus type="text" class="form-control" name="soHopDong" [(ngModel)]="HopDongEdit.soHopDong" #soHopDong="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': soHopDong.valid, 'glyphicon-remove' : !soHopDong.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !soHopDong.valid" class="errorMessage">
-                                        Vui lòng nhập số hợp đồng!
-                                    </span>
+                                <div class="tab-pane active" id="dichvu">
+                                    <div class="dichvu-tab" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
+                                        <div class="row" style="margin-top:10px">
+
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="has-feedback col-sm-12">
-                                <label class="control-label" for="hopDong-{{uniqueId}}">Hợp đồng</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && hopDong.valid, 'has-error' : f.submitted && !hopDong.valid}">
-                                    <input autofocus type="text" class="form-control" name="hopDong" [(ngModel)]="HopDongEdit.hopDong" #hopDong="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': hopDong.valid, 'glyphicon-remove' : !hopDong.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !hopDong.valid" class="errorMessage">
-                                        Vui lòng nhập Hợp đồng!
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="ngayKy-{{uniqueId}}">Ngày ký</label>
-                                <kendo-datepicker [(value)]="valueNgayky" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
-                            </div>
-                            <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="ngayHieuLuc-{{uniqueId}}">Ngày hiệu lực</label>
-                                <kendo-datepicker [(value)]="valueNgayhieuluc" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
-                            </div>
-                            <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="ngayBanGiao-{{uniqueId}}">Ngày bàn giao</label>
-                                <kendo-datepicker [(value)]="valueNgaybangiao" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
-                            </div>
-                            <div class="col-sm-3">
-                                <label class="control-label" for="thoiHan-{{uniqueId}}">Thời hạn</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && thoiHan.valid, 'has-error' : f.submitted && !thoiHan.valid}">
-                                    <span class="text-display" [class.isHoverChangeInputDate]="!isHoverChangeInputDate"> Tháng</span>
-                                    <input autofocus type="number" (focus)="focusFunction($event)" (focusout)="focusOutFunction($event)" (mouseenter)="onHovering($event)" (mouseleave)="onUnovering($event)"  class="form-control" min="1" max="100" name="thoiHan" [(ngModel)]="HopDongEdit.thoiHan" #thoiHan="ngModel" required style="width:100%" />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': thoiHan.valid, 'glyphicon-remove' : !thoiHan.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !thoiHan.valid" class="errorMessage">
-                                        Vui lòng nhập thời hạn!
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <label class="control-label" for="kyThanhToan-{{uniqueId}}">Kỳ thanh toán</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && kyThanhToan.valid, 'has-error' : f.submitted && !kyThanhToan.valid}">
-                                    <span class="text-display"> Tháng</span>
-                                    <input autofocus type="number" (focus)="focusFunction($event)" (focusout)="focusOutFunction($event)" (mouseenter)="onHovering($event)" (mouseleave)="onUnovering($event)" class="form-control" min="1" max="100" name="kyThanhToan" [(ngModel)]="HopDongEdit.kyThanhToan" #kyThanhToan="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': kyThanhToan.valid, 'glyphicon-remove' : !kyThanhToan.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !kyThanhToan.valid" class="errorMessage">
-                                        Vui lòng nhập kỳ thanh toán!
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <label class="control-label" for="hanThanhToan-{{uniqueId}}">Hạn thanh toán</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && hanThanhToan.valid, 'has-error' : f.submitted && !hanThanhToan.valid}">
-                                    <span class="text-display"> Ngày</span>
-                                    <input autofocus type="number" (focus)="focusFunction($event)" (focusout)="focusOutFunction($event)" (mouseenter)="onHovering($event)" (mouseleave)="onUnovering($event)" min="1" max="1000" class="form-control" name="hanThanhToan" [(ngModel)]="HopDongEdit.hanThanhToan" #hanThanhToan="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': hanThanhToan.valid, 'glyphicon-remove' : !hanThanhToan.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !hanThanhToan.valid" class="errorMessage">
-                                        Vui lòng nhập hạn thanh toán!
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <label class="control-label" for="tyleDCGT-{{uniqueId}}">Tỷ lệ ĐCGT / Số năm ĐCGT (%/năm)</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && tyleDCGT.valid, 'has-error' : f.submitted && !tyleDCGT.valid}">
-                                    <input autofocus type="number" step="0.01" min="0" max="100" class="form-control" name="tyleDCGT" [(ngModel)]="HopDongEdit.tyleDCGT" #tyleDCGT="ngModel" required style="width:47%" />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tyleDCGT.valid, 'glyphicon-remove' : !tyleDCGT.valid}"></span> /
-                                    <input autofocus type="number" class="form-control" min="1" max="50" name="soNamDCGT" [(ngModel)]="HopDongEdit.soNamDCGT" #soNamDCGT="ngModel" required style="width:47%" />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': soNamDCGT.valid, 'glyphicon-remove' : !soNamDCGT.valid}"></span>
-                                </div>
-                            </div>
-                            <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="loaiTienId-{{uniqueId}}">Loại tiền</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && loaiTienId.valid, 'has-error' : f.submitted && !loaiTienId.valid}">
-                                    <input autofocus type="text" class="form-control" name="loaiTienId" [(ngModel)]="HopDongEdit.loaiTienId" #loaiTienId="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': loaiTienId.valid, 'glyphicon-remove' : !loaiTienId.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !loaiTienId.valid" class="errorMessage">
-                                        Vui lòng nhập loại tiền!
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="tyGia-{{uniqueId}}">Tỷ giá</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && tyGia.valid, 'has-error' : f.submitted && !tyGia.valid}">
-                                    <input autofocus type="text" class="form-control" name="tyGia" [(ngModel)]="HopDongEdit.tyGia" #tyGia="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tyGia.valid, 'glyphicon-remove' : !tyGia.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !tyGia.valid" class="errorMessage">
-                                        Vui lòng nhập tỷ giá!
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="giaThue-{{uniqueId}}">Giá thuê</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && giaThue.valid, 'has-error' : f.submitted && !giaThue.valid}">
-                                    <input autofocus type="text" class="form-control" name="giaThue" [(ngModel)]="HopDongEdit.giaThue" #giaThue="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': giaThue.valid, 'glyphicon-remove' : !giaThue.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !giaThue.valid" class="errorMessage">
-                                        Vui lòng nhập giá thuê!
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="has-feedback col-sm-3">
-                                <label class="control-label" for="tienCoc-{{uniqueId}}">Tiền cọc</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && tienCoc.valid, 'has-error' : f.submitted && !tienCoc.valid}">
-                                    <input autofocus type="text" class="form-control" name="tienCoc" [(ngModel)]="HopDongEdit.tienCoc" #tienCoc="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tienCoc.valid, 'glyphicon-remove' : !tienCoc.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !tienCoc.valid" class="errorMessage">
-                                        Vui lòng nhập tiền cọc!
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <hr class="edit-last-separator-hr" />
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="tab-pane active" id="hopdong">
-                    <div class="hopdong-tab" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
-                        <div class="row"  style="margin-top:10px">
-
+                        <div class="modal-footer">
+                            <div class="actionBtn-form-group">
+                                <div class="col-sm-12" style="text-align:center;">
+                                    <button type="button" (click)="cancel()" class="btn btn-danger"><i class='fa fa-times'></i> Thoát</button>
+                                    <button type="submit" (click)="save()" class="btn btn-primary"><i class='fa fa-save'></i> Ghi nhận</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="tab-pane active" id="dichvu">
-                    <div class="dichvu-tab" malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
-                        <div class="row" style="margin-top:10px">
-
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="modal-footer">
-            <div class="actionBtn-form-group">
-                <div class="col-sm-7">
-                    <div class="pull-right">
-                        <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
-                        <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
-                        <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
-                            <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
-                        </button>
-                        <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
+    </div>
+</section>

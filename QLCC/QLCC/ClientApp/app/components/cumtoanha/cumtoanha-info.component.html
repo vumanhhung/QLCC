@@ -3,17 +3,17 @@
         <div class="modal-content">
             <div *ngIf="!isViewDetails" class="EditForm">
                 <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="CumToaNhaInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
-          (!tenCumToaNha.valid && showErrorAlert('TenCumToaNha không được để trống', 'Vui lòng nhập tên cụm tòa nhà!'));
-(!tenVietTat.valid && showErrorAlert('TenVietTat không được để trống', 'Vui lòng nhập tên viết tắt!'));
-(!mst.valid && showErrorAlert('MST không được để trống', 'Vui lòng nhập mã số thuế!'));
-(!sdt.valid && showErrorAlert('SDT không được để trống', 'Vui lòng nhập số điện thoại!'));
+          (!tenCumToaNha.valid && showErrorAlert('Tên cụm tòa nhà không được để trống', 'Vui lòng nhập tên cụm tòa nhà!'));
+(!tenVietTat.valid && showErrorAlert('Tên viết tắt không được để trống', 'Vui lòng nhập tên viết tắt!'));
+(!mst.valid && showErrorAlert('Mã số thuế không được để trống', 'Vui lòng nhập mã số thuế!'));
+(!sdt.valid && showErrorAlert('Số điện thoại không được để trống', 'Vui lòng nhập số điện thoại!'));
 (!fax.valid && showErrorAlert('Fax không được để trống', 'Vui lòng nhập Fax!'));
 (!isValidateEmail && showErrorAlert('Email không được để trống', 'Vui lòng nhập Email đúng định dạng abc@xyz!'));
-(!diaChi.valid && showErrorAlert('DiaChi không được để trống', 'Vui lòng nhập địa chỉ!'));
-(!nguoiQuanLy.valid && showErrorAlert('NguoiQuanLy không được để trống', 'Vui lòng nhập tên người quản lý!'));
-(!stk.valid && showErrorAlert('STK không được để trống', 'Vui lòng nhập số tài khoản!'));
-(!nganHang.valid && showErrorAlert('NganHang không được để trống', 'Vui lòng nhập tên ngân hàng!'));
-(!tenNguoiNhan.valid && showErrorAlert('TenNguoiNhan không được để trống', 'Vui lòng nhập tên người nhận!'));
+(!diaChi.valid && showErrorAlert('Địa chỉ không được để trống', 'Vui lòng nhập địa chỉ!'));
+(!nguoiQuanLy.valid && showErrorAlert('Người quản lý không được để trống', 'Vui lòng nhập tên người quản lý!'));
+(!stk.valid && showErrorAlert('Số tài khoản không được để trống', 'Vui lòng nhập số tài khoản!'));
+(!nganhangChk && showErrorAlert('Ngân hàng không được để trống', 'Vui lòng nhập tên ngân hàng!'));
+(!tenNguoiNhan.valid && showErrorAlert('Tên người nhận không được để trống', 'Vui lòng nhập tên người nhận!'));
 ">
                     <div class="modal-header">
                         <p *ngIf="isNew" class="modal-title pull-left"><i class="fa fa-plus"></i> Thêm mới cụm <span>{{tencumtoanha}}</span></p>
@@ -100,24 +100,33 @@
                             <div class="clearfix"></div>
                             <div class="col-sm-4">
                                 <div class="has-feedback">
+                                    <label class="control-label " for="nganHang-{{uniqueId}}">Ngân hàng</label>
+                                    <div class="control" [ngClass]="{'has-success': f.submitted && nganhangChk, 'has-error' : f.submitted && !nganhangChk}">
+                                        <kendo-combobox class="form-control"
+                                                        [data]="nganhangsFilter" [placeholder]="'Ngân hàng'"
+                                                        [textField]="'tenNganHang'"
+                                                        [valueField]="'nganHangId'"
+                                                        [(ngModel)]="nganhangSelected" name="nganhang"
+                                                        (valueChange)="nganhangChange($event)"
+                                                        [filterable]="true">
+                                            <ng-template kendoDropDownListNoDataTemplate>
+                                                <p><span class="k-icon k-i-warning" style="font-size:30px"></span><br /><br /> Không tìm thấy kết quả nào</p>
+                                            </ng-template>
+                                            <ng-template kendoComboBoxItemTemplate let-dataItem>
+                                                &nbsp;{{ dataItem.tenNganHang }}
+                                            </ng-template>
+                                        </kendo-combobox>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="has-feedback">
                                     <label class="control-label " for="stk-{{uniqueId}}">Số tài khoản</label>
                                     <div class="control" [ngClass]="{'has-success': f.submitted && stk.valid, 'has-error' : f.submitted && !stk.valid}">
                                         <input autofocus type="text" class="form-control" name="stk" [(ngModel)]="CumToaNhaEdit.stk" #stk="ngModel" required />
                                         <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': stk.valid, 'glyphicon-remove' : !stk.valid}"></span>
                                         <span *ngIf="showValidationErrors && f.submitted && !stk.valid" class="errorMessage">
                                             Vui lòng nhập số tài khoản!
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="has-feedback">
-                                    <label class="control-label " for="nganHang-{{uniqueId}}">Ngân hàng</label>
-                                    <div class="control" [ngClass]="{'has-success': f.submitted && nganHang.valid, 'has-error' : f.submitted && !nganHang.valid}">
-                                        <input autofocus type="text" class="form-control" name="nganHang" [(ngModel)]="CumToaNhaEdit.nganHang" #nganHang="ngModel" required />
-                                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': nganHang.valid, 'glyphicon-remove' : !nganHang.valid}"></span>
-                                        <span *ngIf="showValidationErrors && f.submitted && !nganHang.valid" class="errorMessage">
-                                            Vui lòng nhập tên ngân hàng!
                                         </span>
                                     </div>
                                 </div>
@@ -206,48 +215,64 @@
                 <div class="modal-body">
                     <div>
                         <form #f="ngForm">
-                            <div>
-                                <div *ngIf="isdisplayImage" class="col-sm-12 logoView" tooltip="Logo tòa nhà">
-                                    <img id="imgData" class="img-responsive" [alt]="altImageItem" [src]="imageData" />
-                                </div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-sm-2 rowCustom title">Tên cụm tòa nhà: </div>
-                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.tenCumToaNha}}</div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-sm-2 rowCustom title">Tên viết tắt: </div>
-                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.tenVietTat}}</div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-sm-2 rowCustom title">Địa chỉ: </div>
-                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.diaChi}}</div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-sm-2  rowCustom title">Điện thoại: </div>
-                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.sdt}}</div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-sm-2 rowCustom title">Email: </div>
-                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.email}}</div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-sm-2 rowCustom title">Fax: </div>
-                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.fax}}</div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-sm-2  rowCustom title">Mã số thuế: </div>
-                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.mst}}</div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-sm-2 rowCustom title">Người quản lý: </div>
-                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.nguoiQuanLy}}</div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-sm-2 rowCustom title">Số tài khoản: </div>
-                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.stk}}</div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-sm-2 rowCustom title">Ngân hàng: </div>
-                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.nganHang}}</div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-sm-2 rowCustom title">Tên người nhận: </div>
-                                <div class="col-sm-10 rowCustom text">{{CumToaNhaEdit.tenNguoiNhan}}</div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-md-12">
-                                    <hr class="edit-last-separator-hr" />
-                                </div>
-                                <div class="clearfix"></div>
+                            <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="4" class="headView">Thông tin chung</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Tên cụm tòa nhà: </td>
+                                            <td colspan="2">{{CumToaNhaEdit.tenCumToaNha}}</td>
+                                            <td rowspan="5">
+                                                <div *ngIf="isdisplayImage" class="col-sm-12 logoView" tooltip="Logo tòa nhà">
+                                                    <img id="imgData" class="img-responsive" [alt]="altImageItem" [src]="imageData" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Tên viết tắt:  </td>
+                                            <td colspan="2">{{CumToaNhaEdit.tenVietTat}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Email:   </td>
+                                            <td colspan="2">{{CumToaNhaEdit.email}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Điện thoại:   </td>
+                                            <td colspan="2">{{CumToaNhaEdit.sdt}}</td>                                            
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Fax:   </td>
+                                            <td colspan="2">{{CumToaNhaEdit.fax}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Địa chỉ:   </td>
+                                            <td colspan="3">{{CumToaNhaEdit.diaChi}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Người quản lý:   </td>
+                                            <td colspan="3">{{CumToaNhaEdit.nguoiQuanLy}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Mã số thuế:   </td>
+                                            <td colspan="3">{{CumToaNhaEdit.mst}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="headView">Thông tin tài khoản ngân hàng</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Ngân hàng:   </td>
+                                            <td colspan="3">{{nganhangSelected.tenNganHang}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Số tài khoản: </td>
+                                            <td>{{CumToaNhaEdit.stk}}</td>
+                                            <td>Tên người nhận: </td>
+                                            <td>{{CumToaNhaEdit.tenNguoiNhan}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="clearfix"></div>
                         </form>

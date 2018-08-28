@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using DAL.Models;
+using QLCC.Helpers;
 
 namespace QLCC.Controllers
 {
@@ -69,25 +70,38 @@ namespace QLCC.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(loaihang).State = EntityState.Modified;
-
-            try
+            var checkvalid = await _context.LoaiHangs.SingleOrDefaultAsync(r => r.LoaiHangId != id && r.TenLoaiHang == loaihang.TenLoaiHang);
+            if (checkvalid == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LoaiHangExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                var user = this.User.Identity.Name;
+                var userId = Utilities.GetUserId(this.User);
+                loaihang.NgaySua = DateTime.Now;
+                loaihang.NguoiSua = user;
+                _context.Entry(loaihang).State = EntityState.Modified;
 
-            return NoContent();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!LoaiHangExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return NoContent();
+            }
+            else
+            {
+                var check = "Exist";
+                return Ok(check);
+            }
         }
         
         // POST: api/LoaiHangs
@@ -99,10 +113,27 @@ namespace QLCC.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.LoaiHangs.Add(loaihang);
-            await _context.SaveChangesAsync();
+            var checkvalid = await _context.LoaiHangs.SingleOrDefaultAsync(r => r.TenLoaiHang == loaihang.TenLoaiHang);
+            if (checkvalid == null)
+            {
+                var user = this.User.Identity.Name;
+                var userId = Utilities.GetUserId(this.User);
+                loaihang.NgayNhap = DateTime.Now;
+                loaihang.NguoiNhap = user;
+                _context.LoaiHangs.Add(loaihang);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetLoaiHang", new { id = loaihang.LoaiHangId }, loaihang);
+                return CreatedAtAction("Getloaihang", new { id = loaihang.LoaiHangId }, loaihang);
+            }
+            else
+            {
+                var check = new LoaiHang();
+                if (checkvalid != null)
+                {
+                    check.TenLoaiHang = "Exist";
+                }
+                return Ok(check);
+            }
         }
         
         // DELETE: api/LoaiHangs/5
@@ -125,7 +156,14 @@ namespace QLCC.Controllers
 
             return Ok(loaihang);
         }
-        
+
+        [HttpGet("FilterStatus/{status}")]
+        public IEnumerable<LoaiHang> getFilterStatus([FromRoute] bool status)
+        {
+            return _context.LoaiHangs.Where(m => m.TrangThai == status).ToList();
+        }
+
+
         private bool LoaiHangExists(int id)
         {                        
             return _context.LoaiHangs.Any(e => e.LoaiHangId == id);

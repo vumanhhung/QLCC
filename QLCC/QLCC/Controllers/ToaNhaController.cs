@@ -126,11 +126,15 @@ namespace QLCC.Controllers
             {
                 return NotFound();
             }
+            List<TangLau> ListTang = _context.TangLaus.Where(t => t.ToaNhaId == toanha.ToaNhaId).ToList();
+            if(ListTang.Count <= 0)
+            {
+                _context.ToaNhas.Remove(toanha);
+                await _context.SaveChangesAsync();
+                return Ok(toanha);
+            }else
+                return BadRequest("Không xóa được tòa nhà. Do đã được sử dụng!");
 
-            _context.ToaNhas.Remove(toanha);
-            await _context.SaveChangesAsync();
-
-            return Ok(toanha);
         }
 
         private bool ToaNhaExists(int id)

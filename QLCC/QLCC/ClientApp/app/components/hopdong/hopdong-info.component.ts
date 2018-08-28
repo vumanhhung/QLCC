@@ -17,7 +17,7 @@ import { KhachHang } from '../../models/khachhang.model';
 export class HopDongInfoComponent implements OnInit {
     private id: number = 0;
 
-    public isFullScreenModal: boolean = false;    
+    public isFullScreenModal: boolean = false;
     isViewDetails = false;
     public scrollbarOptions = { axis: 'y', theme: 'minimal-dark' };
     public heightScroll: number = 480;
@@ -28,14 +28,18 @@ export class HopDongInfoComponent implements OnInit {
     private HopDongEdit: HopDong = new HopDong();
     public valueNgaybangiao: Date = new Date();
     public valueNgayhieuluc: Date = new Date();
-    public valueNgayky: Date = new Date();
-    public formResetToggle = true;
+    public valueNgayky: Date = new Date();    
     private isEditMode = false;
     public changesSavedCallback: () => void;
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
     public isHoverChangeInputDate = true;
     public isFocusChangeInputDate = 1;
+
+    khachhangsFilter: KhachHang[];
+    khachhangs: KhachHang[] = [];
+    khachhang: KhachHang = new KhachHang();
+    khachhangChk: boolean = false;
 
     @Input()
     isViewOnly: boolean;
@@ -44,47 +48,51 @@ export class HopDongInfoComponent implements OnInit {
     isGeneralEditor = false;
 
     @ViewChild('f')
-    private form;
-
-    @ViewChild('editorModal')
-    editorModal: ModalDirective;
+    private form;  
 
     constructor(private alertService: AlertService, private gvService: HopDongService, private route: ActivatedRoute, private khachhangService: KhachHangService) {
     }
-    
+
     ngOnInit() {
         this.id = Number(this.route.snapshot.paramMap.get('id'));
         if (this.id != 0) {
             this.loadData();
         } else {
-
+            this.themmoiHopDong();
         }
     }
 
-    loadKhachhang() {
-        this.alertService.startLoadingMessage();
-        this.khachhangService.getAllKhachHang().subscribe(result => this.onKhachhangDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
+    themmoiHopDong() {
+        this.loadKhachhang(true);
+        this.HopDongEdit = new HopDong();
+        this.HopDongEdit.loaiHopDong = 1;
+    }
+
+    loadKhachhang(isNew: boolean) {
+        var where = "";
+        if (isNew) where = "KhachHangId not in (Select KhachHangId From tbl_HopDong)";
+        else where = "KhachHangId not in (Select KhachHangId From tbl_HopDong where KhachHangId != " + this.HopDongEdit.khachHangId + ")";
+        this.khachhangService.getItems(0, 0, where, "KhDoanhNghiep DESC").subscribe(results => {
+            this.khachhangs = results;
+            this.khachhangsFilter = results;
+        }, error => this.onDataLoadFailed(error));
     }
 
     loadData() {
         this.alertService.startLoadingMessage();
-        this.gvService.getHopDongByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
+        this.gvService.getHopDongByID().subscribe(result => {
+            this.alertService.stopLoadingMessage();
+            this.HopDongEdit = result;
+            this.loadKhachhang(false);
+        }, error => this.onDataLoadFailed(error));
     }
 
-    private onKhachhangDataLoadSuccessful(obj: KhachHang[]) {
+    private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
-    }
-    
-    private onDataLoadSuccessful(obj: HopDong) {
-        this.alertService.stopLoadingMessage();
-    }
-
-    private onCurrentUserDataLoadFailed(error: any) {
-        this.alertService.stopLoadingMessage();
-        this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất dữ liệu người dùng từ máy chủ.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
+        this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất dữ liệu từ máy chủ.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
             MessageSeverity.error, error);
     }
-    
+
     private cancel() {
         this.HopDongEdit = new HopDong();
         this.showValidationErrors = false;
@@ -103,7 +111,7 @@ export class HopDongInfoComponent implements OnInit {
     }
 
     public onUnovering(event) {
-        
+
         if (this.isFocusChangeInputDate == 1) {
             event.target.parentElement.children[0].setAttribute('class', "text-display");
         } else {
@@ -122,14 +130,15 @@ export class HopDongInfoComponent implements OnInit {
     }
 
     private save() {
-        this.isSaving = true;
-        this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");        
-        if (this.isNew) {
-            this.gvService.addnewHopDong(this.HopDongEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
-        }
-        else {
-            this.gvService.updateHopDong(this.HopDongEdit.hopDongId, this.HopDongEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
-        }
+        alert(123);
+        //this.isSaving = true;
+        //this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
+        //if (this.isNew) {
+        //    this.gvService.addnewHopDong(this.HopDongEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
+        //}
+        //else {
+        //    this.gvService.updateHopDong(this.HopDongEdit.hopDongId, this.HopDongEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
+        //}
     }
 
     private saveSuccessHelper(obj?: HopDong) {
@@ -138,11 +147,11 @@ export class HopDongInfoComponent implements OnInit {
 
         this.isSaving = false;
         this.alertService.stopLoadingMessage();
-        this.showValidationErrors = false;        
+        this.showValidationErrors = false;
         if (this.isGeneralEditor) {
             if (this.isNew) {
                 this.alertService.showMessage("Thành công", `Thực hiện thêm mới thành công`, MessageSeverity.success);
-            }                
+            }
             else
                 this.alertService.showMessage("Thành công", `Thực hiện thay đổi thông tin thành công`, MessageSeverity.success);
         }
@@ -163,8 +172,19 @@ export class HopDongInfoComponent implements OnInit {
         if (this.changesFailedCallback)
             this.changesFailedCallback();
     }
-    
+
     private showErrorAlert(caption: string, message: string) {
         this.alertService.showMessage(caption, message, MessageSeverity.error);
+    }
+
+    khachhangChange(khachhang: KhachHang) {
+        if (khachhang != null) {
+            this.khachhangChk = true;            
+        }
+        else this.khachhangChk = false;
+    }
+
+    khachhangfilterChange(value) {
+        this.khachhangsFilter = this.khachhangs.filter((s) => s.tenDayDu.toLowerCase().indexOf(value.toLowerCase()) !== -1);
     }
 }

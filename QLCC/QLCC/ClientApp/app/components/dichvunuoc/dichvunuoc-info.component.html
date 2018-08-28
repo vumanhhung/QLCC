@@ -30,6 +30,9 @@
                                     <ng-template kendoDropDownListNoDataTemplate>
                                         <p><span class="k-icon k-i-warning" style="font-size:30px"></span><br /><br /> Không tìm thấy kết quả nào</p>
                                     </ng-template>
+                                    <ng-template kendoComboBoxItemTemplate let-dataItem>
+                                        <span class="template">Căn hộ: </span>&nbsp;{{ dataItem.tenMatBang }}
+                                    </ng-template>
                                 </kendo-combobox>
                                 <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': mbChk, 'glyphicon-remove' : !mbChk}"></span>
                                 <span *ngIf="showValidationErrors && f.submitted && !mbChk" class="errorMessage">

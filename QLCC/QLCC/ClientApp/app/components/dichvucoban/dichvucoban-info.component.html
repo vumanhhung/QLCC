@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div *ngIf="!isViewDetails" class="EditForm">
                 <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" name="DichVuCoBanInfoForm" class="form-horizontal" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
-(!ChkmatBang && showErrorAlert('Mặt bằng không được để trống', 'Vui lòng chọn diện thoại!'));
+(!ChkmatBang && showErrorAlert('Mặt bằng không được để trống', 'Vui lòng chọn mặt bằng!'));
 (!ChkloaiDichVu && showErrorAlert('Loại dịch vụ không được để trống', 'Vui lòng chọn loại dịch vụ!'));
 (!ChktangLau && showErrorAlert('Tầng lầu không được để trống', 'Vui lòng chọn tầng lầu!'));
 ">
@@ -27,10 +27,6 @@
                                 <label class="control-label" for="ngayChungTu-{{uniqueId}}">Ngày Chứng từ</label>
                                 <kendo-datepicker [(value)]="valueNgayChungTu" [format]="'dd/MM/yyyy'" class="form-control" (valueChange)="ngayChungTuChange($event)"></kendo-datepicker>
                             </div>
-                            <!--<div class="has-feedback col-sm-4">
-                                <label class="control-label" for="ngayThanhToan-{{uniqueId}}">Ngày thanh toán</label>
-                                <kendo-datepicker [(value)]="valueNgayThanhToan" [format]="'dd/MM/yyyy'" class="form-control"></kendo-datepicker>
-                            </div>-->
                             <div class="clearfix"></div>
 
                             <div class="has-feedback col-sm-4">
@@ -287,10 +283,10 @@
                                         <td colspan="8" class="headView">Quy đổi tiền tệ</td>
                                     </tr>
                                     <tr>
-                                        <td class="boldText">Loại tiền quy đổi</td>
-                                        <td colspan="3">{{DichVuCoBanEdit.loaiTiens.tenLoaiTien}}</td>
-                                        <td class="boldText">Tiền thanh toán quy đổi</td>
-                                        <td colspan="3">{{formatPrice(DichVuCoBanEdit.tienTTQuyDoi)}}</td>
+                                        <td class="boldText" colspan="2">Loại tiền quy đổi</td>
+                                        <td colspan="2">{{DichVuCoBanEdit.loaiTiens.tenLoaiTien}}</td>
+                                        <td class="boldText" colspan="2">Tiền thanh toán quy đổi</td>
+                                        <td colspan="2">{{formatPrice(DichVuCoBanEdit.tienTTQuyDoi)}}</td>
                                     </tr>
                                     <tr>
                                         <td colspan="8" class="headView">Thông tin chỉnh sửa</td>

@@ -17,8 +17,9 @@ namespace DAL.Models
 		public string DiaChi { get; set; }
 		public string NguoiQuanLy { get; set; }
 		public string STK { get; set; }
-		public string NganHang { get; set; }
-		public string Logo { get; set; }
+		public int NganHangId { get; set; }
+        public NganHang NganHang { get; set; }
+        public string Logo { get; set; }
 		public string TenNguoiNhan { get; set; }
         public string NguoiNhap { get; set; }
         public DateTime? NgayNhap { get; set; }

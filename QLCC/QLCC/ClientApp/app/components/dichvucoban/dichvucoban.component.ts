@@ -77,6 +77,9 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     @ViewChild('descriptionTemplate')
     descriptionTemplate: TemplateRef<any>;
 
+    @ViewChild('customerTemplate')
+    customerTemplate: TemplateRef<any>;
+
     @ViewChild('actionsTemplate')
     actionsTemplate: TemplateRef<any>;
 
@@ -119,14 +122,13 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         let gT = (key: string) => this.translationService.getTranslation(key);
 
         this.columns = [
-            { headerTemplate: this.checkAllTemplate, width: 50, cellTemplate: this.checkTemplate, canAutoResize: false, sortable: false, draggable: false },
-            { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
-            { prop: 'soChungTu', name: gT('Số CT') },
-            { prop: 'matBangs.tenMatBang', name: gT('Tên mặt bằng') },
-            { prop: 'khachHangs.ten', name: gT('Tên khách hàng') },
-            { name: gT('Ngày CT'), cellTemplate: this.startTemplate },
-            { name: gT('Tổng thanh toán'), cellTemplate: this.priceTemplate },
-            { prop: 'lapLai', name: gT('Lặp lại'), cellTemplate: this.nameTemplate },
+            { headerTemplate: this.checkAllTemplate, width: 38, cellTemplate: this.checkTemplate, canAutoResize: false, sortable: false, draggable: false },
+            { prop: "index", name: '#', width: 35, cellTemplate: this.indexTemplate, canAutoResize: false },
+            { prop: 'soChungTu', name: gT('Số CT'), canAutoResize: true },
+            { prop: 'matBangs.tenMatBang', name: gT('Mặt bằng'), width: 100, canAutoResize: false },
+            { name: gT('Khách hàng'), cellTemplate: this.customerTemplate },
+            { name: gT('Tổng tiền'), cellTemplate: this.priceTemplate, canAutoResize: true },
+            { prop: 'lapLai', name: gT('Lặp lại'), width: 70, cellTemplate: this.nameTemplate, canAutoResize: false },
             { prop: 'trangThai', name: gT('Trạng thái'), cellTemplate: this.descriptionTemplate },
             { name: gT('matbang.qlmb_chucnang'), width: 100, cellTemplate: this.actionsTemplate, canAutoResize: false, sortable: false, draggable: false }
         ];
@@ -135,7 +137,6 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         this.loadAllLoaiDichVu();
         this.loadAllLoaiTien();
         this.loadAllDonViTinh();
-        //this.loaidichvuService.test().subscribe(results => { console.log(results) });
         if (this.authService.currentUser) {
             var userId = this.authService.currentUser.id;
             var where = "NguoiDungId = '" + userId + "'";
@@ -340,7 +341,14 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         this.DichVuCoBanEditor.loaiDichVu = this.loaiDichVu;
         this.DichVuCoBanEditor.loaiTien = this.loaiTien;
         this.DichVuCoBanEditor.donViTinh = this.donViTinh;
-        this.dichvucobanEdit = this.DichVuCoBanEditor.editDichVuCoBan(row);
+        if (row.lapLai == true) {
+            row.ngayChungTu = this.valueDate;
+            row.tuNgay = new Date(this.valueDate.getFullYear(), this.valueDate.getMonth(), 1);
+            row.denNgay = new Date(this.valueDate.getFullYear(), this.valueDate.getMonth() + 1, 0);
+            this.dichvucobanEdit = this.DichVuCoBanEditor.editDichVuCoBan(row);
+        } else {
+            this.dichvucobanEdit = this.DichVuCoBanEditor.editDichVuCoBan(row);
+        }
         this.DichVuCoBanEditor.isViewDetails = true;
         this.DichVuCoBanEditor.editorModal.show();
     }
@@ -357,17 +365,22 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
         } else return "";
     }
 
-    printDiv(selected: any[]) {
+    printDiv(selected: any[]) {        
         var myWindow = window.open('', '', 'width=200,height=100');
+        var dateTuNgay = new Date(this.valueDate.getFullYear(), this.valueDate.getMonth(), 1);
+        var dateDenNgay = new Date(this.valueDate.getFullYear(), this.valueDate.getMonth() + 1, 0);
         for (let item of selected) {
-            console.log(item);
             myWindow.document.write("<div style='font-size: 1em; padding: 4% 5%; height: 45%;'><div style='width: 100%; display: flex;'>");
             myWindow.document.write("<div style='width: 45%; margin-left: 5%; text-align: center'>");
             myWindow.document.write("<div style='font-weight: bold;'>CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ DỊCH VỤ ĐÔ THỊ VIỆT NAM VINASINCO</div><div>Số chứng từ: " + item.soChungTu + "</div>");
             myWindow.document.write("</div>");
             myWindow.document.write("<div style='width: 45%; margin-left: 5%; text-align: center'>");
             myWindow.document.write("<div style='text-transform: uppercase; font-size: 24px; font-weight: bold;'>Phiếu thu tiền</div><br/>");
-            myWindow.document.write("<div>Từ ngày: " + this.datePipe.transform(item.tuNgay, 'dd/MM/yyyy') + " - " + this.datePipe.transform(item.denNgay, 'dd/MM/yyyy') + "</div>");
+            if (item.laplai == true) {
+                myWindow.document.write("<div>Từ ngày: " + this.datePipe.transform(dateTuNgay, 'dd/MM/yyyy') + " - " + this.datePipe.transform(dateDenNgay, 'dd/MM/yyyy') + "</div>");
+            } else {
+                myWindow.document.write("<div>Từ ngày: " + this.datePipe.transform(item.tuNgay, 'dd/MM/yyyy') + " - " + this.datePipe.transform(item.denNgay, 'dd/MM/yyyy') + "</div>");
+            }            
             myWindow.document.write("</div></div>");
             myWindow.document.write("<br/>");
             myWindow.document.write("<div><p>Khách hàng: " + item.khachHangs.hoDem + " " + item.khachHangs.ten + "</p><p><span style='padding-right:15px;'>Địa chỉ:  tòa nhà " + item.matBangs.toanha.tenVietTat + " - tầng lầu " + item.matBangs.tanglau.tenTangLau + "</span><span>Căn hộ: " + item.matBangs.tenMatBang + "</span></p></div>");
@@ -375,7 +388,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
             myWindow.document.write("<table style='border-collapse: collapse;border: 1px solid black; text-align: center;' width='100%'>");
             myWindow.document.write("<tr><td style='border: 1px solid black; width: 25%'>Loại dịch vụ</td><td style='border: 1px solid black; width: 20%'>Đơn giá</td><td style='border: 1px solid black; width: 13%'>Số lượng</td><td style ='border: 1px solid black; width: 17%'>Kỳ thanh toán</td><td style ='border: 1px solid black; width: 25%'>Thành tiền</td></tr>");
             myWindow.document.write("<tr><td style='border: 1px solid black;'>" + item.loaiDichVus.tenLoaiDichVu + "</td><td style='border: 1px solid black;'>" + this.formatPrice(item.donGia.toString()) + "</td><td style='border: 1px solid black;'>" + item.soLuong + "</td><td style='border: 1px solid black;'>" + item.kyThanhToan + "</td><td style='border: 1px solid black;'>" + this.formatPrice(item.thanhTien.toString()) + "</td></tr>");
-            myWindow.document.write("<tr><td colspan='4' style='border: 1px solid black;text-align: right; padding-right: 10px;'>Tổng:</td><td style='border: 1px solid black;'></td></tr>");
+            myWindow.document.write("<tr><td colspan='4' style='border: 1px solid black;text-align: right; padding-right: 10px;'>Tổng:</td><td style='border: 1px solid black;'>" + this.formatPrice(item.thanhTien.toString()) + "</td></tr>");
             myWindow.document.write("<tr><td colspan='6' style='border: 1px solid black;text-align: left; padding-left: 25px;'>Bằng chữ: </td></tr>");
             myWindow.document.write("</table>");
             myWindow.document.write("<br/>");
@@ -415,6 +428,7 @@ export class DichVuCoBanComponent implements OnInit, AfterViewInit {
     }
 
     SelectedTangLauValue(tanglauId: number, loaidichvuId: number, status: number, date: Date) {
+        this.valueDate = date;
         this.loadData(tanglauId, loaidichvuId, status, date);
     }
 

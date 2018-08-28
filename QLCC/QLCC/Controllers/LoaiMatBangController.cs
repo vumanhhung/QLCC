@@ -121,17 +121,21 @@ namespace QLCC.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            //
             var loaimatbang = await _context.LoaiMatBangs.SingleOrDefaultAsync(m => m.LoaiMatBangId == id);
             if (loaimatbang == null)
             {
                 return NotFound();
             }
 
-            _context.LoaiMatBangs.Remove(loaimatbang);
-            await _context.SaveChangesAsync();
-
-            return Ok(loaimatbang);
+            List<MatBang> listmb = _context.MatBangs.Where(t => t.LoaiMatBangId == loaimatbang.LoaiMatBangId).ToList();
+            if (listmb.Count <= 0)
+            {
+                _context.LoaiMatBangs.Remove(loaimatbang);
+                await _context.SaveChangesAsync();
+                return Ok(loaimatbang);
+            }else
+                return BadRequest("Không xóa được loại mặt bằng. Do đã được sử dụng!");
         }
         
         private bool LoaiMatBangExists(int id)

@@ -83,8 +83,9 @@ namespace QLCC.Controllers
             loaidichvu.NguoiSua = user;
             var checkten = await _context.LoaiDichVus.SingleOrDefaultAsync(r => r.MaLoaiDichVuCha == loaidichvu.MaLoaiDichVuCha && r.TenLoaiDichVu == loaidichvu.TenLoaiDichVu && r.LoaiDichVuId != id);
             if (checkten == null)
-            {
+            {                
                 _context.Entry(loaidichvu).State = EntityState.Modified;
+                EditDichVuCon(loaidichvu.LoaiDichVuId, loaidichvu.TrangThai);
                 await _context.SaveChangesAsync();
                 return NoContent();
             }
@@ -97,6 +98,21 @@ namespace QLCC.Controllers
 
                 }
                 return Ok(ldv);
+            }
+        }
+
+        public void EditDichVuCon(int id, byte? status)
+        {
+            List<LoaiDichVu> list = new List<LoaiDichVu>();
+            list = _context.LoaiDichVus.Where(r => r.MaLoaiDichVuCha == id).ToList();
+            for (int i = 0; i < list.Count(); i++)
+            {
+                LoaiDichVu obj = new LoaiDichVu();
+                obj = list[i];
+                obj.TrangThai = status;
+                _context.Entry(obj).State = EntityState.Modified;
+                _context.SaveChanges();
+                EditDichVuCon(obj.LoaiDichVuId, obj.TrangThai);
             }
         }
 
@@ -213,7 +229,7 @@ namespace QLCC.Controllers
         void DeQuyByStatus(List<LoaiDichVu> list, int parentid, int status, string st)
         {
             List<LoaiDichVu> ldv = new List<LoaiDichVu>();
-            ldv = _context.LoaiDichVus.Where(r => r.TrangThai == status && r.MaLoaiDichVuCha == parentid).OrderBy(m => m.TenLoaiDichVu).ToList<LoaiDichVu>();
+            ldv = _context.LoaiDichVus.Where(r => r.MaLoaiDichVuCha == parentid && r.TrangThai == status).OrderBy(m => m.TenLoaiDichVu).ToList<LoaiDichVu>();
             for (int i = 0; i < ldv.Count; i++)
             {
                 LoaiDichVu obj = new LoaiDichVu();

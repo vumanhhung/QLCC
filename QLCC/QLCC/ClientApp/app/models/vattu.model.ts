@@ -1,0 +1,76 @@
+﻿import { QuocTich } from "./quoctich.model";
+import { LoaiHang } from "./loaihang.model";
+import { HangSanXuat } from "./hangsanxuat.model";
+import { NhaCungCap } from "./nhacungcap.model";
+import { DonViTinh } from "./donvitinh.model";
+import { PhongBan } from "./phongban.model";
+import { LoaiTien } from "./loaitien.model";
+
+export class VatTu {
+    public vatTuId: number;
+    public maVatTu: string;
+    public tenVatTu: string;
+    public quocTichId: number;
+    public loaiHangId: number;
+    public hangSanXuatId: number;
+    public nhaCungCapId: number;
+    public donViTinhId: number;
+    public phongBanId: number;
+    public maVatTuCha: number;
+    public nguoiQuanLy: string;
+    public maVachNSX: string;
+    public loaiTienId: number;
+    public giaVatTu: number;
+    public model: string;
+    public partNumber: string;
+    public serialNumber: string;
+    public thongSoKyThuat: string;
+    public ngayLap: Date;
+    public namSD: number;
+    public ngayHHBaoHanh: Date;
+    public khauHao: number;
+    public donViKhauHao: string;
+    public trangThai: number;
+    public nguoiNhap: string;
+    public ngayNhap: Date;
+    public nguoiSua: string;
+    public ngaySua: Date;
+    public quocTichs: QuocTich;
+    public loaiHangs: LoaiHang;
+    public hangSanXuats: HangSanXuat;
+    public nhaCungCaps: NhaCungCap;
+    public donViTinhs: DonViTinh;
+    public phongBans: PhongBan;
+    public loaiTiens: LoaiTien;
+
+    constructor(vatTuId?: number, maVatTu?: string, tenVatTu?: string, quocTichId?: number, loaiHangId?: number, hangSanXuatId?: number, nhaCungCapId?: number, donViTinhId?: number, phongBanId?: number, maVatTuCha?: number, nguoiQuanLy?: string, maVachNSX?: string, loaiTienId?: number, giaVatTu?: number, model?: string, partNumber?: string, serialNumber?: string, thongSoKyThuat?: string, ngayLap?: Date, namSD?: number, ngayHHBaoHanh?: Date, khauHao?: number, donViKhauHao?: string, trangThai?: number, nguoiNhap?: string, ngayNhap?: Date, nguoiSua?: string, ngaySua?: Date) {
+        this.vatTuId = vatTuId;
+        this.maVatTu = maVatTu;
+        this.tenVatTu = tenVatTu;
+        this.quocTichId = quocTichId;
+        this.loaiHangId = loaiHangId;
+        this.hangSanXuatId = hangSanXuatId;
+        this.nhaCungCapId = nhaCungCapId;
+        this.donViTinhId = donViTinhId;
+        this.phongBanId = phongBanId;
+        this.maVatTuCha = maVatTuCha;
+        this.nguoiQuanLy = nguoiQuanLy;
+        this.maVachNSX = maVachNSX;
+        this.loaiTienId = loaiTienId;
+        this.giaVatTu = giaVatTu;
+        this.model = model;
+        this.partNumber = partNumber;
+        this.serialNumber = serialNumber;
+        this.thongSoKyThuat = thongSoKyThuat;
+        this.ngayLap = ngayLap;
+        this.namSD = namSD;
+        this.ngayHHBaoHanh = ngayHHBaoHanh;
+        this.khauHao = khauHao;
+        this.donViKhauHao = donViKhauHao;
+        this.trangThai = trangThai;
+        this.nguoiNhap = nguoiNhap;
+        this.ngayNhap = ngayNhap;
+        this.nguoiSua = nguoiSua;
+        this.ngaySua = ngaySua;
+    }
+}

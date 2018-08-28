@@ -40,6 +40,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
     public valueNgayThanhToan: Date = new Date();
     public valueTuNgay: Date = new Date();
     public valueDenNgay: Date = new Date();
+    public valueDate: Date = new Date();
 
     public dongia: string = "0";
     public thanhtien: string = "0";
@@ -185,6 +186,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
         this.ChkloaiDichVu = false;
         this.isEdit = false;
         this.DichVuCoBanEdit = new DichVuCoBan();
+        this.tanglauids = 0;
         this.DichVuCoBanEdit.matBangId = 0;
         this.DichVuCoBanEdit.khachHangId = 0;
         this.DichVuCoBanEdit.loaiDichVuId = 0;
@@ -266,6 +268,8 @@ export class DichVuCoBanInfoComponent implements OnInit {
                 this.checkLDV = true;
             } else this.checkLDV = false;
             this.tanglauids = obj.matBangs.tangLauId;
+            this.matbangservice.getMatBangByTangLau(obj.matBangs.tangLauId).subscribe(results => this.matBang = results);
+            this.DichVuCoBanEdit.matBangId = obj.matBangId;
             this.dongia = this.formatPrice(obj.donGia.toString());
             this.thanhtien = this.formatPrice(obj.thanhTien.toString());
             this.tygia = this.formatPrice(obj.tyGia.toString());
@@ -327,8 +331,10 @@ export class DichVuCoBanInfoComponent implements OnInit {
             this.matbangservice.getMatBangByTangLau(id).subscribe(results => {
                 this.matBang = results;
             }, error => { });
-        } else
+        } else {
             this.ChktangLau = false;
+            this.matBang = null;
+        }
     }
 
     loaiDichVuChk(id: number) {
@@ -375,6 +381,7 @@ export class DichVuCoBanInfoComponent implements OnInit {
             this.ChkloaiDichVu = true;
         } else {
             this.ChkloaiDichVu = false;
+            this.checkLDV = false;
             this.tygia = "0";
             this.DichVuCoBanEdit.donViTinhId = 0;
             this.DichVuCoBanEdit.loaiTienId = 0;
@@ -462,11 +469,11 @@ export class DichVuCoBanInfoComponent implements OnInit {
         myWindow.document.write("<br/>");
         myWindow.document.write("<div><p>Khách hàng: " + this.DichVuCoBanEdit.khachHangs.hoDem + " " + this.DichVuCoBanEdit.khachHangs.ten + "</p><p><span style='padding-right:15px;'>Tòa nhà: " + this.DichVuCoBanEdit.matBangs.toanha.tenVietTat + "</span><span style='padding-right:15px;'>Tầng lầu: "  + this.DichVuCoBanEdit.matBangs.tanglau.tenTangLau + "</span><span>Địa chỉ: " + this.DichVuCoBanEdit.matBangs.tenMatBang + "</span></p></div>");
         myWindow.document.write("<div class='clearfix'></div>");
-        myWindow.document.write("<table border='1' style='border: 1px solid black; text-align: center;' width='100%'>");
-        myWindow.document.write("<tr><td style='width: 25%'>Loại dịch vụ</td><td style='width: 20%'>Đơn giá</td><td style='width: 13%'>Số lượng</td><td style ='width: 17%'>Kỳ thanh toán</td><td style ='width: 25%'>Thành tiền</td></tr>");
-        myWindow.document.write("<tr><td>" + this.DichVuCoBanEdit.loaiDichVus.tenLoaiDichVu + "</td><td>" + this.formatPrice(this.DichVuCoBanEdit.donGia.toString()) + "</td><td>" + this.DichVuCoBanEdit.soLuong + "</td><td>" + this.DichVuCoBanEdit.kyThanhToan + "</td><td>" + this.formatPrice(this.DichVuCoBanEdit.thanhTien.toString()) + "</td></tr>");
-        myWindow.document.write("<tr><td colspan='4' style='text-align: right; padding-right: 10px;'>Tổng:</td><td></td></tr>");
-        myWindow.document.write("<tr><td colspan='6' style='text-align: left; padding-left: 25px;'>Bằng chữ: </td></tr>");
+        myWindow.document.write("<table style='border-collapse: collapse;border: 1px solid black; text-align: center;' width='100%'>");
+        myWindow.document.write("<tr><td style='border: 1px solid black; width: 25%'>Loại dịch vụ</td><td style='border: 1px solid black; width: 20%'>Đơn giá</td><td style='border: 1px solid black; width: 13%'>Số lượng</td><td style ='border: 1px solid black; width: 17%'>Kỳ thanh toán</td><td style ='border: 1px solid black; width: 25%'>Thành tiền</td></tr>");
+        myWindow.document.write("<tr><td style='border: 1px solid black;'>" + this.DichVuCoBanEdit.loaiDichVus.tenLoaiDichVu + "</td><td style='border: 1px solid black;'>" + this.formatPrice(this.DichVuCoBanEdit.donGia.toString()) + "</td><td style='border: 1px solid black;'>" + this.DichVuCoBanEdit.soLuong + "</td><td style='border: 1px solid black;'>" + this.DichVuCoBanEdit.kyThanhToan + "</td><td style='border: 1px solid black;'>" + this.formatPrice(this.DichVuCoBanEdit.thanhTien.toString()) + "</td></tr>");
+        myWindow.document.write("<tr><td colspan='4' style='border: 1px solid black;text-align: right; padding-right: 10px;'>Tổng:</td><td style='border: 1px solid black;'>" + this.formatPrice(this.DichVuCoBanEdit.thanhTien.toString()) + "</td></tr>");
+        myWindow.document.write("<tr><td colspan='6' style='border: 1px solid black;text-align: left; padding-left: 25px;'>Bằng chữ: </td></tr>");
         myWindow.document.write("</table>");
         myWindow.document.write("<br/>");
         myWindow.document.write("<div style='display: flex; width: 100%'>");

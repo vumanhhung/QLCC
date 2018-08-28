@@ -64,7 +64,7 @@ export class HangSanXuatEndpoint extends EndpointFactory {
     }
 
     getFilterStatus<T>(status?: boolean): Observable<T> {
-        let endpointUrl = `${this.hangsanxuatUrl}/${status}`;
+        let endpointUrl = `${this.hangsanxuatUrl}/FilterStatus/${status}`;
         return this.http.get(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getFilterStatus(status));

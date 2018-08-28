@@ -62,6 +62,7 @@ import { HopDongInfoComponent } from './components/hopdong/hopdong-info.componen
 import { DichVuNuocComponent } from './components/dichvunuoc/dichvunuoc.component';
 import { HangSanXuatComponent } from './components/hangsanxuat/hangsanxuat.component';
 import { LoaiHangComponent } from './components/loaihang/loaihang.component';
+import { VatTuComponent } from './components/vattu/vattu.component';
 
 @NgModule({
     imports: [
@@ -109,8 +110,9 @@ import { LoaiHangComponent } from './components/loaihang/loaihang.component';
             { path: "themhopdong", component: HopDongInfoComponent, canActivate: [AuthGuard], data: { title: "Quản lý hợp đồng" } },
             { path: "congthucnuoc", component: CongThucNuocComponent, canActivate: [AuthGuard], data: { title: "Quản lý công thức nước " } },
             { path: "dichvunuoc", component: DichVuNuocComponent, canActivate: [AuthGuard], data: { title: "Quản lý thu phí nước " } },
-            { path: "hangsanxuat", component: HangSanXuatComponent, canActivate: [AuthGuard], data: { title: "Quản lý thu phí nước " } },
-            { path: "loaihang", component: LoaiHangComponent, canActivate: [AuthGuard], data: { title: "Quản lý thu phí nước " } },
+            { path: "loaihang", component: LoaiHangComponent, canActivate: [AuthGuard], data: { title: "Quản lý loại hàng " } },
+            { path: "vattu", component: VatTuComponent, canActivate: [AuthGuard], data: { title: "Quản lý danh mục vật tư " } },
+            { path: "hangsanxuat", component: HangSanXuatComponent, canActivate: [AuthGuard], data: { title: "Quản lý hãng sản xuất " } },
             { path: "phieuthulichsu/:matbangid", component: PhieuThuLichSuComponent, canActivate: [AuthGuard], data: { title: "Lịch sử thu phí gửi xe " } },
             { path: "settings", component: SettingsComponent, canActivate: [AuthGuard], data: { title: "Cấu hình" } },
             { path: "about", component: AboutComponent, data: { title: "Giới thiệu" } },

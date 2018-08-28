@@ -6,7 +6,7 @@
 // ==> Gun4Hire: contact@ebenmonney.com
 // ======================================
 
-import { NgModule, ErrorHandler } from "@angular/core";
+import { LOCALE_ID,NgModule, ErrorHandler } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule } from '@angular/platform-browser';
@@ -281,6 +281,13 @@ import { LoaiHangInfoComponent } from "./components/loaihang/loaihang-info.compo
 import { LoaiHangService } from "./services/loaihang.service";
 import { LoaiHangEndpoint } from "./services/loaihang-endpoint.service";
 
+import { IntlModule } from '@progress/kendo-angular-intl';
+import '@progress/kendo-angular-intl/locales/vi/all';
+import { VatTuComponent } from "./components/vattu/vattu.component";
+import { VatTuInfoComponent } from "./components/vattu/vattu-info.component";
+import { VatTuService } from "./services/vattu.service";
+import { VatTuEndpoint } from "./services/vattu-endpoint.service";
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -440,9 +447,12 @@ import { LoaiHangEndpoint } from "./services/loaihang-endpoint.service";
         HangSanXuatComponent,
         HangSanXuatInfoComponent,
         LoaiHangComponent,
-        LoaiHangInfoComponent
+        LoaiHangInfoComponent,
+        VatTuComponent,
+        VatTuInfoComponent
     ],
     providers: [
+        { provide: LOCALE_ID, useValue: 'vi' },
         { provide: 'BASE_URL', useFactory: getBaseUrl },
         { provide: ErrorHandler, useClass: AppErrorHandler },
         AlertService,
@@ -537,7 +547,9 @@ import { LoaiHangEndpoint } from "./services/loaihang-endpoint.service";
         HangSanXuatService,
         HangSanXuatEndpoint,
         LoaiHangService,
-        LoaiHangEndpoint
+        LoaiHangEndpoint,
+        VatTuService,
+        VatTuEndpoint
     ],
     bootstrap: [AppComponent]
 })

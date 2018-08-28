@@ -30,7 +30,7 @@
                         <div class="dataTables_length">
                             <label style="width:100%">
                                 <kendo-combobox class="form-control" style="width:150px"
-                                                [data]="matbangsFilter" [placeholder]="'Mặt bằng'"
+                                                [data]="matbangsFilter" [placeholder]="'Căn hộ'"
                                                 [textField]="'tenMatBang'"
                                                 [valueField]="'matBangId'"
                                                 [(ngModel)]="matbangSelected" name="matBang"
@@ -40,12 +40,15 @@
                                     <ng-template kendoDropDownListNoDataTemplate>
                                         <p><span class="k-icon k-i-warning" style="font-size:30px"></span><br /><br /> Không tìm thấy kết quả nào</p>
                                     </ng-template>
+                                    <ng-template kendoComboBoxItemTemplate let-dataItem>
+                                        <span class="template">Căn hộ: </span>&nbsp;{{ dataItem.tenMatBang }}
+                                    </ng-template>
                                 </kendo-combobox>
 
                                 Năm
-                                <select name="snam" [(ngModel)]="snam" class="form-control" style="width:100px;height:30px" (change)="snamChange(snam.value)">
+                                <select name="snam" [(ngModel)]="snam" class="form-control" style="width:120px;height:30px" (change)="snamChange(snam.value)">
                                     <option *ngFor="let o of nams" [value]="o">
-                                        {{o}}
+                                        Năm {{o}}
                                     </option>
                                 </select>
                                 Tháng
@@ -63,7 +66,7 @@
                                     <option value="10">Tháng 10</option>
                                     <option value="11">Tháng 11</option>
                                     <option value="12">Tháng 12</option>
-                                </select>                                
+                                </select>
                             </label>
                         </div>
                         <div class="DTTT_container">
@@ -96,10 +99,10 @@
                             {{getFormatPrice(row.thanhTien)}}
                         </ng-template>
                         <ng-template #vatTemplate let-row="row" let-value="value" let-i="index">
-                            <p>{{getFormatPrice(row.tienVAT)}} ({{row.tyLeVAT}}%)</p>                            
+                            <p>{{getFormatPrice(row.tienVAT)}} ({{row.tyLeVAT}}%)</p>
                         </ng-template>
                         <ng-template #bvmtTemplate let-row="row" let-value="value" let-i="index">
-                            <p>{{getFormatPrice(row.tienBVMT)}} ({{row.tyLeBVMT}}%)</p>                            
+                            <p>{{getFormatPrice(row.tienBVMT)}} ({{row.tyLeBVMT}}%)</p>
                         </ng-template>
                         <ng-template #tienthanhtoanTemplate let-row="row" let-value="value" let-i="index">
                             {{getFormatPrice(row.tienThanhToan)}}
@@ -108,7 +111,7 @@
                             <a class="btn btn-func btn-primary" href="javascript:;" (click)="editDichVuNuoc(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                             <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDichVuNuoc(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </ng-template>
-                        <dichvunuoc-info #dichvunuocEditor [isGeneralEditor]="true"></dichvunuoc-info>                        
+                        <dichvunuoc-info #dichvunuocEditor [isGeneralEditor]="true"></dichvunuoc-info>
                     </div>
                 </div>
             </div>

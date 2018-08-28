@@ -1,6 +1,6 @@
 ﻿<div class="EditForm">
     <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="DonViTinhInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
-          (!tenDonViTinh.valid && showErrorAlert('TenDonViTinh không được để trống', 'Vui lòng nhập TenDonViTinh!'));
+          (!tenDonViTinh.valid && showErrorAlert('Tên đơn vị tính không được để trống', 'Vui lòng nhập tên đơn vị tính!'));
 ">
         <div class="col-sm-12">
             <div class="has-feedback">

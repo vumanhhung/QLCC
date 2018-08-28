@@ -3,9 +3,8 @@
         <div class="modal-content">
             <div class="EditForm">
                 <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="CongThucNuocInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
-                      (!checkTen && showErrorAlert('Tên công thức nước không được để trống', 'Vui lòng nhập tên công thức nước!'));
-(!status.valid && showErrorAlert('Trạng thái không được để trống', 'Vui lòng nhập trạng thái!'));
-">
+                      (!checkTen && showErrorAlert('Tên công thức nước không được để trống', 'Vui lòng nhập tên công thức nước!'));">
+
                     <div class="modal-header">
                         <p *ngIf="isNew" class="modal-title pull-left">
                             <i class="fa fa-plus"></i> Thêm mới công thức nước
@@ -47,7 +46,7 @@
                             <div class="col-md-12 has-feedback">
                                 <label class="control-label" for="dienGiai-{{uniqueId}}">Diễn Giải</label>
                                 <div>
-                                    <input autofocus type="text" class="form-control" name="dienGiai" [(ngModel)]="CongThucNuocEdit.dienGiai" #dienGiai="ngModel" required />
+                                    <input autofocus type="text" class="form-control" name="dienGiai" [(ngModel)]="CongThucNuocEdit.dienGiai" #dienGiai="ngModel"/>
                                 </div>
                             </div>
                             <div class="col-md-12">

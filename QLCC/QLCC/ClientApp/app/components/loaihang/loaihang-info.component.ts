@@ -4,6 +4,7 @@ import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { Utilities } from '../../services/utilities';
 import { LoaiHang } from "../../models/loaihang.model";
 import { LoaiHangService } from "./../../services/loaihang.service";
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
     selector: "loaihang-info",
@@ -13,6 +14,8 @@ import { LoaiHangService } from "./../../services/loaihang.service";
 
 export class LoaiHangInfoComponent implements OnInit {
     private isNew = false;
+    private isEdit = false;
+    isViewDetails = false;
     private isSaving = false;
     private showValidationErrors: boolean = false;
     private uniqueId: string = Utilities.uniqueId();
@@ -24,6 +27,7 @@ export class LoaiHangInfoComponent implements OnInit {
     public changesSavedCallback: () => void;
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
+    checkTen: boolean;
     
     @Input()
     isViewOnly: boolean;
@@ -33,6 +37,9 @@ export class LoaiHangInfoComponent implements OnInit {
 
     @ViewChild('f')
     private form;
+
+    @ViewChild('editorModal')
+    editorModal: ModalDirective;
     
     constructor(private alertService: AlertService, private gvService: LoaiHangService) {
     }
@@ -89,10 +96,24 @@ export class LoaiHangInfoComponent implements OnInit {
         this.isSaving = true;
         this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");        
         if (this.isNew) {
-            this.gvService.addnewLoaiHang(this.LoaiHangEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
+            this.gvService.addnewLoaiHang(this.LoaiHangEdit).subscribe(results => {
+                if (results.tenLoaiHang == "Exist") {
+                    this.showErrorAlert("Lỗi nhập liệu", "Loại hàng: " + this.LoaiHangEdit.tenLoaiHang + " đã được sử dụng trên hệ thống, vui lòng chọn tên khác !");
+                    this.alertService.stopLoadingMessage();
+                    this.isSaving = false;
+                    this.checkTen = false;
+                } else this.saveSuccessHelper(results)
+            }, error => this.saveFailedHelper(error));
         }
         else {
-            this.gvService.updateLoaiHang(this.LoaiHangEdit.loaiHangId, this.LoaiHangEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
+            this.gvService.updateLoaiHang(this.LoaiHangEdit.loaiHangId, this.LoaiHangEdit).subscribe(response => {
+                if (response == "Exist") {
+                    this.showErrorAlert("Lỗi nhập liệu", "Loại hàng: " + this.LoaiHangEdit.tenLoaiHang + " đã tồn tại trên hệ thống, vui lòng chọn tên khác!");
+                    this.alertService.stopLoadingMessage();
+                    this.isSaving = false;
+                    this.checkTen = false;
+                } else this.saveSuccessHelper()
+            }, error => this.saveFailedHelper(error));
         }
     }
     
@@ -102,6 +123,7 @@ export class LoaiHangInfoComponent implements OnInit {
         this.showValidationErrors = true;
         this.editingRowName = null;
         this.LoaiHangEdit = new LoaiHang();
+        this.LoaiHangEdit.trangThai = true;
         this.edit();
         return this.LoaiHangEdit;
     }
@@ -176,4 +198,22 @@ export class LoaiHangInfoComponent implements OnInit {
         if (this.changesSavedCallback)
             this.changesSavedCallback();
     }    
+
+    movetoEditForm() {
+        this.isNew = false;
+        this.isViewDetails = false;
+        this.isEdit = true;
+    }
+
+    onEditorModalHidden() {
+        this.editingRowName = null;
+        this.resetForm(true);
+    }
+
+    tenChk(ten: string) {
+        if (ten != "") {
+            this.checkTen = true;
+        } else
+            this.checkTen = false;
+    }
 }

@@ -109,25 +109,30 @@
                     <div>
                         <form #f="ngForm">
                             <div>
-                                <div class="col-sm-2 rowCustom title">Tên cụm: </div>
-                                <div class="col-sm-10 rowCustom text">{{ToaNhaEdit.cumtoanhas.tenCumToaNha}}</div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-sm-2 rowCustom title">Tên tòa nhà: </div>
-                                <div class="col-sm-10 rowCustom text">{{ToaNhaEdit.tenKhoiNha}}</div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-sm-2 rowCustom title">Tên viết tắt: </div>
-                                <div class="col-sm-10 rowCustom text">{{ToaNhaEdit.tenVietTat}}</div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-sm-2 rowCustom title">Mã tòa nhà: </div>
-                                <div class="col-sm-10 rowCustom text">{{ToaNhaEdit.maKhoiNha}}</div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-sm-2  rowCustom title">Giới thiệu: </div>
-                                <div class="col-sm-10 rowCustom text">{{ToaNhaEdit.dienGiai}}</div>
-                                <div class="clearfix h4"></div>
-                                <div class="col-md-12">
-                                    <hr class="edit-last-separator-hr" />
-                                </div>
-                                <div class="clearfix"></div>
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td class="boldText">Tên cụm tòa nhà: </td>
+                                            <td colspan="3">{{ToaNhaEdit.cumtoanhas.tenCumToaNha}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Tên tòa nhà: </td>
+                                            <td colspan="3">{{ToaNhaEdit.tenKhoiNha}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Tên viết tắt: </td>
+                                            <td colspan="3">{{ToaNhaEdit.tenVietTat}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Mã tòa nhà: </td>
+                                            <td colspan="3">{{ToaNhaEdit.maKhoiNha}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Diễn giải: </td>
+                                            <td colspan="3">{{ToaNhaEdit.dienGiai}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="clearfix"></div>
                         </form>

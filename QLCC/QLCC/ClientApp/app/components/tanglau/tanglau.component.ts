@@ -65,7 +65,7 @@ export class TangLauComponent implements OnInit, AfterViewInit {
         this.columns = [
             { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
             { prop: 'tenTangLau', name: gT('Tên tầng lầu'), width: 140 },
-            { prop: 'dienGiai', name: gT('Mô tả'), width: 150 },
+            { prop: 'dienGiai', name: gT('Diễn giải'), width: 150 },
             { name: gT('matbang.qlmb_chucnang'), width: 100, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false, cellClass: "overflow" }
         ];
 

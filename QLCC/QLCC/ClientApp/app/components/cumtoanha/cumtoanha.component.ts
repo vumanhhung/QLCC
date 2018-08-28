@@ -27,7 +27,7 @@ export class CumToaNhaComponent implements OnInit, AfterViewInit {
     public formResetToggle = true;
     cumtoanhaEdit: CumToaNha;
     sourcecumtoanha: CumToaNha;
-    editingRowName: { name: string };
+    editingRowName: { name: string };    
 
     @ViewChild('f')
     private form;
@@ -89,7 +89,6 @@ export class CumToaNhaComponent implements OnInit, AfterViewInit {
             let objCumToaNha = new CumToaNha();
             Object.assign(objCumToaNha, this.cumtoanhaEdit);
             this.cumtoanhaEdit = null;
-
             let maxIndex = 0;
             for (let u of this.rowsCache) {
                 if ((<any>u).index > maxIndex)
@@ -189,9 +188,11 @@ export class CumToaNhaComponent implements OnInit, AfterViewInit {
         this.editingRowName = { name: row.tenCumToaNha };
         this.sourcecumtoanha = row;
         this.cumtoanhaEdit = this.CumToaNhaEditor.editCumToaNha(row);
+        this.CumToaNhaEditor.nganhangSelected = this.sourcecumtoanha.nganHang;
         this.CumToaNhaEditor.isViewDetails = false;
         this.CumToaNhaEditor.editorModal.show();
     }
+
     viewCumToaNha(row: CumToaNha) {
         this.CumToaNhaEditor.tencumtoanha = "- " + row.tenCumToaNha;
         if (row.logo.length > 0) {
@@ -199,6 +200,7 @@ export class CumToaNhaComponent implements OnInit, AfterViewInit {
         }
         this.editingRowName = { name: row.tenCumToaNha };
         this.sourcecumtoanha = row;
+        this.CumToaNhaEditor.nganhangSelected = this.sourcecumtoanha.nganHang;
         this.cumtoanhaEdit = this.CumToaNhaEditor.editCumToaNha(row);
         this.CumToaNhaEditor.isViewDetails = true;
         this.CumToaNhaEditor.editorModal.show();

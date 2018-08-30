@@ -6,8 +6,8 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
-import { TrangThaiEndpoint } from "./trangthai-endpoint.service";
 import { TrangThai } from "../models/trangthai.model";
+import { TrangThaiEndpoint } from './trangthai-endpoint.service';
 import { AuthService } from './auth.service';
 
 

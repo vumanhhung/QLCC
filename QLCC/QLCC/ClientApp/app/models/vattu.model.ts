@@ -5,6 +5,8 @@ import { NhaCungCap } from "./nhacungcap.model";
 import { DonViTinh } from "./donvitinh.model";
 import { PhongBan } from "./phongban.model";
 import { LoaiTien } from "./loaitien.model";
+import { VatTuHinhAnh } from "./vattuhinhanh.model";
+import { VatTuTaiLieu } from "./vattutailieu.model";
 
 export class VatTu {
     public vatTuId: number;

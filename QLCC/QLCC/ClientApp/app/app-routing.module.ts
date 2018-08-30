@@ -27,7 +27,7 @@ import { TangLauComponent } from './components/tanglau/tanglau.component';
 import { ChucVuComponent } from './components/chucvu/chucvu.component';
 import { DanhMucComponent } from './components/danhmuc/danhmuc.component';
 import { NganHangComponent } from './components/nganhang/nganhang.component';
-import { TrangThaiComponent } from './components/trangthai/trangthai.component';
+//import { TrangThaiComponent } from './components/trangthai/trangthai.component';
 import { TaiKhoanNganHangComponent } from './components/taikhoannganhang/taikhoannganhang.component';
 import { NhaCungCapComponent } from './components/nhacungcap/nhacungcap.component';
 import { QuocTichComponent } from './components/quoctich/quoctich.component';
@@ -63,6 +63,8 @@ import { DichVuNuocComponent } from './components/dichvunuoc/dichvunuoc.componen
 import { HangSanXuatComponent } from './components/hangsanxuat/hangsanxuat.component';
 import { LoaiHangComponent } from './components/loaihang/loaihang.component';
 import { VatTuComponent } from './components/vattu/vattu.component';
+import { VatTuHinhAnhComponent } from './components/vattuhinhanh/vattuhinhanh.component';
+import { VatTuTaiLieuComponent } from './components/vattutailieu/vattutailieu.component';
 
 @NgModule({
     imports: [
@@ -76,7 +78,7 @@ import { VatTuComponent } from './components/vattu/vattu.component';
             { path: "chucvu", component: ChucVuComponent, canActivate: [AuthGuard], data: { title: "Danh sách chức vụ" } },
             { path: "nganhang", component: NganHangComponent, canActivate: [AuthGuard], data: { title: "Danh sách ngân hàng" } },
             { path: "taikhoannganhang", component: TaiKhoanNganHangComponent, canActivate: [AuthGuard], data: { title: "Danh sách tài khoản ngân hàng" } },
-            { path: "trangthai", component: TrangThaiComponent, canActivate: [AuthGuard], data: { title: "Danh sách trạng thái" } },
+            //{ path: "trangthai", component: TrangThaiComponent, canActivate: [AuthGuard], data: { title: "Danh sách trạng thái" } },
             { path: "nhacungcap", component: NhaCungCapComponent, canActivate: [AuthGuard], data: { title: "Danh sách nhà cung cấp" } },
             { path: "quoctich", component: QuocTichComponent, canActivate: [AuthGuard], data: { title: "Danh sách quốc tịch" } },
             { path: "khuvuc", component: KhuVucComponent, canActivate: [AuthGuard], data: { title: "Danh sách khu vực" } },
@@ -112,6 +114,8 @@ import { VatTuComponent } from './components/vattu/vattu.component';
             { path: "dichvunuoc", component: DichVuNuocComponent, canActivate: [AuthGuard], data: { title: "Quản lý thu phí nước " } },
             { path: "loaihang", component: LoaiHangComponent, canActivate: [AuthGuard], data: { title: "Quản lý loại hàng " } },
             { path: "vattu", component: VatTuComponent, canActivate: [AuthGuard], data: { title: "Quản lý danh mục vật tư " } },
+            { path: "vattuhinhanh", component: VatTuHinhAnhComponent, canActivate: [AuthGuard], data: { title: "Quản lý danh mục vật tư hình ảnh" } },
+            { path: "vattutailieu", component: VatTuTaiLieuComponent, canActivate: [AuthGuard], data: { title: "Quản lý danh mục vật tư tài liệu" } },
             { path: "hangsanxuat", component: HangSanXuatComponent, canActivate: [AuthGuard], data: { title: "Quản lý hãng sản xuất " } },
             { path: "phieuthulichsu/:matbangid", component: PhieuThuLichSuComponent, canActivate: [AuthGuard], data: { title: "Lịch sử thu phí gửi xe " } },
             { path: "settings", component: SettingsComponent, canActivate: [AuthGuard], data: { title: "Cấu hình" } },

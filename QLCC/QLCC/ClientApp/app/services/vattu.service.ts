@@ -50,6 +50,10 @@ export class VatTuService {
         return this.vattuEndpoint.deleteVatTu(id);
     }
 
+    getLastRecord() {
+        return this.vattuEndpoint.getLastRecord<VatTu>();
+    }
+
     //getLoaiHang() {
     //    return this.vattuEndpoint.getLoaiHang<LoaiHang[]>();
     //}

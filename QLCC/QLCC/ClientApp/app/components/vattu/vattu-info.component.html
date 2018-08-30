@@ -2,25 +2,16 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div *ngIf="!isViewDetails" class="EditForm">
-                <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="LoaiDichVuInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
-(!tenVatTu.valid && showErrorAlert('TenVatTu không được để trống', 'Vui lòng nhập TenVatTu!'));
-(!ChkquocTich && showErrorAlert('QuocTichId không được để trống', 'Vui lòng nhập QuocTichId!'));
-(!ChkloaiHang && showErrorAlert('LoaiHangId không được để trống', 'Vui lòng nhập LoaiHangId!'));
-(!ChkhangSX && showErrorAlert('HangSanXuatId không được để trống', 'Vui lòng nhập HangSanXuatId!'));
-(!ChknhaCC && showErrorAlert('NhaCungCapId không được để trống', 'Vui lòng nhập NhaCungCapId!'));
-(!ChkdonViTinh && showErrorAlert('DonViTinhId không được để trống', 'Vui lòng nhập DonViTinhId!'));
-(!ChkphongBan && showErrorAlert('PhongBanId không được để trống', 'Vui lòng nhập PhongBanId!'));
-(!ChkVTCha && showErrorAlert('MaVatTuCha không được để trống', 'Vui lòng nhập MaVatTuCha!'));
-(!ChkNDTN && showErrorAlert('NguoiQuanLy không được để trống', 'Vui lòng nhập NguoiQuanLy!'));
-(!maVachNSX.valid && showErrorAlert('MaVachNSX không được để trống', 'Vui lòng nhập MaVachNSX!'));
-(!ChkloaiTien && showErrorAlert('LoaiTienId không được để trống', 'Vui lòng nhập LoaiTienId!'));
-(!giaVatTu.valid && showErrorAlert('GiaVatTu không được để trống', 'Vui lòng nhập GiaVatTu!'));
-(!model.valid && showErrorAlert('Model không được để trống', 'Vui lòng nhập Model!'));
-(!partNumber.valid && showErrorAlert('PartNumber không được để trống', 'Vui lòng nhập PartNumber!'));
-(!serialNumber.valid && showErrorAlert('SerialNumber không được để trống', 'Vui lòng nhập SerialNumber!'));
-(!thongSoKyThuat.valid && showErrorAlert('ThongSoKyThuat không được để trống', 'Vui lòng nhập ThongSoKyThuat!'));
-(!khauHao.valid && showErrorAlert('KhauHao không được để trống', 'Vui lòng nhập KhauHao!'));
-(!ChkDVKH && showErrorAlert('DonViKhauHao không được để trống', 'Vui lòng nhập DonViKhauHao!'));
+                <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="VatTuInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
+(!checkTen && showErrorAlert('Tên Vật Tư không được để trống', 'Vui lòng nhập Tên Vật Tư!'));
+(!ChkquocTich && showErrorAlert('Quốc tịch không được để trống', 'Vui lòng nhập Quốc tịch!'));
+(!ChkloaiHang && showErrorAlert('Loại hàng không được để trống', 'Vui lòng nhập Loại hàng!'));
+(!ChkhangSX && showErrorAlert('Hãng sản xuất không được để trống', 'Vui lòng nhập Hãng sản xuất!'));
+(!ChknhaCC && showErrorAlert('Nhà cung cấp không được để trống', 'Vui lòng nhập Nhà cung cấp!'));
+(!ChkdonViTinh && showErrorAlert('Đơn vị tính không được để trống', 'Vui lòng nhập Đơn vị tính!'));
+(!ChkphongBan && showErrorAlert('Phòng ban không được để trống', 'Vui lòng nhập Phòng ban!'));
+(!ChkNDTN && showErrorAlert('Người quản lý không được để trống', 'Vui lòng nhập Người quản lý!'));
+(!ChkloaiTien && showErrorAlert('Loại tiền không được để trống', 'Vui lòng nhập Loại tiền!'));
 ">
                     <div class="modal-header">
                         <p *ngIf="isNew" class="modal-title pull-left">
@@ -36,9 +27,9 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="has-feedback col-sm-3" style="width: 23%">
-                                <label class="control-label" for="phongBanId-{{uniqueId}}">Phòng Ban</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && ChkphongBan, 'has-error' : f.submitted && !ChkphongBan}">
-                                    <select name="phongBanId" #phongBanId class="form-control" [(ngModel)]="VatTuEdit.phongBanId" (change)="phongbanChk(phongBanId.value)">
+                                <label class="control-label" for="phongBanId-{{uniqueId}}">Phòng ban</label>
+                                <div class="control" [ngClass]="{'has-success': f.submitted && ChkmatBang, 'has-error' : f.submitted && !ChkmatBang}">
+                                    <select name="phongBanId" [(ngModel)]="VatTuEdit.phongBanId" #phongBanId="ngModel" class="form-control" (change)="phongbanChk(phongBanId.value)">
                                         <option value="0">--- Chọn Phòng Ban ---</option>
                                         <option *ngFor="let o of phongbans" value="{{o.phongBanId}}">
                                             {{o.tenPhongBan}}
@@ -53,7 +44,7 @@
                             <div class="has-feedback col-sm-3" style="width: 23%">
                                 <label class="control-label" for="nguoiQuanLy-{{uniqueId}}">Người Quản Lý</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && ChkNDTN, 'has-error' : f.submitted && !ChkNDTN}">
-                                    <select name="nguoiQuanLy" #nguoiQuanLy class="form-control" [(ngModel)]="VatTuEdit.nguoiQuanLy" (change)="NDTNChk(nguoiQuanLy.value)">
+                                    <select name="nguoiQuanLy" #nguoiQuanLy="ngModel" class="form-control" [(ngModel)]="VatTuEdit.nguoiQuanLy" (change)="NDTNChk(nguoiQuanLy.value)">
                                         <option value="0">--- Chọn Quản lý ---</option>
                                         <option *ngFor="let o of NDTN" value="{{o.userName}}">
                                             {{o.userName}}
@@ -94,10 +85,10 @@
                             </div>
                             <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="tenVatTu-{{uniqueId}}">Tên Vật Tư</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && tenVatTu.valid, 'has-error' : f.submitted && !tenVatTu.valid}">
-                                    <input autofocus type="text" class="form-control" name="tenVatTu" [(ngModel)]="VatTuEdit.tenVatTu" #tenVatTu="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tenVatTu.valid, 'glyphicon-remove' : !tenVatTu.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !tenVatTu.valid" class="errorMessage">
+                                <div class="control" [ngClass]="{'has-success': f.submitted && checkTen, 'has-error' : f.submitted && !checkTen}">
+                                    <input autofocus type="text" class="form-control" [ngClass]="{'valid-required ': checkTen, 'valid-not-required' : !checkTen}" name="tenVatTu" [(ngModel)]="VatTuEdit.tenVatTu" #tenVatTu="ngModel" (change)="tenChk(tenVatTu.value)" />
+                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': checkTen, 'glyphicon-remove' : !checkTen}"></span>
+                                    <span *ngIf="showValidationErrors && f.submitted && !checkTen" class="errorMessage">
                                         Vui lòng nhập tên vật tư!
                                     </span>
                                 </div>
@@ -105,7 +96,7 @@
                             <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="loaiHangId-{{uniqueId}}">Loại Hàng</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && ChkloaiHang, 'has-error' : f.submitted && !ChkloaiHang}">
-                                    <select name="loaiHangId" #loaiHangId class="form-control" [(ngModel)]="VatTuEdit.loaiHangId" (change)="loaiHangChk(loaiHangId.value)">
+                                    <select name="loaiHangId" #loaiHangId="ngModel" class="form-control" [(ngModel)]="VatTuEdit.loaiHangId" (change)="loaiHangChk(loaiHangId.value)">
                                         <option value="0">--- Chọn Loại Hàng ---</option>
                                         <option *ngFor="let o of loaihangs" value="{{o.loaiHangId}}">
                                             {{o.tenLoaiHang}}
@@ -119,17 +110,13 @@
                             </div>
                             <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="maVatTuCha-{{uniqueId}}">Vật Tư Cha</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && ChkVTCha, 'has-error' : f.submitted && !ChkVTCha}">
-                                    <select name="maVatTuCha" #maVatTuCha class="form-control" [(ngModel)]="VatTuEdit.maVatTuCha" (change)="VTChaChk(maVatTuCha.value)">
+                                <div class="control">
+                                    <select name="maVatTuCha" #maVatTuCha="ngModel" class="form-control" [(ngModel)]="VatTuEdit.maVatTuCha">
                                         <option value="0">--- Chọn Vật Tư Cha ---</option>
                                         <option *ngFor="let o of rows" value="{{o.vatTuId}}">
-                                            {{o.maVatTu}}
+                                            {{o.tenVatTu}}
                                         </option>
                                     </select>
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkVTCha, 'glyphicon-remove' : !ChkVTCha}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !ChkVTCha" class="errorMessage">
-                                        Vui lòng nhập vật tư cha!
-                                    </span>
                                 </div>
                             </div>
 
@@ -138,7 +125,7 @@
                             <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="quocTichId-{{uniqueId}}">Xuất xứ</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && ChkquocTich, 'has-error' : f.submitted && !ChkquocTich}">
-                                    <select name="quocTichId" #quocTichId class="form-control" [(ngModel)]="VatTuEdit.quocTichId" (change)="quocTichChk(quocTichId.value)">
+                                    <select name="quocTichId" #quocTichId="ngModel" class="form-control" [(ngModel)]="VatTuEdit.quocTichId" (change)="quocTichChk(quocTichId.value)">
                                         <option value="0">--- Chọn Quốc Tịch ---</option>
                                         <option *ngFor="let o of quoctichs" value="{{o.quocTichId}}">
                                             {{o.tenNuoc}}
@@ -153,8 +140,8 @@
                             <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="nhaCungCapId-{{uniqueId}}">Nhà Cung Cấp</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && ChknhaCC, 'has-error' : f.submitted && !ChknhaCC}">
-                                    <select name="nhaCungCapId" #phongBanId class="form-control" [(ngModel)]="VatTuEdit.nhaCungCapId" (change)="nhaCungCapChk(nhaCungCapId.value)">
-                                        <option value="0">--- Chọn Quản lý ---</option>
+                                    <select name="nhaCungCapId" #nhaCungCapId="ngModel" class="form-control" [(ngModel)]="VatTuEdit.nhaCungCapId" (change)="nhaCungCapChk(nhaCungCapId.value)">
+                                        <option value="0">--- Chọn Nhà Cung Cấp ---</option>
                                         <option *ngFor="let o of nhaCC" value="{{o.nhaCungCapId}}">
                                             {{o.tenNhaCungCap}}
                                         </option>
@@ -168,8 +155,8 @@
                             <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="hangSanXuatId-{{uniqueId}}">Hãng Sản Xuất</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && ChkhangSX, 'has-error' : f.submitted && !ChkhangSX}">
-                                    <select name="hangSanXuatId" #phongBanId class="form-control" [(ngModel)]="VatTuEdit.hangSanXuatId" (change)="hangSanXuatChk(hangSanXuatId.value)">
-                                        <option value="0">--- Chọn Quản lý ---</option>
+                                    <select name="hangSanXuatId" #hangSanXuatId="ngModel" class="form-control" [(ngModel)]="VatTuEdit.hangSanXuatId" (change)="hangSanXuatChk(hangSanXuatId.value)">
+                                        <option value="0">--- Chọn Hãng Sản Xuất ---</option>
                                         <option *ngFor="let o of hangSX" value="{{o.hangSanXuatId}}">
                                             {{o.tenHangSanXuat}}
                                         </option>
@@ -182,12 +169,8 @@
                             </div>
                             <div class="has-feedback col-sm-3">
                                 <label class="control-label" for="maVachNSX-{{uniqueId}}">Mã Vạch NSX</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && maVachNSX.valid, 'has-error' : f.submitted && !maVachNSX.valid}">
-                                    <input autofocus type="text" class="form-control" name="maVachNSX" [(ngModel)]="VatTuEdit.maVachNSX" #maVachNSX="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': maVachNSX.valid, 'glyphicon-remove' : !maVachNSX.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !maVachNSX.valid" class="errorMessage">
-                                        Vui lòng nhập mã vạch NSX!
-                                    </span>
+                                <div class="control">
+                                    <input autofocus type="text" class="form-control" name="maVachNSX" [(ngModel)]="VatTuEdit.maVachNSX" #maVachNSX="ngModel" />
                                 </div>
                             </div>
 
@@ -195,38 +178,26 @@
 
                             <div class="has-feedback col-sm-3" style="width: 20%;">
                                 <label class="control-label" for="model-{{uniqueId}}">Model</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && model.valid, 'has-error' : f.submitted && !model.valid}">
-                                    <input autofocus type="text" class="form-control" name="model" [(ngModel)]="VatTuEdit.model" #model="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': model.valid, 'glyphicon-remove' : !model.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !model.valid" class="errorMessage">
-                                        Vui lòng nhập model!
-                                    </span>
+                                <div class="control">
+                                    <input autofocus type="text" class="form-control" name="model" [(ngModel)]="VatTuEdit.model" #model="ngModel" />
                                 </div>
                             </div>
                             <div class="has-feedback col-sm-3" style="width: 20%;">
                                 <label class="control-label" for="partNumber-{{uniqueId}}">PartNumber</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && partNumber.valid, 'has-error' : f.submitted && !partNumber.valid}">
-                                    <input autofocus type="text" class="form-control" name="partNumber" [(ngModel)]="VatTuEdit.partNumber" #partNumber="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': partNumber.valid, 'glyphicon-remove' : !partNumber.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !partNumber.valid" class="errorMessage">
-                                        Vui lòng nhập partNumber!
-                                    </span>
+                                <div class="control">
+                                    <input autofocus type="text" class="form-control" name="partNumber" [(ngModel)]="VatTuEdit.partNumber" #partNumber="ngModel" />
                                 </div>
                             </div>
                             <div class="has-feedback col-sm-4" style="width: 25%;">
                                 <label class="control-label" for="serialNumber-{{uniqueId}}">SerialNumber</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && serialNumber.valid, 'has-error' : f.submitted && !serialNumber.valid}">
-                                    <input autofocus type="text" class="form-control" name="serialNumber" [(ngModel)]="VatTuEdit.serialNumber" #serialNumber="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': serialNumber.valid, 'glyphicon-remove' : !serialNumber.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !serialNumber.valid" class="errorMessage">
-                                        Vui lòng nhập serialNumber!
-                                    </span>
+                                <div class="control">
+                                    <input autofocus type="text" class="form-control" name="serialNumber" [(ngModel)]="VatTuEdit.serialNumber" #serialNumber="ngModel" />
                                 </div>
                             </div>
                             <div class="has-feedback col-sm-2" style="width: 12%">
                                 <label class="control-label" for="namSD-{{uniqueId}}">Năm sử dụng</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && namSD.valid, 'has-error' : f.submitted && !namSD.valid}">
-                                    <input autofocus type="number" min="0" class="form-control" name="namSD" [(ngModel)]="VatTuEdit.namSD" #namSD="ngModel" required />
+                                    <input autofocus type="number" min="1" class="form-control" name="namSD" [(ngModel)]="VatTuEdit.namSD" #namSD="ngModel" required (change)="namChange(namSD.value)" />
                                     <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': namSD.valid, 'glyphicon-remove' : !namSD.valid}"></span>
                                     <span *ngIf="showValidationErrors && f.submitted && !namSD.valid" class="errorMessage">
                                         Vui lòng nhập năm sử dụng!
@@ -244,12 +215,8 @@
 
                             <div class="has-feedback col-sm-12">
                                 <label class="control-label" for="thongSoKyThuat-{{uniqueId}}">Thông Số Kỹ Thuật</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && thongSoKyThuat.valid, 'has-error' : f.submitted && !thongSoKyThuat.valid}">
-                                    <input autofocus type="text" class="form-control" name="thongSoKyThuat" [(ngModel)]="VatTuEdit.thongSoKyThuat" #thongSoKyThuat="ngModel" required />
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': thongSoKyThuat.valid, 'glyphicon-remove' : !thongSoKyThuat.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !thongSoKyThuat.valid" class="errorMessage">
-                                        Vui lòng nhập thông số kỹ thuật!
-                                    </span>
+                                <div class="control">
+                                    <input autofocus type="text" class="form-control" name="thongSoKyThuat" [(ngModel)]="VatTuEdit.thongSoKyThuat" #thongSoKyThuat="ngModel" />
                                 </div>
                             </div>
 
@@ -260,7 +227,7 @@
                                 <div class="control" [ngClass]="{'has-success': f.submitted && ChkdonViTinh, 'has-error' : f.submitted && !ChkdonViTinh}">
                                     <select name="donViTinhId" [(ngModel)]="VatTuEdit.donViTinhId" #donViTinhId="ngModel" class="form-control" (change)="donViTinhChk(donViTinhId.value)">
                                         <option value="0">--- Chọn Đơn Vị Tính ---</option>
-                                        <option *ngFor="let o of donViTinh" value="{{o.donViTinhId}}">
+                                        <option *ngFor="let o of donvitinhs" value="{{o.donViTinhId}}">
                                             {{o.tenDonViTinh}}
                                         </option>
                                     </select>
@@ -273,7 +240,7 @@
                             <div class="has-feedback col-sm-4" style="width:22%;">
                                 <label class="control-label" for="loaiTienId-{{uniqueId}}">Loại Tiền</label>
                                 <div class="control" [ngClass]="{'has-success': f.submitted && ChkloaiTien, 'has-error' : f.submitted && !ChkloaiTien}">
-                                    <select name="loaiTienId" #loaiTienId class="form-control" [(ngModel)]="VatTuEdit.loaiTienId" (change)="loaitienChk(loaiTienId.value)">
+                                    <select name="loaiTienId" #loaiTienId="ngModel" class="form-control" [(ngModel)]="VatTuEdit.loaiTienId" (change)="loaitienChk(loaiTienId.value)">
                                         <option value="0">--- Chọn Loại Tiền ---</option>
                                         <option *ngFor="let o of loaitiens" value="{{o.loaiTienId}}">
                                             {{o.tenLoaiTien}}
@@ -286,44 +253,32 @@
                                 </div>
                             </div>
                             <div class="has-feedback col-sm-4" style="width:19%;">
-                                <label class="control-label" for="giaVatTu-{{uniqueId}}">Giá Vật Tư</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && giaVatTu.valid, 'has-error' : f.submitted && !giaVatTu.valid}">
+                                <label class="control-label" for="giaVattu-{{uniqueId}}">Giá Vật Tư</label>
+                                <div class="control">
                                     <div style="display: flex; position: relative;">
-                                        <input autofocus type="number" min="0" class="form-control" name="giaVatTu" [(ngModel)]="VatTuEdit.giaVatTu" #giaVatTu="ngModel" required />
-                                        <span  style="position: absolute;top: 25%;right: 35%;transition: right 0.2s;">{{kyHieu}}</span>
+                                        <input OnlyNumber="true" autofocus type="text" class="form-control" name="giaVattu" [(ngModel)]="giaVattu" required (ngModelChange)="giaVatTuChange($event)" />
+                                        <span style="position: absolute;top: 25%;right: 35%;transition: right 0.2s;">{{kyHieu}}</span>
                                     </div>
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': giaVatTu.valid, 'glyphicon-remove' : !giaVatTu.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !giaVatTu.valid" class="errorMessage">
-                                        Vui lòng nhập giá vật tư!
-                                    </span>
                                 </div>
                             </div>
                             <div class="has-feedback col-sm-3" style="width:15%;">
                                 <label class="control-label" for="khauHao-{{uniqueId}}">Khấu Hao</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && khauHao.valid, 'has-error' : f.submitted && !khauHao.valid}">
+                                <div class="control">
                                     <div style="display: flex; position: relative;">
                                         <input autofocus type="number" min="0" step="0.01" class="form-control" name="khauHao" [(ngModel)]="VatTuEdit.khauHao" #khauHao="ngModel" required />
                                         <span style="position: absolute;top: 25%;right: 45%;transition: right 0.2s;">%</span>
-                                    </div>                                    
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': khauHao.valid, 'glyphicon-remove' : !khauHao.valid}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !khauHao.valid" class="errorMessage">
-                                        Vui lòng nhập khấu hao!
-                                    </span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="has-feedback col-sm-3" style="width:20%;">
                                 <label class="control-label" for="donViKhauHao-{{uniqueId}}">Đơn vị Khấu Hao</label>
-                                <div class="control" [ngClass]="{'has-success': f.submitted && ChkDVKH, 'has-error' : f.submitted && !ChkDVKH}">
-                                    <select name="donViKhauHao" #donViKhauHao class="form-control" [(ngModel)]="VatTuEdit.donViKhauHao" (change)="DVKHChk(donViKhauHao.value)">
+                                <div class="control">
+                                    <select name="donViKhauHao" #donViKhauHao="ngModel" class="form-control" [(ngModel)]="VatTuEdit.donViKhauHao" (change)="DVKHChk(donViKhauHao.value)">
                                         <option value="0">--- Chọn ĐVKH---</option>
-                                        <option value="Ngày">Ngày</option>
-                                        <option value="Tháng">Tháng</option>
-                                        <option value="Năm">Năm</option>
+                                        <option value="Ngay">Ngày</option>
+                                        <option value="Thang">Tháng</option>
+                                        <option value="Nam">Năm</option>
                                     </select>
-                                    <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkDVKH, 'glyphicon-remove' : !ChkDVKH}"></span>
-                                    <span *ngIf="showValidationErrors && f.submitted && !ChkDVKH" class="errorMessage">
-                                        Vui lòng nhập đơn vị khấu hao!
-                                    </span>
                                 </div>
                             </div>
 
@@ -344,17 +299,18 @@
                                     </div>
                                 </div>
                             </div>
+                            <vattuhinhanh-info #vattuhinhanhEditor [isGeneralEditor]="true"></vattuhinhanh-info>
                             <div class="clearfix"></div>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-        <!--<div *ngIf="isViewDetails" class="ViewForm">
+        <div *ngIf="isViewDetails" class="ViewForm" style="max-width:1000px;">
             <div class="modal-header">
                 <p class="modal-title pull-left">
                     <i class="fa fa-eye"></i> Chi tiết loại dịch vụ
-                    <span>{{tenLoaiDichVu}}</span>
+                    <span>{{VatTuEdit.maVatTu}}</span>
                 </p>
                 <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
                     <span aria-hidden="true">&times;</span>
@@ -363,37 +319,82 @@
             <div class="modal-body">
                 <div>
                     <form #f="ngForm">
-                        <div>
+                        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
                             <table class="table table-bordered">
                                 <tbody>
                                     <tr>
-                                        <td class="boldText">Tên Loại dịch vụ:</td>
-                                        <td>{{LoaiDichVuEdit.tenLoaiDichVu}}</td>
+                                        <td colspan="8" class="headView">Thông tin chung</td>
                                     </tr>
                                     <tr>
-                                        <td class="boldText">Mô tả:</td>
-                                        <td>{{LoaiDichVuEdit.moTa}}</td>
-                                    </tr>
-                                    <tr>
+                                        <td class="boldText">Mã Vật Tư</td>
+                                        <td>{{VatTuEdit.maVatTu}}</td>
+                                        <td class="boldText">Tên Vật Tư</td>
+                                        <td>{{VatTuEdit.tenVatTu}}</td>
+                                        <td class="boldText">Ngày Lập</td>
+                                        <td>{{VatTuEdit.ngayLap | date:'dd/MM/yyyy'}}</td>
                                         <td class="boldText">Trạng thái:</td>
-                                        <td *ngIf="LoaiDichVuEdit.trangThai == 1">Đang hoạt động</td>
-                                        <td *ngIf="LoaiDichVuEdit.trangThai == 2">Dừng hoạt động</td>
+                                        <td colspan="3" *ngIf="VatTuEdit.trangThai == 1">Đang sử dụng</td>
+                                        <td colspan="3" *ngIf="VatTuEdit.trangThai == 2">Ngừng sử dụng</td>
                                     </tr>
                                     <tr>
-                                        <td class="boldText">Ngày Nhập:</td>
-                                        <td>{{LoaiDichVuEdit.ngayNhap | date:'dd/MM/yyyy'}}</td>
+                                        <td class="boldText">Phòng Ban</td>
+                                        <td>{{VatTuEdit.phongBans.tenPhongBan}}</td>
+                                        <td class="boldText">Người Quản Lý</td>
+                                        <td>{{VatTuEdit.nguoiQuanLy}}</td>
+                                        <td class="boldText">Loại Hàng</td>
+                                        <td>{{VatTuEdit.loaiHangs.tenLoaiHang}}</td>
+                                        <td class="boldText">Vật Tư Cha</td>
+                                        <td>{{VatTuEdit.tenVatTu}}</td>
                                     </tr>
                                     <tr>
-                                        <td class="boldText">Người Nhập:</td>
-                                        <td>{{LoaiDichVuEdit.nguoiNhap}}</td>
+                                        <td colspan="8" class="headView">Thông tin chi tiết</td>
                                     </tr>
                                     <tr>
-                                        <td class="boldText">Ngày Sửa:</td>
-                                        <td>{{LoaiDichVuEdit.ngaySua | date: 'dd/MM/yyyy'}}</td>
+                                        <td class="boldText">Xuất Xứ</td>
+                                        <td>{{VatTuEdit.quocTichs.tenNuoc}}</td>
+                                        <td class="boldText">Hãng Sản Xuất</td>
+                                        <td>{{VatTuEdit.hangSanXuats.tenHangSanXuat}}</td>
+                                        <td class="boldText">Nhà Cung Cấp</td>
+                                        <td>{{VatTuEdit.nhaCungCaps.tenNhaCungCap}}</td>
+                                        <td class="boldText">Mã Vạch NSX</td>
+                                        <td>{{VatTuEdit.maVachNSX}}</td>
                                     </tr>
                                     <tr>
-                                        <td class="boldText">Người Sửa:</td>
-                                        <td>{{LoaiDichVuEdit.nguoiSua}}</td>
+                                        <td class="boldText">Model</td>
+                                        <td>{{VatTuEdit.model}}</td>
+                                        <td class="boldText">PartNumber</td>
+                                        <td colspan="2">{{VatTuEdit.partNumber}}</td>
+                                        <td class="boldText">SerialNumber</td>
+                                        <td colspan="2">{{VatTuEdit.serialNumber}}</td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td rowspan="4" class="headView">Thông số kỹ thuật</td>
+                                        <td rowspan="4" colspan="7">{{VatTuEdit.thongSoKyThuat}}</td>
+                                    </tr>-->
+                                    <tr>
+                                        <td class="boldText">Giá vật tư</td>
+                                        <td>{{formatPrice(VatTuEdit.giaVatTu)}} {{VatTuEdit.loaiTiens.kyHieu}}</td>
+                                        <td class="boldText">Đơn vị tính</td>
+                                        <td>{{VatTuEdit.donViTinhs.tenDonViTinh}}</td>
+                                        <td class="boldText">Hạn bảo hành</td>
+                                        <td>{{VatTuEdit.ngayHHBaoHanh | date: 'dd/MM/yyyy'}}</td>
+                                        <td class="boldText">Khấu hao</td>
+                                        <td *ngIf="VatTuEdit.donViKhauHao == 'Nam'">{{VatTuEdit.khauHao}}% / Năm</td>
+                                        <td *ngIf="VatTuEdit.donViKhauHao == 'Thang'">{{VatTuEdit.khauHao}}% / Tháng</td>
+                                        <td *ngIf="VatTuEdit.donViKhauHao == 'Ngay'">{{VatTuEdit.khauHao}}% / Ngày</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8" class="headView">Thông tin chỉnh sửa</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="boldText">Ngày nhập</td>
+                                        <td>{{VatTuEdit.ngayNhap | date: 'dd/MM/yyyy'}}</td>
+                                        <td class="boldText">Người nhập</td>
+                                        <td>{{VatTuEdit.nguoiNhap}}</td>
+                                        <td class="boldText">Ngày sửa</td>
+                                        <td>{{VatTuEdit.ngaySua | date: 'dd/MM/yyyy'}}</td>
+                                        <td class="boldText">Người sửa</td>
+                                        <td>{{VatTuEdit.nguoiSua}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -407,11 +408,11 @@
                     <div class="col-sm-7">
                         <div class="pull-right">
                             <button type="button" (click)="movetoEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
-                            <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                            <button *ngIf="isEditMode" type="button" (click)="closeModal()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>-->
+        </div>
     </div>
 </div>

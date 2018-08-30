@@ -13,6 +13,13 @@ import { NhaCungCap } from '../../models/nhacungcap.model';
 import { DonViTinh } from '../../models/donvitinh.model';
 import { PhongBan } from '../../models/phongban.model';
 import { NguoiDungToaNha } from '../../models/nguoidungtoanha.model';
+import { LoaiTienService } from '../../services/loaitien.service';
+import { VatTuHinhAnhComponent } from '../vattuhinhanh/vattuhinhanh.component';
+import { VatTuHinhAnhInfoComponent } from '../vattuhinhanh/vattuhinhanh-info.component';
+import { UploadEvent, SelectEvent, FileInfo } from '@progress/kendo-angular-upload';
+import { VatTuHinhAnh } from '../../models/vattuhinhanh.model';
+import { VatTuHinhAnhService } from '../../services/vattuhinhanh.service';
+import { VatTuTaiLieuService } from '../../services/vattutailieu.service';
 
 @Component({
     selector: "vattu-info",
@@ -22,6 +29,8 @@ import { NguoiDungToaNha } from '../../models/nguoidungtoanha.model';
 
 export class VatTuInfoComponent implements OnInit {
     private isNew = false;
+    isEdit = false;
+    isViewDetails = false;
     private isSaving = false;
     private showValidationErrors: boolean = false;
     private uniqueId: string = Utilities.uniqueId();
@@ -34,6 +43,17 @@ export class VatTuInfoComponent implements OnInit {
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
 
+    public ChkquocTich: boolean;
+    public ChkloaiHang: boolean;
+    public ChkhangSX: boolean;
+    public ChknhaCC: boolean;
+    public ChkdonViTinh: boolean;
+    public ChkloaiTien: boolean;
+    public ChkphongBan: boolean;
+    public ChkNDTN: boolean;
+    public ChkDVKH: boolean;
+    public checkTen: boolean;
+
     quoctichs: QuocTich[] = [];
     loaihangs: LoaiHang[] = [];
     hangSX: HangSanXuat[] = [];
@@ -42,24 +62,17 @@ export class VatTuInfoComponent implements OnInit {
     phongbans: PhongBan[] = [];
     loaitiens: LoaiTien[] = [];
     NDTN: NguoiDungToaNha[] = [];
-
-    ChkquocTich: boolean;
-    ChkloaiHang: boolean;
-    ChkhangSX: boolean;
-    ChknhaCC: boolean;
-    ChkdonViTinh: boolean;
-    ChkloaiTien: boolean;
-    ChkphongBan: boolean;
-    ChkNDTN: boolean;
-    ChkDVKH: boolean;
-    ChkVTCha: boolean;
-    checkTen: boolean;
+    vattuCha: VatTu[] = [];
+    vattuhinhanhEdit: VatTuHinhAnh;
+    sourcevattuhinhanh: VatTuHinhAnh;
 
     valueNgayLap: Date = new Date();
     valueBaoHanh: Date = new Date();
 
     kyHieu: string = "VND";
-    
+    giaVattu: string = "0";
+    last: string = "";
+
     @Input()
     isViewOnly: boolean;
 
@@ -71,10 +84,17 @@ export class VatTuInfoComponent implements OnInit {
 
     @ViewChild('editorModal')
     editorModal: ModalDirective;
-    
-    constructor(private alertService: AlertService, private gvService: VatTuService) {
+
+    @ViewChild('vattuhinhanhEditor')
+    VatTuHinhAnhEditor: VatTuHinhAnhInfoComponent;
+
+    constructor(private alertService: AlertService, private gvService: VatTuService,
+        private loaitienService: LoaiTienService,
+        private vattuhinhanhService: VatTuHinhAnhService,
+        private vattutailieuService: VatTuTaiLieuService
+    ) {
     }
-    
+
     ngOnInit() {
         if (!this.isGeneralEditor) {
             this.loadData();
@@ -83,9 +103,10 @@ export class VatTuInfoComponent implements OnInit {
 
     loadData() {
         this.alertService.startLoadingMessage();
+        this.gvService.getAllVatTu().subscribe(results => this.vattuCha == results);
         this.gvService.getVatTuByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
     }
-    
+
     private onDataLoadSuccessful(obj: VatTu) {
         this.alertService.stopLoadingMessage();
     }
@@ -109,7 +130,7 @@ export class VatTuInfoComponent implements OnInit {
             });
         }
     }
-    
+
     private cancel() {
         this.VatTuEdit = new VatTu();
         this.showValidationErrors = false;
@@ -124,21 +145,52 @@ export class VatTuInfoComponent implements OnInit {
     }
 
     private save() {
-        this.isSaving = true;
-        this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");        
-        if (this.isNew) {
-            this.gvService.addnewVatTu(this.VatTuEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
-        }
-        else {
-            this.gvService.updateVatTu(this.VatTuEdit.vatTuId, this.VatTuEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
+        if (this.ChkdonViTinh == false || this.ChkDVKH == false || this.ChkhangSX == false || this.ChkloaiHang == false || this.ChkloaiTien == false || this.ChkNDTN == false || this.ChknhaCC == false || this.ChkphongBan == false || this.ChkquocTich == false) {
+            this.isSaving = false;
+        } else {
+            this.valueBaoHanh = new Date(this.valueNgayLap.getFullYear() + this.VatTuEdit.namSD, this.valueBaoHanh.getMonth(), this.valueBaoHanh.getDate());
+            this.VatTuEdit.ngayLap = this.valueNgayLap;
+            this.VatTuEdit.ngayHHBaoHanh = this.valueBaoHanh;
+            this.VatTuEdit.giaVatTu = Number(this.giaVattu.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
+            this.isSaving = true;
+            this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
+            if (this.isNew) {
+                this.gvService.addnewVatTu(this.VatTuEdit).subscribe(results => {
+                    if (results.tenVatTu == "Exist") {
+                        this.showErrorAlert("Lỗi nhập liệu", "Tên vật tư " + this.VatTuEdit.tenVatTu + " đã tồn tại trên hệ thống, vui lòng chọn tên khác");
+                        this.alertService.stopLoadingMessage();
+                        this.isSaving = false;
+                        this.checkTen = false;
+                    } else this.saveSuccessHelper(results)
+                }, error => this.saveFailedHelper(error));
+            }
+            else {
+                this.gvService.updateVatTu(this.VatTuEdit.vatTuId, this.VatTuEdit).subscribe(response => {
+                    if (response == "Exist") {
+                        this.showErrorAlert("Lỗi nhập liệu", "Tên vật tư " + this.VatTuEdit.tenVatTu + " đã tồn tại trên hệ thống, vui lòng chọn tên khác");
+                        this.alertService.stopLoadingMessage();
+                        this.isSaving = false;
+                        this.checkTen = false;
+                    } else this.saveSuccessHelper()
+                }, error => this.saveFailedHelper(error));
+            }
         }
     }
-    
+
     newVatTu() {
         this.isGeneralEditor = true;
         this.isNew = true;
         this.showValidationErrors = true;
         this.editingRowName = null;
+        this.ChkphongBan = false;
+        this.ChkdonViTinh = false;
+        this.ChkDVKH = false;
+        this.ChkhangSX = false;
+        this.ChkloaiHang = false;
+        this.ChkloaiTien = false;
+        this.ChkNDTN = false;
+        this.ChknhaCC = false;
+        this.ChkquocTich = false;
         this.VatTuEdit = new VatTu();
         this.VatTuEdit.quocTichId = 0;
         this.VatTuEdit.loaiHangId = 0;
@@ -150,9 +202,23 @@ export class VatTuInfoComponent implements OnInit {
         this.VatTuEdit.maVatTuCha = 0;
         this.VatTuEdit.donViKhauHao = "0";
         this.VatTuEdit.nguoiQuanLy = "0";
-        this.VatTuEdit.namSD = 0;
+        this.VatTuEdit.namSD = 1;
+        this.VatTuEdit.maVatTuCha = 0;
+        this.gvService.getLastRecord().subscribe(results => {
+            if (results == null) {
+                var numberLast = 1;
+            } else {
+                var numberLast = results.vatTuId + 1;
+            }            
+            var number = 10 - numberLast.toString().length;
+            for (var i = 0; i < number; i++) {
+                this.last += "0";
+            }
+            this.VatTuEdit.maVatTu = "VT-" + this.last + numberLast;
+        });
+        this.giaVattu = this.formatPrice("0");
+        this.valueBaoHanh = new Date(this.valueNgayLap.getFullYear() + this.VatTuEdit.namSD, this.valueBaoHanh.getMonth(), this.valueBaoHanh.getDate());
         this.VatTuEdit.khauHao = 0;
-        this.VatTuEdit.giaVatTu = 0;
         this.VatTuEdit.trangThai = 1;
         this.edit();
         return this.VatTuEdit;
@@ -164,18 +230,18 @@ export class VatTuInfoComponent implements OnInit {
 
         this.isSaving = false;
         this.alertService.stopLoadingMessage();
-        this.showValidationErrors = false;        
+        this.showValidationErrors = false;
         if (this.isGeneralEditor) {
             if (this.isNew) {
                 this.alertService.showMessage("Thành công", `Thực hiện thêm mới thành công`, MessageSeverity.success);
-            }                
+            }
             else
                 this.alertService.showMessage("Thành công", `Thực hiện thay đổi thông tin thành công`, MessageSeverity.success);
         }
         this.VatTuEdit = new VatTu();
         this.resetForm();
         this.isEditMode = false;
-
+        this.addVatTuHinhAnh(obj);
         if (this.changesSavedCallback)
             this.changesSavedCallback();
     }
@@ -189,7 +255,7 @@ export class VatTuInfoComponent implements OnInit {
         if (this.changesFailedCallback)
             this.changesFailedCallback();
     }
-    
+
     private showErrorAlert(caption: string, message: string) {
         this.alertService.showMessage(caption, message, MessageSeverity.error);
     }
@@ -198,12 +264,23 @@ export class VatTuInfoComponent implements OnInit {
         if (obj) {
             this.isGeneralEditor = true;
             this.isNew = false;
+            this.isEdit = true;
+            this.isViewDetails = false;
+            this.ChkphongBan = true;
+            this.ChkdonViTinh = true;
+            this.ChkDVKH = true;
+            this.ChkhangSX = true;
+            this.ChkloaiHang = true;
+            this.ChkloaiTien = true;
+            this.ChkNDTN = true;
+            this.ChknhaCC = true;
+            this.ChkquocTich = true;
             this.editingRowName = obj.tenVatTu;
+            this.giaVattu = this.formatPrice(obj.giaVatTu.toString());
             this.VatTuEdit = new VatTu();
             Object.assign(this.VatTuEdit, obj);
             Object.assign(this.VatTuEdit, obj);
             this.edit();
-
             return this.VatTuEdit;
         }
         else {
@@ -227,7 +304,7 @@ export class VatTuInfoComponent implements OnInit {
 
         if (this.changesSavedCallback)
             this.changesSavedCallback();
-    }    
+    }
 
     onEditorModalHidden() {
         this.editingRowName = null;
@@ -238,7 +315,27 @@ export class VatTuInfoComponent implements OnInit {
         this.editorModal.hide();
     }
 
+    namChange(nam: number) {
+        this.valueBaoHanh = new Date(this.valueNgayLap.getFullYear() + nam, this.valueBaoHanh.getMonth(), this.valueBaoHanh.getDate());
+    }
+
+    giaVatTuChange(price: string) {
+        if (price) {
+            var pS = price.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
+            var pN = Number(pS);
+            this.giaVattu = Utilities.formatNumber(pN);
+        }
+    }
+
+    tenChk(value: string) {
+        if (value != "") {
+            this.checkTen = true;
+        } else
+            this.checkTen = false;
+    }
+
     phongbanChk(id: number) {
+        console.log(id);
         if (id > 0) {
             this.ChkphongBan = true;
         } else
@@ -252,7 +349,7 @@ export class VatTuInfoComponent implements OnInit {
             this.ChkloaiHang = false;
     }
 
-    quoctichChk(id: number) {
+    quocTichChk(id: number) {
         if (id > 0) {
             this.ChkquocTich = true;
         } else
@@ -266,8 +363,11 @@ export class VatTuInfoComponent implements OnInit {
             this.ChkdonViTinh = false;
     }
 
-    loaiTienChk(id: number) {
+    loaitienChk(id: number) {
         if (id > 0) {
+            this.loaitienService.getLoaiTienByID(id).subscribe(results => {
+                this.kyHieu = results.kyHieu;
+            }, error => { });
             this.ChkloaiTien = true;
         } else
             this.ChkloaiTien = false;
@@ -301,10 +401,24 @@ export class VatTuInfoComponent implements OnInit {
             this.ChkDVKH = false;
     }
 
-    VTChaChk(id: number) {
-        if (id > 0) {
-            this.ChkVTCha = true;
-        } else
-            this.ChkVTCha = false;
+    formatPrice(price: string) {
+        if (price) {
+            var pN = Number(price);
+            var fm = Utilities.formatNumber(pN);
+            return fm;
+        } 
+    }
+
+    private movetoEditForm() {
+        this.isViewDetails = false;
+        this.isEdit = true;
+    }
+
+    addVatTuHinhAnh(row: VatTu) {
+        this.editingRowName = null;
+        this.sourcevattuhinhanh = null;
+        this.VatTuHinhAnhEditor.VatTuHinhAnhEdit.vatTuId = row.vatTuId;
+        this.vattuhinhanhEdit = this.VatTuHinhAnhEditor.loadVatTu(row);
+        this.VatTuHinhAnhEditor.editorModal.show();
     }
 }

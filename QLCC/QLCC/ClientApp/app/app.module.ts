@@ -197,8 +197,8 @@ import { TangLauComponent } from "./components/tanglau/tanglau.component";
 import { TangLauInfoComponent } from "./components/tanglau/tanglau-info.component";
 import { MatBangComponent } from "./components/matbang/matbang.component";
 import { MatBangInfoComponent } from "./components/matbang/matbang-info.component";
-import { TrangThaiComponent } from "./components/trangthai/trangthai.component";
-import { TrangThaiInfoComponent } from "./components/trangthai/trangthai-info.component";
+//import { TrangThaiComponent } from "./components/trangthai/trangthai.component";
+//import { TrangThaiInfoComponent } from "./components/trangthai/trangthai-info.component";
 import { DanhMucComponent } from "./components/danhmuc/danhmuc.component";
 import { ChucVuComponent } from "./components/chucvu/chucvu.component";
 import { ChucVuInfoComponent } from "./components/chucvu/chucvu-info.component";
@@ -287,6 +287,16 @@ import { VatTuComponent } from "./components/vattu/vattu.component";
 import { VatTuInfoComponent } from "./components/vattu/vattu-info.component";
 import { VatTuService } from "./services/vattu.service";
 import { VatTuEndpoint } from "./services/vattu-endpoint.service";
+import { VatTuHinhAnhComponent } from "./components/vattuhinhanh/vattuhinhanh.component";
+import { VatTuHinhAnhInfoComponent } from "./components/vattuhinhanh/vattuhinhanh-info.component";
+import { VatTuTaiLieuComponent } from "./components/vattutailieu/vattutailieu.component";
+import { VatTuTaiLieuInfoComponent } from "./components/vattutailieu/vattutailieu-info.component";
+import { VatTuHinhAnhService } from "./services/vattuhinhanh.service";
+import { VatTuHinhAnhEndpoint } from "./services/vattuhinhanh-endpoint.service";
+import { VatTuTaiLieuEndpoint } from "./services/vattutailieu-endpoint.service";
+import { VatTuTaiLieuService } from "./services/vattutailieu.service";
+import { AuthService } from "./services/auth.service";
+import { Utilities } from "./models/utilities";
 
 @NgModule({
     imports: [
@@ -373,8 +383,8 @@ import { VatTuEndpoint } from "./services/vattu-endpoint.service";
         TangLauInfoComponent,
         MatBangComponent,
         MatBangInfoComponent,
-        TrangThaiComponent,
-        TrangThaiInfoComponent,
+        //TrangThaiComponent,
+        //TrangThaiInfoComponent,
         NhaCungCapComponent,
         NhaCungCapInfoComponent,
         ChucVuComponent,
@@ -449,7 +459,11 @@ import { VatTuEndpoint } from "./services/vattu-endpoint.service";
         LoaiHangComponent,
         LoaiHangInfoComponent,
         VatTuComponent,
-        VatTuInfoComponent
+        VatTuInfoComponent,
+        VatTuHinhAnhComponent,
+        VatTuHinhAnhInfoComponent,
+        VatTuTaiLieuComponent,
+        VatTuTaiLieuInfoComponent
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'vi' },
@@ -549,7 +563,13 @@ import { VatTuEndpoint } from "./services/vattu-endpoint.service";
         LoaiHangService,
         LoaiHangEndpoint,
         VatTuService,
-        VatTuEndpoint
+        VatTuEndpoint,
+        VatTuHinhAnhService,
+        VatTuHinhAnhEndpoint,
+        VatTuTaiLieuService,
+        VatTuTaiLieuEndpoint,
+        AuthService,
+        Utilities
     ],
     bootstrap: [AppComponent]
 })

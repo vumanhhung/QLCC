@@ -7,6 +7,7 @@ namespace DAL.Models
     public class VatTuTaiLieu
     {
 		public int VatTutaiLieuId { get; set; }
+		public int VatTuId { get; set; }
 		public string TenTaiLieu { get; set; }
 		public string URLTaiLieu { get; set; }
 		public string DienGiai { get; set; }

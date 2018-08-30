@@ -151,6 +151,13 @@ namespace QLCC.Controllers
             return _context.VatTus.Any(e => e.VatTuId == id);
         }
 
+        [HttpGet("LastRecord")]
+        public async Task<IActionResult> getLastRecord()
+        {
+            var last = await _context.VatTus.LastOrDefaultAsync();
+            return Ok(last);
+        }
+
         //[HttpGet("GetLoaiHang")]
         //public IEnumerable<LoaiHang> GetLoaiHangs()
         //{

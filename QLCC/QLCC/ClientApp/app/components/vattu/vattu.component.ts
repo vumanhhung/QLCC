@@ -44,6 +44,7 @@ export class VatTuComponent implements OnInit, AfterViewInit {
     phongbans: PhongBan[] = [];
     loaitiens: LoaiTien[] = [];
     NDTN: NguoiDungToaNha[] = [];
+    vattuCha: VatTu[] = [];
 
     loadingIndicator: boolean;
     public formResetToggle = true;
@@ -60,14 +61,15 @@ export class VatTuComponent implements OnInit, AfterViewInit {
     @ViewChild('nameTemplate')
     nameTemplate: TemplateRef<any>;
 
-    @ViewChild('descriptionTemplate')
-    descriptionTemplate: TemplateRef<any>;
+    @ViewChild('priceTemplate')
+    priceTemplate: TemplateRef<any>;
 
     @ViewChild('actionsTemplate')
     actionsTemplate: TemplateRef<any>;
 
     @ViewChild('vattuEditor')
     VatTuEditor: VatTuInfoComponent;
+
     constructor(private alertService: AlertService, private translationService: AppTranslationService,
         private vattuService: VatTuService,
         private quoctichService: QuocTichService,
@@ -88,11 +90,11 @@ export class VatTuComponent implements OnInit, AfterViewInit {
             { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },              
             { prop: 'maVatTu', name: gT('Mã VT')},
             { prop: 'tenVatTu', name: gT('Tên VT')},
-            { prop: 'quocTichId', name: gT('Xuất xứ')},
-            { prop: 'nhaCungCapId', name: gT('Nhà cung cấp')},
+            { prop: 'quocTichs.tenNuoc', name: gT('Xuất xứ')},
+            { prop: 'nhaCungCaps.tenNhaCungCap', name: gT('Nhà cung cấp')},
             { prop: 'maVachNSX', name: gT('Mã vạch NSX')},            
             { prop: 'serialNumber', name: gT('SerialNumber') },
-            { prop: 'giaVatTu', name: gT('Giá VT') },
+            { prop: 'giaVatTu', name: gT('Giá VT'), cellTemplate: this.priceTemplate },
             { name: gT('Chức năng'), width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
         this.loadAllQuocTich();
@@ -169,6 +171,7 @@ export class VatTuComponent implements OnInit, AfterViewInit {
     }
     
     addNewToList() {
+        this.loadData();
         if (this.sourcevattu) {
             Object.assign(this.sourcevattu, this.vattuEdit);
             this.vattuEdit = null;
@@ -195,7 +198,10 @@ export class VatTuComponent implements OnInit, AfterViewInit {
     loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.vattuService.getAllVatTu().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        this.vattuService.getAllVatTu().subscribe(results => {
+            this.vattuCha = results;
+            this.onDataLoadSuccessful(results);
+        }, error => this.onDataLoadFailed(error));
     }
     
     onDataLoadSuccessful(obj: VatTu[]) {
@@ -234,6 +240,8 @@ export class VatTuComponent implements OnInit, AfterViewInit {
         this.VatTuEditor.phongbans = this.phongbans;
         this.VatTuEditor.loaitiens = this.loaitiens;
         this.VatTuEditor.NDTN = this.NDTN;
+        this.VatTuEditor.vattuCha = this.vattuCha;
+        this.VatTuEditor.isViewDetails = false;
         this.vattuEdit = this.VatTuEditor.newVatTu();
         this.VatTuEditor.editorModal.show();
     }
@@ -243,7 +251,7 @@ export class VatTuComponent implements OnInit, AfterViewInit {
     }
     
     onSearchChanged(value: string) {
-        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false,r.vatTuId,r.maVatTu,r.tenVatTu,r.quocTichId,r.loaiHangId,r.hangSanXuatId,r.nhaCungCapId,r.donViTinhId,r.phongBanId,r.maVatTuCha,r.nguoiQuanLy,r.maVachNSX,r.loaiTienId,r.giaVatTu,r.model,r.partNumber,r.serialNumber,r.thongSoKyThuat,r.ngayLap,r.namSD,r.ngayHHBaoHanh,r.khauHao,r.donViKhauHao,r.trangThai,r.nguoiNhap,r.ngayNhap,r.nguoiSua,r.ngaySua));
+        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.maVatTu, r.tenVatTu, r.quocTichs.tenNuoc, r.nhaCungCaps.tenNhaCungCap, r.maVachNSX, r.serialNumber, r.giaVatTu));
     }
 
     deleteVatTu(row: VatTu) {
@@ -273,6 +281,7 @@ export class VatTuComponent implements OnInit, AfterViewInit {
     editVatTu(row: VatTu) {
         this.editingRowName = { name: row.tenVatTu };
         this.sourcevattu = row;
+        this.VatTuEditor.checkTen = true;
         this.VatTuEditor.quoctichs = this.quoctichs;
         this.VatTuEditor.loaihangs = this.loaihangs;
         this.VatTuEditor.hangSX = this.hangSX;
@@ -281,7 +290,34 @@ export class VatTuComponent implements OnInit, AfterViewInit {
         this.VatTuEditor.phongbans = this.phongbans;
         this.VatTuEditor.loaitiens = this.loaitiens;
         this.VatTuEditor.NDTN = this.NDTN;
+        this.VatTuEditor.vattuCha = this.vattuCha;
+        this.VatTuEditor.isViewDetails = false;
+        this.VatTuEditor.isEdit = true;
         this.vattuEdit = this.VatTuEditor.editVatTu(row);
         this.VatTuEditor.editorModal.show();
-    }    
+    } 
+
+    viewVatTu(row: VatTu) {
+        //this.editingRowName = { name: row.tenichVuCoBan };
+        this.sourcevattu = row;
+        this.VatTuEditor.quoctichs = this.quoctichs;
+        this.VatTuEditor.loaihangs = this.loaihangs;
+        this.VatTuEditor.hangSX = this.hangSX;
+        this.VatTuEditor.nhaCC = this.nhaCC;
+        this.VatTuEditor.donvitinhs = this.donvitinhs;
+        this.VatTuEditor.phongbans = this.phongbans;
+        this.VatTuEditor.loaitiens = this.loaitiens;
+        this.vattuEdit = this.VatTuEditor.editVatTu(row);
+        this.VatTuEditor.isViewDetails = true;
+        this.VatTuEditor.isEdit = false;
+        this.VatTuEditor.editorModal.show();
+    }
+
+    formatPrice(price: string): string {
+        if (price) {
+            var pN = Number(price);
+            var fm = Utilities.formatNumber(pN);
+            return fm;
+        } else return "";
+    }
 }

@@ -16,3 +16,10 @@
     right: 20%;
     transition: right 0.2s;
 }
+
+.headView {
+    text-align: center;
+    font-weight: bold;
+    color: #048b8b;
+    background: #ecf0f5
+}

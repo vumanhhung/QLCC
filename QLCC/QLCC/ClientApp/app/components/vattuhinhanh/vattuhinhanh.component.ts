@@ -40,9 +40,6 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
     @ViewChild('actionsTemplate')
     actionsTemplate: TemplateRef<any>;
 
-    @ViewChild('editorModal')
-    editorModal: ModalDirective;
-
     @ViewChild('vattuhinhanhEditor')
     VatTuHinhAnhEditor: VatTuHinhAnhInfoComponent;
     constructor(private alertService: AlertService, private translationService: AppTranslationService, private vattuhinhanhService: VatTuHinhAnhService) {
@@ -52,15 +49,11 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
         let gT = (key: string) => this.translationService.getTranslation(key);
 
         this.columns = [
-            { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },              
-			{ prop: 'tenHinhAnh', name: gT('TenHinhAnh')},
-			{ prop: 'uRLHinhAnh', name: gT('URLHinhAnh')},
-			{ prop: 'dienGiai', name: gT('DienGiai')},
-			{ prop: 'nguoiNhap', name: gT('NguoiNhap')},
-			{ prop: 'ngayNhap', name: gT('NgayNhap')},
-			{ prop: 'nguoiSua', name: gT('NguoiSua')},
-			{ prop: 'ngaySua', name: gT('NgaySua')},
-            { name: '', width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
+            { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
+            { name: gT('Hình ảnh'), cellTemplate: this.descriptionTemplate },
+            { prop: 'tenHinhAnh', name: gT('Tên hình ảnh') },
+            { prop: 'dienGiai', name: gT('Diễn giải') },
+            { name: gT('Chức năng'), width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
 
         this.loadData();
@@ -69,13 +62,13 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.VatTuHinhAnhEditor.changesSavedCallback = () => {
             this.addNewToList();
-            this.editorModal.hide();
+            this.VatTuHinhAnhEditor.editorModal.hide();
         };
 
         this.VatTuHinhAnhEditor.changesCancelledCallback = () => {
             this.vattuhinhanhEdit = null;
             this.sourcevattuhinhanh = null;
-            this.editorModal.hide();
+            this.VatTuHinhAnhEditor.editorModal.hide();
         };
     }
     
@@ -127,18 +120,13 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
 
         this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất người dùng từ máy chủ.\r\nErrors: "${Utilities.getHttpResponseMessage(error)}"`,
             MessageSeverity.error, error);
-    }
-    
-    onEditorModalHidden() {
-        this.editingRowName = null;
-        this.VatTuHinhAnhEditor.resetForm(true);
-    }
+    } 
 
     newVatTuHinhAnh() {
         this.editingRowName = null;
         this.sourcevattuhinhanh = null;
         this.vattuhinhanhEdit = this.VatTuHinhAnhEditor.newVatTuHinhAnh();
-        this.editorModal.show();
+        this.VatTuHinhAnhEditor.editorModal.show();
     }
     
     SelectedValue(value: number) {
@@ -177,6 +165,6 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
         this.editingRowName = { name: row.tenHinhAnh };
         this.sourcevattuhinhanh = row;
         this.vattuhinhanhEdit = this.VatTuHinhAnhEditor.editVatTuHinhAnh(row);
-        this.editorModal.show();
+        this.VatTuHinhAnhEditor.editorModal.show();
     }    
 }

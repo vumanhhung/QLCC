@@ -1,9 +1,10 @@
 ﻿import { Component, OnInit, ViewChild, Input } from '@angular/core';
-
 import { AlertService, MessageSeverity } from '../../services/alert.service';
+import { TrangThaiService } from '../../services/trangthai.service';
+import { TrangThai } from '../../models/trangthai.model';
 import { Utilities } from '../../services/utilities';
-import { TrangThai } from "../../models/trangthai.model";
-import { TrangThaiService } from "./../../services/trangthai.service";
+
+
 
 @Component({
     selector: "trangthai-info",
@@ -47,7 +48,7 @@ export class TrangThaiInfoComponent implements OnInit {
         this.alertService.startLoadingMessage();
         this.gvService.getTrangThaiByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
     }
-    
+
     private onDataLoadSuccessful(obj: TrangThai) {
         this.alertService.stopLoadingMessage();
     }

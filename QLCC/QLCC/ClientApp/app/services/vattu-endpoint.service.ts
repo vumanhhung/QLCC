@@ -63,6 +63,14 @@ export class VatTuEndpoint extends EndpointFactory {
             });
     }
 
+    getLastRecord<T>(): Observable<T> {
+        let endpointUrl = `${this.vattuUrl}/LastRecord`;
+        return this.http.get(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getLastRecord());
+            });
+    }
+
     //getLoaiHang<T>(): Observable<T> {
     //    let endpointUrl = `${this.vattuUrl}/GetLoaiHang`;
     //    return this.http.get(endpointUrl, this.getRequestHeaders())

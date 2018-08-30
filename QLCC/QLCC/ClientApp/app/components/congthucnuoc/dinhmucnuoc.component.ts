@@ -211,8 +211,6 @@ export class DinhMucNuocComponent implements OnInit {
             if (this.isNew == true) {
                 this.DinhMucNuocEdit.congThucNuocId = this.rowCongthucnuoc.congThucNuocId;
                 this.gvService.addnewDinhMucNuoc(this.DinhMucNuocEdit).subscribe(results => {
-                    console.log(results);
-                    console.log(results.tenDinhMucNuoc);
                     if (results.tenDinhMucNuoc == "Exist") {
                         this.showErrorAlert("Lỗi nhập liệu", "Tên định mức: " + this.DinhMucNuocEdit.tenDinhMucNuoc + " đã tồn tại trên hệ thống, vui lòng nhập tên khác!");
                         this.alertService.stopLoadingMessage();

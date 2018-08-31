@@ -113,7 +113,7 @@
                                 <div class="control">
                                     <select name="maVatTuCha" #maVatTuCha="ngModel" class="form-control" [(ngModel)]="VatTuEdit.maVatTuCha">
                                         <option value="0">--- Chọn Vật Tư Cha ---</option>
-                                        <option *ngFor="let o of rows" value="{{o.vatTuId}}">
+                                        <option *ngFor="let o of vattuCha" value="{{o.vatTuId}}">
                                             {{o.tenVatTu}}
                                         </option>
                                     </select>
@@ -257,7 +257,6 @@
                                 <div class="control">
                                     <div style="display: flex; position: relative;">
                                         <input OnlyNumber="true" autofocus type="text" class="form-control" name="giaVattu" [(ngModel)]="giaVattu" required (ngModelChange)="giaVatTuChange($event)" />
-                                        <span style="position: absolute;top: 25%;right: 35%;transition: right 0.2s;">{{kyHieu}}</span>
                                     </div>
                                 </div>
                             </div>

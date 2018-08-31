@@ -73,6 +73,7 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
     }
     
     addNewToList() {
+        this.loadData();
         if (this.sourcevattuhinhanh) {
             Object.assign(this.sourcevattuhinhanh, this.vattuhinhanhEdit);
             this.vattuhinhanhEdit = null;
@@ -134,7 +135,7 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
     }
     
     onSearchChanged(value: string) {
-        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false,r.vatTuHinhAnhId,r.tenHinhAnh,r.uRLHinhAnh,r.dienGiai,r.nguoiNhap,r.ngayNhap,r.nguoiSua,r.ngaySua));
+        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false,r.tenHinhAnh,r.dienGiai));
     }
 
     deleteVatTuHinhAnh(row: VatTuHinhAnh) {
@@ -164,6 +165,7 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
     editVatTuHinhAnh(row: VatTuHinhAnh) {
         this.editingRowName = { name: row.tenHinhAnh };
         this.sourcevattuhinhanh = row;
+        this.VatTuHinhAnhEditor.isEdit = true;
         this.vattuhinhanhEdit = this.VatTuHinhAnhEditor.editVatTuHinhAnh(row);
         this.VatTuHinhAnhEditor.editorModal.show();
     }    

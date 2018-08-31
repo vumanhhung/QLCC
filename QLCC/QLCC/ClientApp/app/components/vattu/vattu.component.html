@@ -59,7 +59,7 @@
                                        [columnMode]="'force'">
                         </ngx-datatable>
                         <ng-template #priceTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <p>{{formatPrice(row.giaVatTu)}} {{row.loaiTiens.kyHieu}}</p>
+                            <p>{{formatPrice(row.giaVatTu)}}</p>
                         </ng-template>
                         <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
                             <a class="btn btn-func btn-success" href="javascript:;" (click)="viewVatTu(row)" title="Chi tiết"><i class="fa fa-eye"></i></a>

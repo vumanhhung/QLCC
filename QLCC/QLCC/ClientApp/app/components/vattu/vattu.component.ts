@@ -199,7 +199,6 @@ export class VatTuComponent implements OnInit, AfterViewInit {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.vattuService.getAllVatTu().subscribe(results => {
-            this.vattuCha = results;
             this.onDataLoadSuccessful(results);
         }, error => this.onDataLoadFailed(error));
     }
@@ -211,7 +210,7 @@ export class VatTuComponent implements OnInit, AfterViewInit {
         obj.forEach((item, index, obj) => {
             (<any>item).index = index + 1;
         });
-
+        this.vattuCha = obj;
         this.rowsCache = [...obj];
         this.rows = obj;
     }

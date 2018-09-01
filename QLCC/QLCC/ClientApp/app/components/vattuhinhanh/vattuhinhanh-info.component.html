@@ -38,9 +38,9 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="has-feedback">
-                                <label class="control-label " for="uRLHinhAnh-{{uniqueId}}">Logo</label>
+                                <label class="control-label " for="urlHinhAnh-{{uniqueId}}">Logo</label>
                                 <div class="control">
-                                    <kendo-upload [autoUpload]="false" (upload)="uploadEventHandler($event,'/logo_cumtoanha')" (select)="selectEventHandler($event)" [multiple]="true" [saveUrl]='"api/FileUploads/UploadFile"' [removeUrl]='"api/FileUploads/Remove"' [restrictions]="uploadRestrictions" [disabled]="false"></kendo-upload>
+                                    <kendo-upload [autoUpload]="false" (upload)="uploadEventHandler($event,'/image_vattu')" (select)="selectEventHandler($event)" [multiple]="true" [saveUrl]='"api/FileUploads/UploadFile"' [removeUrl]='"api/FileUploads/Remove"' [restrictions]="uploadRestrictions" [disabled]="false"></kendo-upload>
                                     <div class="clearfix"></div>
                                     <div *ngIf="isdisplayImage" class="description-form-group box-image" style="position:relative;z-index:1;width:100px;margin-top:5px">
                                         <img id="imgData" class="img-responsive" [alt]="altImageItem" [src]="imageData" style="width:80px;border: 1px solid #ccc;border-radius: 100%;height:75px;object-fit:contain;overflow:hidden" />

@@ -117,7 +117,7 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
                 if (k_file_name[i] != undefined) {//Nếu ảnh đại diện được chọn. Up ảnh
                     //this.VatTuHinhAnhEdit.urlHinhAnh = this.imagePreviews[i].i;
                     console.log(this.imagePreviews);
-                    console.log(this.imagePreviews[i].src);
+                    //console.log(this.imagePreviews[i].src);
                 }
                 else {
                     this.VatTuHinhAnhEdit.urlHinhAnh = "no_image.gif";
@@ -256,16 +256,7 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
         const that = this;
         e.files.forEach((file) => {
             if (!file.validationErrors) {
-                const reader = new FileReader();
-                reader.onload = function (ev: any) {
-                    const image: any = {
-                        src: ev.target.result,
-                        uid: file.uid,
-                    };
-                    VatTuHinhAnhInfoComponent.srcDataImg = image.src;
-                    that.imagePreviews.unshift(image);
-                };
-                reader.readAsDataURL(file.rawFile);
+                this.imagePreviews.push(file);
             }
         });
     }

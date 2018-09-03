@@ -281,7 +281,7 @@ import { LoaiHangInfoComponent } from "./components/loaihang/loaihang-info.compo
 import { LoaiHangService } from "./services/loaihang.service";
 import { LoaiHangEndpoint } from "./services/loaihang-endpoint.service";
 
-import { IntlModule } from '@progress/kendo-angular-intl';
+//import { IntlModule } from '@progress/kendo-angular-intl';
 import '@progress/kendo-angular-intl/locales/vi/all';
 import { VatTuComponent } from "./components/vattu/vattu.component";
 import { VatTuInfoComponent } from "./components/vattu/vattu-info.component";
@@ -297,6 +297,7 @@ import { VatTuTaiLieuEndpoint } from "./services/vattutailieu-endpoint.service";
 import { VatTuTaiLieuService } from "./services/vattutailieu.service";
 import { AuthService } from "./services/auth.service";
 import { Utilities } from "./models/utilities";
+import { FormWizardModule } from 'angular-wizard-form';
 
 @NgModule({
     imports: [
@@ -304,6 +305,7 @@ import { Utilities } from "./models/utilities";
         BrowserAnimationsModule,
         HttpClientModule,
         //HttpModule,
+        FormWizardModule,
         FormsModule,
         AppRoutingModule,
         UploadModule,

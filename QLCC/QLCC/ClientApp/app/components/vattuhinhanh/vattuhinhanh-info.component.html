@@ -1,7 +1,7 @@
-﻿<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
+﻿<!--<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div *ngIf="!isViewDetails" class="EditForm">
+            <div *ngIf="!isViewDetails" class="EditForm">-->
                 <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="VatTuHinhAnhInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save(): 
 (!tenHinhAnh.valid && showErrorAlert('Tên Hình Ảnh không được để trống', 'Vui lòng nhập Tên Hình Ảnh!'));">
                     <div class="modal-header">
@@ -67,7 +67,7 @@
                         <div class="clearfix"></div>
                     </div>
                 </form>
-            </div>
+            <!--</div>
         </div>
     </div>
-</div>
+</div>-->

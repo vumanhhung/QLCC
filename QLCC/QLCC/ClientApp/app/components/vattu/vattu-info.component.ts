@@ -418,6 +418,6 @@ export class VatTuInfoComponent implements OnInit {
         this.sourcevattuhinhanh = null;
         this.VatTuHinhAnhEditor.VatTuHinhAnhEdit.vatTuId = row.vatTuId;
         this.vattuhinhanhEdit = this.VatTuHinhAnhEditor.loadVatTu(row);
-        this.VatTuHinhAnhEditor.editorModal.show();
+        this.editorModal.show();
     }
 }

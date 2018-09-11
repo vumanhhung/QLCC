@@ -42,6 +42,10 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
 
     @ViewChild('vattuhinhanhEditor')
     VatTuHinhAnhEditor: VatTuHinhAnhInfoComponent;
+
+    @ViewChild('editorModal')
+    editorModal: ModalDirective;
+
     constructor(private alertService: AlertService, private translationService: AppTranslationService, private vattuhinhanhService: VatTuHinhAnhService) {
     }
     
@@ -62,13 +66,13 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.VatTuHinhAnhEditor.changesSavedCallback = () => {
             this.addNewToList();
-            this.VatTuHinhAnhEditor.editorModal.hide();
+            this.editorModal.hide();
         };
 
         this.VatTuHinhAnhEditor.changesCancelledCallback = () => {
             this.vattuhinhanhEdit = null;
             this.sourcevattuhinhanh = null;
-            this.VatTuHinhAnhEditor.editorModal.hide();
+            this.editorModal.hide();
         };
     }
     
@@ -127,7 +131,7 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
         this.editingRowName = null;
         this.sourcevattuhinhanh = null;
         this.vattuhinhanhEdit = this.VatTuHinhAnhEditor.newVatTuHinhAnh();
-        this.VatTuHinhAnhEditor.editorModal.show();
+        this.editorModal.show();
     }
     
     SelectedValue(value: number) {
@@ -167,6 +171,11 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
         this.sourcevattuhinhanh = row;
         this.VatTuHinhAnhEditor.isEdit = true;
         this.vattuhinhanhEdit = this.VatTuHinhAnhEditor.editVatTuHinhAnh(row);
-        this.VatTuHinhAnhEditor.editorModal.show();
+        this.editorModal.show();
     }    
+
+    onEditorModalHidden() {
+        this.editingRowName = null;
+        this.VatTuHinhAnhEditor.resetForm(true);
+    }
 }

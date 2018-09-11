@@ -25,39 +25,43 @@ namespace DemoWebapp.Controllers
     public class FileUploadsController : Controller
     {
         private static Random random = new Random();
-        [HttpPost("UploadFile")]
-        public async Task<IActionResult> UploadFile([FromForm]ICollection<IFormFile> files, string stringRandom, string urlSever)
+        [HttpPost("UploadFile/{stringRandom}/{urlServer}")]
+        public async Task<IActionResult> UploadFile([FromBody] object stringRandom, object urlSever, ICollection<IFormFile> files)
         {
-            var a = stringRandom;
-            var b = urlSever;
-            long size = files.Sum(f => f.Length);
-            // full path to file in temp location
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + b);
-            foreach (var formFile in files)
-            {
-                if (formFile.Length > 0)
-                {
-                    try
-                    {
-                        using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + b, a + "_" + formFile.FileName), FileMode.Create))
-                        {
-                            await formFile.CopyToAsync(stream);
-                        }
-                    }
-                    catch(Exception e)
-                    {
-                        if(!Directory.Exists(filePath))
-                        {
-                            Directory.CreateDirectory(filePath);
-                            using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + b, a + "_" + formFile.FileName), FileMode.Create))
-                            {
-                                await formFile.CopyToAsync(stream);
-                            }
-                        }
-                    }
-                }
-            }
-            return Ok(new { count = files.Count, size, filePath });
+
+
+
+            //var test = stringRandom + " " + urlSever + " " + 
+            //var a = stringRandom;
+            //var b = urlSever;
+            //long size = files.Sum(f => f.Length);
+            //// full path to file in temp location
+            //var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + "/" + b);
+            //foreach (var formFile in files)
+            //{
+            //    if (formFile.Length > 0)
+            //    {
+            //        try
+            //        {
+            //            using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + "/" + b, a + "_" + formFile.FileName), FileMode.Create))
+            //            {
+            //                await formFile.CopyToAsync(stream);
+            //            }
+            //        }
+            //        catch(Exception e)
+            //        {
+            //            if(!Directory.Exists(filePath))
+            //            {
+            //                Directory.CreateDirectory(filePath);
+            //                using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + "/" + b, a + "_" + formFile.FileName), FileMode.Create))
+            //                {
+            //                    await formFile.CopyToAsync(stream);
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            return Ok("OK");
         }
 
         [HttpPost("Remove")]

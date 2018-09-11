@@ -8,6 +8,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { SelectEvent, UploadEvent, FileInfo } from '@progress/kendo-angular-upload';
 import { VatTu } from '../../models/vattu.model';
 import { VatTuHinhAnhComponent } from './vattuhinhanh.component';
+import { FileUploadService } from '../../services/fileupload.service';
 
 @Component({
     selector: "vattuhinhanh-info",
@@ -29,6 +30,7 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
     isdisplayImage = false;
     public imagePreviews: FileInfo[] = [];
     public stringRandom: string;
+    public urlImage: string = "";
     public imageData: string;
     static srcDataImg: any;
     public altImageItem: string;
@@ -46,10 +48,7 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
     @ViewChild('f')
     private form;
 
-    @ViewChild('editorModal')
-    editorModal: ModalDirective;
-
-    constructor(private alertService: AlertService, private gvService: VatTuHinhAnhService) {
+    constructor(private alertService: AlertService, private gvService: VatTuHinhAnhService, private fileuploadservice: FileUploadService) {
     }
 
     ngOnInit() {
@@ -65,7 +64,6 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
     loadVatTu(obj: VatTu) {
         this.vatTu = obj;
         this.VatTuHinhAnhEdit.vatTuId = obj.vatTuId;
-        console.log(this.VatTuHinhAnhEdit.vatTuId);
         return this.VatTuHinhAnhEdit;
     }
 
@@ -106,23 +104,45 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
             this.changesCancelledCallback();
     }
 
+    public selectEventHandler(e: SelectEvent): void {
+        const that = this;
+        e.files.forEach((file) => {
+            if (!file.validationErrors) {
+                const reader = new FileReader();
+
+                reader.onload = function (ev: any) {
+                    const image: any = {
+                        src: ev.target.result,
+                        uid: file.uid,
+                        name: file.name
+                    };
+                    VatTuHinhAnhInfoComponent.srcDataImg = image.src;
+                    that.imagePreviews.unshift(image);
+                };
+                reader.readAsDataURL(file.rawFile);
+            }
+        });
+    }
+
     private save() {
         this.stringRandom = Utilities.RandomText(10);
+        this.urlImage = "image_vattu";
         this.isSaving = true;
         this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
         let k_file_name: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("k-file-name") as HTMLCollectionOf<HTMLElement>;
         this.VatTuHinhAnhEdit.vatTuId = this.vatTu.vatTuId;
         if (this.isNew) {
-            for (var i = 0; i < this.imagePreviews.length; i++) {
-                if (k_file_name[i] != undefined) {//Nếu ảnh đại diện được chọn. Up ảnh
-                    //this.VatTuHinhAnhEdit.urlHinhAnh = this.imagePreviews[i].i;
-                    console.log(this.imagePreviews);
-                    //console.log(this.imagePreviews[i].src);
-                }
-                else {
-                    this.VatTuHinhAnhEdit.urlHinhAnh = "no_image.gif";
-                }
-            }
+            this.fileuploadservice.uploadFile(this.stringRandom, this.urlImage,this.imagePreviews).subscribe(results => console.log(results));
+            //for (var i = 0; i < this.imagePreviews.length; i++) {
+            //    if (k_file_name[i] != undefined) {//Nếu ảnh đại diện được chọn. Up ảnh
+            //        //this.VatTuHinhAnhEdit.urlHinhAnh = this.imagePreviews[i].i;
+            //        //console.log(this.imagePreviews[i]);
+            //        //console.log(this.imagePreviews[i].src);
+            //    }
+            //    else {
+            //        this.VatTuHinhAnhEdit.urlHinhAnh = "no_image.gif";
+            //    }
+            //}
             this.isSaving = false;
             //if (k_file_name[0] != undefined) {//Nếu ảnh đại diện được chọn. Up ảnh
             //    this.VatTuHinhAnhEdit.urlHinhAnh = VatTuHinhAnhInfoComponent.srcDataImg;
@@ -231,11 +251,6 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
             this.changesSavedCallback();
     }
 
-    onEditorModalHidden() {
-        this.editingRowName = null;
-        this.resetForm(true);
-    }
-
     uploadEventHandler(e: UploadEvent, value: string) {
         e.data = {
             stringRandom: this.stringRandom,
@@ -250,15 +265,6 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
         this.VatTuHinhAnhEdit.urlHinhAnh = "";
         this.gvService.updateVatTuHinhAnh(this.VatTuHinhAnhEdit.vatTuHinhAnhId, this.VatTuHinhAnhEdit).subscribe(response => this.saveImageSuccessHelper(), error => this.saveImageFailedHelper(error));
         this.imageData = location.protocol + "//" + location.hostname + ":" + location.port + "/images/no_image.gif";
-    }
-
-    public selectEventHandler(e: SelectEvent): void {
-        const that = this;
-        e.files.forEach((file) => {
-            if (!file.validationErrors) {
-                this.imagePreviews.push(file);
-            }
-        });
     }
 
     private saveImageFailedHelper(error: any) {

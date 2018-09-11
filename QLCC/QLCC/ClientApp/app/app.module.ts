@@ -298,6 +298,8 @@ import { VatTuTaiLieuService } from "./services/vattutailieu.service";
 import { AuthService } from "./services/auth.service";
 import { Utilities } from "./models/utilities";
 import { FormWizardModule } from 'angular-wizard-form';
+import { FileUploadEndpoint } from "./services/fileupload-endpoint.service";
+import { FileUploadService } from "./services/fileupload.service";
 
 @NgModule({
     imports: [
@@ -570,6 +572,8 @@ import { FormWizardModule } from 'angular-wizard-form';
         VatTuHinhAnhEndpoint,
         VatTuTaiLieuService,
         VatTuTaiLieuEndpoint,
+        FileUploadService,
+        FileUploadEndpoint,
         AuthService,
         Utilities
     ],

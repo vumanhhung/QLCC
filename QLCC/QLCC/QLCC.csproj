@@ -76,6 +76,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\app\services\fileupload-endpoint.service.ts" />
+    <None Remove="ClientApp\app\services\fileupload.service.ts" />
     <None Remove="Logs\log-20180108.log" />
     <None Remove="Logs\log-20180118.log" />
     <None Remove="Logs\log-20180122.log" />
@@ -132,5 +134,10 @@
     <None Include="wwwroot\dist\vendor.js" />
     <None Include="wwwroot\js\jquery-1.9.1.min.js" />
     <None Include="wwwroot\js\site.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\app\services\fileupload-endpoint.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\fileupload.service.ts" />
   </ItemGroup>
 </Project>

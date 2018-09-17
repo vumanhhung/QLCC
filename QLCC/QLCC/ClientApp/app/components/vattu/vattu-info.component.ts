@@ -72,6 +72,10 @@ export class VatTuInfoComponent implements OnInit {
     giaVattu: string = "0";
     last: string = "";
 
+    step1: boolean = false;
+    step2: boolean = false;
+    step3: boolean = false;
+
     @Input()
     isViewOnly: boolean;
 
@@ -95,9 +99,9 @@ export class VatTuInfoComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (!this.isGeneralEditor) {
-            this.loadData();
-        }
+        this.step1 = true;
+        this.step3 = false;
+        this.step2 = false;
     }
 
     loadData() {
@@ -131,9 +135,9 @@ export class VatTuInfoComponent implements OnInit {
     }
 
     private cancel() {
-        this.VatTuEdit = new VatTu();
         this.showValidationErrors = false;
         this.resetForm();
+        this.VatTuEdit = new VatTu();
         this.alertService.showMessage("Hủy thao tác", "Thao tác bị hủy bởi người dùng", MessageSeverity.default);
         this.alertService.resetStickyMessage();
         if (!this.isGeneralEditor)
@@ -143,7 +147,7 @@ export class VatTuInfoComponent implements OnInit {
             this.changesCancelledCallback();
     }
 
-    private save() {
+    private saveStep1() {
         if (this.ChkdonViTinh == false || this.ChkDVKH == false || this.ChkhangSX == false || this.ChkloaiHang == false || this.ChkloaiTien == false || this.ChkNDTN == false || this.ChknhaCC == false || this.ChkphongBan == false || this.ChkquocTich == false) {
             this.isSaving = false;
         } else {
@@ -161,7 +165,7 @@ export class VatTuInfoComponent implements OnInit {
                         this.isSaving = false;
                         this.checkTen = false;
                     } else {
-                        this.saveSuccessHelper(results);
+                        this.save1SuccessHelper(results);
                     }
                 }, error => this.saveFailedHelper(error));
             }
@@ -173,7 +177,7 @@ export class VatTuInfoComponent implements OnInit {
                         this.isSaving = false;
                         this.checkTen = false;
                     } else {
-                        this.saveSuccessHelper();
+                        this.save1SuccessHelper();
                     }
                 }, error => this.saveFailedHelper(error));
             }
@@ -212,7 +216,7 @@ export class VatTuInfoComponent implements OnInit {
                 var numberLast = 1;
             } else {
                 var numberLast = results.vatTuId + 1;
-            }            
+            }
             var number = 10 - numberLast.toString().length;
             for (var i = 0; i < number; i++) {
                 this.last += "0";
@@ -227,25 +231,18 @@ export class VatTuInfoComponent implements OnInit {
         return this.VatTuEdit;
     }
 
-    private saveSuccessHelper(obj?: VatTu) {
-        if (obj)
-            Object.assign(this.VatTuEdit, obj);
-        this.isSaving = false;
-        this.alertService.stopLoadingMessage();
-        this.showValidationErrors = false;
-        if (this.isGeneralEditor) {
-            if (this.isNew) {
-                this.alertService.showMessage("Thành công", `Thực hiện thêm mới thành công`, MessageSeverity.success);
+    private save1SuccessHelper(obj?: VatTu) {
+        if (this.isNew && this.VatTuEdit.vatTuId == null) {
+            this.alertService.showMessage("Bước 1 thành công", `Thực hiện thêm mới vật tư thành công`, MessageSeverity.success);
+            if (obj) {
+                this.VatTuEdit.vatTuId = obj.vatTuId;
             }
-            else
-                this.alertService.showMessage("Thành công", `Thực hiện thay đổi thông tin thành công`, MessageSeverity.success);
         }
-        this.addVatTuHinhAnh(obj);
-        this.VatTuEdit = new VatTu();
-        this.resetForm();
-        this.isEditMode = false;        
-        if (this.changesSavedCallback)
-            this.changesSavedCallback();
+        else
+            this.alertService.showMessage("Bước 1 thành công", `Thực hiện thay đổi thông tin vật tư thành công`, MessageSeverity.success);
+        this.step1 = false;
+        this.step2 = true;
+        this.step3 = false;
     }
 
     private saveFailedHelper(error: any) {
@@ -369,7 +366,7 @@ export class VatTuInfoComponent implements OnInit {
             this.ChkloaiTien = true;
         } else {
             this.ChkloaiTien = false;
-        }            
+        }
     }
 
     nhaCungCapChk(id: number) {
@@ -405,7 +402,7 @@ export class VatTuInfoComponent implements OnInit {
             var pN = Number(price);
             var fm = Utilities.formatNumber(pN);
             return fm;
-        } 
+        }
     }
 
     private movetoEditForm() {

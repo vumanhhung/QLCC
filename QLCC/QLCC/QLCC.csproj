@@ -76,6 +76,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\app\components\vattuhinhanh\vattuhinhanh-info.component.html~RF24f175.TMP" />
     <None Remove="ClientApp\app\services\fileupload-endpoint.service.ts" />
     <None Remove="ClientApp\app\services\fileupload.service.ts" />
     <None Remove="Logs\log-20180108.log" />
@@ -124,6 +125,7 @@
     <Folder Include="Views\Shared\" />
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\image_vattu\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -25,43 +25,54 @@ namespace DemoWebapp.Controllers
     public class FileUploadsController : Controller
     {
         private static Random random = new Random();
-        [HttpPost("UploadFile/{stringRandom}/{urlServer}")]
-        public async Task<IActionResult> UploadFile([FromBody] object stringRandom, object urlSever, ICollection<IFormFile> files)
+        //[HttpPost("UploadFile")]
+        //public async Task<IActionResult> UploadFile([FromForm] ICollection<IFormFile> files)
+        //{
+        //    long size = files.Sum(f => f.Length);
+        //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+        //    foreach (var formFile in files)
+        //    {
+        //        var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + "/image_vattu/" + formFile.FileName), FileMode.Create);
+        //        if (formFile.Length > 0)
+        //        {
+        //            await formFile.CopyToAsync(stream);
+        //        }
+        //    }
+        //    return Ok(new { count = files.Count, size, filePath });
+        //}
+
+        [HttpPost("UploadFile")]
+        public async Task<IActionResult> UploadFile([FromForm]ICollection<IFormFile> files, string urlSever)
         {
-
-
-
-            //var test = stringRandom + " " + urlSever + " " + 
-            //var a = stringRandom;
-            //var b = urlSever;
-            //long size = files.Sum(f => f.Length);
-            //// full path to file in temp location
-            //var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + "/" + b);
-            //foreach (var formFile in files)
-            //{
-            //    if (formFile.Length > 0)
-            //    {
-            //        try
-            //        {
-            //            using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + "/" + b, a + "_" + formFile.FileName), FileMode.Create))
-            //            {
-            //                await formFile.CopyToAsync(stream);
-            //            }
-            //        }
-            //        catch(Exception e)
-            //        {
-            //            if(!Directory.Exists(filePath))
-            //            {
-            //                Directory.CreateDirectory(filePath);
-            //                using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + "/" + b, a + "_" + formFile.FileName), FileMode.Create))
-            //                {
-            //                    await formFile.CopyToAsync(stream);
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-            return Ok("OK");
+            var url = urlSever;
+            long size = files.Sum(f => f.Length);
+            // full path to file in temp location
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + url);
+            foreach (var formFile in files)
+            {
+                if (formFile.Length > 0)
+                {
+                    try
+                    {
+                        using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + url, formFile.FileName), FileMode.Create))
+                        {
+                            await formFile.CopyToAsync(stream);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        if (!Directory.Exists(filePath))
+                        {
+                            Directory.CreateDirectory(filePath);
+                            using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + url, formFile.FileName), FileMode.Create))
+                            {
+                                await formFile.CopyToAsync(stream);
+                            }
+                        }
+                    }
+                }
+            }
+            return Ok(new { count = files.Count, size, filePath });
         }
 
         [HttpPost("Remove")]
@@ -72,7 +83,7 @@ namespace DemoWebapp.Controllers
                 foreach (var fullName in fileNames)
                 {
                     var fileName = Path.GetFileName(fullName);
-                    var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/", fileName);
+                    var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", fileName);
                     if (System.IO.File.Exists(physicalPath))
                     {
                         System.IO.File.Delete(physicalPath);
@@ -84,17 +95,21 @@ namespace DemoWebapp.Controllers
 
 
         [HttpPost("RemoveFileByPath")]
-        public IActionResult RemoveFileByPath([FromBody] string [] fileNames, string path)
+        public IActionResult RemoveFileByPath([FromForm] string[] fileNames, string path)
         {
-            if (fileNames != null && fileNames[1].Length > 0)
+            var url = path;
+            if (fileNames != null && fileNames.Length > 0)
             {
-                    path = fileNames[0].ToString();
-                    var fileName = Path.GetFileName(fileNames[1]);
-                    var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + path, fileName);
+                foreach(var name in fileNames)
+                {
+                    path = name.ToString();
+                    var fileName = Path.GetFileName(name);
+                    var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + url, fileName);
                     if (System.IO.File.Exists(physicalPath))
                     {
                         System.IO.File.Delete(physicalPath);
                     }
+                }                            
             }
             return Ok("Success");
         }
@@ -111,8 +126,8 @@ namespace DemoWebapp.Controllers
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + foder);
             foreach (var filter in filters)
             {
-                filesFound.AddRange(Directory.GetFiles(filePath, String.Format("*.{0}", filter), searchOption).Select(f=> Path.GetFileName(f)));
-                
+                filesFound.AddRange(Directory.GetFiles(filePath, String.Format("*.{0}", filter), searchOption).Select(f => Path.GetFileName(f)));
+
             }
             return Ok(Json(filesFound));
         }
@@ -127,9 +142,9 @@ namespace DemoWebapp.Controllers
                 string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/Bill-" + RandomString(5) + "-" + dt + ".pdf");
                 FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
                 Document doc = new Document(PageSize.A4, 20, 20, 20, 40);
-                #pragma warning disable CS0612 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
                 StyleSheet styles = new StyleSheet();
-                #pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning restore CS0612 // Type or member is obsolete
                 //Load style width Class
                 styles.LoadStyle("What_is_a_table", "color", "red");
                 styles.LoadStyle("highlight-span", "color", "blue");
@@ -144,7 +159,7 @@ namespace DemoWebapp.Controllers
                     String htmlText = "";
                     for (int i = 0; i < a.Length; i++)
                     {
-                        if (a[i].Substring(0,7) == "imgurl:")
+                        if (a[i].Substring(0, 7) == "imgurl:")
                         {
                             string url = a[i].Replace("imgurl:", "");
                             Image jpg = Image.GetInstance(new Uri(url));
@@ -152,7 +167,7 @@ namespace DemoWebapp.Controllers
                             jpg.Alignment = Image.ALIGN_CENTER;
                             doc.Add(jpg);
                         }
-                        else if (a[i].Substring(0,7) == "imgloc:")
+                        else if (a[i].Substring(0, 7) == "imgloc:")
                         {
                             string imagepath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
                             Image gif = Image.GetInstance(imagepath + a[i].Replace("imgloc:", "/"));
@@ -164,9 +179,9 @@ namespace DemoWebapp.Controllers
                         {
 
                             htmlText = a[i].ToString();
-                            #pragma warning disable CS0612 // Type or member is obsolete
-                            List<IElement> htmlarraylist = iTextSharp.text.html.simpleparser.HTMLWorker.ParseToList(new StringReader(htmlText),styles);
-                            #pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
+                            List<IElement> htmlarraylist = iTextSharp.text.html.simpleparser.HTMLWorker.ParseToList(new StringReader(htmlText), styles);
+#pragma warning restore CS0612 // Type or member is obsolete
                             Paragraph mypara = new Paragraph();
                             mypara.IndentationLeft = 36;
                             mypara.InsertRange(0, htmlarraylist);

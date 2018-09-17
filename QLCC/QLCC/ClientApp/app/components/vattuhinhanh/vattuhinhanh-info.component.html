@@ -1,54 +1,60 @@
-﻿<form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="VatTuHinhAnhInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save():
-(!tenHinhAnh.valid && showErrorAlert('Tên Hình Ảnh không được để trống', 'Vui lòng nhập Tên Hình Ảnh!'));">
+﻿<form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="VatTuHinhAnhInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
+      (!isUpload && showErrorAlert('Hình ảnh không được để trống', 'Vui lòng chọn hình ảnh!'));">
     <div class="modal-body" style="height: auto; max-height: 1000px;">
-        <div class="col-sm-3">
-            <div class="has-feedback">
-                <label class="control-label " for="tenHinhAnh-{{uniqueId}}">Tên hình ảnh</label>
-                <div class="control" [ngClass]="{'has-success': f.submitted && tenHinhAnh.valid, 'has-error' : f.submitted && !tenHinhAnh.valid}">
-                    <input autofocus type="text" class="form-control" name="tenHinhAnh" [ngClass]="{'valid-required ': tenHinhAnh.valid, 'valid-not-required' : !tenHinhAnh.valid}" [(ngModel)]="VatTuHinhAnhEdit.tenHinhAnh" #tenHinhAnh="ngModel" required />
+        <div class="row">
+            <div class="has-feedback col-sm-12">
+                <div class="has-feedback">
+                    <label class="control-label">Hình ảnh vật tư</label>
+                    <div class="control">
+                        <kendo-upload [autoUpload]="true"
+                                      [saveUrl]="uploadSaveUrl"
+                                      [removeUrl]="uploadRemoveUrl"
+                                      [restrictions]="uploadRestrictions"
+                                      (upload)="uploadEventHandler($event,'\image_vattu')"
+                                      (remove)="removeEventHandler($event,'\image_vattu')"
+                                      (select)="selectEventHandler($event)">
+                        </kendo-upload>
+                        <div class="clearfix"></div>
+                        <div *ngIf="isdisplayImage" class="description-form-group box-image" style="position:relative;z-index:1;width:100px;margin-top:5px">
+                            <img id="imgData" class="img-responsive" [alt]="altImageItem" [src]="imageData" style="width:80px;border: 1px solid #ccc;border-radius: 100%;height:75px;object-fit:contain;overflow:hidden" />
+                            <span id="{{vatTuHinhAnhId}}" (click)="clearImageData($event)" tooltip="Xóa" class="glyphicon glyphicon-remove glyphicon-remove-image"></span>
+                        </div>
+                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': isUpload, 'glyphicon-remove' : !isUpload}"></span>
+                        <span *ngIf="showValidationErrors && f.submitted && !isUpload" class="errorMessage">
+                            Vui lòng chọn hình ảnh!
+                        </span>
+                    </div>
                 </div>
-                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': tenHinhAnh.valid, 'glyphicon-remove' : !tenHinhAnh.valid}"></span>
-                <span *ngIf="showValidationErrors && f.submitted && !tenHinhAnh.valid" class="errorMessage">
-                    Vui lòng nhập tên hình ảnh!
-                </span>
             </div>
-        </div>
-        <div class="col-sm-9">
-            <div class="has-feedback">
-                <label class="control-label " for="dienGiai-{{uniqueId}}">Diễn giải</label>
+            <div class="clearfix"></div>
+            <div class="col-sm-12">
+                <label class="control-label" for="dienGiai-{{uniqueId}}">Diễn giải</label>
                 <div class="control">
                     <input autofocus type="text" class="form-control" name="dienGiai" [(ngModel)]="VatTuHinhAnhEdit.dienGiai" #dienGiai="ngModel" />
                 </div>
             </div>
-        </div>
-        <div class="col-sm-12">
-            <div class="has-feedback">
-                <label class="control-label " for="urlHinhAnh-{{uniqueId}}">Logo</label>
-                <div class="control">
-                    <kendo-upload [autoUpload]="false" (upload)="uploadEventHandler($event,'/image_vattu')" (select)="selectEventHandler($event)" [multiple]="true" [saveUrl]='"api/FileUploads/UploadFile"' [removeUrl]='"api/FileUploads/Remove"' [restrictions]="uploadRestrictions" [disabled]="false"></kendo-upload>
-                    <div class="clearfix"></div>
-                    <div *ngIf="isdisplayImage" class="description-form-group box-image" style="position:relative;z-index:1;width:100px;margin-top:5px">
-                        <img id="imgData" class="img-responsive" [alt]="altImageItem" [src]="imageData" style="width:80px;border: 1px solid #ccc;border-radius: 100%;height:75px;object-fit:contain;overflow:hidden" />
-                        <span id="{{vatTuHinhAnhId}}" (click)="clearImageData($event)" tooltip="Xóa" class="glyphicon glyphicon-remove glyphicon-remove-image"></span>
+            <div class="clearfix"></div>
+            <div class="col-md-12">
+                <hr class="edit-last-separator-hr" />
+            </div>
+            <div class="form-group actionBtn-form-group">
+                <div class="col-sm-7">
+                    <div class="pull-right">
+                        <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                        <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                        <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
+                        <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
+                            <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
+                        </button>
                     </div>
                 </div>
             </div>
+            <div class="clearfix"></div>
         </div>
-        <div class="col-md-12">
-            <hr class="edit-last-separator-hr" />
-        </div>
-        <div class="form-group actionBtn-form-group">
-            <div class="col-sm-7">
-                <div class="pull-right">
-                    <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
-                    <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
-                    <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
-                    <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
-                        <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="clearfix"></div>
     </div>
 </form>
+
+
+
+
+

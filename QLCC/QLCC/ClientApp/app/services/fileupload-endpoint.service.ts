@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map';
 import { EndpointFactory } from './endpoint-factory.service';
 import { ConfigurationService } from './configuration.service';
 import { FileInfo } from '@progress/kendo-angular-upload';
+import { VatTuHinhAnh } from '../models/vattuhinhanh.model';
 
 @Injectable()
 export class FileUploadEndpoint extends EndpointFactory {
@@ -15,17 +16,11 @@ export class FileUploadEndpoint extends EndpointFactory {
         super(http, configurations, injector);
     }
 
-    uploadFile<T>(stringRandom?: string, urlServer?: string, file?: FileInfo[]): Observable<T> {
-        let endpointUrl = `${this._fileuploadUrl}/UploadFile/${stringRandom}/${urlServer}`;
-
-        let jb = {
-            "file": file, "url": "a"
-        }
-
-         
-        return this.http.post(endpointUrl, jb, this.getRequestHeaders())
-            .catch(error => {
-            return this.handleError(error, () => this.uploadFile(stringRandom, urlServer, file));
+    uploadFile(file?: FileInfo[]) {
+        let endpointUrl = `${this._fileuploadUrl}/UploadFile`;
+        let body = JSON.stringify(file);
+        return this.http.post(endpointUrl, body, this.getRequestHeaders()).catch(error => {
+            return this.handleError(error, () => this.uploadFile(file));
         });
     }
 }

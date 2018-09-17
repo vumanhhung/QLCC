@@ -241,6 +241,7 @@ export class VatTuComponent implements OnInit, AfterViewInit {
         this.VatTuEditor.NDTN = this.NDTN;
         this.VatTuEditor.vattuCha = this.vattuCha;
         this.VatTuEditor.isViewDetails = false;
+        this.VatTuEditor.step1 = true;
         this.vattuEdit = this.VatTuEditor.newVatTu();
         this.VatTuEditor.editorModal.show();
     }

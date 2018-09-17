@@ -5,7 +5,7 @@ import { Utilities } from '../../services/utilities';
 import { VatTuHinhAnh } from "../../models/vattuhinhanh.model";
 import { VatTuHinhAnhService } from "./../../services/vattuhinhanh.service";
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { SelectEvent, UploadEvent, FileInfo } from '@progress/kendo-angular-upload';
+import { SelectEvent, UploadEvent, FileInfo, FileRestrictions, ClearEvent, RemoveEvent } from '@progress/kendo-angular-upload';
 import { VatTu } from '../../models/vattu.model';
 import { VatTuHinhAnhComponent } from './vattuhinhanh.component';
 import { FileUploadService } from '../../services/fileupload.service';
@@ -19,6 +19,8 @@ import { FileUploadService } from '../../services/fileupload.service';
 export class VatTuHinhAnhInfoComponent implements OnInit {
     private isNew = false;
     isEdit = false;
+    public uploadSaveUrl = 'api/FileUploads/UploadFile'; // should represent an actual API endpoint
+    public uploadRemoveUrl = 'api/FileUploads/RemoveFileByPath'; // should represent an actual API endpoint
     private isSaving = false;
     private showValidationErrors: boolean = false;
     private uniqueId: string = Utilities.uniqueId();
@@ -27,10 +29,11 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
     public value: Date = new Date();
     public formResetToggle = true;
     private isEditMode = false;
+    isUpload = false;
     isdisplayImage = false;
     public imagePreviews: FileInfo[] = [];
     public stringRandom: string;
-    public urlImage: string = "";
+    public urlSever: string = "";
     public imageData: string;
     static srcDataImg: any;
     public altImageItem: string;
@@ -38,6 +41,10 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
     public changesSavedCallback: () => void;
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
+
+    public uploadRestrictions: FileRestrictions = {
+        allowedExtensions: ['.jpg', '.png']
+    };
 
     @Input()
     isViewOnly: boolean;
@@ -104,60 +111,94 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
             this.changesCancelledCallback();
     }
 
+    public clearEventHandler(e: ClearEvent): void {
+        console.log('Clearing the file upload');
+        this.imagePreviews = [];
+    }
+
+    public completeEventHandler() {
+        console.log(`All files processed`);
+        //
+    }
+
+    public removeEventHandler(e: RemoveEvent, value: string): void {
+        console.log(`Removing ${e.files[0].name}`);
+
+        e.data = {
+            path: value
+        };
+
+        const index = this.imagePreviews.findIndex(item => item.uid === e.files[0].uid);
+
+        if (index >= 0) {
+            this.imagePreviews.splice(index, 1);
+        }
+    }
+
+    uploadEventHandler(e: UploadEvent, value: string) {
+        e.data = {
+            urlSever: value
+        };
+    }
+
     public selectEventHandler(e: SelectEvent): void {
         const that = this;
+        that.stringRandom = Utilities.RandomText(2);
         e.files.forEach((file) => {
             if (!file.validationErrors) {
                 const reader = new FileReader();
-
-                reader.onload = function (ev: any) {
-                    const image: any = {
-                        src: ev.target.result,
-                        uid: file.uid,
-                        name: file.name
-                    };
-                    VatTuHinhAnhInfoComponent.srcDataImg = image.src;
-                    that.imagePreviews.unshift(image);
-                };
-                reader.readAsDataURL(file.rawFile);
+                this.gvService.getExist(file.name).subscribe(results => {
+                    if (results == "Ok") {
+                        reader.onload = function (ev: any) {
+                            const image = {
+                                src: ev.target.result,
+                                uid: file.uid,
+                                name: file.name
+                            };
+                            that.imagePreviews.unshift(image);
+                        };
+                        reader.readAsDataURL(file.rawFile);
+                    } else if (results == "Exist") {
+                        reader.onload = function (ev: any) {
+                            const image = {
+                                src: ev.target.result,
+                                uid: file.uid,
+                                name: file.name + that.stringRandom
+                            };
+                            that.imagePreviews.unshift(image);
+                        };
+                        reader.readAsDataURL(file.rawFile);
+                    }
+                }, error => { });
+                console.log(this.imagePreviews);
             }
         });
     }
 
-    private save() {
-        this.stringRandom = Utilities.RandomText(10);
-        this.urlImage = "image_vattu";
-        this.isSaving = true;
-        this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
-        let k_file_name: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("k-file-name") as HTMLCollectionOf<HTMLElement>;
-        this.VatTuHinhAnhEdit.vatTuId = this.vatTu.vatTuId;
-        if (this.isNew) {
-            this.fileuploadservice.uploadFile(this.stringRandom, this.urlImage,this.imagePreviews).subscribe(results => console.log(results));
-            //for (var i = 0; i < this.imagePreviews.length; i++) {
-            //    if (k_file_name[i] != undefined) {//Nếu ảnh đại diện được chọn. Up ảnh
-            //        //this.VatTuHinhAnhEdit.urlHinhAnh = this.imagePreviews[i].i;
-            //        //console.log(this.imagePreviews[i]);
-            //        //console.log(this.imagePreviews[i].src);
-            //    }
-            //    else {
-            //        this.VatTuHinhAnhEdit.urlHinhAnh = "no_image.gif";
-            //    }
-            //}
-            this.isSaving = false;
-            //if (k_file_name[0] != undefined) {//Nếu ảnh đại diện được chọn. Up ảnh
-            //    this.VatTuHinhAnhEdit.urlHinhAnh = VatTuHinhAnhInfoComponent.srcDataImg;
-            //}
-            //else {
-            //    this.VatTuHinhAnhEdit.urlHinhAnh = "no_image.gif";
-            //}
-            //this.gvService.addnewVatTuHinhAnh(this.VatTuHinhAnhEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
-        }
-        else {
-            if (k_file_name[0] != undefined) {//Nếu ảnh đại diện được chọn. Up ảnh
-                this.VatTuHinhAnhEdit.urlHinhAnh = VatTuHinhAnhInfoComponent.srcDataImg;
+    private save() {        
+        if (this.imagePreviews.length == 0) {
+            this.alertService.showStickyMessage("Lỗi nhập liệu", "Ảnh không được để trống - Vui lòng chọn ảnh để upload", MessageSeverity.error);
+            this.isUpload = false;
+        } else {
+            this.isSaving = true;
+            this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
+            this.VatTuHinhAnhEdit.vatTuId = 0;
+            if (this.isNew) {
+                for (var i = 0; i < this.imagePreviews.length; i++) {
+                    this.VatTuHinhAnhEdit.tenHinhAnh = this.imagePreviews[i].name;
+                    this.gvService.addnewVatTuHinhAnh(this.VatTuHinhAnhEdit).subscribe(results => {
+                        this.saveSuccessHelper(results);
+                        console.log(results.urlHinhAnh);
+                    }, error => this.saveFailedHelper(error));
+                }
             }
-            this.gvService.updateVatTuHinhAnh(this.VatTuHinhAnhEdit.vatTuHinhAnhId, this.VatTuHinhAnhEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
-        }
+            else {
+                for (var i = 0; i < this.imagePreviews.length; i++) {
+                    this.VatTuHinhAnhEdit.tenHinhAnh = this.imagePreviews[i].name;
+                    this.gvService.updateVatTuHinhAnh(this.VatTuHinhAnhEdit.vatTuHinhAnhId, this.VatTuHinhAnhEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
+                }                
+            }
+        }        
     }
 
     newVatTuHinhAnh() {
@@ -168,8 +209,6 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
         this.isdisplayImage = false;
         this.VatTuHinhAnhEdit = new VatTuHinhAnh();
         this.edit();
-        this.altImageItem = "";
-        this.imageData = location.protocol + "//" + location.hostname + ":" + location.port + "/images/no_image.gif";
         return this.VatTuHinhAnhEdit;
     }
 
@@ -249,13 +288,6 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
 
         if (this.changesSavedCallback)
             this.changesSavedCallback();
-    }
-
-    uploadEventHandler(e: UploadEvent, value: string) {
-        e.data = {
-            stringRandom: this.stringRandom,
-            urlSever: value
-        };
     }
 
     clearImageData(event) {

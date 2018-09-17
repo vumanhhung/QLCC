@@ -10,6 +10,7 @@ import { FileInfo } from '@progress/kendo-angular-upload';
 import { LoaiDichVuEndpoint } from './loaidichvu-endpoint.service';
 import { FileUploadEndpoint } from './fileupload-endpoint.service';
 import { AuthService } from './auth.service';
+import { VatTuHinhAnh } from '../models/vattuhinhanh.model';
 
 @Injectable()
 export class FileUploadService {
@@ -17,7 +18,7 @@ export class FileUploadService {
 
     }
 
-    uploadFile(stringRandom?: string, urlServer?: string, file?: FileInfo[]) {
-        return this.fileUploadEndpoint.uploadFile(stringRandom, urlServer, file);
+    uploadFile(file?: FileInfo[]) {
+        return this.fileUploadEndpoint.uploadFile(file);
     }
 }

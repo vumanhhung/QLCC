@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, AfterViewInit, TemplateRef, ViewChild, Input } from '@angular/core';
+﻿import { Component, OnInit, AfterViewInit, TemplateRef, ViewChild} from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { AlertService, DialogType, MessageSeverity } from '../../services/alert.service';

@@ -120,7 +120,6 @@ namespace QLCC.Controllers
                 hangsanxuat.NguoiNhap = user;
                 _context.HangSanXuats.Add(hangsanxuat);
                 await _context.SaveChangesAsync();
-
                 return CreatedAtAction("GetHangSanXuat", new { id = hangsanxuat.HangSanXuatId }, hangsanxuat);
             }
             else

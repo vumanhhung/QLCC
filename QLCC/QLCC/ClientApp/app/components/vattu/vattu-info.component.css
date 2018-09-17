@@ -1,25 +1,115 @@
-﻿.modal-body {
-    max-height: 800px;
-}
-
-.form-control[disabled] {
-    background-color: #fff;
-}
-
-.has-feedback .form-control {
-    padding-right: 10px;
-}
-
-#kyHieu {
+﻿.text-display {
     position: absolute;
-    top: 25%;
-    right: 20%;
-    transition: right 0.2s;
+    right: 5px;
+    top: 34px;
+    margin-left: 5px;
+    margin-right: 20px;
+    color: #ccc;
+    font-size: 11px;
+    font-style: italic;
 }
 
-.headView {
-    text-align: center;
-    font-weight: bold;
-    color: #048b8b;
-    background: #ecf0f5
+.isHoverChangeInputDate {
+    position: absolute;
+    right: 30px;
+    top: 34px;
+    margin-left: 5px;
+    margin-right: 20px;
+    color: #ccc;
+    font-size: 11px;
+    font-style: italic;
+}
+
+.dateSpecial:focus {
+    right: 30px !important;
+}
+
+.panel {
+    padding: 10px 0 15px 0;
+    width: 100%;
+    margin: 10px 0;
+    border: 1px dashed #ddd
+}
+
+    .panel h5 {
+        margin-top: 0;
+        padding: 0 15px;
+    }
+
+.step ul {
+    padding: 0;
+    margin: 0;
+}
+
+    .step ul li {
+        list-style: none;
+        float: left;
+        padding: 10px;
+    }
+
+        .step ul li.active {
+            background: #048b8b;
+        }
+
+            .step ul li.active a {
+                color: #fff;
+            }
+
+        .step ul li a {
+            font-size: 14px;
+        }
+
+.tab-content .modal-body {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.box-info {
+    margin-bottom: 0;
+}
+
+.modal-footer {
+    padding: 5px;
+}
+
+.table-item {
+    margin-top: 15px;
+}
+
+.table {
+    /*border-color: grey;*/
+    margin: 0 auto;
+    width: 100%;
+}
+
+    .table tr th, .table tr td {
+        padding: 8px;
+        line-height: 1;
+        border-left: 1px solid #ddd;
+        text-align: center;
+    }
+
+    .table tr td {
+        border-bottom: 1px solid #ddd
+    }
+
+        .table tr td:last-child {
+            border-right: 1px solid #ddd
+        }
+
+    .table tr th:last-child {
+        border-right: 1px solid #ddd
+    }
+
+    .table tr a i {
+        color: red;
+        font-size: 22px;
+    }
+
+    .table tr a:hover {
+        cursor: pointer
+    }
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    background-color: #fff;
 }

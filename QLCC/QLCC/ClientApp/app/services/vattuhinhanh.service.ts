@@ -47,5 +47,9 @@ export class VatTuHinhAnhService {
     deleteVatTuHinhAnh(id: number) {
         return this.vattuhinhanhEndpoint.deleteVatTuHinhAnh(id);
     }
+
+    getExist(name?: string) {
+        return this.vattuhinhanhEndpoint.getExist(name);
+    }
     
 }

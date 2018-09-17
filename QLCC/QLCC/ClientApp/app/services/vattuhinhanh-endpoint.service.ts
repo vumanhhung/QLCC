@@ -39,7 +39,7 @@ export class VatTuHinhAnhEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getVatTuHinhAnhByID(Id));
             });
     }
-    
+
     addnewVatTuHinhAnh<T>(vattuhinhanhObject?: any): Observable<T> {
         let body = JSON.stringify(vattuhinhanhObject);
         return this.http.post(this.vattuhinhanhUrl, body, this.getRequestHeaders()).catch(error => {
@@ -60,6 +60,14 @@ export class VatTuHinhAnhEndpoint extends EndpointFactory {
         return this.http.delete(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.deleteVatTuHinhAnh(id));
+            });
+    }
+
+    getExist<T>(name?: string): Observable<T> {
+        let endpointUrl = `${this.vattuhinhanhUrl}/CheckExist/${name}`;
+        return this.http.get(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getExist(name));
             });
     }
 }

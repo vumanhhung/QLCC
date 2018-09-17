@@ -464,6 +464,7 @@ export class UploadInterceptor implements HttpInterceptor {
         if (req.url === 'removeUrl') {
             return of(new HttpResponse({ status: 200 }));
         }
+
         return next.handle(req);
     }
 }

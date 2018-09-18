@@ -40,21 +40,10 @@ namespace QLCC.Controllers
 
         // GET: api/VatTuHinhAnhs/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetVatTuHinhAnh([FromRoute] int id)
+        public IEnumerable<VatTuHinhAnh> GetVatTuHinhAnh([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var vattuhinhanh = await _context.VatTuHinhAnhs.SingleOrDefaultAsync(m => m.VatTuHinhAnhId == id);
-
-            if (vattuhinhanh == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(vattuhinhanh);
+            var vattuhinhanh = _context.VatTuHinhAnhs.Where(m => m.VatTuId == id);
+            return vattuhinhanh;
         }
 
         // PUT: api/VatTuHinhAnhs/5
@@ -109,7 +98,7 @@ namespace QLCC.Controllers
             vattuhinhanh.NgayNhap = DateTime.Now;
             vattuhinhanh.NguoiNhap = user;
 
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + @"\image_vattu", vattuhinhanh.TenHinhAnh);
+            var filePath = Path.Combine(@"\image_vattu", vattuhinhanh.TenHinhAnh);
             vattuhinhanh.URLHinhAnh = filePath;
             _context.VatTuHinhAnhs.Add(vattuhinhanh);
             await _context.SaveChangesAsync();
@@ -139,17 +128,18 @@ namespace QLCC.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            var vattuhinhanh = await _context.VatTuHinhAnhs.SingleOrDefaultAsync(m => m.VatTuHinhAnhId == id);
-            if (vattuhinhanh == null)
+            var check = _context.VatTuHinhAnhs.Where(r => r.VatTuId == id);
+            foreach(var vattuhinhanh in check)
             {
-                return NotFound();
+                if (vattuhinhanh == null)
+                {
+                    return NotFound();
+                }
+                _context.VatTuHinhAnhs.Remove(vattuhinhanh);
+                await _context.SaveChangesAsync();
             }
 
-            _context.VatTuHinhAnhs.Remove(vattuhinhanh);
-            await _context.SaveChangesAsync();
-
-            return Ok(vattuhinhanh);
+            return Ok(check);
         }
 
         private bool VatTuHinhAnhExists(int id)

@@ -114,18 +114,34 @@ namespace QLCC.Controllers
                 return BadRequest(ModelState);
             }
 
-            var vattutailieu = await _context.VatTuTaiLieus.SingleOrDefaultAsync(m => m.VatTutaiLieuId == id);
-            if (vattutailieu == null)
+            var check = _context.VatTuTaiLieus.Where(r => r.VatTuId == id);
+            foreach (var vattutailieu in check)
             {
-                return NotFound();
+                if (vattutailieu == null)
+                {
+                    return NotFound();
+                }
+                _context.VatTuTaiLieus.Remove(vattutailieu);
+                await _context.SaveChangesAsync();
             }
 
-            _context.VatTuTaiLieus.Remove(vattutailieu);
-            await _context.SaveChangesAsync();
-
-            return Ok(vattutailieu);
+            return Ok(check);
         }
-        
+
+        [HttpGet("CheckExist/{name}")]
+        public async Task<IActionResult> GetExist([FromRoute] string name)
+        {
+            var check = await _context.VatTuTaiLieus.SingleOrDefaultAsync(r => r.TenTaiLieu == name);
+            if (check != null)
+            {
+                return Ok("Exist");
+            }
+            else
+            {
+                return Ok("Ok");
+            }
+        }
+
         private bool VatTuTaiLieuExists(int id)
         {                        
             return _context.VatTuTaiLieus.Any(e => e.VatTutaiLieuId == id);

@@ -16,11 +16,11 @@ export class FileUploadEndpoint extends EndpointFactory {
         super(http, configurations, injector);
     }
 
-    uploadFile(file?: FileInfo[]) {
+    uploadFile(file?: any,stringRandom?: string, urlServer?: string) {
         let endpointUrl = `${this._fileuploadUrl}/UploadFile`;
         let body = JSON.stringify(file);
         return this.http.post(endpointUrl, body, this.getRequestHeaders()).catch(error => {
-            return this.handleError(error, () => this.uploadFile(file));
+            return this.handleError(error, () => this.uploadFile(file, stringRandom, urlServer));
         });
     }
 }

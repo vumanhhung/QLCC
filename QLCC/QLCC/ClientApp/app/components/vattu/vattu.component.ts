@@ -23,6 +23,10 @@ import { PhongBan } from '../../models/phongban.model';
 import { LoaiHang } from '../../models/loaihang.model';
 import { NguoiDungToaNha } from '../../models/nguoidungtoanha.model';
 import { NguoiDungToaNhaService } from '../../services/nguoidungtoanha.service';
+import { VatTuHinhAnhService } from '../../services/vattuhinhanh.service';
+import { VatTuTaiLieuService } from '../../services/vattutailieu.service';
+import { VatTuHinhAnh } from '../../models/vattuhinhanh.model';
+import { VatTuTaiLieu } from '../../models/vattutailieu.model';
 
 @Component({
     selector: "vattu",
@@ -49,6 +53,8 @@ export class VatTuComponent implements OnInit, AfterViewInit {
     loadingIndicator: boolean;
     public formResetToggle = true;
     vattuEdit: VatTu;
+    vattuHinhAnhEdit: VatTuHinhAnh;
+    vattuTaiLieuEdit: VatTuTaiLieu;
     sourcevattu: VatTu;
     editingRowName: { name: string };
 
@@ -79,7 +85,9 @@ export class VatTuComponent implements OnInit, AfterViewInit {
         private donvitinhService: DonViTinhService,
         private phongbanService: PhongBanService,
         private loaitienService: LoaiTienService,
-        private NDTNService: NguoiDungToaNhaService
+        private NDTNService: NguoiDungToaNhaService,
+        private vattuhinhanhservice: VatTuHinhAnhService,
+        private vattutailieuservice: VatTuTaiLieuService
     ) {
     }
     
@@ -266,6 +274,8 @@ export class VatTuComponent implements OnInit, AfterViewInit {
             .subscribe(results => {
                 this.alertService.stopLoadingMessage();
                 this.loadingIndicator = false;
+                this.vattuhinhanhservice.deleteVatTuHinhAnh(row.vatTuId).subscribe(results => { console.log(results) }, error => { console.log(error) });
+                this.vattutailieuservice.deleteVatTuTaiLieu(row.vatTuId).subscribe(results => { console.log(results) }, error => { console.log(error) });
                 this.rowsCache = this.rowsCache.filter(item => item !== row)
                 this.rows = this.rows.filter(item => item !== row)
                 this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
@@ -294,6 +304,10 @@ export class VatTuComponent implements OnInit, AfterViewInit {
         this.VatTuEditor.isViewDetails = false;
         this.VatTuEditor.isEdit = true;
         this.vattuEdit = this.VatTuEditor.editVatTu(row);
+        this.vattuhinhanhservice.getVatTuHinhAnhByID(row.vatTuId).subscribe(results => {
+            this.vattuHinhAnhEdit = this.VatTuEditor.editVatTuHinhAnh(results);
+        })
+        
         this.VatTuEditor.editorModal.show();
     } 
 

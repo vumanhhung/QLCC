@@ -18,7 +18,7 @@ export class FileUploadService {
 
     }
 
-    uploadFile(file?: FileInfo[]) {
-        return this.fileUploadEndpoint.uploadFile(file);
+    uploadFile(file?: any, stringRandom?: string, urlServer?: string) {
+        return this.fileUploadEndpoint.uploadFile(file, stringRandom, urlServer);
     }
 }

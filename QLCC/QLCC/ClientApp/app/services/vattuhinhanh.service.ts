@@ -27,7 +27,7 @@ export class VatTuHinhAnhService {
     }
 
     getVatTuHinhAnhByID(id?: number) {
-        return this.vattuhinhanhEndpoint.getVatTuHinhAnhByID<VatTuHinhAnh>(id);
+        return this.vattuhinhanhEndpoint.getVatTuHinhAnhByID<VatTuHinhAnh[]>(id);
     }
 
     updateVatTuHinhAnh(id?: number, vattuhinhanh?: VatTuHinhAnh) {

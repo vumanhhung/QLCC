@@ -47,7 +47,7 @@
                                        [columnMode]="'force'">
                         </ngx-datatable>
                         <ng-template #descriptionTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <img [src]="row.urlHinhAnh" width="100" height="100" />
+                            <img [src]="row.urlHinhAnh" width="100" style="height: 100%" />
                         </ng-template>
                         <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
                             <a class="btn btn-func btn-success" href="javascript:;" title="Chi tiết"><i class="fa fa-eye"></i></a>

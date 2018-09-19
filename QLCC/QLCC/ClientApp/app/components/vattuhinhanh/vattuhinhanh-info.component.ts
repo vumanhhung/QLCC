@@ -33,7 +33,7 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
     isdisplayImage = false;
     public imagePreviews: FileInfo[] = [];
     public stringRandom: string;
-    public urlSever: string = "";
+    public urlServer: string = "";
     public imageData: string;
     static srcDataImg: any;
     public altImageItem: string;
@@ -65,7 +65,7 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
 
     loadData() {
         this.alertService.startLoadingMessage();
-        this.gvService.getVatTuHinhAnhByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
+        //this.gvService.getVatTuHinhAnhByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
     }
 
     loadVatTu(obj: VatTu) {
@@ -111,96 +111,6 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
             this.changesCancelledCallback();
     }
 
-    public clearEventHandler(e: ClearEvent): void {
-        console.log('Clearing the file upload');
-        this.imagePreviews = [];
-    }
-
-    public completeEventHandler() {
-        console.log(`All files processed`);
-        //
-    }
-
-    public removeEventHandler(e: RemoveEvent, value: string): void {
-        console.log(`Removing ${e.files[0].name}`);
-
-        e.data = {
-            path: value
-        };
-
-        const index = this.imagePreviews.findIndex(item => item.uid === e.files[0].uid);
-
-        if (index >= 0) {
-            this.imagePreviews.splice(index, 1);
-        }
-    }
-
-    uploadEventHandler(e: UploadEvent, value: string) {
-        e.data = {
-            urlSever: value
-        };
-    }
-
-    public selectEventHandler(e: SelectEvent): void {
-        const that = this;
-        that.stringRandom = Utilities.RandomText(2);
-        e.files.forEach((file) => {
-            if (!file.validationErrors) {
-                const reader = new FileReader();
-                this.gvService.getExist(file.name).subscribe(results => {
-                    if (results == "Ok") {
-                        reader.onload = function (ev: any) {
-                            const image = {
-                                src: ev.target.result,
-                                uid: file.uid,
-                                name: file.name
-                            };
-                            that.imagePreviews.unshift(image);
-                        };
-                        reader.readAsDataURL(file.rawFile);
-                    } else if (results == "Exist") {
-                        reader.onload = function (ev: any) {
-                            const image = {
-                                src: ev.target.result,
-                                uid: file.uid,
-                                name: file.name + that.stringRandom
-                            };
-                            that.imagePreviews.unshift(image);
-                        };
-                        reader.readAsDataURL(file.rawFile);
-                    }
-                }, error => { });
-                console.log(this.imagePreviews);
-            }
-        });
-    }
-
-    private save() {        
-        if (this.imagePreviews.length == 0) {
-            this.alertService.showStickyMessage("Lỗi nhập liệu", "Ảnh không được để trống - Vui lòng chọn ảnh để upload", MessageSeverity.error);
-            this.isUpload = false;
-        } else {
-            this.isSaving = true;
-            this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
-            this.VatTuHinhAnhEdit.vatTuId = 0;
-            if (this.isNew) {
-                for (var i = 0; i < this.imagePreviews.length; i++) {
-                    this.VatTuHinhAnhEdit.tenHinhAnh = this.imagePreviews[i].name;
-                    this.gvService.addnewVatTuHinhAnh(this.VatTuHinhAnhEdit).subscribe(results => {
-                        this.saveSuccessHelper(results);
-                        console.log(results.urlHinhAnh);
-                    }, error => this.saveFailedHelper(error));
-                }
-            }
-            else {
-                for (var i = 0; i < this.imagePreviews.length; i++) {
-                    this.VatTuHinhAnhEdit.tenHinhAnh = this.imagePreviews[i].name;
-                    this.gvService.updateVatTuHinhAnh(this.VatTuHinhAnhEdit.vatTuHinhAnhId, this.VatTuHinhAnhEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
-                }                
-            }
-        }        
-    }
-
     newVatTuHinhAnh() {
         this.isGeneralEditor = true;
         this.isNew = true;
@@ -221,7 +131,7 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
         this.showValidationErrors = false;
         if (this.isGeneralEditor) {
             if (this.isNew) {
-                this.alertService.showMessage("Thành công", `Thực hiện thêm mới thành công`, MessageSeverity.success);
+                
             }
             else
                 this.alertService.showMessage("Thành công", `Thực hiện thay đổi thông tin thành công`, MessageSeverity.success);
@@ -291,12 +201,8 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
     }
 
     clearImageData(event) {
-        var idItem = "";
-        idItem = event.target.id;
         //Update image Item to NULL
         this.VatTuHinhAnhEdit.urlHinhAnh = "";
-        this.gvService.updateVatTuHinhAnh(this.VatTuHinhAnhEdit.vatTuHinhAnhId, this.VatTuHinhAnhEdit).subscribe(response => this.saveImageSuccessHelper(), error => this.saveImageFailedHelper(error));
-        this.imageData = location.protocol + "//" + location.hostname + ":" + location.port + "/images/no_image.gif";
     }
 
     private saveImageFailedHelper(error: any) {

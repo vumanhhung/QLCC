@@ -27,7 +27,7 @@ export class VatTuHinhAnhService {
     }
 
     getVatTuHinhAnhByID(id?: number) {
-        return this.vattuhinhanhEndpoint.getVatTuHinhAnhByID<VatTuHinhAnh>(id);
+        return this.vattuhinhanhEndpoint.getVatTuHinhAnhByID<VatTuHinhAnh[]>(id);
     }
 
     updateVatTuHinhAnh(id?: number, vattuhinhanh?: VatTuHinhAnh) {
@@ -48,8 +48,8 @@ export class VatTuHinhAnhService {
         return this.vattuhinhanhEndpoint.deleteVatTuHinhAnh(id);
     }
 
-    getExist(name?: string) {
-        return this.vattuhinhanhEndpoint.getExist(name);
+    getCount(id?: number) {
+        return this.vattuhinhanhEndpoint.getCount<VatTuHinhAnh[]>(id);
     }
     
 }

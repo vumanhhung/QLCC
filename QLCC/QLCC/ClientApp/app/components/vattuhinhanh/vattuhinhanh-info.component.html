@@ -6,13 +6,15 @@
                 <div class="has-feedback">
                     <label class="control-label">Hình ảnh vật tư</label>
                     <div class="control">
-                        <kendo-upload [autoUpload]="true"
+                        <kendo-upload [autoUpload]="false"
                                       [saveUrl]="uploadSaveUrl"
                                       [removeUrl]="uploadRemoveUrl"
                                       [restrictions]="uploadRestrictions"
                                       (upload)="uploadEventHandler($event,'\image_vattu')"
                                       (remove)="removeEventHandler($event,'\image_vattu')"
-                                      (select)="selectEventHandler($event)">
+                                      (select)="selectEventHandler($event)"
+                                      (clear)="clearEventHandler($event)"
+                                      (complete)="completeEventHandler($event)">
                         </kendo-upload>
                         <div class="clearfix"></div>
                         <div *ngIf="isdisplayImage" class="description-form-group box-image" style="position:relative;z-index:1;width:100px;margin-top:5px">

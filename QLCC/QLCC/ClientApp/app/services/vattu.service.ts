@@ -53,12 +53,4 @@ export class VatTuService {
     getLastRecord() {
         return this.vattuEndpoint.getLastRecord<VatTu>();
     }
-
-    //getLoaiHang() {
-    //    return this.vattuEndpoint.getLoaiHang<LoaiHang[]>();
-    //}
-
-    //getHangSX() {
-    //    return this.vattuEndpoint.getHangSX<HangSanXuat[]>();
-    //}
 }

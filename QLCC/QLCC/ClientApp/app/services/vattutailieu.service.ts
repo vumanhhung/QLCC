@@ -47,5 +47,8 @@ export class VatTuTaiLieuService {
     deleteVatTuTaiLieu(id: number) {
         return this.vattutailieuEndpoint.deleteVatTuTaiLieu(id);
     }
-    
+
+    getExist(name?: string) {
+        return this.vattutailieuEndpoint.getExist(name);
+    }
 }

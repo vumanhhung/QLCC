@@ -25,36 +25,22 @@ namespace DemoWebapp.Controllers
     public class FileUploadsController : Controller
     {
         private static Random random = new Random();
-        //[HttpPost("UploadFile")]
-        //public async Task<IActionResult> UploadFile([FromForm] ICollection<IFormFile> files)
-        //{
-        //    long size = files.Sum(f => f.Length);
-        //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-        //    foreach (var formFile in files)
-        //    {
-        //        var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + "/image_vattu/" + formFile.FileName), FileMode.Create);
-        //        if (formFile.Length > 0)
-        //        {
-        //            await formFile.CopyToAsync(stream);
-        //        }
-        //    }
-        //    return Ok(new { count = files.Count, size, filePath });
-        //}
 
         [HttpPost("UploadFile")]
-        public async Task<IActionResult> UploadFile([FromForm]ICollection<IFormFile> files, string urlSever)
+        public async Task<IActionResult> UploadFile([FromForm]ICollection<IFormFile> files, string stringRandom, string urlSever)
         {
-            var url = urlSever;
+            var a = stringRandom;
+            var b = urlSever;
             long size = files.Sum(f => f.Length);
             // full path to file in temp location
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + url);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + b);
             foreach (var formFile in files)
             {
                 if (formFile.Length > 0)
                 {
                     try
                     {
-                        using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + url, formFile.FileName), FileMode.Create))
+                        using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + @"\" + b, a + "_" + formFile.FileName), FileMode.Create))
                         {
                             await formFile.CopyToAsync(stream);
                         }
@@ -64,7 +50,7 @@ namespace DemoWebapp.Controllers
                         if (!Directory.Exists(filePath))
                         {
                             Directory.CreateDirectory(filePath);
-                            using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + url, formFile.FileName), FileMode.Create))
+                            using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + @"\" + b, a + "_" + formFile.FileName), FileMode.Create))
                             {
                                 await formFile.CopyToAsync(stream);
                             }
@@ -100,20 +86,52 @@ namespace DemoWebapp.Controllers
             var url = path;
             if (fileNames != null && fileNames.Length > 0)
             {
-                foreach(var name in fileNames)
+                foreach (var name in fileNames)
                 {
                     path = name.ToString();
                     var fileName = Path.GetFileName(name);
-                    var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + url, fileName);
+                    var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" +  url, fileName);
                     if (System.IO.File.Exists(physicalPath))
                     {
                         System.IO.File.Delete(physicalPath);
                     }
-                }                            
+                }
             }
             return Ok("Success");
         }
 
+        [HttpPost("DelFileByPath/{path}")]
+        public IActionResult DeleteFileByPath([FromBody] string[] fileNames, string path)
+        {
+            var url = path;
+            if (fileNames != null && fileNames.Length > 0)
+            {
+                foreach (var name in fileNames)
+                {
+                    path = name.ToString();
+                    var fileName = Path.GetFileName(name);
+                    var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + @"\" + url, fileName);
+                    if (System.IO.File.Exists(physicalPath))
+                    {
+                        System.IO.File.Delete(physicalPath);
+                    }
+                }
+            }
+            return Ok("Success");
+        }
+
+        [HttpPost("DelEachFileByPath/{fileNames}/{path}")]
+        public IActionResult DeleteEachFileByPath([FromRoute] string fileNames, string path)
+        {
+            var url = path;
+            var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + @"\" + url, fileNames);
+            if (System.IO.File.Exists(physicalPath))
+            {
+                System.IO.File.Delete(physicalPath);
+            }
+
+            return Ok("Success");
+        }
 
         [HttpPost("LoadListFile")]
         public IActionResult LoadListFile([FromBody] string foder)

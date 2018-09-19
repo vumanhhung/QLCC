@@ -7,6 +7,7 @@ import { Utilities } from "../../services/utilities";
 import { VatTuHinhAnhService } from "../../services/vattuhinhanh.service";
 import { VatTuHinhAnh } from "../../models/vattuhinhanh.model";
 import { VatTuHinhAnhInfoComponent } from "./vattuhinhanh-info.component";
+import { FileUploadService } from '../../services/fileupload.service';
 
 @Component({
     selector: "vattuhinhanh",
@@ -46,7 +47,7 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
     @ViewChild('editorModal')
     editorModal: ModalDirective;
 
-    constructor(private alertService: AlertService, private translationService: AppTranslationService, private vattuhinhanhService: VatTuHinhAnhService) {
+    constructor(private alertService: AlertService, private translationService: AppTranslationService, private vattuhinhanhService: VatTuHinhAnhService, private fileuploadService: FileUploadService) {
     }
     
     ngOnInit() {
@@ -164,6 +165,7 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
                 this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
                     MessageSeverity.error, error);
             });
+        this.fileuploadService.deleteEachFileByPath(row.tenHinhAnh, row.urlHinhAnh.slice(1, 12)).subscribe(resulst => { this.loadData(); }, error => { });
     }
 
     editVatTuHinhAnh(row: VatTuHinhAnh) {

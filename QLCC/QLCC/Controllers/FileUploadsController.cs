@@ -24,7 +24,6 @@ namespace DemoWebapp.Controllers
     [Route("api/FileUploads")]
     public class FileUploadsController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private static Random random = new Random();
 
         [HttpPost("UploadFile")]
@@ -41,7 +40,7 @@ namespace DemoWebapp.Controllers
                 {
                     try
                     {
-                        using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + b, a + "_" + formFile.FileName), FileMode.Create))
+                        using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + @"\" + b, a + "_" + formFile.FileName), FileMode.Create))
                         {
                             await formFile.CopyToAsync(stream);
                         }
@@ -51,7 +50,7 @@ namespace DemoWebapp.Controllers
                         if (!Directory.Exists(filePath))
                         {
                             Directory.CreateDirectory(filePath);
-                            using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + b, a + "_" + formFile.FileName), FileMode.Create))
+                            using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + @"\" + b, a + "_" + formFile.FileName), FileMode.Create))
                             {
                                 await formFile.CopyToAsync(stream);
                             }
@@ -91,7 +90,7 @@ namespace DemoWebapp.Controllers
                 {
                     path = name.ToString();
                     var fileName = Path.GetFileName(name);
-                    var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + url, fileName);
+                    var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" +  url, fileName);
                     if (System.IO.File.Exists(physicalPath))
                     {
                         System.IO.File.Delete(physicalPath);
@@ -101,6 +100,38 @@ namespace DemoWebapp.Controllers
             return Ok("Success");
         }
 
+        [HttpPost("DelFileByPath/{path}")]
+        public IActionResult DeleteFileByPath([FromBody] string[] fileNames, string path)
+        {
+            var url = path;
+            if (fileNames != null && fileNames.Length > 0)
+            {
+                foreach (var name in fileNames)
+                {
+                    path = name.ToString();
+                    var fileName = Path.GetFileName(name);
+                    var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + @"\" + url, fileName);
+                    if (System.IO.File.Exists(physicalPath))
+                    {
+                        System.IO.File.Delete(physicalPath);
+                    }
+                }
+            }
+            return Ok("Success");
+        }
+
+        [HttpPost("DelEachFileByPath/{fileNames}/{path}")]
+        public IActionResult DeleteEachFileByPath([FromRoute] string fileNames, string path)
+        {
+            var url = path;
+            var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + @"\" + url, fileNames);
+            if (System.IO.File.Exists(physicalPath))
+            {
+                System.IO.File.Delete(physicalPath);
+            }
+
+            return Ok("Success");
+        }
 
         [HttpPost("LoadListFile")]
         public IActionResult LoadListFile([FromBody] string foder)

@@ -97,27 +97,16 @@ namespace QLCC.Controllers
             var userId = Utilities.GetUserId(this.User);
             vattuhinhanh.NgayNhap = DateTime.Now;
             vattuhinhanh.NguoiNhap = user;
-
-            var filePath = Path.Combine(@"\image_vattu", vattuhinhanh.TenHinhAnh);
-            vattuhinhanh.URLHinhAnh = filePath;
             _context.VatTuHinhAnhs.Add(vattuhinhanh);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetVatTuHinhAnh", new { id = vattuhinhanh.VatTuHinhAnhId }, vattuhinhanh);
         }
 
-        [HttpGet("CheckExist/{name}")]
-        public async Task<IActionResult> GetExist([FromRoute] string name)
+        [HttpGet("Count/{id}")]
+        public IEnumerable<VatTuHinhAnh> getCount([FromRoute] int id)
         {
-            var check = await _context.VatTuHinhAnhs.SingleOrDefaultAsync(r => r.TenHinhAnh == name);
-            if(check != null)
-            {
-                return Ok("Exist");
-            }
-            else
-            {
-                return Ok("Ok");
-            }
+            return _context.VatTuHinhAnhs.Where(r => r.VatTuId == id);
         }
 
         // DELETE: api/VatTuHinhAnhs/5

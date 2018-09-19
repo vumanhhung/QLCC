@@ -1,4 +1,5 @@
-﻿import { Component, OnInit, ViewChild, Input } from '@angular/core';
+﻿
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 
 import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { Utilities } from '../../services/utilities';
@@ -72,6 +73,7 @@ export class VatTuInfoComponent implements OnInit {
     public ChkDVKH: boolean;
     public checkTen: boolean;
 
+    VTHAs: VatTuHinhAnh[] = [];
     quoctichs: QuocTich[] = [];
     loaihangs: LoaiHang[] = [];
     hangSX: HangSanXuat[] = [];
@@ -91,12 +93,15 @@ export class VatTuInfoComponent implements OnInit {
     last: string = "";
     public stringRandom: string;
     public urlSever: string = "";
+    public urlFile: string = "";
+    public urlFileList: string[] = [];
 
     step1: boolean = false;
     step2: boolean = false;
     step3: boolean = false;
 
     isUpload = false;
+    isUploadFile = false;
     isdisplayImage = false;
     public imageData: string;
     static srcDataImg: any;
@@ -133,8 +138,10 @@ export class VatTuInfoComponent implements OnInit {
 
     loadData() {
         this.alertService.startLoadingMessage();
-        this.gvService.getAllVatTu().subscribe(results => this.vattuCha = results);
-        this.gvService.getVatTuByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
+        this.gvService.getVatTuByID().subscribe(result => {
+            this.vattuhinhanhService.getVatTuHinhAnhByID(result.vatTuId).subscribe(results => { console.log(results) }, error => { });
+            this.onDataLoadSuccessful(result);
+        }, error => this.onCurrentUserDataLoadFailed(error));
     }
 
     private onDataLoadSuccessful(obj: VatTu) {
@@ -210,6 +217,7 @@ export class VatTuInfoComponent implements OnInit {
         if (this.ChkdonViTinh == false || this.ChkDVKH == false || this.ChkhangSX == false || this.ChkloaiHang == false || this.ChkloaiTien == false || this.ChkNDTN == false || this.ChknhaCC == false || this.ChkphongBan == false || this.ChkquocTich == false) {
             this.showErrorAlert("Lỗi nhập liệu", "Vui lòng nhập đầy đủ các trường được yêu cầu !");
             this.alertService.stopLoadingMessage();
+            this.isSaving = false;
         } else {
             this.valueBaoHanh = new Date(this.valueNgayLap.getFullYear() + this.VatTuEdit.namSD, this.valueBaoHanh.getMonth(), this.valueBaoHanh.getDate());
             this.VatTuEdit.ngayLap = this.valueNgayLap;
@@ -246,34 +254,29 @@ export class VatTuInfoComponent implements OnInit {
 
     private saveStep2() {
         if (this.imagePreviews.length == 0) {
-            this.showErrorAlert("Lỗi nhập liệu", "Vu lòng nhập hình ảnh");
+            this.alertService.showStickyMessage("Lỗi nhập liệu", "Ảnh không được để trống - Vui lòng chọn ảnh để upload", MessageSeverity.error);
+            this.isUpload = false;
             this.isSaving = false;
         } else {
-            for (var i = 0; i < this.imagePreviews.length; i++) {
-                this.fileuploadService.uploadFile(this.imagePreviews[i]).subscribe(results => {
-                    console.log(results);
-                })
+            let k_img_name: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("k-upload-selected") as HTMLCollectionOf<HTMLElement>;
+            if (k_img_name.length > 0) {
+                k_img_name[0].click();
+                this.isUpload = true;
             }
-            //if (this.isNew) {
-            //    for (var i = 0; i < this.imagePreviews.length; i++) {
-            //        this.VatTuHinhAnhEdit.tenHinhAnh = this.imagePreviews[i].name;
-            //        this.vattuhinhanhService.addnewVatTuHinhAnh(this.VatTuHinhAnhEdit).subscribe(results => {
-            //            this.save2SuccessHelper(results);
-            //        }, error => this.saveFailedHelper(error));
-            //    }
-            //} else {
-            //    for (var i = 0; i < this.imagePreviews.length; i++) {
-            //        this.VatTuHinhAnhEdit.tenHinhAnh = this.imagePreviews[i].name;
-            //        if (this.VatTuHinhAnhEdit.vatTuHinhAnhId > 0) {
-            //            this.vattuhinhanhService.updateVatTuHinhAnh(this.VatTuHinhAnhEdit.vatTuHinhAnhId, this.VatTuHinhAnhEdit).subscribe(response => this.save2SuccessHelper(),
-            //                error => this.saveFailedHelper(error));
-            //        } else {
-            //            this.vattuhinhanhService.addnewVatTuHinhAnh(this.VatTuHinhAnhEdit).subscribe(results => {
-            //                this.save2SuccessHelper(results);
-            //            }, error => this.saveFailedHelper(error));
-            //        }
-            //    }
-            //}
+        }
+    }
+
+    private saveStep3() {
+        if (this.imagePreviews.length == 0) {
+            this.alertService.showStickyMessage("Lỗi nhập liệu", "Tài liệu không được để trống - Vui lòng chọn tài liệu để upload", MessageSeverity.error);
+            this.isUploadFile = false;
+            this.isSaving = false;
+        } else {
+            let k_file_name: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("k-upload-selected") as HTMLCollectionOf<HTMLElement>;
+            if (k_file_name.length > 0) {
+                k_file_name[0].click();
+                this.isUploadFile = true;
+            }
         }
     }
 
@@ -353,11 +356,6 @@ export class VatTuInfoComponent implements OnInit {
 
     private save2SuccessHelper(obj?: VatTuHinhAnh) {
         this.alertService.stopLoadingMessage();
-        if (this.isNew && this.VatTuHinhAnhEdit.vatTuHinhAnhId == null) {
-            this.alertService.showMessage("Bước 2 thành công", `Thực hiện thêm mới hình ảnh vật tư thành công`, MessageSeverity.success);
-        }
-        else
-            this.alertService.showMessage("Bước 2 thành công", `Thực hiện thay đổi hình ảnh vật tư thành công`, MessageSeverity.success);
         this.step1 = false;
         this.step2 = false;
         this.step3 = true;
@@ -370,9 +368,7 @@ export class VatTuInfoComponent implements OnInit {
         }
         else
             this.alertService.showMessage("Bước 3 thành công", `Thực hiện thay đổi hình ảnh vật tư thành công`, MessageSeverity.success);
-        this.step1 = false;
-        this.step2 = true;
-        this.step3 = false;
+
         if (this.changesSavedCallback)
             this.changesSavedCallback();
     }
@@ -564,81 +560,49 @@ export class VatTuInfoComponent implements OnInit {
         this.isEdit = true;
     }
 
-    public clearEventHandler(e: ClearEvent): void {
-        console.log('Clearing the file upload');
-        this.filePreviews = [];
-    }
-
-    public completeEventHandler() {
-        console.log(`All files processed`);
-    }
-
-    uploadEventHandler(e: UploadEvent, value: string) {
-        e.data = {
-            urlSever: value
-        };
-    }
-
-    public removeEventHandler(e: RemoveEvent, value: string): void {
-        console.log(`Removing ${e.files[0].name}`);
-
-        e.data = {
-            path: value
-        };
-
-        const index = this.filePreviews.findIndex(item => item.uid === e.files[0].uid);
-
-        if (index >= 0) {
-            this.filePreviews.splice(index, 1);
-        }
-    }
-
-    public selectEventHandler(e: SelectEvent): void {
-        const that = this;
-        that.stringRandom = Utilities.RandomText(2);
-        e.files.forEach((file) => {
-            if (!file.validationErrors) {
-                const reader = new FileReader();
-                this.vattutailieuService.getExist(file.name).subscribe(results => {
-                    if (results == "Ok") {
-                        reader.onload = function (ev: any) {
-                            const image = {
-                                src: ev.target.result,
-                                uid: file.uid,
-                                name: file.name
-                            };
-                            that.filePreviews.unshift(image);
-                        };
-                        reader.readAsDataURL(file.rawFile);
-                    } else if (results == "Exist") {
-                        reader.onload = function (ev: any) {
-                            const image = {
-                                src: ev.target.result,
-                                uid: file.uid,
-                                name: file.name + that.stringRandom
-                            };
-                            that.filePreviews.unshift(image);
-                        };
-                        reader.readAsDataURL(file.rawFile);
-                    }
-                }, error => { });
-            }
-        });
-    }
-
     public clear2EventHandler(e: ClearEvent): void {
         console.log('Clearing the file upload');
         this.imagePreviews = [];
     }
 
-    public complete2EventHandler() {
-        console.log(`All files processed`);
-    }
-
-    upload2EventHandler(e: UploadEvent, value: string) {
-        e.data = {
-            urlSever: value
-        };
+    public complete2EventHandler(event) {
+        this.isSaving = true;
+            for (var i = 1; i <= this.urlFileList.length; i++) {
+                this.VatTuHinhAnhEdit.tenHinhAnh = this.urlFileList[i].slice(13);
+                this.VatTuHinhAnhEdit.urlHinhAnh = this.urlFileList[i];
+                this.vattuhinhanhService.addnewVatTuHinhAnh(this.VatTuHinhAnhEdit).subscribe(results => {
+                    this.save2SuccessHelper(results);
+                    if (i == this.urlFileList.length) {
+                        this.alertService.showMessage("Bước 2 thành công", `Thực hiện thêm mới hình ảnh vật tư thành công`, MessageSeverity.success);
+                    }
+                }, error => { this.saveFailedHelper(error) });
+            }
+        //} else {
+        //    this.vattuhinhanhService.getCount(this.VatTuHinhAnhEdit.vatTuId).subscribe(results => {
+        //        for (var i = 1; i <= this.urlFileList.length; i++) {
+        //            if (i <= results.length) {
+        //                this.fileuploadService.deleteEachFileByPath(results[i].tenHinhAnh, results[i].urlHinhAnh.slice(1, 12)).subscribe(r => { }, error => { });
+        //                results[i].tenHinhAnh = this.urlFileList[i].slice(13);
+        //                results[i].urlHinhAnh = this.urlFileList[i];
+        //                this.vattuhinhanhService.updateVatTuHinhAnh(results[i].vatTuHinhAnhId, results[i]).subscribe(response => {
+        //                    this.save2SuccessHelper();
+        //                    if (i == this.urlFileList.length) {
+        //                        this.alertService.showMessage("Bước 2 thành công", `Thực hiện thay đổi hình ảnh vật tư thành công`, MessageSeverity.success);
+        //                    }
+        //                }, error => this.saveFailedHelper(error));
+        //            } else {
+        //                this.VatTuHinhAnhEdit.tenHinhAnh = this.urlFileList[i].slice(13);
+        //                this.VatTuHinhAnhEdit.urlHinhAnh = this.urlFileList[i];
+        //                this.vattuhinhanhService.addnewVatTuHinhAnh(this.VatTuHinhAnhEdit).subscribe(results => {
+        //                    this.save2SuccessHelper(results);
+        //                    if (i == this.urlFileList.length) {
+        //                        this.alertService.showMessage("Bước 2 thành công", `Thực hiện thay đổi hình ảnh vật tư thành công`, MessageSeverity.success);
+        //                    }
+        //                }, error => { this.saveFailedHelper(error) });
+        //            }
+        //        }
+        //    })
+        //}
     }
 
     public remove2EventHandler(e: RemoveEvent, value: string): void {
@@ -655,36 +619,40 @@ export class VatTuInfoComponent implements OnInit {
         }
     }
 
+    upload2EventHandler(e: UploadEvent, value: string) {
+        this.stringRandom = Utilities.RandomText(5);
+        e.data = {
+            stringRandom: this.stringRandom,
+            urlSever: value
+        };
+        e.files.forEach((file) => {
+
+            var name = this.stringRandom + "_" + file.name;
+            this.urlFile = "\\" + value + "\\" + name;
+            this.urlFileList.unshift(this.urlFile);
+        })
+    }
+
     public select2EventHandler(e: SelectEvent): void {
         const that = this;
-        that.stringRandom = Utilities.RandomText(2);
         e.files.forEach((file) => {
             if (!file.validationErrors) {
                 const reader = new FileReader();
-                this.vattuhinhanhService.getExist(file.name).subscribe(results => {
-                    if (results == "Ok") {
-                        reader.onload = function (ev: any) {
-                            const image = {
-                                src: ev.target.result,
-                                uid: file.uid,
-                                name: file.name
-                            };
-                            that.imagePreviews.unshift(image);
-                        };
-                        reader.readAsDataURL(file.rawFile);
-                    } else if (results == "Exist") {
-                        reader.onload = function (ev: any) {
-                            const image = {
-                                src: ev.target.result,
-                                uid: file.uid,
-                                name: file.name + that.stringRandom
-                            };
-                            that.imagePreviews.unshift(image);
-                        };
-                        reader.readAsDataURL(file.rawFile);
-                    }
-                }, error => { });
+
+                reader.onload = function (ev: any) {
+                    const image: any = {
+                        src: ev.target.result,
+                        uid: file.uid
+                    };
+                    VatTuHinhAnhInfoComponent.srcDataImg = image.src;
+                    that.imagePreviews.unshift(image);
+                };
+                reader.readAsDataURL(file.rawFile);
             }
         });
+    } 
+
+    clearImageData(id: number) {
+        console.log(id);
     }
 }

@@ -63,11 +63,11 @@ export class VatTuHinhAnhEndpoint extends EndpointFactory {
             });
     }
 
-    getExist<T>(name?: string): Observable<T> {
-        let endpointUrl = `${this.vattuhinhanhUrl}/CheckExist/${name}`;
+    getCount<T>(id?: number): Observable<T> {
+        let endpointUrl = `${this.vattuhinhanhUrl}/Count/${id}`;
         return this.http.get(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getExist(name));
+                return this.handleError(error, () => this.getCount(id));
             });
     }
 }

@@ -21,4 +21,12 @@ export class FileUploadService {
     uploadFile(file?: any, stringRandom?: string, urlServer?: string) {
         return this.fileUploadEndpoint.uploadFile(file, stringRandom, urlServer);
     }
+
+    deleteFileByPath(file?: string[], path?: string) {
+        return this.fileUploadEndpoint.deleteFileByPath(file, path);
+    }
+
+    deleteEachFileByPath(file?: string, path?: string) {
+        return this.fileUploadEndpoint.deleteEachFileByPath(file, path);
+    }
 }

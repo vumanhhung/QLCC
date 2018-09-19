@@ -23,4 +23,19 @@ export class FileUploadEndpoint extends EndpointFactory {
             return this.handleError(error, () => this.uploadFile(file, stringRandom, urlServer));
         });
     }
+
+    deleteFileByPath(file?: string[], path?: string) {
+        let endpointUrl = `${this._fileuploadUrl}/DelFileByPath/${path}`;
+        let body = JSON.stringify(file);
+        return this.http.post(endpointUrl, body, this.getRequestHeaders()).catch(error => {
+            return this.handleError(error, () => this.deleteFileByPath(file, path));
+        });
+    }
+
+    deleteEachFileByPath(file?: string, path?: string) {
+        let endpointUrl = `${this._fileuploadUrl}/DelEachFileByPath/${file}/${path}`;
+        return this.http.post(endpointUrl, this.getRequestHeaders()).catch(error => {
+            return this.handleError(error, () => this.deleteEachFileByPath(file, path));
+        });
+    }
 }

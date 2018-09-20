@@ -16,7 +16,7 @@ export class FileUploadEndpoint extends EndpointFactory {
         super(http, configurations, injector);
     }
 
-    uploadFile(file?: any,stringRandom?: string, urlServer?: string) {
+    uploadFile<T>(file?: any, stringRandom?: string, urlServer?: string): Observable<T> {
         let endpointUrl = `${this._fileuploadUrl}/UploadFile`;
         let body = JSON.stringify(file);
         return this.http.post(endpointUrl, body, this.getRequestHeaders()).catch(error => {
@@ -24,7 +24,7 @@ export class FileUploadEndpoint extends EndpointFactory {
         });
     }
 
-    deleteFileByPath(file?: string[], path?: string) {
+    deleteFileByPath<T>(file?: string[], path?: string): Observable<T> {
         let endpointUrl = `${this._fileuploadUrl}/DelFileByPath/${path}`;
         let body = JSON.stringify(file);
         return this.http.post(endpointUrl, body, this.getRequestHeaders()).catch(error => {
@@ -32,7 +32,7 @@ export class FileUploadEndpoint extends EndpointFactory {
         });
     }
 
-    deleteEachFileByPath(file?: string, path?: string) {
+    deleteEachFileByPath<T>(file?: string, path?: string): Observable<T> {
         let endpointUrl = `${this._fileuploadUrl}/DelEachFileByPath/${file}/${path}`;
         return this.http.post(endpointUrl, this.getRequestHeaders()).catch(error => {
             return this.handleError(error, () => this.deleteEachFileByPath(file, path));

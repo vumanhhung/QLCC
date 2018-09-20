@@ -110,6 +110,24 @@ namespace QLCC.Controllers
         }
 
         // DELETE: api/VatTuHinhAnhs/5
+        [HttpDelete("DelAll/{id}")]
+        public async Task<IActionResult> DeleteAllVatTuHinhAnh([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var vattuhinhanh = await _context.VatTuHinhAnhs.SingleOrDefaultAsync(r => r.VatTuHinhAnhId == id);
+            if (vattuhinhanh == null)
+            {
+                return NotFound();
+            }
+            _context.VatTuHinhAnhs.Remove(vattuhinhanh);
+            await _context.SaveChangesAsync();
+
+            return Ok(vattuhinhanh);
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVatTuHinhAnh([FromRoute] int id)
         {
@@ -118,7 +136,7 @@ namespace QLCC.Controllers
                 return BadRequest(ModelState);
             }
             var check = _context.VatTuHinhAnhs.Where(r => r.VatTuId == id);
-            foreach(var vattuhinhanh in check)
+            foreach (var vattuhinhanh in check)
             {
                 if (vattuhinhanh == null)
                 {

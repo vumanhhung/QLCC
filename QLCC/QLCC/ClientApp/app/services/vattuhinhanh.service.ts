@@ -48,6 +48,10 @@ export class VatTuHinhAnhService {
         return this.vattuhinhanhEndpoint.deleteVatTuHinhAnh(id);
     }
 
+    deleteAllVatTuHinhAnh(id: number) {
+        return this.vattuhinhanhEndpoint.deleteAllVatTuHinhAnh(id);
+    }
+
     getCount(id?: number) {
         return this.vattuhinhanhEndpoint.getCount<VatTuHinhAnh[]>(id);
     }

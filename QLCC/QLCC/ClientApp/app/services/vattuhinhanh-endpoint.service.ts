@@ -63,6 +63,14 @@ export class VatTuHinhAnhEndpoint extends EndpointFactory {
             });
     }
 
+    deleteAllVatTuHinhAnh<T>(id: number): Observable<T> {
+        let endpointUrl = `${this.vattuhinhanhUrl}/DelAll/${id}`;
+        return this.http.delete(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.deleteAllVatTuHinhAnh(id));
+            });
+    }
+
     getCount<T>(id?: number): Observable<T> {
         let endpointUrl = `${this.vattuhinhanhUrl}/Count/${id}`;
         return this.http.get(endpointUrl, this.getRequestHeaders())

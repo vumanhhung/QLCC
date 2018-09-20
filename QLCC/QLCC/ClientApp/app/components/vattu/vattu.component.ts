@@ -27,6 +27,7 @@ import { VatTuHinhAnhService } from '../../services/vattuhinhanh.service';
 import { VatTuTaiLieuService } from '../../services/vattutailieu.service';
 import { VatTuHinhAnh } from '../../models/vattuhinhanh.model';
 import { VatTuTaiLieu } from '../../models/vattutailieu.model';
+import { VatTuDetailComponent } from './vattu-detail.component';
 
 @Component({
     selector: "vattu",
@@ -76,6 +77,9 @@ export class VatTuComponent implements OnInit, AfterViewInit {
     @ViewChild('vattuEditor')
     VatTuEditor: VatTuInfoComponent;
 
+    @ViewChild('vattuDetailEditor')
+    vattuDetailEditor: VatTuDetailComponent;
+
     constructor(private alertService: AlertService, private translationService: AppTranslationService,
         private vattuService: VatTuService,
         private quoctichService: QuocTichService,
@@ -119,48 +123,63 @@ export class VatTuComponent implements OnInit, AfterViewInit {
     loadAllQuocTich() {
         this.quoctichService.getAllQuocTich().subscribe(results => this.onDataLoadQuocTichSuccessful(results), error => this.onDataLoadFailed(error));
     }
+
     onDataLoadQuocTichSuccessful(obj: QuocTich[]) {
         this.quoctichs = obj;
     }
+
     loadAllLoaiHang() {
         this.loaihangService.getAllLoaiHang().subscribe(results => this.onDataLoadLoaiHangSuccessful(results), error => this.onDataLoadFailed(error))
     }
+
     onDataLoadLoaiHangSuccessful(obj: LoaiHang[]) {
         this.loaihangs = obj;
     }
+
     loadAllHangSanXuat() {
         this.hangsxService.getAllHangSanXuat().subscribe(results => this.onDataLoadHangSanXuatSuccessful(results), error => this.onDataLoadFailed(error))
     }
+
     onDataLoadHangSanXuatSuccessful(obj: HangSanXuat[]) {
         this.hangSX = obj;
     }
+
     loadAllNhaCungCap() {
         this.nhaccService.getAllNhaCungCap().subscribe(results => this.onDataLoadNhaCungCapSuccessful(results), error => this.onDataLoadFailed(error))
     }
+
     onDataLoadNhaCungCapSuccessful(obj: NhaCungCap[]) {
         this.nhaCC = obj;
     }
+
     loadAllPhongBan() {
         this.phongbanService.getAllPhongBan().subscribe(results => this.onDataLoadPhongBanSuccessful(results), error => this.onDataLoadFailed(error))
     }
+
     onDataLoadPhongBanSuccessful(obj: PhongBan[]) {
         this.phongbans = obj;
     }
+
     loadAllDonViTinh() {
         this.donvitinhService.getAllDonViTinh().subscribe(results => this.onDataLoadDonViTinhSuccessful(results), error => this.onDataLoadFailed(error))
     }
+
     onDataLoadDonViTinhSuccessful(obj: DonViTinh[]) {
         this.donvitinhs = obj;
     }
+
     loadAllLoaiTien() {
         this.loaitienService.getAllLoaiTien().subscribe(results => this.onDataLoadLoaiTienSuccessful(results), error => this.onDataLoadFailed(error))
     }
+
     onDataLoadLoaiTienSuccessful(obj: LoaiTien[]) {
         this.loaitiens = obj;
     }
+
     loadAllNDTN() {
         this.NDTNService.getAllNguoiDungToaNha().subscribe(results => this.onDataLoadNDTNSuccessful(results), error => this.onDataLoadFailed(error))
     }
+
     onDataLoadNDTNSuccessful(obj: NguoiDungToaNha[]) {
         this.NDTN = obj;
     }
@@ -274,8 +293,8 @@ export class VatTuComponent implements OnInit, AfterViewInit {
             .subscribe(results => {
                 this.alertService.stopLoadingMessage();
                 this.loadingIndicator = false;
-                this.vattuhinhanhservice.deleteVatTuHinhAnh(row.vatTuId).subscribe(results => { console.log(results) }, error => { console.log(error) });
-                this.vattutailieuservice.deleteVatTuTaiLieu(row.vatTuId).subscribe(results => { console.log(results) }, error => { console.log(error) });
+                this.vattuhinhanhservice.deleteAllVatTuHinhAnh(row.vatTuId).subscribe(results => { console.log(results) }, error => { console.log(error) });
+                this.vattutailieuservice.deleteAllVatTuTaiLieu(row.vatTuId).subscribe(results => { console.log(results) }, error => { console.log(error) });
                 this.rowsCache = this.rowsCache.filter(item => item !== row)
                 this.rows = this.rows.filter(item => item !== row)
                 this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
@@ -303,11 +322,10 @@ export class VatTuComponent implements OnInit, AfterViewInit {
         this.VatTuEditor.vattuCha = this.vattuCha;
         this.VatTuEditor.isViewDetails = false;
         this.VatTuEditor.isEdit = true;
-        this.vattuEdit = this.VatTuEditor.editVatTu(row);
-        this.vattuhinhanhservice.getVatTuHinhAnhByID(row.vatTuId).subscribe(results => {
-            this.vattuHinhAnhEdit = this.VatTuEditor.editVatTuHinhAnh(results);
-        })
-        
+        this.VatTuEditor.step1 = true;
+        this.VatTuEditor.step2 = false;
+        this.VatTuEditor.step3 = false;
+        this.vattuEdit = this.VatTuEditor.editVatTu(row);        
         this.VatTuEditor.editorModal.show();
     } 
 
@@ -321,10 +339,9 @@ export class VatTuComponent implements OnInit, AfterViewInit {
         this.VatTuEditor.donvitinhs = this.donvitinhs;
         this.VatTuEditor.phongbans = this.phongbans;
         this.VatTuEditor.loaitiens = this.loaitiens;
-        this.vattuEdit = this.VatTuEditor.editVatTu(row);
-        this.VatTuEditor.isViewDetails = true;
-        this.VatTuEditor.isEdit = false;
-        this.VatTuEditor.editorModal.show();
+        this.vattuhinhanhservice.getVatTuHinhAnhByID(row.vatTuId).subscribe(results => this.vattuDetailEditor.VTHAs = results, error => { });
+        this.vattutailieuservice.getVatTuTaiLieuByID(row.vatTuId).subscribe(results => this.vattuDetailEditor.VTTLs = results, error => { });
+        this.vattuDetailEditor.editorModal.show();
     }
 
     formatPrice(price: string): string {

@@ -50,14 +50,14 @@
                             <div class="row">
                                 <div class="col-sm-3" style="width: 23%">
                                     <label class="control-label" for="phongBanId-{{uniqueId}}">Phòng ban</label>
-                                    <div class="control" [ngClass]="{'has-success': f.submitted && ChkmatBang, 'has-error' : f.submitted && !ChkmatBang}">
+                                    <div class="control" [ngClass]="{'has-success': f.submitted && ChkphongBan, 'has-error' : f.submitted && !ChkphongBan}">
                                         <select name="phongBanId" [(ngModel)]="VatTuEdit.phongBanId" #phongBanId="ngModel" class="form-control" (change)="phongbanChk(phongBanId.value)">
                                             <option value="0">-- Chọn Phòng Ban --</option>
                                             <option *ngFor="let o of phongbans" value="{{o.phongBanId}}">
                                                 {{o.tenPhongBan}}
                                             </option>
                                         </select>
-                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkphongBan, 'glyphicon-remove' : !ChkphongBan}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok': ChkphongBan, 'glyphicon-remove' : !ChkphongBan}"></span>
                                         <span *ngIf="showValidationErrors && f.submitted && !ChkphongBan" class="errorMessage">
                                             Vui lòng nhập phòng ban!
                                         </span>
@@ -72,7 +72,7 @@
                                                 {{o.userName}}
                                             </option>
                                         </select>
-                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkNDTN, 'glyphicon-remove' : !ChkNDTN}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok': ChkNDTN, 'glyphicon-remove' : !ChkNDTN}"></span>
                                         <span *ngIf="showValidationErrors && f.submitted && !ChkNDTN" class="errorMessage">
                                             Vui lòng nhập tên quản lý!
                                         </span>
@@ -109,7 +109,7 @@
                                     <label class="control-label" for="tenVatTu-{{uniqueId}}">Tên Vật Tư</label>
                                     <div class="control" [ngClass]="{'has-success': f.submitted && checkTen, 'has-error' : f.submitted && !checkTen}">
                                         <input autofocus type="text" class="form-control" [ngClass]="{'valid-required ': checkTen, 'valid-not-required' : !checkTen}" name="tenVatTu" [(ngModel)]="VatTuEdit.tenVatTu" #tenVatTu="ngModel" (change)="tenChk(tenVatTu.value)" />
-                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': checkTen, 'glyphicon-remove' : !checkTen}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok': checkTen, 'glyphicon-remove' : !checkTen}"></span>
                                         <span *ngIf="showValidationErrors && f.submitted && !checkTen" class="errorMessage">
                                             Vui lòng nhập tên vật tư!
                                         </span>
@@ -124,7 +124,7 @@
                                                 {{o.tenLoaiHang}}
                                             </option>
                                         </select>
-                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkloaiHang, 'glyphicon-remove' : !ChkloaiHang}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok': ChkloaiHang, 'glyphicon-remove' : !ChkloaiHang}"></span>
                                         <span *ngIf="showValidationErrors && f.submitted && !ChkloaiHang" class="errorMessage">
                                             Vui lòng nhập loại hàng!
                                         </span>
@@ -153,7 +153,7 @@
                                                 {{o.tenNuoc}}
                                             </option>
                                         </select>
-                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkquocTich, 'glyphicon-remove' : !ChkquocTich}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok': ChkquocTich, 'glyphicon-remove' : !ChkquocTich}"></span>
                                         <span *ngIf="showValidationErrors && f.submitted && !ChkquocTich" class="errorMessage">
                                             Vui lòng nhập xuất xứ!
                                         </span>
@@ -168,7 +168,7 @@
                                                 {{o.tenNhaCungCap}}
                                             </option>
                                         </select>
-                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChknhaCC, 'glyphicon-remove' : !ChknhaCC}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok': ChknhaCC, 'glyphicon-remove' : !ChknhaCC}"></span>
                                         <span *ngIf="showValidationErrors && f.submitted && !ChknhaCC" class="errorMessage">
                                             Vui lòng nhập nhà cung cấp!
                                         </span>
@@ -183,7 +183,7 @@
                                                 {{o.tenHangSanXuat}}
                                             </option>
                                         </select>
-                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkhangSX, 'glyphicon-remove' : !ChkhangSX}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok': ChkhangSX, 'glyphicon-remove' : !ChkhangSX}"></span>
                                         <span *ngIf="showValidationErrors && f.submitted && !ChkhangSX" class="errorMessage">
                                             Vui lòng nhập hãng sản xuất!
                                         </span>
@@ -220,7 +220,7 @@
                                     <label class="control-label" for="namSD-{{uniqueId}}">Năm sử dụng</label>
                                     <div class="control" [ngClass]="{'has-success': f.submitted && namSD.valid, 'has-error' : f.submitted && !namSD.valid}">
                                         <input autofocus type="number" min="1" class="form-control" name="namSD" [(ngModel)]="VatTuEdit.namSD" #namSD="ngModel" required (change)="namChange(namSD.value)" />
-                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': namSD.valid, 'glyphicon-remove' : !namSD.valid}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok': namSD.valid, 'glyphicon-remove' : !namSD.valid}"></span>
                                         <span *ngIf="showValidationErrors && f.submitted && !namSD.valid" class="errorMessage">
                                             Vui lòng nhập năm sử dụng!
                                         </span>
@@ -253,7 +253,7 @@
                                                 {{o.tenDonViTinh}}
                                             </option>
                                         </select>
-                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkdonViTinh, 'glyphicon-remove' : !ChkdonViTinh}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok': ChkdonViTinh, 'glyphicon-remove' : !ChkdonViTinh}"></span>
                                         <span *ngIf="showValidationErrors && f.submitted && !ChkdonViTinh" class="errorMessage">
                                             Vui lòng nhập đơn vị tính!
                                         </span>
@@ -268,7 +268,7 @@
                                                 {{o.tenLoaiTien}}
                                             </option>
                                         </select>
-                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': ChkloaiTien, 'glyphicon-remove' : !ChkloaiTien}"></span>
+                                        <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok': ChkloaiTien, 'glyphicon-remove' : !ChkloaiTien}"></span>
                                         <span *ngIf="showValidationErrors && f.submitted && !ChkloaiTien" class="errorMessage">
                                             Vui lòng nhập loại tiền!
                                         </span>
@@ -331,25 +331,27 @@
                                                       [saveUrl]="uploadSaveUrl"
                                                       [removeUrl]="uploadRemoveUrl"
                                                       [restrictions]="uploadImageRestrictions"
-                                                      (upload)="upload2EventHandler($event,'\image_vattu')"
-                                                      (remove)="remove2EventHandler($event,'\image_vattu')"
+                                                      (upload)="upload2EventHandler($event,'image_vattu')"
+                                                      (remove)="remove2EventHandler($event,'image_vattu')"
                                                       (select)="select2EventHandler($event)"
                                                       (clear)="clear2EventHandler($event)"
                                                       (complete)="complete2EventHandler($event)">
                                         </kendo-upload>
                                         <div class="clearfix"></div>
-                                        <div *ngIf="isdisplayImage" class="description-form-group box-image" style="position:relative;z-index:1;width:100px;margin-top:5px">
-                                            <div *ngFor="let img of VTHAs">
+                                        <div *ngIf="isEdit" class="description-form-group col-sm-12" style="position:relative;z-index:1;margin-top:5px">
+                                            <div *ngFor="let img of VTHAs" class="col-sm-2 box-image">
                                                 <img id="img.vatTuHinhAnhId" class="img-responsive" [alt]="img.tenHinhAnh" [src]="img.urlHinhAnh" style="width:80px;border: 1px solid #ccc;border-radius: 100%;height:75px;object-fit:contain;overflow:hidden" />
-                                                <span id="img.vatTuHinhAnhId" (click)="clearImageData(img.vatTuHinhAnhId)" tooltip="Xóa" class="glyphicon glyphicon-remove glyphicon-remove-image"></span>
-                                            </div>                                            
+                                                <span id="img.vatTuHinhAnhId" (click)="clear2ImageData(img.vatTuHinhAnhId, img.urlHinhAnh)" tooltip="Xóa" class="glyphicon glyphicon-remove glyphicon-remove-image"></span>
+                                            </div>
                                         </div>
-                                        <span *ngIf="!isUpload" class="errorMessage">
-                                            Vui lòng chọn hình ảnh! <span class="feedback glyphicon glyphicon-remove form-control-feedback"></span>
-                                        </span>
+                                        <div *ngIf="!isUpload" style="display: flex;" class="errorMessage">
+                                            <span> Vui lòng chọn hình ảnh! </span>
+                                            <span class="feedback glyphicon glyphicon-remove form-control-feedback"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="clearfix"></div>
                             <div class="col-sm-12">
                                 <label class="control-label" for="dienGiai-{{uniqueId}}">Diễn giải</label>
                                 <div class="control">
@@ -381,19 +383,28 @@
                                         <kendo-upload [autoUpload]="false"
                                                       [saveUrl]="uploadSaveUrl"
                                                       [removeUrl]="uploadRemoveUrl"
-                                                      [restrictions]="uploadImageRestrictions"
-                                                      (upload)="upload3EventHandler($event,'\image_vattu')"
-                                                      (remove)="remove3EventHandler($event,'\image_vattu')"
+                                                      [restrictions]="uploadFileRestrictions"
+                                                      (upload)="upload3EventHandler($event,'file_vattu')"
+                                                      (remove)="remove3EventHandler($event,'file_vattu')"
                                                       (select)="select3EventHandler($event)"
                                                       (clear)="clear3EventHandler($event)"
                                                       (complete)="complete3EventHandler($event)">
                                         </kendo-upload>
-                                        <span *ngIf="!isUploadFile" class="errorMessage">
-                                            Vui lòng chọn tài liệu! <span class="feedback glyphicon glyphicon-remove form-control-feedback"></span>
-                                        </span>
+                                        <div class="clearfix"></div>
+                                        <div *ngIf="isEdit" class="description-form-group col-sm-12" style="position:relative;z-index:1;margin-top:5px">
+                                            <div *ngFor="let file of VTTLs" class="col-sm-2 box-image">
+                                                <a id="file.vatTutaiLieuId" class="file-responsive" href="{{file.urlTaiLieu}}" style="width:80px; overflow:hidden">{{file.tenTaiLieu}}</a>
+                                                <span id="file.vatTutaiLieuId" (click)="clear3ImageData(file.vatTutaiLieuId, file.urlTaiLieu)" tooltip="Xóa" class="glyphicon glyphicon-remove glyphicon-remove-image"></span>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="!isUploadFile" style="display: flex;" class="errorMessage">
+                                            <span> Vui lòng chọn tài liệu! </span>
+                                            <span class="feedback glyphicon glyphicon-remove form-control-feedback"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="clearfix"></div>
                             <div class="col-sm-12">
                                 <label class="control-label" for="dienGiai-{{uniqueId}}">Diễn giải</label>
                                 <div class="control">
@@ -409,7 +420,7 @@
                                 <div class="col-sm-12" style="text-align:center;">
                                     <button type="button" (click)="cancel()" class="btn btn-danger"><i class='fa fa fa-times'></i> Thoát</button>
                                     <button type="button" (click)="backStep2()" class="btn btn-danger"><i class='fa fa-angle-double-left'></i> Bước 2</button>
-                                    <button type="button" (click)="save3()" class="btn btn-primary"><i class='fa fa fa-save'></i> Hoàn thành </button>
+                                    <button type="button" (click)="saveStep3()" class="btn btn-primary"><i class='fa fa fa-save'></i> Hoàn thành </button>
                                 </div>
                             </div>
                         </div>

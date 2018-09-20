@@ -1,0 +1,40 @@
+T?t Hibefil.sys
+- Ch?y CMD v?i quy?n admin
+- Ch?y lênh powercfg -h off  ==>> xoa file hiberfil.sys
+
+T?t pagefile.sys n?u có nhi?u RAM
+My Computer - Property - Advanced System setting - Performance Setting - Advanced - Change sau dó t?t b? nh? ?o (ho?c chuy?n sang ? khác)
+
+Sau khi t?t 2 cái này, thu?ng ? C s? tang kho?ng 6-10GB. Lúc kh?i d?ng l?i m?i t?t du?c Pagefile nhé.
+
+Finished !!!
+
+Máy con nhu th? này là dã upgrade lên Win ver 1803, xóa b?n cu di s? thêm kho?ng 20GB
+
+kiem tra phan manh ntn bo
+
+Voi d?nh d?ng dia  là NTFS thì s? ch?ng phân m?nh t? d?ng
+còn n?u mu?n check thì vào tool - defragment. N?u dùng SSD thì t?t tính nang (chuy?n sang OFF) này di cho nhanh
+
+oke
+
+hom trc con ra net, co cai theme win nhin` nhu mac hay ma` chua tim` ra
+
+d?y, theme d?y lên m?ng search m?t d?ng
+search k ra cai do ms dien
+
+Ð?y, con th?y chua, nó s? optimize t? d?ng nên gi? con check ch? có 1% b? phânm?nh thôi
+
+con dang bi cai truong hop bat ung dung rat cham va` lau, rat kho chiu browser thi` hay bi die
+
+thu?ng do các soft t? cài thêm (d?ng ads ware), khi con cài soft vào ph?i luu ý
+ may cai do thi` con rat luu y
+
+co ma` toan soft lam` vc thi` no load lau
+
+do bo nhi`n xem
+
+b? v? dây, lúc khác xem
+
+ok
+

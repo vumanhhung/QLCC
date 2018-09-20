@@ -33,7 +33,7 @@ namespace DemoWebapp.Controllers
             var b = urlSever;
             long size = files.Sum(f => f.Length);
             // full path to file in temp location
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + b);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + @"\" + b);
             foreach (var formFile in files)
             {
                 if (formFile.Length > 0)

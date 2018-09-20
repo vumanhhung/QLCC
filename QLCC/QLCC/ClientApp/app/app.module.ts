@@ -300,6 +300,7 @@ import { Utilities } from "./models/utilities";
 import { FormWizardModule } from 'angular-wizard-form';
 import { FileUploadEndpoint } from "./services/fileupload-endpoint.service";
 import { FileUploadService } from "./services/fileupload.service";
+import { VatTuDetailComponent } from "./components/vattu/vattu-detail.component";
 
 @NgModule({
     imports: [
@@ -467,7 +468,8 @@ import { FileUploadService } from "./services/fileupload.service";
         VatTuHinhAnhComponent,
         VatTuHinhAnhInfoComponent,
         VatTuTaiLieuComponent,
-        VatTuTaiLieuInfoComponent
+        VatTuTaiLieuInfoComponent,
+        VatTuDetailComponent
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'vi' },

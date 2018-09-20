@@ -45,7 +45,7 @@ export class VatTuTaiLieuInfoComponent implements OnInit {
 
     loadData() {
         this.alertService.startLoadingMessage();
-        this.gvService.getVatTuTaiLieuByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
+        //this.gvService.getVatTuTaiLieuByID().subscribe(result => this.onDataLoadSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));
     }
     
     private onDataLoadSuccessful(obj: VatTuTaiLieu) {

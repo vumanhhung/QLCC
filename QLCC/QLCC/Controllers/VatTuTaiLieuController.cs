@@ -38,23 +38,12 @@ namespace QLCC.Controllers
         
         // GET: api/VatTuTaiLieus/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetVatTuTaiLieu([FromRoute] int id)
+        public IEnumerable<VatTuTaiLieu> GetVatTuTaiLieu([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var vattutailieu = await _context.VatTuTaiLieus.SingleOrDefaultAsync(m => m.VatTutaiLieuId == id);
-
-            if (vattutailieu == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(vattutailieu);
+            var vattutailieu = _context.VatTuTaiLieus.Where(m => m.VatTuId == id);
+            return vattutailieu;
         }
-        
+
         // PUT: api/VatTuTaiLieus/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutVatTuTaiLieu([FromRoute] int id, [FromBody] VatTuTaiLieu vattutailieu)
@@ -104,8 +93,26 @@ namespace QLCC.Controllers
 
             return CreatedAtAction("GetVatTuTaiLieu", new { id = vattutailieu.VatTutaiLieuId }, vattutailieu);
         }
-        
+
         // DELETE: api/VatTuTaiLieus/5
+        [HttpDelete("DelAll/{id}")]
+        public async Task<IActionResult> DeleteAllVatTuTaiLieu([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var vattutailieu = await _context.VatTuTaiLieus.SingleOrDefaultAsync(r => r.VatTutaiLieuId == id);
+            if (vattutailieu == null)
+            {
+                return NotFound();
+            }
+            _context.VatTuTaiLieus.Remove(vattutailieu);
+            await _context.SaveChangesAsync();
+
+            return Ok(vattutailieu);
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVatTuTaiLieu([FromRoute] int id)
         {
@@ -113,7 +120,6 @@ namespace QLCC.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             var check = _context.VatTuTaiLieus.Where(r => r.VatTuId == id);
             foreach (var vattutailieu in check)
             {

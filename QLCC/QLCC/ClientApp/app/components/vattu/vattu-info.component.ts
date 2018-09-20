@@ -74,6 +74,7 @@ export class VatTuInfoComponent implements OnInit {
     public checkTen: boolean;
 
     VTHAs: VatTuHinhAnh[] = [];
+    VTTLs: VatTuTaiLieu[] = [];
     quoctichs: QuocTich[] = [];
     loaihangs: LoaiHang[] = [];
     hangSX: HangSanXuat[] = [];
@@ -92,7 +93,9 @@ export class VatTuInfoComponent implements OnInit {
     giaVattu: string = "0";
     last: string = "";
     public stringRandom: string;
-    public urlSever: string = "";
+
+    public urlImg: string = "";
+    public urlImgList: string[] = [];
     public urlFile: string = "";
     public urlFileList: string[] = [];
 
@@ -126,8 +129,7 @@ export class VatTuInfoComponent implements OnInit {
         private loaitienService: LoaiTienService,
         private vattuhinhanhService: VatTuHinhAnhService,
         private vattutailieuService: VatTuTaiLieuService,
-        private fileuploadService: FileUploadService
-    ) {
+        private fileuploadService: FileUploadService) {
     }
 
     ngOnInit() {
@@ -138,10 +140,6 @@ export class VatTuInfoComponent implements OnInit {
 
     loadData() {
         this.alertService.startLoadingMessage();
-        this.gvService.getVatTuByID().subscribe(result => {
-            this.vattuhinhanhService.getVatTuHinhAnhByID(result.vatTuId).subscribe(results => { console.log(results) }, error => { });
-            this.onDataLoadSuccessful(result);
-        }, error => this.onCurrentUserDataLoadFailed(error));
     }
 
     private onDataLoadSuccessful(obj: VatTu) {
@@ -155,7 +153,6 @@ export class VatTuInfoComponent implements OnInit {
     }
 
     resetForm(replace = false) {
-
         if (!replace) {
             this.form.reset();
         }
@@ -178,6 +175,15 @@ export class VatTuInfoComponent implements OnInit {
         this.step1 = false;
         this.step2 = true;
         this.step3 = false;
+        this.VTHAs = [];
+        this.vattuhinhanhService.getVatTuHinhAnhByID(this.VatTuEdit.vatTuId).subscribe(results => {
+            this.VTHAs = results;
+            if (this.VTHAs.length > 0) {
+                this.isUpload = true;
+            } else {
+                this.isUpload = false;
+            }
+        });
     }
 
     private cancel1() {
@@ -223,17 +229,19 @@ export class VatTuInfoComponent implements OnInit {
             this.VatTuEdit.ngayLap = this.valueNgayLap;
             this.VatTuEdit.ngayHHBaoHanh = this.valueBaoHanh;
             this.VatTuEdit.giaVatTu = Number(this.giaVattu.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""));
-            //this.isSaving = true;
+            this.isSaving = true;
             this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
             if (this.isNew) {
                 this.gvService.addnewVatTu(this.VatTuEdit).subscribe(results => {
                     if (results.tenVatTu == "Exist") {
                         this.showErrorAlert("Lỗi nhập liệu", "Tên vật tư " + this.VatTuEdit.tenVatTu + " đã tồn tại trên hệ thống, vui lòng chọn tên khác");
                         this.alertService.stopLoadingMessage();
-                        //this.isSaving = false;
+                        this.isSaving = false;
                         this.checkTen = false;
                     } else {
                         this.save1SuccessHelper(results);
+                        this.VatTuHinhAnhEdit.vatTuId = results.vatTuId;
+                        this.VatTuTaiLieuEdit.vatTuId = results.vatTuId;
                     }
                 }, error => this.saveFailedHelper(error));
             }
@@ -242,10 +250,20 @@ export class VatTuInfoComponent implements OnInit {
                     if (response == "Exist") {
                         this.showErrorAlert("Lỗi nhập liệu", "Tên vật tư " + this.VatTuEdit.tenVatTu + " đã tồn tại trên hệ thống, vui lòng chọn tên khác");
                         this.alertService.stopLoadingMessage();
-                        //this.isSaving = false;
+                        this.isSaving = false;
                         this.checkTen = false;
                     } else {
                         this.save1SuccessHelper();
+                        this.vattuhinhanhService.getVatTuHinhAnhByID(this.VatTuEdit.vatTuId).subscribe(results => {
+                            this.VTHAs = results;
+                            if (this.VTHAs.length > 0) {
+                                this.isUpload = true;
+                            } else {
+                                this.isUpload = false;
+                            }
+                        });
+                        this.VatTuHinhAnhEdit.vatTuId = this.VatTuEdit.vatTuId;
+                        this.VatTuTaiLieuEdit.vatTuId = this.VatTuEdit.vatTuId;
                     }
                 }, error => this.saveFailedHelper(error));
             }
@@ -253,29 +271,73 @@ export class VatTuInfoComponent implements OnInit {
     }
 
     private saveStep2() {
-        if (this.imagePreviews.length == 0) {
-            this.alertService.showStickyMessage("Lỗi nhập liệu", "Ảnh không được để trống - Vui lòng chọn ảnh để upload", MessageSeverity.error);
-            this.isUpload = false;
-            this.isSaving = false;
-        } else {
-            let k_img_name: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("k-upload-selected") as HTMLCollectionOf<HTMLElement>;
+        let k_img_name: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("k-upload-selected") as HTMLCollectionOf<HTMLElement>;
+        if (this.VTHAs.length > 0 && this.isEdit == true) {
+            this.isUpload = true;
+            this.isSaving = true;
             if (k_img_name.length > 0) {
                 k_img_name[0].click();
                 this.isUpload = true;
+            } else {
+                for (var i = 0; i < this.VTHAs.length; i++) {
+                    this.vattuhinhanhService.updateVatTuHinhAnh(this.VTHAs[i].vatTuHinhAnhId, this.VTHAs[i]).subscribe(response => {
+                        this.save2SuccessHelper();
+                        if (this.VTHAs.length - i == 1) {
+                            this.alertService.showMessage("Bước 2 thành công", `Thực hiện thay đổi hình ảnh vật tư thành công`, MessageSeverity.success);
+                        }
+                    }, error => this.saveFailedHelper(error));
+                }
+                this.vattutailieuService.getVatTuTaiLieuByID(this.VatTuTaiLieuEdit.vatTuId).subscribe(results => {
+                    this.VTTLs = results;
+                    if (this.VTTLs.length > 0) {
+                        this.isUploadFile = true;
+                    } else {
+                        this.isUploadFile = false;
+                    }
+                })
+            }
+        } else {
+            if (this.imagePreviews.length == 0) {
+                this.alertService.showStickyMessage("Lỗi nhập liệu", "Ảnh không được để trống - Vui lòng chọn ảnh để upload", MessageSeverity.error);
+                this.isUpload = false;
+                this.isSaving = false;
+            } else {
+                if (k_img_name.length > 0) {
+                    k_img_name[0].click();
+                    this.isUpload = true;
+                }
             }
         }
     }
 
     private saveStep3() {
-        if (this.imagePreviews.length == 0) {
-            this.alertService.showStickyMessage("Lỗi nhập liệu", "Tài liệu không được để trống - Vui lòng chọn tài liệu để upload", MessageSeverity.error);
-            this.isUploadFile = false;
-            this.isSaving = false;
-        } else {
-            let k_file_name: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("k-upload-selected") as HTMLCollectionOf<HTMLElement>;
+        let k_file_name: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("k-upload-selected") as HTMLCollectionOf<HTMLElement>;
+        if (this.VTTLs.length > 0 && this.isEdit == true) {
+            this.isUploadFile = true;
+            this.isSaving = true;
             if (k_file_name.length > 0) {
                 k_file_name[0].click();
                 this.isUploadFile = true;
+            } else {
+                for (var i = 0; i < this.VTTLs.length; i++) {
+                    this.vattutailieuService.updateVatTuTaiLieu(this.VTTLs[i].vatTutaiLieuId, this.VTTLs[i]).subscribe(response => {
+                        this.save3SuccessHelper();
+                        if (this.VTHAs.length - i == 1) {
+                            this.alertService.showMessage("Hoàn thành", `Thực hiện thay đổi vật tư thành công`, MessageSeverity.success);
+                        }
+                    }, error => this.saveFailedHelper(error));
+                }
+            }
+        } else {
+            if (this.filePreviews.length == 0) {
+                this.alertService.showStickyMessage("Lỗi nhập liệu", "Tài liệu không được để trống - Vui lòng chọn tài liệu để upload", MessageSeverity.error);
+                this.isUploadFile = false;
+                this.isSaving = false;
+            } else {
+                if (k_file_name.length > 0) {
+                    k_file_name[0].click();
+                    this.isUploadFile = true;
+                }
             }
         }
     }
@@ -327,25 +389,10 @@ export class VatTuInfoComponent implements OnInit {
         return this.VatTuEdit;
     }
 
-    newVatTuHinhAnh() {
-        this.isGeneralEditor = true;
-        this.isNew = true;
-        this.showValidationErrors = true;
-        this.editingRowName = null;
-        this.isdisplayImage = false;
-        this.VatTuHinhAnhEdit = new VatTuHinhAnh();
-        this.edit();
-        return this.VatTuHinhAnhEdit;
-    }
-
     private save1SuccessHelper(obj?: VatTu) {
         this.alertService.stopLoadingMessage();
         if (this.isNew && this.VatTuEdit.vatTuId == null) {
             this.alertService.showMessage("Bước 1 thành công", `Thực hiện thêm mới vật tư thành công`, MessageSeverity.success);
-            if (obj) {
-                this.VatTuHinhAnhEdit.vatTuId = obj.vatTuId;
-                this.VatTuTaiLieuEdit.vatTuId = obj.vatTuId;
-            }
         }
         else
             this.alertService.showMessage("Bước 1 thành công", `Thực hiện thay đổi thông tin vật tư thành công`, MessageSeverity.success);
@@ -363,12 +410,6 @@ export class VatTuInfoComponent implements OnInit {
 
     private save3SuccessHelper(obj?: VatTuTaiLieu) {
         this.alertService.stopLoadingMessage();
-        if (this.isNew && this.VatTuTaiLieuEdit.vatTutaiLieuId == null) {
-            this.alertService.showMessage("Bước 3 thành công", `Thực hiện thêm mới hình ảnh vật tư thành công`, MessageSeverity.success);
-        }
-        else
-            this.alertService.showMessage("Bước 3 thành công", `Thực hiện thay đổi hình ảnh vật tư thành công`, MessageSeverity.success);
-
         if (this.changesSavedCallback)
             this.changesSavedCallback();
     }
@@ -413,27 +454,6 @@ export class VatTuInfoComponent implements OnInit {
         }
         else {
             return this.newVatTu();
-        }
-    }
-
-    editVatTuHinhAnh(obj: VatTuHinhAnh[]) {
-        if (obj) {
-            this.isGeneralEditor = true;
-            this.isNew = false;            
-            this.isdisplayImage = true;
-            this.VatTuHinhAnhEdit = new VatTuHinhAnh();
-            for (var i = 0; i < obj.length; i++) {
-                this.editingRowName = obj[i].tenHinhAnh;
-                Object.assign(this.VatTuHinhAnhEdit, obj[i]);
-                Object.assign(this.VatTuHinhAnhEdit, obj[i]);               
-                this.altImageItem = obj[i].tenHinhAnh;
-                this.imageData = location.origin + obj[i].urlHinhAnh;
-            }
-            this.edit();
-            return this.VatTuHinhAnhEdit;
-        }
-        else {
-            return this.newVatTuHinhAnh();
         }
     }
 
@@ -555,11 +575,6 @@ export class VatTuInfoComponent implements OnInit {
         }
     }
 
-    private movetoEditForm() {
-        this.isViewDetails = false;
-        this.isEdit = true;
-    }
-
     public clear2EventHandler(e: ClearEvent): void {
         console.log('Clearing the file upload');
         this.imagePreviews = [];
@@ -567,42 +582,21 @@ export class VatTuInfoComponent implements OnInit {
 
     public complete2EventHandler(event) {
         this.isSaving = true;
-            for (var i = 1; i <= this.urlFileList.length; i++) {
-                this.VatTuHinhAnhEdit.tenHinhAnh = this.urlFileList[i].slice(13);
-                this.VatTuHinhAnhEdit.urlHinhAnh = this.urlFileList[i];
-                this.vattuhinhanhService.addnewVatTuHinhAnh(this.VatTuHinhAnhEdit).subscribe(results => {
-                    this.save2SuccessHelper(results);
-                    if (i == this.urlFileList.length) {
-                        this.alertService.showMessage("Bước 2 thành công", `Thực hiện thêm mới hình ảnh vật tư thành công`, MessageSeverity.success);
-                    }
-                }, error => { this.saveFailedHelper(error) });
-            }
-        //} else {
-        //    this.vattuhinhanhService.getCount(this.VatTuHinhAnhEdit.vatTuId).subscribe(results => {
-        //        for (var i = 1; i <= this.urlFileList.length; i++) {
-        //            if (i <= results.length) {
-        //                this.fileuploadService.deleteEachFileByPath(results[i].tenHinhAnh, results[i].urlHinhAnh.slice(1, 12)).subscribe(r => { }, error => { });
-        //                results[i].tenHinhAnh = this.urlFileList[i].slice(13);
-        //                results[i].urlHinhAnh = this.urlFileList[i];
-        //                this.vattuhinhanhService.updateVatTuHinhAnh(results[i].vatTuHinhAnhId, results[i]).subscribe(response => {
-        //                    this.save2SuccessHelper();
-        //                    if (i == this.urlFileList.length) {
-        //                        this.alertService.showMessage("Bước 2 thành công", `Thực hiện thay đổi hình ảnh vật tư thành công`, MessageSeverity.success);
-        //                    }
-        //                }, error => this.saveFailedHelper(error));
-        //            } else {
-        //                this.VatTuHinhAnhEdit.tenHinhAnh = this.urlFileList[i].slice(13);
-        //                this.VatTuHinhAnhEdit.urlHinhAnh = this.urlFileList[i];
-        //                this.vattuhinhanhService.addnewVatTuHinhAnh(this.VatTuHinhAnhEdit).subscribe(results => {
-        //                    this.save2SuccessHelper(results);
-        //                    if (i == this.urlFileList.length) {
-        //                        this.alertService.showMessage("Bước 2 thành công", `Thực hiện thay đổi hình ảnh vật tư thành công`, MessageSeverity.success);
-        //                    }
-        //                }, error => { this.saveFailedHelper(error) });
-        //            }
-        //        }
-        //    })
-        //}
+        for (var i = 0; i < this.urlFileList.length; i++) {
+            this.VatTuHinhAnhEdit.vatTuHinhAnhId = undefined;
+            this.VatTuHinhAnhEdit.tenHinhAnh = this.urlFileList[i].slice(13);
+            this.VatTuHinhAnhEdit.urlHinhAnh = this.urlFileList[i];
+            this.vattuhinhanhService.addnewVatTuHinhAnh(this.VatTuHinhAnhEdit).subscribe(results => {
+                this.save2SuccessHelper(results);
+                if (this.urlFileList.length - i == 1) {
+                    this.alertService.showMessage("Bước 2 thành công", `Thực hiện thêm mới hình ảnh vật tư thành công`, MessageSeverity.success);
+                }
+            }, error => {
+                this.saveFailedHelper(error);
+                this.fileuploadService.deleteEachFileByPath(this.urlFileList[i].slice(13), this.urlFileList[i].slice(1, 12))
+                    .subscribe(results => { }, error => { });
+            });
+        }
     }
 
     public remove2EventHandler(e: RemoveEvent, value: string): void {
@@ -635,6 +629,7 @@ export class VatTuInfoComponent implements OnInit {
 
     public select2EventHandler(e: SelectEvent): void {
         const that = this;
+        this.isUpload = true;
         e.files.forEach((file) => {
             if (!file.validationErrors) {
                 const reader = new FileReader();
@@ -650,9 +645,102 @@ export class VatTuInfoComponent implements OnInit {
                 reader.readAsDataURL(file.rawFile);
             }
         });
-    } 
+    }
 
-    clearImageData(id: number) {
-        console.log(id);
+    clear2ImageData(id: number, path: string) {
+        this.vattuhinhanhService.deleteVatTuHinhAnh(id).subscribe(results => { }, error => {
+            this.alertService.showMessage("Lỗi xóa", `Thực hiện xóa không thành công`, MessageSeverity.error);
+        });
+        var pathImg = path.slice(1, 12);
+        var nameImg = path.slice(13);
+        this.fileuploadService.deleteEachFileByPath(nameImg, pathImg).subscribe(results => {
+            this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
+        }, error => {
+            this.alertService.showMessage("Lỗi xóa", `Thực hiện xóa không thành công`, MessageSeverity.error);
+        });
+    }
+
+    public clear3EventHandler(e: ClearEvent): void {
+        console.log('Clearing the file upload');
+        this.filePreviews = [];
+    }
+
+    public complete3EventHandler(event) {
+        this.isSaving = true;
+        for (var i = 0; i < this.urlFileList.length; i++) {
+            this.VatTuTaiLieuEdit.vatTutaiLieuId = undefined;
+            this.VatTuTaiLieuEdit.tenTaiLieu = this.urlFileList[i].slice(13);
+            this.VatTuTaiLieuEdit.urlTaiLieu = this.urlFileList[i];
+            this.vattutailieuService.addnewVatTuTaiLieu(this.VatTuTaiLieuEdit).subscribe(results => {
+                this.save3SuccessHelper(results);
+                if (this.urlFileList.length - i == 1) {
+                    this.alertService.showMessage("Hoàn thành", `Hoàn thành thực hiện thêm mới vật tư thành công`, MessageSeverity.success);
+                }
+            }, error => {
+                this.saveFailedHelper(error);
+                this.fileuploadService.deleteEachFileByPath(this.urlFileList[i].slice(13), this.urlFileList[i].slice(1, 12))
+                    .subscribe(results => { }, error => { });
+            });
+        }
+    }
+
+    public remove3EventHandler(e: RemoveEvent, value: string): void {
+        console.log(`Removing ${e.files[0].name}`);
+
+        e.data = {
+            path: value
+        };
+
+        const index = this.filePreviews.findIndex(item => item.uid === e.files[0].uid);
+
+        if (index >= 0) {
+            this.filePreviews.splice(index, 1);
+        }
+    }
+
+    upload3EventHandler(e: UploadEvent, value: string) {
+        this.stringRandom = Utilities.RandomText(5);
+        console.log(value);
+        e.data = {
+            stringRandom: this.stringRandom,
+            urlSever: value
+        };
+        e.files.forEach((file) => {
+            var name = this.stringRandom + "_" + file.name;
+            this.urlFile = "\\" + value + "\\" + name;
+            this.urlFileList.unshift(this.urlFile);
+        })
+    }
+
+    public select3EventHandler(e: SelectEvent): void {
+        const that = this;
+        this.isUpload = true;
+        e.files.forEach((file) => {
+            if (!file.validationErrors) {
+                const reader = new FileReader();
+
+                reader.onload = function (ev: any) {
+                    const image: any = {
+                        src: ev.target.result,
+                        uid: file.uid
+                    };
+                    that.filePreviews.unshift(image);
+                };
+                reader.readAsDataURL(file.rawFile);
+            }
+        });
+    }
+
+    clear3ImageData(id: number, path: string) {
+        this.vattutailieuService.deleteVatTuTaiLieu(id).subscribe(results => { }, error => {
+            this.alertService.showMessage("Lỗi xóa", `Thực hiện xóa không thành công`, MessageSeverity.error);
+        });
+        var pathFile = path.slice(1, 12);
+        var nameFile = path.slice(13);
+        this.fileuploadService.deleteEachFileByPath(nameFile, pathFile).subscribe(results => {
+            this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
+        }, error => {
+            this.alertService.showMessage("Lỗi xóa", `Thực hiện xóa không thành công`, MessageSeverity.error);
+        });
     }
 }

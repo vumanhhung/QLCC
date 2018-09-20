@@ -1,0 +1,116 @@
+﻿<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div *ngIf="isViewDetails" class="ViewForm" style="max-width:1000px;">
+                <div class="modal-header">
+                    <p class="modal-title pull-left">
+                        <i class="fa fa-eye"></i> Chi tiết vật tư
+                        <span>{{vattuEdit.maVatTu}}</span>
+                    </p>
+                    <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <form #f="ngForm">
+                            <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="8" class="headView">Thông tin chung</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Tên vật tư</td>
+                                            <td>{{vattuEdit.tenVatTu}}</td>
+                                            <td class="boldText">Phòng ban</td>
+                                            <td>{{vattuEdit.phongBans.tenPhongBan}}</td>
+                                            <td class="boldText">Người quản lý</td>
+                                            <td>{{vattuEdit.nguoiQuanLy}}</td>
+                                            <td class="boldText">Ngày lập</td>
+                                            <td>{{vattuEdit.ngayLap | date:'dd/MM/yyyy'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Vật tư cha</td>
+                                            <td>{{vattuEdit.khachHangs.hoDem}} {{vattuEdit.khachHangs.ten}}</td>
+                                            <td class="boldText">Loại hàng</td>
+                                            <td>{{vattuEdit.matBangs.tenMatBang}}</td>
+                                            <td class="boldText">Xuất xứ</td>
+                                            <td>{{vattuEdit.loaiDichVus.tenLoaiDichVu}}</td>
+                                            <td class="boldText">NCC</td>
+                                            <td>{{vattuEdit.donViTinhs.tenDonViTinh}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Diễn giải</td>
+                                            <td colspan="7">{{vattuEdit.dienGiai}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Lặp lại:</td>
+                                            <td colspan="3" *ngIf="vattuEdit.lapLai == true">Có</td>
+                                            <td colspan="3" *ngIf="vattuEdit.lapLai == false">Không</td>
+                                            <td class="boldText">Trạng thái:</td>
+                                            <td colspan="3" *ngIf="vattuEdit.trangThai == 1">Đang sử dụng</td>
+                                            <td colspan="3" *ngIf="vattuEdit.trangThai == 2">Ngừng sử dụng</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="8" class="headView">Thông tin thanh toán</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Đơn giá:</td>
+                                            <td colspan="2">{{formatPrice(vattuEdit.donGia)}}</td>
+                                            <td class="boldText">Số lượng</td>
+                                            <td colspan="1">{{vattuEdit.soLuong}}</td>
+                                            <td class="boldText">Thành tiền</td>
+                                            <td colspan="2">{{formatPrice(vattuEdit.thanhTien)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Ngày thanh toán</td>
+                                            <td colspan="2">{{vattuEdit.ngayThanhToan | date: 'dd/MM/yyyy'}}</td>
+                                            <td class="boldText">Kỳ thanh toán</td>
+                                            <td colspan="1">{{vattuEdit.kyThanhToan}}</td>
+                                            <td class="boldText">Tiền thanh toán</td>
+                                            <td colspan="2">{{formatPrice(vattuEdit.tienThanhToan)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="8" class="headView">Hình ảnh vật tư</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText" colspan="2">Loại tiền quy đổi</td>
+                                            <td colspan="2">{{vattuEdit.loaiTiens.tenLoaiTien}}</td>
+                                            <td class="boldText" colspan="2">Tiền thanh toán quy đổi</td>
+                                            <td colspan="2">{{formatPrice(vattuEdit.tienTTQuyDoi)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="8" class="headView">Thông tin chỉnh sửa</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Ngày nhập</td>
+                                            <td>{{vattuEdit.ngayNhap | date: 'dd/MM/yyyy'}}</td>
+                                            <td class="boldText">Người nhập</td>
+                                            <td>{{vattuEdit.nguoiNhap}}</td>
+                                            <td class="boldText">Ngày sửa</td>
+                                            <td>{{vattuEdit.ngaySua | date: 'dd/MM/yyyy'}}</td>
+                                            <td class="boldText">Người sửa</td>
+                                            <td>{{vattuEdit.nguoiSua}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="actionBtn-form-group">
+                        <div class="col-sm-8">
+                            <div class="pull-right">
+                                <button type="button" (click)="movetoEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                                <button *ngIf="isEditMode" type="button" (click)="closeModal()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

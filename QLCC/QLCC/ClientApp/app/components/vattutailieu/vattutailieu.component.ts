@@ -146,7 +146,7 @@ export class VatTuTaiLieuComponent implements OnInit, AfterViewInit {
     }
     
     onSearchChanged(value: string) {
-        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false,r.vatTutaiLieuId,r.tenTaiLieu,r.uRLTaiLieu,r.dienGiai,r.nguoiNhap,r.ngayNhap,r.nguoiSua,r.ngaySua));
+        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.vatTutaiLieuId, r.tenTaiLieu, r.urlTaiLieu,r.dienGiai,r.nguoiNhap,r.ngayNhap,r.nguoiSua,r.ngaySua));
     }
 
     deleteVatTuTaiLieu(row: VatTuTaiLieu) {

@@ -148,6 +148,12 @@ namespace QLCC.Controllers
             }
         }
 
+        [HttpGet("Filter/{value}")]
+        public IEnumerable<VatTuTaiLieu> GetFilter([FromRoute] int value)
+        {
+            return _context.VatTuTaiLieus.Where(r => r.VatTuId == value).ToList();
+        }
+
         private bool VatTuTaiLieuExists(int id)
         {                        
             return _context.VatTuTaiLieus.Any(e => e.VatTutaiLieuId == id);

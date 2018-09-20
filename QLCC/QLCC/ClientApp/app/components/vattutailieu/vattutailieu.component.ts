@@ -7,6 +7,8 @@ import { Utilities } from "../../services/utilities";
 import { VatTuTaiLieuService } from "../../services/vattutailieu.service";
 import { VatTuTaiLieu } from "../../models/vattutailieu.model";
 import { VatTuTaiLieuInfoComponent } from "./vattutailieu-info.component";
+import { VatTuService } from '../../services/vattu.service';
+import { VatTu } from '../../models/vattu.model';
 
 @Component({
     selector: "vattutailieu",
@@ -19,6 +21,7 @@ export class VatTuTaiLieuComponent implements OnInit, AfterViewInit {
     columns: any[] = [];
     rows: VatTuTaiLieu[] = [];
     rowsCache: VatTuTaiLieu[] = [];
+    vattu: VatTu[] = [];
     loadingIndicator: boolean;
     public formResetToggle = true;
     vattutailieuEdit: VatTuTaiLieu;
@@ -45,7 +48,7 @@ export class VatTuTaiLieuComponent implements OnInit, AfterViewInit {
 
     @ViewChild('vattutailieuEditor')
     VatTuTaiLieuEditor: VatTuTaiLieuInfoComponent;
-    constructor(private alertService: AlertService, private translationService: AppTranslationService, private vattutailieuService: VatTuTaiLieuService) {
+    constructor(private alertService: AlertService, private translationService: AppTranslationService, private vattutailieuService: VatTuTaiLieuService, private vattuService: VatTuService) {
     }
     
     ngOnInit() {
@@ -63,7 +66,14 @@ export class VatTuTaiLieuComponent implements OnInit, AfterViewInit {
             { name: '', width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
 
-        this.loadData();
+        this.loadData(0);
+    }
+
+    loadAllVatTu() {
+        this.vattuService.getAllVatTu().subscribe(results => this.onDataLoadVatTuSuccessful(results), error => this.onDataLoadFailed(error));
+    }
+    onDataLoadVatTuSuccessful(obj: VatTu[]) {
+        this.vattu = obj;
     }
     
     ngAfterViewInit() {
@@ -103,10 +113,14 @@ export class VatTuTaiLieuComponent implements OnInit, AfterViewInit {
         }
     }
     
-    loadData() {
+    loadData(value: number) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.vattutailieuService.getAllVatTuTaiLieu().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        if (value == 0) {
+            this.vattutailieuService.getAllVatTuTaiLieu().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        } else {
+            this.vattutailieuService.getFilter(value).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        }
     }
     
     onDataLoadSuccessful(obj: VatTuTaiLieu[]) {
@@ -179,4 +193,8 @@ export class VatTuTaiLieuComponent implements OnInit, AfterViewInit {
         this.vattutailieuEdit = this.VatTuTaiLieuEditor.editVatTuTaiLieu(row);
         this.editorModal.show();
     }    
+
+    SelectedVattuValue(value: number) {
+        this.loadData(value);
+    }
 }

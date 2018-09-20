@@ -331,17 +331,18 @@ export class VatTuComponent implements OnInit, AfterViewInit {
 
     viewVatTu(row: VatTu) {
         //this.editingRowName = { name: row.tenichVuCoBan };
-        this.sourcevattu = row;
-        this.VatTuEditor.quoctichs = this.quoctichs;
-        this.VatTuEditor.loaihangs = this.loaihangs;
-        this.VatTuEditor.hangSX = this.hangSX;
-        this.VatTuEditor.nhaCC = this.nhaCC;
-        this.VatTuEditor.donvitinhs = this.donvitinhs;
-        this.VatTuEditor.phongbans = this.phongbans;
-        this.VatTuEditor.loaitiens = this.loaitiens;
+        this.vattuDetailEditor.vattuEdit = row;
+        this.vattuDetailEditor.isViewDetails = true;
+        this.vattuDetailEditor.quoctichs = this.quoctichs;
+        this.vattuDetailEditor.loaihangs = this.loaihangs;
+        this.vattuDetailEditor.hangSX = this.hangSX;
+        this.vattuDetailEditor.nhaCC = this.nhaCC;
+        this.vattuDetailEditor.donvitinhs = this.donvitinhs;
+        this.vattuDetailEditor.phongbans = this.phongbans;
+        this.vattuDetailEditor.loaitiens = this.loaitiens;
         this.vattuhinhanhservice.getVatTuHinhAnhByID(row.vatTuId).subscribe(results => this.vattuDetailEditor.VTHAs = results, error => { });
-        this.vattutailieuservice.getVatTuTaiLieuByID(row.vatTuId).subscribe(results => this.vattuDetailEditor.VTTLs = results, error => { });
-        this.vattuDetailEditor.editorModal.show();
+        this.vattutailieuservice.getVatTuTaiLieuByID(row.vatTuId).subscribe(result => this.vattuDetailEditor.VTTLs = result, error => { });
+        this.vattuDetailEditor.editorModal1.show();
     }
 
     formatPrice(price: string): string {

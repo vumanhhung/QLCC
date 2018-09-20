@@ -55,5 +55,8 @@ export class VatTuHinhAnhService {
     getCount(id?: number) {
         return this.vattuhinhanhEndpoint.getCount<VatTuHinhAnh[]>(id);
     }
-    
+
+    getFilter(value?: number) {
+        return this.vattuhinhanhEndpoint.getFilter<VatTuHinhAnh[]>(value);
+    }
 }

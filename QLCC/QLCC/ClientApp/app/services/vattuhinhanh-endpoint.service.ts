@@ -78,4 +78,12 @@ export class VatTuHinhAnhEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getCount(id));
             });
     }
+
+    getFilter<T>(value?: number): Observable<T> {
+        let endpointUrl = `${this.vattuhinhanhUrl}/Filter/${value}`;
+        return this.http.get(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getFilter(value));
+            });
+    }
 }

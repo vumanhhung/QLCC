@@ -368,6 +368,13 @@ export class VatTuInfoComponent implements OnInit {
                 this.last += "0";
             }
             this.VatTuEdit.maVatTu = "VT-" + this.last + numberLast;
+        }, error => {
+            var numberLast = 1;
+            var number = 10 - numberLast.toString().length;
+            for (var i = 0; i < number; i++) {
+                this.last += "0";
+            }
+            this.VatTuEdit.maVatTu = "VT-" + this.last + numberLast;
         });
         this.VatTuEdit.quocTichId = 0;
         this.VatTuEdit.loaiHangId = 0;
@@ -714,7 +721,7 @@ export class VatTuInfoComponent implements OnInit {
 
     public select3EventHandler(e: SelectEvent): void {
         const that = this;
-        this.isUpload = true;
+        this.isUploadFile = true;
         e.files.forEach((file) => {
             if (!file.validationErrors) {
                 const reader = new FileReader();
@@ -740,7 +747,7 @@ export class VatTuInfoComponent implements OnInit {
         this.fileuploadService.deleteEachFileByPath(nameFile, pathFile).subscribe(results => {
             this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
         }, error => {
-            this.alertService.showMessage("Lỗi xóa", `Thực hiện xóa không thành công`, MessageSeverity.error);
+            this.alertService.showMessage("Lỗi xóa", `Thực hiện xóa file không thành công`, MessageSeverity.error);
         });
     }
 }

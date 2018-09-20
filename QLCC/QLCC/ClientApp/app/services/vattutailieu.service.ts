@@ -55,4 +55,8 @@ export class VatTuTaiLieuService {
     getExist(name?: string) {
         return this.vattutailieuEndpoint.getExist(name);
     }
+
+    getFilter(value?: number) {
+        return this.vattutailieuEndpoint.getFilter<VatTuTaiLieu[]>(value);
+    }
 }

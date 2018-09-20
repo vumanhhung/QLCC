@@ -78,4 +78,12 @@ export class VatTuTaiLieuEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getExist(name));
             });
     }
+
+    getFilter<T>(value?: number): Observable<T> {
+        let endpointUrl = `${this.vattutailieuUrl}/Filter/${value}`;
+        return this.http.get(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getFilter(value));
+            });
+    }
 }

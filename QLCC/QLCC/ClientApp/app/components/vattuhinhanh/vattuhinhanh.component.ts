@@ -28,6 +28,7 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
     vattuhinhanhEdit: VatTuHinhAnh;
     sourcevattuhinhanh: VatTuHinhAnh;
     editingRowName: { name: string };
+    public selectedVattu: number = 0;
 
     @ViewChild('f')
     private form;
@@ -63,7 +64,6 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
             { prop: 'dienGiai', name: gT('Diễn giải') },
             { name: gT('Chức năng'), width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
-
         this.loadData(0);
         this.loadAllVatTu();
     }

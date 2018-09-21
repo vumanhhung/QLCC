@@ -27,6 +27,7 @@ export class VatTuTaiLieuComponent implements OnInit, AfterViewInit {
     vattutailieuEdit: VatTuTaiLieu;
     sourcevattutailieu: VatTuTaiLieu;
     editingRowName: { name: string };
+    public selectedVattu: number = 0;
 
     @ViewChild('f')
     private form;
@@ -57,16 +58,12 @@ export class VatTuTaiLieuComponent implements OnInit, AfterViewInit {
         this.columns = [
             { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },              
 			{ prop: 'tenTaiLieu', name: gT('TenTaiLieu')},
-			{ prop: 'uRLTaiLieu', name: gT('URLTaiLieu')},
-			{ prop: 'dienGiai', name: gT('DienGiai')},
-			{ prop: 'nguoiNhap', name: gT('NguoiNhap')},
-			{ prop: 'ngayNhap', name: gT('NgayNhap')},
-			{ prop: 'nguoiSua', name: gT('NguoiSua')},
-			{ prop: 'ngaySua', name: gT('NgaySua')},
+            //{ prop: 'dienGiai', name: gT('DienGiai')},
             { name: '', width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
 
         this.loadData(0);
+        this.loadAllVatTu();
     }
 
     loadAllVatTu() {
@@ -77,16 +74,16 @@ export class VatTuTaiLieuComponent implements OnInit, AfterViewInit {
     }
     
     ngAfterViewInit() {
-        this.VatTuTaiLieuEditor.changesSavedCallback = () => {
-            this.addNewToList();
-            this.editorModal.hide();
-        };
+        //this.VatTuTaiLieuEditor.changesSavedCallback = () => {
+        //    this.addNewToList();
+        //    this.editorModal.hide();
+        //};
 
-        this.VatTuTaiLieuEditor.changesCancelledCallback = () => {
-            this.vattutailieuEdit = null;
-            this.sourcevattutailieu = null;
-            this.editorModal.hide();
-        };
+        //this.VatTuTaiLieuEditor.changesCancelledCallback = () => {
+        //    this.vattutailieuEdit = null;
+        //    this.sourcevattutailieu = null;
+        //    this.editorModal.hide();
+        //};
     }
     
     addNewToList() {
@@ -160,7 +157,7 @@ export class VatTuTaiLieuComponent implements OnInit, AfterViewInit {
     }
     
     onSearchChanged(value: string) {
-        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.vatTutaiLieuId, r.tenTaiLieu, r.urlTaiLieu,r.dienGiai,r.nguoiNhap,r.ngayNhap,r.nguoiSua,r.ngaySua));
+        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.vatTutaiLieuId, r.tenTaiLieu, r.urlTaiLieu,r.nguoiNhap,r.ngayNhap,r.nguoiSua,r.ngaySua));
     }
 
     deleteVatTuTaiLieu(row: VatTuTaiLieu) {

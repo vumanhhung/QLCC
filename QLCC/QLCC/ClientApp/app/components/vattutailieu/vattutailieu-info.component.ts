@@ -21,9 +21,9 @@ export class VatTuTaiLieuInfoComponent implements OnInit {
     public formResetToggle = true;
     private isEditMode = false;
     private editingRowName: string;
-    public changesSavedCallback: () => void;
-    public changesFailedCallback: () => void;
-    public changesCancelledCallback: () => void;
+    //public changesSavedCallback: () => void;
+    //public changesFailedCallback: () => void;
+    //public changesCancelledCallback: () => void;
     
     @Input()
     isViewOnly: boolean;
@@ -81,8 +81,8 @@ export class VatTuTaiLieuInfoComponent implements OnInit {
         if (!this.isGeneralEditor)
             this.isEditMode = false;
 
-        if (this.changesCancelledCallback)
-            this.changesCancelledCallback();
+        //if (this.changesCancelledCallback)
+        //    this.changesCancelledCallback();
     }
 
     private save() {
@@ -124,8 +124,8 @@ export class VatTuTaiLieuInfoComponent implements OnInit {
         this.resetForm();
         this.isEditMode = false;
 
-        if (this.changesSavedCallback)
-            this.changesSavedCallback();
+        //if (this.changesSavedCallback)
+        //    this.changesSavedCallback();
     }
 
     private saveFailedHelper(error: any) {
@@ -134,8 +134,8 @@ export class VatTuTaiLieuInfoComponent implements OnInit {
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
 
-        if (this.changesFailedCallback)
-            this.changesFailedCallback();
+        //if (this.changesFailedCallback)
+        //    this.changesFailedCallback();
     }
     
     private showErrorAlert(caption: string, message: string) {
@@ -173,7 +173,7 @@ export class VatTuTaiLieuInfoComponent implements OnInit {
         this.resetForm();
         this.isEditMode = false;
 
-        if (this.changesSavedCallback)
-            this.changesSavedCallback();
+        //if (this.changesSavedCallback)
+        //    this.changesSavedCallback();
     }    
 }

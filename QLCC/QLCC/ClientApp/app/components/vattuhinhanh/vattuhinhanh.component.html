@@ -22,17 +22,17 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div>
-                        <div class="dataTables_length">
-                            <label style="width: 20%;">
+                        <div>
+                            <label class="col-md-4" style="float: left">
                                 Vật tư
-                                <select style="width:80%;" class="form-control input-sm" #drVattu [(ngModel)]="selectedVattu" (change)="SelectedVattuValue(drVattu.value)">
+                                <select class="form-control input-sm" #drVattu [(ngModel)]="selectedVattu" (change)="SelectedVattuValue(drVattu.value)">
                                     <option value="0">---Tất cả---</option>
                                     <option *ngFor="let o of vattu" [value]="o.vatTuId">
                                         {{o.tenVatTu}}
                                     </option>
                                 </select>
                             </label>
-                            <label>
+                            <label style="float: right;">
                                 Hiển thị
                                 <select class="form-control input-sm" #drSelected (change)="SelectedValue(drSelected.value)">
                                     <option value="10">10</option>

@@ -110,8 +110,8 @@ namespace QLCC.Controllers
         }
 
         // DELETE: api/VatTuHinhAnhs/5
-        [HttpDelete("DelAll/{id}")]
-        public async Task<IActionResult> DeleteAllVatTuHinhAnh([FromRoute] int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteVatTuHinhAnh([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -128,8 +128,8 @@ namespace QLCC.Controllers
             return Ok(vattuhinhanh);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteVatTuHinhAnh([FromRoute] int id)
+        [HttpDelete("DelAll/{id}")]
+        public async Task<IActionResult> DeleteAllVatTuHinhAnh([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {

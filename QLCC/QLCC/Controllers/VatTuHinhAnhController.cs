@@ -149,6 +149,11 @@ namespace QLCC.Controllers
             return Ok(check);
         }
 
+        [HttpGet("Filter/{value}")]
+        public IEnumerable<VatTuHinhAnh> GetFilter([FromRoute] int value)
+        {
+            return _context.VatTuHinhAnhs.Where(r => r.VatTuId == value).ToList();
+        }
         private bool VatTuHinhAnhExists(int id)
         {
             return _context.VatTuHinhAnhs.Any(e => e.VatTuHinhAnhId == id);

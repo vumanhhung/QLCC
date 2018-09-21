@@ -15,15 +15,10 @@ import { DonViTinh } from '../../models/donvitinh.model';
 import { PhongBan } from '../../models/phongban.model';
 import { NguoiDungToaNha } from '../../models/nguoidungtoanha.model';
 import { LoaiTienService } from '../../services/loaitien.service';
-import { VatTuHinhAnhComponent } from '../vattuhinhanh/vattuhinhanh.component';
-import { VatTuHinhAnhInfoComponent } from '../vattuhinhanh/vattuhinhanh-info.component';
-import { UploadEvent, SelectEvent, FileInfo, ClearEvent, RemoveEvent, FileRestrictions } from '@progress/kendo-angular-upload';
 import { VatTuHinhAnh } from '../../models/vattuhinhanh.model';
 import { VatTuHinhAnhService } from '../../services/vattuhinhanh.service';
 import { VatTuTaiLieuService } from '../../services/vattutailieu.service';
 import { VatTuTaiLieu } from '../../models/vattutailieu.model';
-import { serializePath } from '@angular/router/src/url_tree';
-import { window } from 'rxjs/operators';
 import { FileUploadService } from '../../services/fileupload.service';
 
 @Component({
@@ -34,24 +29,32 @@ import { FileUploadService } from '../../services/fileupload.service';
 
 export class VatTuDetailComponent implements OnInit {
     isEdit = false;
-    isViewDetails = false
+    isViewDetails = false;
+    formResetToggle = false;
 
     VTHAs: VatTuHinhAnh[] = [];
     VTTLs: VatTuTaiLieu[] = [];
+    quoctichs: QuocTich[] = [];
+    loaihangs: LoaiHang[] = [];
+    hangSX: HangSanXuat[] = [];
+    nhaCC: NhaCungCap[] = [];
+    donvitinhs: DonViTinh[] = [];
+    phongbans: PhongBan[] = [];
+    loaitiens: LoaiTien[] = [];
+    NDTN: NguoiDungToaNha[] = [];
+    vattuCha: VatTu[] = [];
+
     vattuEdit: VatTu;
     sourcevattu: VatTu;
 
     @Input()
     isViewOnly: boolean;
 
-    @Input()
-    isGeneralEditor = false;
-
     @ViewChild('f')
     private form;
 
-    @ViewChild('editorModal')
-    editorModal: ModalDirective;
+    @ViewChild('editorModal1')
+    editorModal1: ModalDirective;
 
     constructor(private alertService: AlertService, private gvService: VatTuService,
         private loaitienService: LoaiTienService,
@@ -61,11 +64,39 @@ export class VatTuDetailComponent implements OnInit {
     }
 
     ngOnInit() {
-        
     }
 
     private movetoEditForm() {
         this.isViewDetails = false;
         this.isEdit = true;
+    }
+
+    onEditorModalHidden() {
+        this.resetForm(true);
+    }
+
+    resetForm(replace = false) {
+        if (!replace) {
+            this.form.reset();
+        }
+        else {
+            this.formResetToggle = false;
+
+            setTimeout(() => {
+                this.formResetToggle = true;
+            });
+        }
+    }
+
+    formatPrice(price: string) {
+        if (price) {
+            var pN = Number(price);
+            var fm = Utilities.formatNumber(pN);
+            return fm;
+        }
+    }
+
+    closeModal() {
+        this.editorModal1.hide();
     }
 }

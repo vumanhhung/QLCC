@@ -8,6 +8,8 @@ import { VatTuHinhAnhService } from "../../services/vattuhinhanh.service";
 import { VatTuHinhAnh } from "../../models/vattuhinhanh.model";
 import { VatTuHinhAnhInfoComponent } from "./vattuhinhanh-info.component";
 import { FileUploadService } from '../../services/fileupload.service';
+import { VatTu } from '../../models/vattu.model';
+import { VatTuService } from '../../services/vattu.service';
 
 @Component({
     selector: "vattuhinhanh",
@@ -20,6 +22,7 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
     columns: any[] = [];
     rows: VatTuHinhAnh[] = [];
     rowsCache: VatTuHinhAnh[] = [];
+    vattu: VatTu[] = [];
     loadingIndicator: boolean;
     public formResetToggle = true;
     vattuhinhanhEdit: VatTuHinhAnh;
@@ -47,7 +50,7 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
     @ViewChild('editorModal')
     editorModal: ModalDirective;
 
-    constructor(private alertService: AlertService, private translationService: AppTranslationService, private vattuhinhanhService: VatTuHinhAnhService, private fileuploadService: FileUploadService) {
+    constructor(private alertService: AlertService, private translationService: AppTranslationService, private vattuService: VatTuService, private vattuhinhanhService: VatTuHinhAnhService, private fileuploadService: FileUploadService) {
     }
     
     ngOnInit() {
@@ -61,9 +64,17 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
             { name: gT('Chức năng'), width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
         ];
 
-        this.loadData();
+        this.loadData(0);
+        this.loadAllVatTu();
     }
-    
+
+    loadAllVatTu() {
+        this.vattuService.getAllVatTu().subscribe(results => this.onDataLoadVatTuSuccessful(results), error => this.onDataLoadFailed(error));
+    }
+    onDataLoadVatTuSuccessful(obj: VatTu[]) {
+        this.vattu = obj;
+    }
+
     ngAfterViewInit() {
         this.VatTuHinhAnhEditor.changesSavedCallback = () => {
             this.addNewToList();
@@ -78,7 +89,7 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
     }
     
     addNewToList() {
-        this.loadData();
+        this.loadData(0);
         if (this.sourcevattuhinhanh) {
             Object.assign(this.sourcevattuhinhanh, this.vattuhinhanhEdit);
             this.vattuhinhanhEdit = null;
@@ -102,10 +113,14 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
         }
     }
     
-    loadData() {
+    loadData(value: number) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.vattuhinhanhService.getAllVatTuHinhAnh().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        if (value == 0) {
+            this.vattuhinhanhService.getAllVatTuHinhAnh().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        } else {
+            this.vattuhinhanhService.getFilter(value).subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        }        
     }
     
     onDataLoadSuccessful(obj: VatTuHinhAnh[]) {
@@ -165,7 +180,7 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
                 this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
                     MessageSeverity.error, error);
             });
-        this.fileuploadService.deleteEachFileByPath(row.tenHinhAnh, row.urlHinhAnh.slice(1, 12)).subscribe(resulst => { this.loadData(); }, error => { });
+        this.fileuploadService.deleteEachFileByPath(row.tenHinhAnh, row.urlHinhAnh.slice(1, 12)).subscribe(resulst => { this.loadData(0); }, error => { });
     }
 
     editVatTuHinhAnh(row: VatTuHinhAnh) {
@@ -179,5 +194,9 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
     onEditorModalHidden() {
         this.editingRowName = null;
         this.VatTuHinhAnhEditor.resetForm(true);
+    }
+
+    SelectedVattuValue(value: number) {
+        this.loadData(value);
     }
 }

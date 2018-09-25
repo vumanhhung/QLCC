@@ -60,16 +60,16 @@ export class LoaiDichVuComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        let gT = (key: string) => this.translationService.getTranslation(key);
+        //let gT = (key: string) => this.translationService.getTranslation(key);
 
-        this.columns = [
-            { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
-            { prop: 'tenLoaiDichVu', name: gT('Tên loại dịch vụ') },
-            { prop: 'moTa', name: gT('Mô tả') },
-            { prop: 'viTri', name: gT('Vị trí') },
-            { prop: 'trangThai', name: gT('Trạng Thái'), cellTemplate: this.statusTemplate },
-            { name: gT('Chức Năng'), width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
-        ];
+        //this.columns = [
+        //    { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
+        //    { prop: 'tenLoaiDichVu', name: gT('Tên loại dịch vụ') },
+        //    { prop: 'moTa', name: gT('Mô tả') },
+        //    { prop: 'viTri', name: gT('Vị trí') },
+        //    { prop: 'trangThai', name: gT('Trạng Thái'), cellTemplate: this.statusTemplate },
+        //    { name: gT('Chức Năng'), width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
+        //];
         this.loadData(0);
     }
 

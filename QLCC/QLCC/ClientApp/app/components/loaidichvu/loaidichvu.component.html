@@ -60,8 +60,34 @@
                                        [columns]="columns"
                                        [limit]="limit"
                                        [columnMode]="'force'">
+                            <ngx-datatable-row-detail [rowHeight]="auto" #myDetailRow (toggle)="onDetailToggle($event)">
+                                <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                                    <h4 style="margin-bottom:5px">Lịch thanh toán</h4>
+                                    <div *ngFor="let obj of getHopDongThanhToans(row)">
+                                        <h4><strong>Mặt bằng: {{obj.matBang.tenMatBang}}</strong></h4>
+                                        <table class="tableChild" [@fadeInOut]>
+                                            <tr>
+                                                <th>Đợt</th>
+                                                <th>Từ ngày</th>
+                                                <th>Số tháng</th>
+                                                <th>Đến ngày</th>
+                                                <th>Số tiền</th>
+                                                <th>Diễn giải</th>
+                                            </tr>
+                                            <tr *ngFor="let o of obj.hopDongThanhToans">
+                                                <td>{{o.dotThanhToan}}</td>
+                                                <td>{{o.tuNgay | date: 'dd/MM/yyyy'}}</td>
+                                                <td>{{o.soThang}}</td>
+                                                <td>{{o.denNgay | date: 'dd/MM/yyyy'}}</td>
+                                                <td>{{formatNumberToString(o.soTien)}}</td>
+                                                <td>{{o.dienGiai}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-row-detail>
                         </ngx-datatable>
-                        <ng-template #statusTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                        <!--<ng-template #statusTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
                             <div *ngIf="row.trangThai == 1" class="status-use">Đang hoạt động</div>
                             <div *ngIf="row.trangThai == 2" class="status-none">Dừng hoạt động</div>
                         </ng-template>
@@ -69,7 +95,7 @@
                             <a class="btn btn-func btn-success" href="javascript:;" (click)="viewDetailLoaiDichVu(row)" title="Chi tiết"><i class="fa fa-eye"></i></a>
                             <a class="btn btn-func btn-primary" href="javascript:;" (click)="editLoaiDichVu(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                             <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteLoaiDichVu(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                        </ng-template>
+                        </ng-template>-->
                         <loaidichvu-info #loaidichvuEditor [isGeneralEditor]="true"></loaidichvu-info>
                     </div>
                 </div>

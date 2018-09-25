@@ -20,6 +20,7 @@ import { VatTuHinhAnhService } from '../../services/vattuhinhanh.service';
 import { VatTuTaiLieuService } from '../../services/vattutailieu.service';
 import { VatTuTaiLieu } from '../../models/vattutailieu.model';
 import { FileUploadService } from '../../services/fileupload.service';
+import { VatTuInfoComponent } from './vattu-info.component';
 
 @Component({
     selector: "vattu-detail",
@@ -56,19 +57,18 @@ export class VatTuDetailComponent implements OnInit {
     @ViewChild('editorModal1')
     editorModal1: ModalDirective;
 
-    constructor(private alertService: AlertService, private gvService: VatTuService,
-        private loaitienService: LoaiTienService,
-        private vattuhinhanhService: VatTuHinhAnhService,
-        private vattutailieuService: VatTuTaiLieuService,
-        private fileuploadService: FileUploadService) {
+    @ViewChild('vattuEditor')
+    vattuEditor: VatTuInfoComponent;
+
+    constructor() {
     }
 
     ngOnInit() {
     }
 
-    private movetoEditForm() {
+    private movetoEditForm() {        
         this.isViewDetails = false;
-        this.isEdit = true;
+        this.vattuEditor.editorModal.show();
     }
 
     onEditorModalHidden() {

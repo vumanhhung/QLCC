@@ -1,6 +1,6 @@
 ﻿
 <section class="content-header">
-    <h1>Quản lý VatTuTaiLieu</h1>
+    <h1>Quản lý Vật tư tài liệu</h1>
     <commonroad></commonroad>
 </section>
 <section class="content">
@@ -22,17 +22,17 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div>
-                        <div class="dataTables_length">
-                            <label style="width: 20%;">
+                        <div>
+                            <label style="float: left;">
                                 Vật tư
-                                <select style="width:80%;" class="form-control input-sm" #drVattu [(ngModel)]="selectedVattu" (change)="SelectedVattuValue(drVattu.value)">
+                                <select class="form-control input-sm" #drVattu [(ngModel)]="selectedVattu" (change)="SelectedVattuValue(drVattu.value)">
                                     <option value="0">---Tất cả---</option>
                                     <option *ngFor="let o of vattu" [value]="o.vatTuId">
                                         {{o.tenVatTu}}
                                     </option>
                                 </select>
                             </label>
-                            <label>
+                            <label style="float: right">
                                 Hiển thị
                                 <select class="form-control input-sm" #drSelected (change)="SelectedValue(drSelected.value)">
                                     <option value="10">10</option>
@@ -42,11 +42,6 @@
                                     <option value="100">100</option>
                                 </select> bản ghi
                             </label>
-                        </div>
-                        <div class="DTTT_container">
-                            <a class="DTTT_button DTTT_button_print" title="{{'preferences.Print' | translate}}" tabindex="0">
-                                <span>{{'preferences.Print' | translate}}</span>
-                            </a>
                         </div>
                         <div class="clearfix"></div>
                         <ngx-datatable class="material colored-header sm table table-striped table-hover "
@@ -59,10 +54,13 @@
                                        [limit]="limit"
                                        [columnMode]="'force'">
                         </ngx-datatable>
-                        <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <a class="btn btn-func btn-danger"  href="javascript:;" (click)="deleteVatTuTaiLieu(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        <ng-template #descriptionTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <img [src]="row.urlTaiLieu" width="100" style="height: 100%" />
                         </ng-template>
-                        <div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
+                        <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <a class="btn btn-func btn-danger" href="row.urlTaiLieu" (click)="deleteVatTuTaiLieu(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        </ng-template>
+                        <!--<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -72,11 +70,11 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <vattutailieu-info #vattutailieuEditor [isGeneralEditor]="true"></vattutailieu-info>
+                                        <<vattutailieu-info #vattutailieuEditor [isGeneralEditor]="true"></vattutailieu-info>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </div>

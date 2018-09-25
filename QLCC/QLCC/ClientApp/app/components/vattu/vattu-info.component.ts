@@ -1,6 +1,4 @@
-﻿
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
-
+﻿import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { Utilities } from '../../services/utilities';
 import { VatTu } from "../../models/vattu.model";
@@ -15,16 +13,14 @@ import { DonViTinh } from '../../models/donvitinh.model';
 import { PhongBan } from '../../models/phongban.model';
 import { NguoiDungToaNha } from '../../models/nguoidungtoanha.model';
 import { LoaiTienService } from '../../services/loaitien.service';
-import { VatTuHinhAnhComponent } from '../vattuhinhanh/vattuhinhanh.component';
 import { VatTuHinhAnhInfoComponent } from '../vattuhinhanh/vattuhinhanh-info.component';
 import { UploadEvent, SelectEvent, FileInfo, ClearEvent, RemoveEvent, FileRestrictions } from '@progress/kendo-angular-upload';
 import { VatTuHinhAnh } from '../../models/vattuhinhanh.model';
 import { VatTuHinhAnhService } from '../../services/vattuhinhanh.service';
 import { VatTuTaiLieuService } from '../../services/vattutailieu.service';
 import { VatTuTaiLieu } from '../../models/vattutailieu.model';
-import { serializePath } from '@angular/router/src/url_tree';
-import { window } from 'rxjs/operators';
 import { FileUploadService } from '../../services/fileupload.service';
+
 
 @Component({
     selector: "vattu-info",
@@ -126,7 +122,6 @@ export class VatTuInfoComponent implements OnInit {
     VatTuHinhAnhEditor: VatTuHinhAnhInfoComponent;
 
     constructor(private alertService: AlertService, private gvService: VatTuService,
-        private loaitienService: LoaiTienService,
         private vattuhinhanhService: VatTuHinhAnhService,
         private vattutailieuService: VatTuTaiLieuService,
         private fileuploadService: FileUploadService) {
@@ -286,6 +281,7 @@ export class VatTuInfoComponent implements OnInit {
                             this.alertService.showMessage("Bước 2 thành công", `Thực hiện thay đổi hình ảnh vật tư thành công`, MessageSeverity.success);
                         }
                     }, error => this.saveFailedHelper(error));
+
                 }
                 this.vattutailieuService.getVatTuTaiLieuByID(this.VatTuTaiLieuEdit.vatTuId).subscribe(results => {
                     this.VTTLs = results;
@@ -327,6 +323,14 @@ export class VatTuInfoComponent implements OnInit {
                         }
                     }, error => this.saveFailedHelper(error));
                 }
+                this.vattutailieuService.getVatTuTaiLieuByID(this.VatTuEdit.vatTuId).subscribe(results => {
+                    this.VTTLs = results;
+                    if (this.VTTLs.length > 0) {
+                        this.isUploadFile = true;
+                    } else {
+                        this.isUploadFile = false;
+                    }
+                });
             }
         } else {
             if (this.filePreviews.length == 0) {
@@ -589,18 +593,26 @@ export class VatTuInfoComponent implements OnInit {
 
     public complete2EventHandler(event) {
         this.isSaving = true;
-        for (var i = 0; i < this.urlFileList.length; i++) {
+        for (var i = 0; i < this.urlImgList.length; i++) {
             this.VatTuHinhAnhEdit.vatTuHinhAnhId = undefined;
-            this.VatTuHinhAnhEdit.tenHinhAnh = this.urlFileList[i].slice(13);
-            this.VatTuHinhAnhEdit.urlHinhAnh = this.urlFileList[i];
+            this.VatTuHinhAnhEdit.tenHinhAnh = this.urlImgList[i].slice(13);
+            this.VatTuHinhAnhEdit.urlHinhAnh = this.urlImgList[i];
             this.vattuhinhanhService.addnewVatTuHinhAnh(this.VatTuHinhAnhEdit).subscribe(results => {
                 this.save2SuccessHelper(results);
-                if (this.urlFileList.length - i == 1) {
+                if (this.urlImgList.length - i == 1) {
                     this.alertService.showMessage("Bước 2 thành công", `Thực hiện thêm mới hình ảnh vật tư thành công`, MessageSeverity.success);
                 }
+                this.vattutailieuService.getVatTuTaiLieuByID(this.VatTuEdit.vatTuId).subscribe(results => {
+                    this.VTTLs = results;
+                    if (this.VTTLs.length > 0) {
+                        this.isUploadFile = true;
+                    } else {
+                        this.isUploadFile = false;
+                    }
+                });
             }, error => {
                 this.saveFailedHelper(error);
-                this.fileuploadService.deleteEachFileByPath(this.urlFileList[i].slice(13), this.urlFileList[i].slice(1, 12))
+                this.fileuploadService.deleteEachFileByPath(this.urlImgList[i].slice(13), this.urlImgList[i].slice(1, 12))
                     .subscribe(results => { }, error => { });
             });
         }
@@ -623,14 +635,15 @@ export class VatTuInfoComponent implements OnInit {
     upload2EventHandler(e: UploadEvent, value: string) {
         this.stringRandom = Utilities.RandomText(5);
         e.data = {
+
             stringRandom: this.stringRandom,
             urlSever: value
         };
         e.files.forEach((file) => {
 
             var name = this.stringRandom + "_" + file.name;
-            this.urlFile = "\\" + value + "\\" + name;
-            this.urlFileList.unshift(this.urlFile);
+            this.urlImg = "\\" + value + "\\" + name;
+            this.urlImgList.unshift(this.urlImg);
         })
     }
 
@@ -655,15 +668,24 @@ export class VatTuInfoComponent implements OnInit {
     }
 
     clear2ImageData(id: number, path: string) {
-        this.vattuhinhanhService.deleteVatTuHinhAnh(id).subscribe(results => { }, error => {
-            this.alertService.showMessage("Lỗi xóa", `Thực hiện xóa không thành công`, MessageSeverity.error);
-        });
         var pathImg = path.slice(1, 12);
-        var nameImg = path.slice(13);
-        this.fileuploadService.deleteEachFileByPath(nameImg, pathImg).subscribe(results => {
-            this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
+        var nameImg = path.slice(13);        
+        this.vattuhinhanhService.deleteVatTuHinhAnh(id).subscribe(results => {
+            this.fileuploadService.deleteEachFileByPath(nameImg, pathImg).subscribe(results => {
+                this.alertService.showMessage("Thành công", `thực hiện xóa thành công`, MessageSeverity.success);
+                this.vattuhinhanhService.getVatTuHinhAnhByID(this.VatTuHinhAnhEdit.vatTuId).subscribe(results => {
+                    this.VTHAs = results;
+                    if (this.VTHAs.length > 0) {
+                        this.isUploadFile = true;
+                    } else {
+                        this.isUploadFile = false;
+                    }
+                })
+            }, error => {
+                this.alertService.showMessage("lỗi xóa", `xóa không thành công`, MessageSeverity.error);
+            })
         }, error => {
-            this.alertService.showMessage("Lỗi xóa", `Thực hiện xóa không thành công`, MessageSeverity.error);
+            this.alertService.showMessage("Lỗi xóa", `Thực hiện xóa ảnh không thành công`, MessageSeverity.error);
         });
     }
 
@@ -739,15 +761,26 @@ export class VatTuInfoComponent implements OnInit {
     }
 
     clear3ImageData(id: number, path: string) {
-        this.vattutailieuService.deleteVatTuTaiLieu(id).subscribe(results => { }, error => {
-            this.alertService.showMessage("Lỗi xóa", `Thực hiện xóa không thành công`, MessageSeverity.error);
-        });
         var pathFile = path.slice(1, 12);
         var nameFile = path.slice(13);
-        this.fileuploadService.deleteEachFileByPath(nameFile, pathFile).subscribe(results => {
-            this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
+        this.vattutailieuService.deleteVatTuTaiLieu(id).subscribe(results => {
+            this.fileuploadService.deleteEachFileByPath(nameFile, pathFile).subscribe(results => {
+                if (results == "Success") {
+                    this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
+                    this.vattuhinhanhService.getVatTuHinhAnhByID(this.VatTuHinhAnhEdit.vatTuId).subscribe(results => {
+                        this.VTHAs = results;
+                        if (this.VTHAs.length > 0) {
+                            this.isUploadFile = true;
+                        } else {
+                            this.isUploadFile = false;
+                        }
+                    })
+                }
+            }, error => {
+
+            });
         }, error => {
-            this.alertService.showMessage("Lỗi xóa", `Thực hiện xóa file không thành công`, MessageSeverity.error);
+            this.alertService.showMessage("Lỗi xóa", `Thực hiện xóa tài liệu không thành công`, MessageSeverity.error);
         });
     }
 }

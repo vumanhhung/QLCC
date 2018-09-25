@@ -114,23 +114,24 @@ namespace DemoWebapp.Controllers
                     if (System.IO.File.Exists(physicalPath))
                     {
                         System.IO.File.Delete(physicalPath);
+                        return Ok("Success");
                     }
                 }
             }
             return Ok("Success");
         }
 
-        [HttpPost("DelEachFileByPath/{fileNames}/{path}")]
-        public IActionResult DeleteEachFileByPath([FromRoute] string fileNames, string path)
+        [HttpPost("DelEachFileByPath/{path}")]
+        public IActionResult DeleteEachFileByPath([FromBody] string fileNames, string path)
         {
             var url = path;
             var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + @"\" + url, fileNames);
             if (System.IO.File.Exists(physicalPath))
             {
                 System.IO.File.Delete(physicalPath);
+                
             }
-
-            return Ok("Success");
+            return Ok(Json("Success"));
         }
 
         [HttpPost("LoadListFile")]

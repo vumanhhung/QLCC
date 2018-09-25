@@ -392,8 +392,8 @@
                                         </kendo-upload>
                                         <div class="clearfix"></div>
                                         <div *ngIf="isEdit" class="description-form-group col-sm-12" style="position:relative;z-index:1;margin-top:5px">
-                                            <div *ngFor="let file of VTTLs" class="col-sm-2 box-image">
-                                                <a id="file.vatTutaiLieuId" class="file-responsive" href="{{file.urlTaiLieu}}" style="width:80px; overflow:hidden">{{file.tenTaiLieu}}</a>
+                                            <div *ngFor="let file of VTTLs" class="col-sm-3 box-image">
+                                                <a id="file.vatTutaiLieuId" class="file-responsive" href="{{file.urlTaiLieu}}" style="width:80px; overflow:hidden; white-space: nowrap;">{{file.tenTaiLieu}}</a>
                                                 <span id="file.vatTutaiLieuId" (click)="clear3ImageData(file.vatTutaiLieuId, file.urlTaiLieu)" tooltip="Xóa" class="glyphicon glyphicon-remove glyphicon-remove-image"></span>
                                             </div>
                                         </div>

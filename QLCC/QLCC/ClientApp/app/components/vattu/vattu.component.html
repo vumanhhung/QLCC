@@ -63,7 +63,7 @@
                         </ng-template>
                         <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
                             <a class="btn btn-func btn-success" href="javascript:;" (click)="viewVatTu(row)" title="Chi tiết"><i class="fa fa-eye"></i></a>
-                            <a class="btn btn-func btn-success" href="javascript:;" title="Tải tài liệu"><i class="fa fa-download"></i></a>
+                            <a class="btn btn-func btn-success" href="javascript:;" (click)="download(row.vatTuId, row.tenVatTu)" title="Tải tài liệu"><i class="fa fa-download"></i></a>
                             <a class="btn btn-func btn-primary" href="javascript:;" (click)="editVatTu(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                             <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteVatTu(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </ng-template>

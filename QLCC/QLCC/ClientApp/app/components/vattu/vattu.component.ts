@@ -28,6 +28,9 @@ import { VatTuTaiLieuService } from '../../services/vattutailieu.service';
 import { VatTuHinhAnh } from '../../models/vattuhinhanh.model';
 import { VatTuTaiLieu } from '../../models/vattutailieu.model';
 import { VatTuDetailComponent } from './vattu-detail.component';
+import JSZip from 'jszip';
+import JSZipUtils from 'jszip-utils';
+import saveAs from 'save-as';
 
 @Component({
     selector: "vattu",
@@ -351,5 +354,28 @@ export class VatTuComponent implements OnInit, AfterViewInit {
             var fm = Utilities.formatNumber(pN);
             return fm;
         } else return "";
+    }
+
+    download(id: number, name: string) {
+        console.log(name);
+        var zip = new JSZip();
+        var count = 0;
+        this.vattutailieuservice.getVatTuTaiLieuByID(id).subscribe(results => {
+            results.forEach(function (files) {
+                console.log(files);
+                JSZipUtils.getBinaryContent(files, function (err, data) {
+                    if (err) {
+                        throw err;
+                    }
+                    zip.file(files.tenTaiLieu, data);
+                    count++;
+                    if (count == results.length) {
+                        zip.generateAsync({ type: 'blob' }).then(function (content) {
+                            saveAs(content, name + ".zip");
+                        });
+                    }
+                });
+            });
+        })
     }
 }

@@ -52,13 +52,14 @@
                                        [columnMode]="'force'">
                         </ngx-datatable>
                         <ng-template #descriptionTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <div *ngIf="row.trangThai == 1" class="status-use">Chờ phê duyệt</div>
-                            <div *ngIf="row.trangThai == 2" class="status-none">Đã được phê duyệt</div>
+                            <div *ngIf="row.trangThai == 1" class="status-use">Đã gửi đề xuất</div>
+                            <div *ngIf="row.trangThai == 2" class="status-none">Đã tiếp nhận</div>
+                            <div *ngIf="row.trangThai == 3" class="status-none">Đã được phê duyệt</div>
                         </ng-template>
                         <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <a class="btn btn-func btn-success" href="javascript:;" title="Chi tiết"><i class="fa fa-eye"></i></a>
-                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editVatTuYeuCau(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                            <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteVatTuYeuCau(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                            <a class="btn btn-func btn-success" href="javascript:;" (click)="viewDeXuat(row)" title="Chi tiết"><i class="fa fa-eye"></i></a>
+                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editDeXuat(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                            <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDeXuat(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </ng-template>
                         <vattuyeucau-info #vattuyeucauEditor [isGeneralEditor]="true"></vattuyeucau-info>
                     </div>

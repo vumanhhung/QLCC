@@ -1,7 +1,7 @@
 ﻿<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1" [class.fullScreenModal]="isFullScreenModal">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div *ngIf="!isViewDetails" class="EditForm">
+            <div *ngIf="!isViewDetail" class="EditForm">
                 <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="VatTuPhieuYeuCauInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
           (!nguoiYeuCau.valid && showErrorAlert('NguoiYeuCau không được để trống', 'Vui lòng nhập NguoiYeuCau!'));
 (!phongbanChk && showErrorAlert('Bộ Phận Yêu Cầu không được để trống', 'Vui lòng nhập Bộ Phận Yêu Cầu!'));
@@ -11,7 +11,7 @@
 ">
                     <div class="modal-header">
                         <p *ngIf="isNew" class="modal-title pull-left"><i class="fa fa-plus"></i> Tạo phiếu yêu cầu</p>
-                        <p *ngIf="isEdit" class="modal-title pull-left"><i class="fa fa-pencil-square-o"></i> Chỉnh sửa phiếu yêu cầu - <span>{{DichVuCoBanEdit.soChungTu}}</span></p>
+                        <p *ngIf="isEdit" class="modal-title pull-left"><i class="fa fa-pencil-square-o"></i> Chỉnh sửa phiếu yêu cầu</p>
                         <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -62,7 +62,16 @@
                                 </span>
                             </div>
                         </div>
-
+                        <div class="has-feedback col-sm-12">
+                            <label class="control-label" for="mucDichSuDung-{{uniqueId}}">Mục đích sử dụng</label>
+                            <div class="control" [ngClass]="{'has-success': f.submitted && mucDichSuDung.valid, 'has-error' : f.submitted && !mucDichSuDung.valid}">
+                                <input autofocus type="text" class="form-control" name="mucDichSuDung" [(ngModel)]="VatTuPhieuYeuCauEdit.mucDichSuDung" #mucDichSuDung="ngModel" required />
+                                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': mucDichSuDung.valid, 'glyphicon-remove' : !mucDichSuDung.valid}"></span>
+                                <span *ngIf="showValidationErrors && f.submitted && !mucDichSuDung.valid" class="errorMessage">
+                                    Vui lòng nhập mục đích sử dụng!
+                                </span>
+                            </div>
+                        </div>
                         <div style="display: inline-flex">
                             <div class="has-feedback col-sm-4">
                                 <label class="control-label" for="vatTuId-{{uniqueId}}">Chọn vật tư</label>
@@ -129,16 +138,6 @@
                             </div>
                         </div>
                         <div class="has-feedback col-sm-12">
-                            <label class="control-label" for="mucDichSuDung-{{uniqueId}}">Mục đích sử dụng</label>
-                            <div class="control" [ngClass]="{'has-success': f.submitted && mucDichSuDung.valid, 'has-error' : f.submitted && !mucDichSuDung.valid}">
-                                <input autofocus type="text" class="form-control" name="mucDichSuDung" [(ngModel)]="VatTuPhieuYeuCauEdit.mucDichSuDung" #mucDichSuDung="ngModel" required />
-                                <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': mucDichSuDung.valid, 'glyphicon-remove' : !mucDichSuDung.valid}"></span>
-                                <span *ngIf="showValidationErrors && f.submitted && !mucDichSuDung.valid" class="errorMessage">
-                                    Vui lòng nhập mục đích sử dụng!
-                                </span>
-                            </div>
-                        </div>
-                        <div class="has-feedback col-sm-12">
                             <label class="control-label" for="dienGiai-{{uniqueId}}">Diễn Giải</label>
                             <div class="control">
                                 <input autofocus type="text" class="form-control" name="dienGiai" [(ngModel)]="VatTuPhieuYeuCauEdit.dienGiai" #dienGiai="ngModel" />
@@ -162,6 +161,88 @@
                     </div>
                     <div class="clearfix"></div>
                 </form>
+            </div>
+            <div *ngIf="isViewDetail">
+                <div class="modal-header">
+                    <p class="modal-title pull-left">
+                        <i class="fa fa-eye"></i> Chi tiết vật tư - <span *ngIf="VatTuPhieuYeuCauEdit.trangThai == 1">Đã gửi đề xuất</span>
+                        <span *ngIf="VatTuPhieuYeuCauEdit.trangThai == 2">Đã tiếp nhận</span>
+                        <span *ngIf="VatTuPhieuYeuCauEdit.trangThai == 3">Đã được phê duyệt</span>
+                    </p>
+                    <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <form #f="ngForm">
+                            <div>
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="8" class="headView">Thông tin chung</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Bộ phận yêu cầu</td>
+                                            <td>{{VatTuPhieuYeuCauEdit.phongbans.tenPhongBan}}</td>
+                                            <td class="boldText">Người yêu cầu</td>
+                                            <td>{{VatTuPhieuYeuCauEdit.nguoiYeuCau}}</td>
+                                            <td class="boldText">Người tiếp nhận</td>
+                                            <td>{{VatTuPhieuYeuCauEdit.nguoiTiepNhan }}</td>
+                                            <td class="boldText">Người phê duyệt</td>
+                                            <td>{{VatTuPhieuYeuCauEdit.nguoiDuyet}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Mục đích sử dụng</td>
+                                            <td colspan="7">{{VatTuPhieuYeuCauEdit.mucDichSuDung}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="8" class="headView">Vật tư đề xuất</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="boldText">Vật tư</td>
+                                            <td colspan="1" class="boldText">Đơn vị tính</td>
+                                            <td colspan="2" class="boldText">Xuất xứ</td>
+                                            <td colspan="1" class="boldText">Số lượng</td>
+                                            <td colspan="2" class="boldText">Ghi chú</td>
+                                        </tr>
+                                        <tr *ngFor="let vtyc of list">
+                                            <td colspan="2">{{ vtyc.vattus.tenVatTu }}</td>
+                                            <td colspan="1">{{ vtyc.vattus.donViTinhs.tenDonViTinh }}</td>
+                                            <td colspan="2">{{ vtyc.vattus.quocTichs.tenNuoc }}</td>
+                                            <td colspan="1">{{ vtyc.soLuong }}</td>
+                                            <td colspan="2">{{ vtyc.ghiChu }}</td>
+                                        </tr>
+                                        <!--<tr>
+                                            <td colspan="8" class="headView">Thông tin chỉnh sửa</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Ngày nhập</td>
+                                            <td>{{VatTuPhieuYeuCauEdit.ngayNhap | date: 'dd/MM/yyyy'}}</td>
+                                            <td class="boldText">Người nhập</td>
+                                            <td>{{VatTuPhieuYeuCauEdit.nguoiNhap}}</td>
+                                            <td class="boldText">Ngày sửa</td>
+                                            <td>{{VatTuPhieuYeuCauEdit.ngaySua | date: 'dd/MM/yyyy'}}</td>
+                                            <td class="boldText">Người sửa</td>
+                                            <td>{{VatTuPhieuYeuCauEdit.nguoiSua}}</td>
+                                        </tr>-->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="actionBtn-form-group">
+                        <div class="col-sm-7">
+                            <div class="pull-right">
+                                <button type="button" (click)="movetoEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                                <button type="button" (click)="closeModal()" class="btn btn-danger"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

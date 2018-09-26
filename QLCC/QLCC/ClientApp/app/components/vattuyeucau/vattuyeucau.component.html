@@ -51,26 +51,16 @@
                                        [limit]="limit"
                                        [columnMode]="'force'">
                         </ngx-datatable>
-                        <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <a class="btn btn-func btn-success"  href="javascript:;" title="Chi tiết"><i class="fa fa-eye"></i></a>
-                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editVatTuYeuCau(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                            <a class="btn btn-func btn-danger"  href="javascript:;" (click)="deleteVatTuYeuCau(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        <ng-template #descriptionTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <div *ngIf="row.trangThai == 1" class="status-use">Chờ phê duyệt</div>
+                            <div *ngIf="row.trangThai == 2" class="status-none">Đã được phê duyệt</div>
                         </ng-template>
-                        <div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title pull-left"><i class="glyphicon glyphicon-plus-sign"></i> Thêm mới </h4>
-                                        <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <vattuyeucau-info #vattuyeucauEditor [isGeneralEditor]="true"></vattuyeucau-info>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <a class="btn btn-func btn-success" href="javascript:;" title="Chi tiết"><i class="fa fa-eye"></i></a>
+                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editVatTuYeuCau(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                            <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteVatTuYeuCau(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        </ng-template>
+                        <vattuyeucau-info #vattuyeucauEditor [isGeneralEditor]="true"></vattuyeucau-info>
                     </div>
                 </div>
             </div>

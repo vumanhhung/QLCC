@@ -301,6 +301,14 @@ import { FormWizardModule } from 'angular-wizard-form';
 import { FileUploadEndpoint } from "./services/fileupload-endpoint.service";
 import { FileUploadService } from "./services/fileupload.service";
 import { VatTuDetailComponent } from "./components/vattu/vattu-detail.component";
+import { VatTuPhieuYeuCauComponent } from "./components/vattuphieuyeucau/vattuphieuyeucau.component";
+import { VatTuPhieuYeuCauInfoComponent } from "./components/vattuphieuyeucau/vattuphieuyeucau-info.component";
+import { VatTuPhieuYeuCauService } from "./services/vattuphieuyeucau.service";
+import { VatTuPhieuYeuCauEndpoint } from "./services/vattuphieuyeucau-endpoint.service";
+import { VatTuYeuCauService } from "./services/vattuyeucau.service";
+import { VatTuYeuCauEndpoint } from "./services/vattuyeucau-endpoint.service";
+import { VatTuYeuCauComponent } from "./components/vattuyeucau/vattuyeucau.component";
+import { VatTuYeuCauInfoComponent } from "./components/vattuyeucau/vattuyeucau-info.component";
 
 @NgModule({
     imports: [
@@ -469,7 +477,11 @@ import { VatTuDetailComponent } from "./components/vattu/vattu-detail.component"
         VatTuHinhAnhInfoComponent,
         VatTuTaiLieuComponent,
         VatTuTaiLieuInfoComponent,
-        VatTuDetailComponent
+        VatTuDetailComponent,
+        VatTuPhieuYeuCauComponent,
+        VatTuPhieuYeuCauInfoComponent,
+        VatTuYeuCauComponent,
+        VatTuYeuCauInfoComponent
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'vi' },
@@ -576,6 +588,10 @@ import { VatTuDetailComponent } from "./components/vattu/vattu-detail.component"
         VatTuTaiLieuEndpoint,
         FileUploadService,
         FileUploadEndpoint,
+        VatTuPhieuYeuCauService,
+        VatTuPhieuYeuCauEndpoint,
+        VatTuYeuCauService,
+        VatTuYeuCauEndpoint,
         AuthService,
         Utilities
     ],

@@ -45,7 +45,7 @@ namespace QLCC.Controllers
                 return BadRequest(ModelState);
             }
 
-            var vattuphieuyeucau = await _context.VatTuPhieuYeuCaus.SingleOrDefaultAsync(m => m.VatTuPhieuYeuCauId == id);
+            var vattuphieuyeucau = await _context.VatTuPhieuYeuCaus.SingleOrDefaultAsync(m => m.PhieuYeuCauVTId == id);
 
             if (vattuphieuyeucau == null)
             {
@@ -64,7 +64,7 @@ namespace QLCC.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != vattuphieuyeucau.VatTuPhieuYeuCauId)
+            if (id != vattuphieuyeucau.PhieuYeuCauVTId)
             {
                 return BadRequest();
             }
@@ -102,7 +102,7 @@ namespace QLCC.Controllers
             _context.VatTuPhieuYeuCaus.Add(vattuphieuyeucau);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetVatTuPhieuYeuCau", new { id = vattuphieuyeucau.VatTuPhieuYeuCauId }, vattuphieuyeucau);
+            return CreatedAtAction("GetVatTuPhieuYeuCau", new { id = vattuphieuyeucau.PhieuYeuCauVTId }, vattuphieuyeucau);
         }
         
         // DELETE: api/VatTuPhieuYeuCaus/5
@@ -114,7 +114,7 @@ namespace QLCC.Controllers
                 return BadRequest(ModelState);
             }
 
-            var vattuphieuyeucau = await _context.VatTuPhieuYeuCaus.SingleOrDefaultAsync(m => m.VatTuPhieuYeuCauId == id);
+            var vattuphieuyeucau = await _context.VatTuPhieuYeuCaus.SingleOrDefaultAsync(m => m.PhieuYeuCauVTId == id);
             if (vattuphieuyeucau == null)
             {
                 return NotFound();
@@ -128,7 +128,7 @@ namespace QLCC.Controllers
         
         private bool VatTuPhieuYeuCauExists(int id)
         {                        
-            return _context.VatTuPhieuYeuCaus.Any(e => e.VatTuPhieuYeuCauId == id);
+            return _context.VatTuPhieuYeuCaus.Any(e => e.PhieuYeuCauVTId == id);
         }
     }    
 }

@@ -46,7 +46,7 @@ namespace QLCC.Controllers
                 return BadRequest(ModelState);
             }
 
-            var vattu = await _context.VatTus.SingleOrDefaultAsync(m => m.VatTuId == id);
+            var vattu = await _context.VatTus.Include(r => r.quocTichs).Include(r => r.loaiHangs).Include(r => r.nhaCungCaps).Include(r => r.hangSanXuats).Include(r => r.donViTinhs).Include(r => r.phongBans).Include(r => r.loaiTiens).SingleOrDefaultAsync(m => m.VatTuId == id);
 
             if (vattu == null)
             {

@@ -4,6 +4,7 @@ import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { Utilities } from '../../services/utilities';
 import { VatTuPhieuYeuCau } from "../../models/vattuphieuyeucau.model";
 import { VatTuPhieuYeuCauService } from "./../../services/vattuphieuyeucau.service";
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
     selector: "vattuphieuyeucau-info",
@@ -33,6 +34,9 @@ export class VatTuPhieuYeuCauInfoComponent implements OnInit {
 
     @ViewChild('f')
     private form;
+
+    @ViewChild('editorModal')
+    editorModal: ModalDirective;
     
     constructor(private alertService: AlertService, private gvService: VatTuPhieuYeuCauService) {
     }
@@ -92,7 +96,7 @@ export class VatTuPhieuYeuCauInfoComponent implements OnInit {
             this.gvService.addnewVatTuPhieuYeuCau(this.VatTuPhieuYeuCauEdit).subscribe(results => this.saveSuccessHelper(results), error => this.saveFailedHelper(error));
         }
         else {
-            this.gvService.updateVatTuPhieuYeuCau(this.VatTuPhieuYeuCauEdit.vatTuPhieuYeuCauId, this.VatTuPhieuYeuCauEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
+            this.gvService.updateVatTuPhieuYeuCau(this.VatTuPhieuYeuCauEdit.phieuYeuCauVTId, this.VatTuPhieuYeuCauEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
         }
     }
     
@@ -146,7 +150,7 @@ export class VatTuPhieuYeuCauInfoComponent implements OnInit {
         if (obj) {
             this.isGeneralEditor = true;
             this.isNew = false;
-            this.editingRowName = obj.tenVatTuPhieuYeuCau;
+            //this.editingRowName = obj.mucDichSuDung;
             this.VatTuPhieuYeuCauEdit = new VatTuPhieuYeuCau();
             Object.assign(this.VatTuPhieuYeuCauEdit, obj);
             Object.assign(this.VatTuPhieuYeuCauEdit, obj);
@@ -176,4 +180,9 @@ export class VatTuPhieuYeuCauInfoComponent implements OnInit {
         if (this.changesSavedCallback)
             this.changesSavedCallback();
     }    
+
+    onEditorModalHidden() {
+        this.editingRowName = null;
+        this.resetForm();
+    }
 }

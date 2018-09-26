@@ -40,11 +40,9 @@ export class VatTuPhieuYeuCauComponent implements OnInit, AfterViewInit {
     @ViewChild('actionsTemplate')
     actionsTemplate: TemplateRef<any>;
 
-    @ViewChild('editorModal')
-    editorModal: ModalDirective;
-
     @ViewChild('vattuphieuyeucauEditor')
     VatTuPhieuYeuCauEditor: VatTuPhieuYeuCauInfoComponent;
+
     constructor(private alertService: AlertService, private translationService: AppTranslationService, private vattuphieuyeucauService: VatTuPhieuYeuCauService) {
     }
     
@@ -70,13 +68,13 @@ export class VatTuPhieuYeuCauComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.VatTuPhieuYeuCauEditor.changesSavedCallback = () => {
             this.addNewToList();
-            this.editorModal.hide();
+            this.VatTuPhieuYeuCauEditor.editorModal.hide();
         };
 
         this.VatTuPhieuYeuCauEditor.changesCancelledCallback = () => {
             this.vattuphieuyeucauEdit = null;
             this.sourcevattuphieuyeucau = null;
-            this.editorModal.hide();
+            this.VatTuPhieuYeuCauEditor.editorModal.hide();
         };
     }
     
@@ -129,17 +127,12 @@ export class VatTuPhieuYeuCauComponent implements OnInit, AfterViewInit {
         this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất người dùng từ máy chủ.\r\nErrors: "${Utilities.getHttpResponseMessage(error)}"`,
             MessageSeverity.error, error);
     }
-    
-    onEditorModalHidden() {
-        this.editingRowName = null;
-        this.VatTuPhieuYeuCauEditor.resetForm(true);
-    }
 
     newVatTuPhieuYeuCau() {
         this.editingRowName = null;
         this.sourcevattuphieuyeucau = null;
         this.vattuphieuyeucauEdit = this.VatTuPhieuYeuCauEditor.newVatTuPhieuYeuCau();
-        this.editorModal.show();
+        this.VatTuPhieuYeuCauEditor.editorModal.show();
     }
     
     SelectedValue(value: number) {
@@ -158,7 +151,7 @@ export class VatTuPhieuYeuCauComponent implements OnInit, AfterViewInit {
         this.alertService.startLoadingMessage("Đang thực hiện xóa...");
         this.loadingIndicator = true;
 
-        this.vattuphieuyeucauService.deleteVatTuPhieuYeuCau(row.vatTuPhieuYeuCauId)
+        this.vattuphieuyeucauService.deleteVatTuPhieuYeuCau(row.phieuYeuCauVTId)
             .subscribe(results => {
                 this.alertService.stopLoadingMessage();
                 this.loadingIndicator = false;
@@ -175,9 +168,9 @@ export class VatTuPhieuYeuCauComponent implements OnInit, AfterViewInit {
     }
 
     editVatTuPhieuYeuCau(row: VatTuPhieuYeuCau) {
-        this.editingRowName = { name: row.tenVatTuPhieuYeuCau };
+        //this.editingRowName = { name: row.tenVatTuPhieuYeuCau };
         this.sourcevattuphieuyeucau = row;
         this.vattuphieuyeucauEdit = this.VatTuPhieuYeuCauEditor.editVatTuPhieuYeuCau(row);
-        this.editorModal.show();
+        this.VatTuPhieuYeuCauEditor.editorModal.show();
     }    
 }

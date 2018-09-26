@@ -65,6 +65,8 @@ import { LoaiHangComponent } from './components/loaihang/loaihang.component';
 import { VatTuComponent } from './components/vattu/vattu.component';
 import { VatTuHinhAnhComponent } from './components/vattuhinhanh/vattuhinhanh.component';
 import { VatTuTaiLieuComponent } from './components/vattutailieu/vattutailieu.component';
+import { VatTuPhieuYeuCauComponent } from './components/vattuphieuyeucau/vattuphieuyeucau.component';
+import { VatTuYeuCauComponent } from './components/vattuyeucau/vattuyeucau.component';
 
 @NgModule({
     imports: [
@@ -115,6 +117,7 @@ import { VatTuTaiLieuComponent } from './components/vattutailieu/vattutailieu.co
             { path: "loaihang", component: LoaiHangComponent, canActivate: [AuthGuard], data: { title: "Quản lý loại hàng " } },
             { path: "vattu", component: VatTuComponent, canActivate: [AuthGuard], data: { title: "Quản lý danh mục vật tư " } },
             { path: "vattuhinhanh", component: VatTuHinhAnhComponent, canActivate: [AuthGuard], data: { title: "Quản lý danh mục vật tư hình ảnh" } },
+            { path: "vattuphieuyeucau", component: VatTuYeuCauComponent, canActivate: [AuthGuard], data: { title: "Quản lý yêu cầu vật tư" } },
             { path: "vattutailieu", component: VatTuTaiLieuComponent, canActivate: [AuthGuard], data: { title: "Quản lý danh mục vật tư tài liệu" } },
             { path: "hangsanxuat", component: HangSanXuatComponent, canActivate: [AuthGuard], data: { title: "Quản lý hãng sản xuất " } },
             { path: "phieuthulichsu/:matbangid", component: PhieuThuLichSuComponent, canActivate: [AuthGuard], data: { title: "Lịch sử thu phí gửi xe " } },

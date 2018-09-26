@@ -31,8 +31,8 @@ export class VatTuYeuCauService {
     }
 
     updateVatTuYeuCau(id?: number, vattuyeucau?: VatTuYeuCau) {
-        if (vattuyeucau.vatTuYeuCauId) {
-            return this.vattuyeucauEndpoint.updateVatTuYeuCau(vattuyeucau.vatTuYeuCauId, vattuyeucau);
+        if (vattuyeucau.yeuCauvatTuId) {
+            return this.vattuyeucauEndpoint.updateVatTuYeuCau(vattuyeucau.yeuCauvatTuId, vattuyeucau);
         }
     }
 

@@ -55,7 +55,7 @@ export class VatTuInfoComponent implements OnInit {
     };
 
     public uploadFileRestrictions: FileRestrictions = {
-        allowedExtensions: ['.xlsx', '.docx', '.doc']
+        allowedExtensions: ['.xlsx', '.docx', '.doc', '.ppt']
     };
 
     public ChkquocTich: boolean;
@@ -131,10 +131,19 @@ export class VatTuInfoComponent implements OnInit {
         this.step1 = true;
         this.step3 = false;
         this.step2 = false;
+        this.loadHinhAnh();
     }
 
     loadData() {
         this.alertService.startLoadingMessage();
+    }
+
+    loadHinhAnh() {
+        this.vattuhinhanhService.getVatTuHinhAnhByID(this.VatTuEdit.vatTuId).subscribe(results => { this.VTHAs = results }, error => { });
+    }
+
+    loadTaiLieu() {
+        this.vattutailieuService.getVatTuTaiLieuByID(this.VatTuEdit.vatTuId).subscribe(result => { this.VTTLs = result }, error => { });
     }
 
     private onDataLoadSuccessful(obj: VatTu) {

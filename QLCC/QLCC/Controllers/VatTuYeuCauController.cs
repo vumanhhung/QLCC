@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using DAL.Models;
+using QLCC.Helpers;
 
 namespace QLCC.Controllers
 {
@@ -45,7 +46,7 @@ namespace QLCC.Controllers
                 return BadRequest(ModelState);
             }
 
-            var vattuyeucau = await _context.VatTuYeuCaus.SingleOrDefaultAsync(m => m.VatTuYeuCauId == id);
+            var vattuyeucau = await _context.VatTuYeuCaus.SingleOrDefaultAsync(m => m.YeuCauvatTuId == id);
 
             if (vattuyeucau == null)
             {
@@ -64,11 +65,14 @@ namespace QLCC.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != vattuyeucau.VatTuYeuCauId)
+            if (id != vattuyeucau.YeuCauvatTuId)
             {
                 return BadRequest();
             }
-
+            var user = this.User.Identity.Name;
+            var userId = Utilities.GetUserId(this.User);
+            vattuyeucau.NgaySua = DateTime.Now;
+            vattuyeucau.NguoiSua = user;
             _context.Entry(vattuyeucau).State = EntityState.Modified;
 
             try
@@ -98,11 +102,14 @@ namespace QLCC.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            var user = this.User.Identity.Name;
+            var userId = Utilities.GetUserId(this.User);
+            vattuyeucau.NgayNhap = DateTime.Now;
+            vattuyeucau.NguoiNhap = user;
             _context.VatTuYeuCaus.Add(vattuyeucau);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetVatTuYeuCau", new { id = vattuyeucau.VatTuYeuCauId }, vattuyeucau);
+            return CreatedAtAction("GetVatTuYeuCau", new { id = vattuyeucau.YeuCauvatTuId }, vattuyeucau);
         }
         
         // DELETE: api/VatTuYeuCaus/5
@@ -114,7 +121,7 @@ namespace QLCC.Controllers
                 return BadRequest(ModelState);
             }
 
-            var vattuyeucau = await _context.VatTuYeuCaus.SingleOrDefaultAsync(m => m.VatTuYeuCauId == id);
+            var vattuyeucau = await _context.VatTuYeuCaus.SingleOrDefaultAsync(m => m.YeuCauvatTuId == id);
             if (vattuyeucau == null)
             {
                 return NotFound();
@@ -128,7 +135,7 @@ namespace QLCC.Controllers
         
         private bool VatTuYeuCauExists(int id)
         {                        
-            return _context.VatTuYeuCaus.Any(e => e.VatTuYeuCauId == id);
+            return _context.VatTuYeuCaus.Any(e => e.YeuCauvatTuId == id);
         }
     }    
 }

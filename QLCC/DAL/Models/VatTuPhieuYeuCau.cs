@@ -18,5 +18,6 @@ namespace DAL.Models
 		public string NguoiDuyet { get; set; }
 		public int? TrangThai { get; set; }
         public PhongBan phongbans { get; set; }
+        public ToaNha toanhas { get; set; }
     }
 }

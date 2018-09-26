@@ -33,7 +33,7 @@ namespace QLCC.Controllers
         [HttpGet]
         public IEnumerable<VatTuPhieuYeuCau> GetVatTuPhieuYeuCaus()
         {
-            return _context.VatTuPhieuYeuCaus;
+            return _context.VatTuPhieuYeuCaus.Include(r => r.phongbans).Include(r => r.toanhas);
         }
         
         // GET: api/VatTuPhieuYeuCaus/5

@@ -20,11 +20,13 @@ import { VatTuPhieuYeuCauService } from '../../services/vattuphieuyeucau.service
 
 export class VatTuYeuCauInfoComponent implements OnInit {
     private isNew = false;
+    public isEdit = false;
+    public isViewDetail = false;
     private isSaving = false;
     private showValidationErrors: boolean = false;
     private uniqueId: string = Utilities.uniqueId();
-    private VatTuYeuCauEdit: VatTuYeuCau = new VatTuYeuCau();
-    private VatTuPhieuYeuCauEdit: VatTuPhieuYeuCau = new VatTuPhieuYeuCau();
+    public VatTuYeuCauEdit: VatTuYeuCau = new VatTuYeuCau();
+    public VatTuPhieuYeuCauEdit: VatTuPhieuYeuCau = new VatTuPhieuYeuCau();
     public list: VatTuYeuCau[] = [];
     public listRemoved: VatTuYeuCau[] = [];
     public vattusFilter: VatTu[] = [];
@@ -163,7 +165,13 @@ export class VatTuYeuCauInfoComponent implements OnInit {
     }
 
     deleteFromList(value: VatTuYeuCau) {
-        this.list.splice(this.list.indexOf(value), 1);
+        if (this.isNew) {
+            this.list.splice(this.list.indexOf(value), 1);
+        } else {
+            var removed = this.list.splice(this.list.indexOf(value), 1);
+            console.log(removed[0]);
+            this.listRemoved.unshift(removed[0]);
+        }        
     }
     
     private cancel() {
@@ -187,16 +195,34 @@ export class VatTuYeuCauInfoComponent implements OnInit {
             if (this.isNew) {
                 this.vtpycService.addnewVatTuPhieuYeuCau(this.VatTuPhieuYeuCauEdit).subscribe(results => {
                     for (var item of this.list) {
-                        item.phieuYeuCauVTId = results.phieuYeuCauVTId;
-                        item.donViTinhId = item.vattus.donViTinhId;
-                        item.quocTichId = item.vattus.quocTichId;
-                        this.gvService.addnewVatTuYeuCau(item).subscribe(results => this.saveVTYCSuccessHelper(results), error => this.saveFailedHelper(error));
+                        this.VatTuYeuCauEdit.phieuYeuCauVTId = results.phieuYeuCauVTId;
+                        this.VatTuYeuCauEdit.donViTinhId = item.vattus.donViTinhId;
+                        this.VatTuYeuCauEdit.quocTichId = item.vattus.quocTichId;
+                        this.VatTuYeuCauEdit.vatTuId = item.vatTuId;
+                        this.gvService.addnewVatTuYeuCau(this.VatTuYeuCauEdit).subscribe(results => this.saveVTYCSuccessHelper(results), error => this.saveFailedHelper(error));
                     }                    
                     this.saveVTPYCSuccessHelper(results);
                 }, error => this.saveFailedHelper(error));                
             }
             else {
-                this.gvService.updateVatTuYeuCau(this.VatTuYeuCauEdit.yeuCauvatTuId, this.VatTuYeuCauEdit).subscribe(response => this.saveVTYCSuccessHelper(), error => this.saveFailedHelper(error));
+                this.vtpycService.updateVatTuPhieuYeuCau(this.VatTuPhieuYeuCauEdit.phieuYeuCauVTId, this.VatTuPhieuYeuCauEdit).subscribe(response => {
+                    this.gvService.getByPhieuYeuCau(this.VatTuPhieuYeuCauEdit.phieuYeuCauVTId).subscribe(results => {
+                        if (this.list <= results) {
+                            for (var item of this.list) {
+                                this.gvService.updateVatTuYeuCau(item.yeuCauvatTuId, item).subscribe(response => this.saveVTYCSuccessHelper(), error => this.saveFailedHelper(error));
+                            }
+                        } else {
+                            for (var i = 0; i < this.list.length; i++) {
+                                if (i - results.length >= 0) {
+                                    this.gvService.addnewVatTuYeuCau(this.list[i]).subscribe(result => this.saveVTYCSuccessHelper(result), error => this.saveFailedHelper(error));
+                                } else {
+                                    this.gvService.updateVatTuYeuCau(this.list[i].yeuCauvatTuId, this.list[i]).subscribe(response => this.saveVTYCSuccessHelper(), error => this.saveFailedHelper(error));
+                                }
+                            }
+                        }
+                    }, error => this.saveFailedHelper(error));
+                }, error => this.saveFailedHelper(error));
+                
             }
         } else {
             this.alertService.showStickyMessage("Lỗi nhập liệu", "Vui lòng nhập vật tư cần đề xuất", MessageSeverity.error);
@@ -205,7 +231,7 @@ export class VatTuYeuCauInfoComponent implements OnInit {
         
     }
     
-    newVatTuYeuCau() {
+    newDeXuat() {
         this.isGeneralEditor = true;
         this.isNew = true;
         this.showValidationErrors = true;
@@ -274,20 +300,23 @@ export class VatTuYeuCauInfoComponent implements OnInit {
         this.alertService.showMessage(caption, message, MessageSeverity.error);
     }
 
-    editVatTuYeuCau(obj: VatTuYeuCau) {
+    editDeXuat(obj: VatTuPhieuYeuCau) {
         if (obj) {
             this.isGeneralEditor = true;
             this.isNew = false;
+            this.isEdit = true;
             //this.editingRowName = obj.tenVatTuYeuCau;
-            this.VatTuYeuCauEdit = new VatTuYeuCau();
-            Object.assign(this.VatTuYeuCauEdit, obj);
-            Object.assign(this.VatTuYeuCauEdit, obj);
+            this.VatTuYeuCauEdit.soLuong = 1;
+            this.gvService.getByPhieuYeuCau(obj.phieuYeuCauVTId).subscribe(results => this.list = results, error => { alert(error) });
+            this.VatTuPhieuYeuCauEdit = new VatTuPhieuYeuCau();
+            Object.assign(this.VatTuPhieuYeuCauEdit, obj);
+            Object.assign(this.VatTuPhieuYeuCauEdit, obj);
             this.edit();
 
             return this.VatTuYeuCauEdit;
         }
         else {
-            return this.newVatTuYeuCau();
+            return this.newDeXuat();
         }
     }
 
@@ -312,5 +341,14 @@ export class VatTuYeuCauInfoComponent implements OnInit {
     onEditorModalHidden() {
         this.editingRowName = null;
         this.resetForm();
+    }
+
+    closeModal() {
+        this.editorModal.hide();
+    }
+
+    private movetoEditForm() {
+        this.isViewDetail = false;
+        this.isEdit = true;
     }
 }

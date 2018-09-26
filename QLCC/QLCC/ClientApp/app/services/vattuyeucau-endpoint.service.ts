@@ -62,4 +62,12 @@ export class VatTuYeuCauEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.deleteVatTuYeuCau(id));
             });
     }
+
+    getByPhieuYeuCau<T>(id?: number): Observable<T> {
+        let endpointUrl = `${this.vattuyeucauUrl}/GetByPhieuYeuCau/${id}`;
+        return this.http.get(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getByPhieuYeuCau(id));
+            });
+    }
 }

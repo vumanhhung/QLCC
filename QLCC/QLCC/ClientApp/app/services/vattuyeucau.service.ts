@@ -47,5 +47,8 @@ export class VatTuYeuCauService {
     deleteVatTuYeuCau(id: number) {
         return this.vattuyeucauEndpoint.deleteVatTuYeuCau(id);
     }
-    
+
+    getByPhieuYeuCau(id: number) {
+        return this.vattuyeucauEndpoint.getByPhieuYeuCau<VatTuYeuCau[]>(id);
+    }
 }

@@ -1,4 +1,5 @@
 ﻿import { PhongBan } from "./phongban.model";
+import { ToaNha } from "./toanha.model";
 
 export class VatTuPhieuYeuCau {
     public phieuYeuCauVTId: number;
@@ -11,6 +12,7 @@ export class VatTuPhieuYeuCau {
     public nguoiDuyet: string;
     public trangThai: number;
     public phongbans: PhongBan;
+    public toanhas: ToaNha;
 
     constructor(phieuYeuCauVTId?: number, nguoiYeuCau?: string, phongBanId?: number, toaNhaId?: number, mucDichSuDung?: string, nguoiTiepNhan?: string, dienGiai?: string, nguoiDuyet?: string, trangThai?: number) {
         this.phieuYeuCauVTId = phieuYeuCauVTId;

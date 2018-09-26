@@ -34,7 +34,7 @@ namespace QLCC.Controllers
         [HttpGet]
         public IEnumerable<VatTuYeuCau> GetVatTuYeuCaus()
         {
-            return _context.VatTuYeuCaus;
+            return _context.VatTuYeuCaus.Include(r => r.vattus);
         }
         
         // GET: api/VatTuYeuCaus/5
@@ -132,7 +132,14 @@ namespace QLCC.Controllers
 
             return Ok(vattuyeucau);
         }
-        
+
+        [HttpGet("GetByPhieuYeuCau/{id}")]
+        public IEnumerable<VatTuYeuCau> GetByPhieuYeuCau([FromRoute] int id)
+        {
+            return _context.VatTuYeuCaus.Include(r => r.vattus).Include(r => r.vattus.donViTinhs).Include(r => r.vattus.quocTichs).Where(m => m.PhieuYeuCauVTId == id).ToList();
+        }
+
+
         private bool VatTuYeuCauExists(int id)
         {                        
             return _context.VatTuYeuCaus.Any(e => e.YeuCauvatTuId == id);

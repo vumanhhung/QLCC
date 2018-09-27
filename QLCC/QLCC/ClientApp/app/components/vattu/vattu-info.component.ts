@@ -68,9 +68,6 @@ export class VatTuInfoComponent implements OnInit {
     public ChkNDTN: boolean;
     public ChkDVKH: boolean;
     public checkTen: boolean;
-
-    VTHAs: VatTuHinhAnh[] = [];
-    VTTLs: VatTuTaiLieu[] = [];
     quoctichs: QuocTich[] = [];
     loaihangs: LoaiHang[] = [];
     hangSX: HangSanXuat[] = [];
@@ -94,6 +91,9 @@ export class VatTuInfoComponent implements OnInit {
     public urlImgList: string[] = [];
     public urlFile: string = "";
     public urlFileList: string[] = [];
+
+    public listHA: VatTuHinhAnh[] = [];
+    public listTL: VatTuTaiLieu[] = [];
 
     step1: boolean = false;
     step2: boolean = false;
@@ -139,11 +139,11 @@ export class VatTuInfoComponent implements OnInit {
     }
 
     loadHinhAnh() {
-        this.vattuhinhanhService.getVatTuHinhAnhByID(this.VatTuEdit.vatTuId).subscribe(results => { this.VTHAs = results }, error => { });
+        this.vattuhinhanhService.getVatTuHinhAnhByID(this.VatTuEdit.vatTuId).subscribe(results => { this.listHA = results }, error => { });
     }
 
     loadTaiLieu() {
-        this.vattutailieuService.getVatTuTaiLieuByID(this.VatTuEdit.vatTuId).subscribe(result => { this.VTTLs = result }, error => { });
+        this.vattutailieuService.getVatTuTaiLieuByID(this.VatTuEdit.vatTuId).subscribe(result => { this.listTL = result }, error => { });
     }
 
     private onDataLoadSuccessful(obj: VatTu) {
@@ -179,15 +179,34 @@ export class VatTuInfoComponent implements OnInit {
         this.step1 = false;
         this.step2 = true;
         this.step3 = false;
-        this.VTHAs = [];
+        this.listHA = [];
         this.vattuhinhanhService.getVatTuHinhAnhByID(this.VatTuEdit.vatTuId).subscribe(results => {
-            this.VTHAs = results;
-            if (this.VTHAs.length > 0) {
+            this.listHA = results;
+            if (this.listHA.length > 0) {
                 this.isUpload = true;
             } else {
                 this.isUpload = false;
             }
         });
+    }
+
+    nextStep3() {
+        if (this.listHA.length > 0) {
+            this.step1 = false;
+            this.step2 = false;
+            this.step3 = true;
+        } else {
+            this.alertService.showStickyMessage("Lỗi nhập liệu", "Vui lòng nhập hình ảnh vật tư để qua bước tiếp theo", MessageSeverity.error);
+        }        
+    }
+
+    finish() {
+        if (this.listHA.length > 0) {
+            if (this.changesSavedCallback)
+                this.changesSavedCallback();
+        } else {
+            this.alertService.showStickyMessage("Lỗi nhập liệu", "Vui lòng nhập tài liệu vật tư để hoàn thành", MessageSeverity.error);
+        }           
     }
 
     private cancel1() {
@@ -259,8 +278,8 @@ export class VatTuInfoComponent implements OnInit {
                     } else {
                         this.save1SuccessHelper();
                         this.vattuhinhanhService.getVatTuHinhAnhByID(this.VatTuEdit.vatTuId).subscribe(results => {
-                            this.VTHAs = results;
-                            if (this.VTHAs.length > 0) {
+                            this.listHA = results;
+                            if (this.listHA.length > 0) {
                                 this.isUpload = true;
                             } else {
                                 this.isUpload = false;
@@ -276,83 +295,109 @@ export class VatTuInfoComponent implements OnInit {
 
     private saveStep2() {
         let k_img_name: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("k-upload-selected") as HTMLCollectionOf<HTMLElement>;
-        if (this.VTHAs.length > 0 && this.isEdit == true) {
+        if (k_img_name.length > 0) {
+            k_img_name[0].click();
             this.isUpload = true;
-            this.isSaving = true;
-            if (k_img_name.length > 0) {
-                k_img_name[0].click();
-                this.isUpload = true;
-            } else {
-                for (var i = 0; i < this.VTHAs.length; i++) {
-                    this.vattuhinhanhService.updateVatTuHinhAnh(this.VTHAs[i].vatTuHinhAnhId, this.VTHAs[i]).subscribe(response => {
-                        this.save2SuccessHelper();
-                        if (this.VTHAs.length - i == 1) {
-                            this.alertService.showMessage("Bước 2 thành công", `Thực hiện thay đổi hình ảnh vật tư thành công`, MessageSeverity.success);
-                        }
-                    }, error => this.saveFailedHelper(error));
-
-                }
-                this.vattutailieuService.getVatTuTaiLieuByID(this.VatTuTaiLieuEdit.vatTuId).subscribe(results => {
-                    this.VTTLs = results;
-                    if (this.VTTLs.length > 0) {
-                        this.isUploadFile = true;
-                    } else {
-                        this.isUploadFile = false;
-                    }
-                })
-            }
-        } else {
-            if (this.imagePreviews.length == 0) {
-                this.alertService.showStickyMessage("Lỗi nhập liệu", "Ảnh không được để trống - Vui lòng chọn ảnh để upload", MessageSeverity.error);
-                this.isUpload = false;
-                this.isSaving = false;
-            } else {
-                if (k_img_name.length > 0) {
-                    k_img_name[0].click();
-                    this.isUpload = true;
-                }
-            }
         }
+        //if (this.listHA.length > 0 && this.isEdit == true) {
+        //    this.isUpload = true;
+        //    this.isSaving = true;
+        //    if (k_img_name.length > 0) {
+        //        k_img_name[0].click();
+        //        this.isUpload = true;
+        //    } else {
+        //        for (var i = 0; i < this.listHA.length; i++) {
+        //            this.vattuhinhanhService.updateVatTuHinhAnh(this.listHA[i].vatTuHinhAnhId, this.listHA[i]).subscribe(response => {
+        //                this.save2SuccessHelper();
+        //                if (this.listHA.length - i == 1) {
+        //                    this.alertService.showMessage("Bước 2 thành công", `Thực hiện thay đổi hình ảnh vật tư thành công`, MessageSeverity.success);
+        //                }
+        //            }, error => this.saveFailedHelper(error));
+
+        //        }
+        //        this.vattutailieuService.getVatTuTaiLieuByID(this.VatTuTaiLieuEdit.vatTuId).subscribe(results => {
+        //            this.listTL = results;
+        //            if (this.listTL.length > 0) {
+        //                this.isUploadFile = true;
+        //            } else {
+        //                this.isUploadFile = false;
+        //            }
+        //        })
+        //    }
+        //} else {
+        //    if (this.imagePreviews.length == 0) {
+        //        this.alertService.showStickyMessage("Lỗi nhập liệu", "Ảnh không được để trống - Vui lòng chọn ảnh để upload", MessageSeverity.error);
+        //        this.isUpload = false;
+        //        this.isSaving = false;
+        //    } else {
+        //        if (k_img_name.length > 0) {
+        //            k_img_name[0].click();
+        //            this.isUpload = true;
+        //        }
+        //    }
+        //}
     }
 
     private saveStep3() {
         let k_file_name: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("k-upload-selected") as HTMLCollectionOf<HTMLElement>;
-        if (this.VTTLs.length > 0 && this.isEdit == true) {
+        if (k_file_name.length > 0) {
+            k_file_name[0].click();
             this.isUploadFile = true;
-            this.isSaving = true;
-            if (k_file_name.length > 0) {
-                k_file_name[0].click();
-                this.isUploadFile = true;
-            } else {
-                for (var i = 0; i < this.VTTLs.length; i++) {
-                    this.vattutailieuService.updateVatTuTaiLieu(this.VTTLs[i].vatTutaiLieuId, this.VTTLs[i]).subscribe(response => {
-                        this.save3SuccessHelper();
-                        if (this.VTHAs.length - i == 1) {
-                            this.alertService.showMessage("Hoàn thành", `Thực hiện thay đổi vật tư thành công`, MessageSeverity.success);
-                        }
-                    }, error => this.saveFailedHelper(error));
-                }
-                this.vattutailieuService.getVatTuTaiLieuByID(this.VatTuEdit.vatTuId).subscribe(results => {
-                    this.VTTLs = results;
-                    if (this.VTTLs.length > 0) {
-                        this.isUploadFile = true;
-                    } else {
-                        this.isUploadFile = false;
-                    }
-                });
-            }
-        } else {
-            if (this.filePreviews.length == 0) {
-                this.alertService.showStickyMessage("Lỗi nhập liệu", "Tài liệu không được để trống - Vui lòng chọn tài liệu để upload", MessageSeverity.error);
-                this.isUploadFile = false;
-                this.isSaving = false;
-            } else {
-                if (k_file_name.length > 0) {
-                    k_file_name[0].click();
-                    this.isUploadFile = true;
-                }
-            }
-        }
+        }        
+        //if (this.listTL.length > 0 && this.isEdit == true) {
+        //    this.isUploadFile = true;
+        //    this.isSaving = true;
+        //    if (k_file_name.length > 0) {
+        //        k_file_name[0].click();
+        //        this.isUploadFile = true;
+        //    } else {
+        //        for (var i = 0; i < this.listTL.length; i++) {
+        //            this.vattutailieuService.updateVatTuTaiLieu(this.listTL[i].vatTutaiLieuId, this.listTL[i]).subscribe(response => {
+        //                this.save3SuccessHelper();
+        //                if (this.listHA.length - i == 1) {
+        //                    this.alertService.showMessage("Hoàn thành", `Thực hiện thay đổi vật tư thành công`, MessageSeverity.success);
+        //                }
+        //            }, error => this.saveFailedHelper(error));
+        //        }
+        //        this.vattutailieuService.getVatTuTaiLieuByID(this.VatTuEdit.vatTuId).subscribe(results => {
+        //            this.listTL = results;
+        //            if (this.listTL.length > 0) {
+        //                this.isUploadFile = true;
+        //            } else {
+        //                this.isUploadFile = false;
+        //            }
+        //        });
+        //    }
+        //} else {
+        //    if (this.filePreviews.length == 0) {
+        //        this.alertService.showStickyMessage("Lỗi nhập liệu", "Tài liệu không được để trống - Vui lòng chọn tài liệu để upload", MessageSeverity.error);
+        //        this.isUploadFile = false;
+        //        this.isSaving = false;
+        //    } else {
+        //        if (k_file_name.length > 0) {
+        //            k_file_name[0].click();
+        //            this.isUploadFile = true;
+        //        }
+        //    }
+        //}
+    }
+
+    deleteHinhAnh(row: VatTuHinhAnh) {
+        this.vattuhinhanhService.deleteVatTuHinhAnh(row.vatTuHinhAnhId).subscribe(resulst => {
+            this.fileuploadService.deleteEachFileByPath(row.tenHinhAnh, row.urlHinhAnh.slice(1, 12)).subscribe(result => {
+                this.alertService.showStickyMessage("Thành công", "Xóa hình ảnh thành công", MessageSeverity.success);
+                this.listHA.splice(this.listHA.indexOf(row), 1);
+            }, error => { });
+        }, error => error);        
+    }
+
+    deleteTaiLieu(row: VatTuTaiLieu) {
+        this.vattutailieuService.deleteVatTuTaiLieu(row.vatTutaiLieuId).subscribe(resulst => {
+            this.fileuploadService.deleteEachFileByPath(row.tenTaiLieu, row.urlTaiLieu.slice(1, 12)).subcribe(result => {
+                this.alertService.showStickyMessage("Thành công", "Xóa tài liệu thành công", MessageSeverity.success);
+                this.listTL.splice(this.listTL.indexOf(row), 1);
+            }, error => { });            
+        }, error => { })        
     }
 
     newVatTu() {
@@ -423,15 +468,20 @@ export class VatTuInfoComponent implements OnInit {
 
     private save2SuccessHelper(obj?: VatTuHinhAnh) {
         this.alertService.stopLoadingMessage();
-        this.step1 = false;
-        this.step2 = false;
-        this.step3 = true;
+        if (this.isNew) {
+            this.alertService.showMessage("Bước 2 thành công", `Thực hiện thêm mới hình ảnh vật tư thành công`, MessageSeverity.success);
+        } else {
+            this.alertService.showMessage("Bước 2 thành công", `Thực hiện chỉnh sửa hình ảnh vật tư thành công`, MessageSeverity.success);
+        }        
     }
 
     private save3SuccessHelper(obj?: VatTuTaiLieu) {
         this.alertService.stopLoadingMessage();
-        if (this.changesSavedCallback)
-            this.changesSavedCallback();
+        if (this.isNew) {
+            this.alertService.showMessage("Bước 3 thành công", `Thực hiện thêm mới tài liệu vật tư thành công`, MessageSeverity.success);
+        } else {
+            this.alertService.showMessage("Bước 3 thành công", `Thực hiện chỉnh sửa tài liệu vật tư thành công`, MessageSeverity.success);
+        }
     }
 
     private saveFailedHelper(error: any) {
@@ -608,12 +658,10 @@ export class VatTuInfoComponent implements OnInit {
             this.VatTuHinhAnhEdit.urlHinhAnh = this.urlImgList[i];
             this.vattuhinhanhService.addnewVatTuHinhAnh(this.VatTuHinhAnhEdit).subscribe(results => {
                 this.save2SuccessHelper(results);
-                if (this.urlImgList.length - i == 1) {
-                    this.alertService.showMessage("Bước 2 thành công", `Thực hiện thêm mới hình ảnh vật tư thành công`, MessageSeverity.success);
-                }
+                this.listHA.push(results);
                 this.vattutailieuService.getVatTuTaiLieuByID(this.VatTuEdit.vatTuId).subscribe(results => {
-                    this.VTTLs = results;
-                    if (this.VTTLs.length > 0) {
+                    this.listTL = results;
+                    if (this.listTL.length > 0) {
                         this.isUploadFile = true;
                     } else {
                         this.isUploadFile = false;
@@ -683,8 +731,8 @@ export class VatTuInfoComponent implements OnInit {
             this.fileuploadService.deleteEachFileByPath(nameImg, pathImg).subscribe(results => {
                 this.alertService.showMessage("Thành công", `thực hiện xóa thành công`, MessageSeverity.success);
                 this.vattuhinhanhService.getVatTuHinhAnhByID(this.VatTuHinhAnhEdit.vatTuId).subscribe(results => {
-                    this.VTHAs = results;
-                    if (this.VTHAs.length > 0) {
+                    this.listHA = results;
+                    if (this.listHA.length > 0) {
                         this.isUploadFile = true;
                     } else {
                         this.isUploadFile = false;
@@ -711,9 +759,7 @@ export class VatTuInfoComponent implements OnInit {
             this.VatTuTaiLieuEdit.urlTaiLieu = this.urlFileList[i];
             this.vattutailieuService.addnewVatTuTaiLieu(this.VatTuTaiLieuEdit).subscribe(results => {
                 this.save3SuccessHelper(results);
-                if (this.urlFileList.length - i == 1) {
-                    this.alertService.showMessage("Hoàn thành", `Hoàn thành thực hiện thêm mới vật tư thành công`, MessageSeverity.success);
-                }
+                this.listTL.push(results);
             }, error => {
                 this.saveFailedHelper(error);
                 this.fileuploadService.deleteEachFileByPath(this.urlFileList[i].slice(13), this.urlFileList[i].slice(1, 12))
@@ -777,8 +823,8 @@ export class VatTuInfoComponent implements OnInit {
                 if (results == "Success") {
                     this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
                     this.vattuhinhanhService.getVatTuHinhAnhByID(this.VatTuHinhAnhEdit.vatTuId).subscribe(results => {
-                        this.VTHAs = results;
-                        if (this.VTHAs.length > 0) {
+                        this.listHA = results;
+                        if (this.listHA.length > 0) {
                             this.isUploadFile = true;
                         } else {
                             this.isUploadFile = false;

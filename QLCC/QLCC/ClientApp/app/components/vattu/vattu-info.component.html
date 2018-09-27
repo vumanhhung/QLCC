@@ -339,12 +339,6 @@
                                                       (complete)="complete2EventHandler($event)">
                                         </kendo-upload>
                                         <div class="clearfix"></div>
-                                        <!--<div *ngIf="isEdit" class="description-form-group col-sm-12" style="position:relative;z-index:1;margin-top:5px">
-                                            <div *ngFor="let img of VTHAs" class="col-sm-2 box-image">
-                                                <img id="img.vatTuHinhAnhId" class="img-responsive" [alt]="img.tenHinhAnh" [src]="img.urlHinhAnh" style="width:80px;border: 1px solid #ccc;border-radius: 100%;height:75px;object-fit:contain;overflow:hidden" />
-                                                <span id="img.vatTuHinhAnhId" (click)="clear2ImageData(img.vatTuHinhAnhId, img.urlHinhAnh)" tooltip="Xóa" class="glyphicon glyphicon-remove glyphicon-remove-image"></span>
-                                            </div>
-                                        </div>-->
                                         <div *ngIf="!isUpload" style="display: flex;" class="errorMessage">
                                             <span> Vui lòng chọn hình ảnh! </span>
                                             <span class="feedback glyphicon glyphicon-remove form-control-feedback"></span>
@@ -360,15 +354,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="height: auto;padding:5px 2% 2% 2%;">
-                            <!-- /.box-header -->
+                        <div style="padding-top: 10px;">
+                            <button type="submit" (click)="saveStep2()" class="btn btn-primary"> Lưu hình ảnh</button>
+                        </div>
+                        <div style="height: auto;padding-top:5px;">
                             <div class="box-body">
-                                <table class='table' *ngIf="list">
+                                <table class='table' *ngIf="listHA">
                                     <thead>
                                         <tr style="background-color:#048b8b;">
                                             <th>Hình ảnh</th>
                                             <th>Tên hình ảnh</th>
                                             <th>Diễn giải</th>
+                                            <th>Chức năng</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -377,7 +374,7 @@
                                             <td>{{ list.tenHinhAnh }}</td>
                                             <td>{{ list.dienGiai }}</td>
                                             <td>
-                                                <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteHinhAnh(list)" title="Xóa" *ngIf="list.soCuoi == max"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                <a class="btn btn-func btn-default" href="javascript:;" (click)="deleteHinhAnh(list)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -385,37 +382,6 @@
                             </div>
                         </div>
                     </div>
-                    <div style="height: auto;padding:5px 2% 2% 2%;">
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                        <table class='table' *ngIf="list">
-                            <thead>
-                                <tr  style="background-color:#048b8b;" >
-                                    <th>Tên định mức nước</th>
-                                    <th>Số đầu</th>
-                                    <th>Số cuối</th>
-                                    <th>Giá</th>
-                                    <th>Diễn giải</th>
-                                    <th>Chức năng</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let list of list">
-                                    <td>{{ list.tenDinhMucNuoc }}</td>
-                                    <td>{{ list.soDau }}</td>
-                                    <td *ngIf="list.soCuoi != null">{{ list.soCuoi }}</td>
-                                    <td *ngIf="list.soCuoi == null">trở lên</td>
-                                    <td>{{formatPrice(list.gia)}}</td>
-                                    <td>{{ list.dienGiai }}</td>
-                                    <td>
-                                        <a class="btn btn-func btn-primary" href="javascript:;" (click)="editDinhMucNuoc(list)" title="Sửa" *ngIf="list.soCuoi == max"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                        <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDinhMucNuoc(list)" title="Xóa" *ngIf="list.soCuoi == max"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
                     <div class="clearfix"></div>
                     <div class="modal-footer">
                         <div class="step-action">
@@ -423,7 +389,7 @@
                                 <div class="col-sm-12" style="text-align:center;">
                                     <button type="button" (click)="cancel()" class="btn btn-danger"><i class='fa fa fa-times'></i> Thoát</button>
                                     <button type="button" (click)="backStep1()" class="btn btn-danger"><i class='fa fa-angle-double-left'></i> Bước 1</button>
-                                    <button type="submit" (click)="saveStep2()" class="btn btn-primary"> Bước 3 <i class='fa fa-angle-double-right'></i></button>
+                                    <button type="submit" (click)="nextStep3()" class="btn btn-primary"> Bước 3 <i class='fa fa-angle-double-right'></i></button>
                                 </div>
                             </div>
                         </div>
@@ -447,12 +413,6 @@
                                                       (complete)="complete3EventHandler($event)">
                                         </kendo-upload>
                                         <div class="clearfix"></div>
-                                        <div *ngIf="isEdit" class="description-form-group col-sm-12" style="position:relative;z-index:1;margin-top:5px">
-                                            <div *ngFor="let file of VTTLs" class="col-sm-3 box-image">
-                                                <a id="file.vatTutaiLieuId" class="file-responsive" href="{{file.urlTaiLieu}}" style="width:80px; overflow:hidden; white-space: nowrap;">{{file.tenTaiLieu}}</a>
-                                                <span id="file.vatTutaiLieuId" (click)="clear3ImageData(file.vatTutaiLieuId, file.urlTaiLieu)" tooltip="Xóa" class="glyphicon glyphicon-remove glyphicon-remove-image"></span>
-                                            </div>
-                                        </div>
                                         <div *ngIf="!isUploadFile" style="display: flex;" class="errorMessage">
                                             <span> Vui lòng chọn tài liệu! </span>
                                             <span class="feedback glyphicon glyphicon-remove form-control-feedback"></span>
@@ -468,6 +428,31 @@
                                 </div>
                             </div>
                         </div>
+                        <div style="padding-top: 10px;">
+                            <button type="submit" (click)="saveStep3()" class="btn btn-primary"> Lưu hình ảnh</button>
+                        </div>
+                        <div style="height: auto;padding-top:5px;">
+                            <div class="box-body">
+                                <table class='table' *ngIf="listTL">
+                                    <thead>
+                                        <tr style="background-color:#048b8b;">
+                                            <th>Tên tài liệu</th>
+                                            <th>Diễn giải</th>
+                                            <th>Chức năng</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let list of listTL">
+                                            <td>{{ list.tenTaiLieu }}</td>
+                                            <td>{{ list.dienGiai }}</td>
+                                            <td>
+                                                <a class="btn btn-func btn-default" href="javascript:;" (click)="deleteTaiLieu(list)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                     <div class="clearfix"></div>
                     <div class="modal-footer">
@@ -476,7 +461,7 @@
                                 <div class="col-sm-12" style="text-align:center;">
                                     <button type="button" (click)="cancel()" class="btn btn-danger"><i class='fa fa fa-times'></i> Thoát</button>
                                     <button type="button" (click)="backStep2()" class="btn btn-danger"><i class='fa fa-angle-double-left'></i> Bước 2</button>
-                                    <button type="button" (click)="saveStep3()" class="btn btn-primary"><i class='fa fa fa-save'></i> Hoàn thành </button>
+                                    <button type="button" (click)="finish()" class="btn btn-primary"><i class='fa fa fa-save'></i> Hoàn thành </button>
                                 </div>
                             </div>
                         </div>

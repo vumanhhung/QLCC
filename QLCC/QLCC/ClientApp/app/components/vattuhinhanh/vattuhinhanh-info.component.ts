@@ -55,6 +55,9 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
     @ViewChild('f')
     private form;
 
+    @ViewChild('editorModal')
+    editorModal: ModalDirective;
+
     constructor(private alertService: AlertService, private gvService: VatTuHinhAnhService, private fileuploadservice: FileUploadService) {
     }
 
@@ -220,5 +223,10 @@ export class VatTuHinhAnhInfoComponent implements OnInit {
             Object.assign(this.VatTuHinhAnhEdit, obj);
             this.alertService.showMessage("Thành công", `Thực hiện xóa ảnh thành công`, MessageSeverity.success);
         }
+    }
+
+    onEditorModalHidden() {
+        this.editingRowName = null;
+        this.resetForm(true);
     }
 }

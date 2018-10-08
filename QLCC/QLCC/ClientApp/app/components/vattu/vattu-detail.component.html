@@ -13,8 +13,7 @@
                 <div class="modal-body">
                     <div>
                         <form #f="ngForm">
-                            <!--<div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">-->
-                            <div>
+                            <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" [ngStyle]="{'height.px':heightScroll}">
                                 <table class="table table-bordered">
                                     <tbody>
                                         <tr>
@@ -28,7 +27,8 @@
                                             <td class="boldText">Ngày lập</td>
                                             <td>{{vattuEdit.ngayLap | date:'dd/MM/yyyy'}}</td>
                                             <td class="boldText">Trạng thái</td>
-                                            <td>{{vattuEdit.trangThai}}</td>
+                                            <td *ngIf="vattuEdit.trangThai == 1">Đang sử dụng</td>
+                                            <td *ngIf="vattuEdit.trangThai == 0">Dừng sử dụng</td>
                                         </tr>
                                         <tr>
                                             <td class="boldText">Phòng ban</td>
@@ -56,7 +56,7 @@
                                             <td class="boldText">Part Number</td>
                                             <td>{{vattuEdit.partNumber}}</td>
                                             <td class="boldText">Thời gian sử dụng</td>
-                                            <td>{{vattuEdit.maVachNSX}}</td>
+                                            <td>{{vattuEdit.namSD}}</td>
                                             <td class="boldText">Hạn bảo hành</td>
                                             <td>{{vattuEdit.ngayHHBaoHanh | date: 'dd/MM/yyyy'}}</td>
                                         </tr>
@@ -68,29 +68,79 @@
                                             <td class="boldText">Giá vật tư</td>
                                             <td colspan="3">{{formatPrice(vattuEdit.giaVatTu)}} {{vattuEdit.loaiTiens.kyHieu}} / {{vattuEdit.donViTinhs.tenDonViTinh}}</td>
                                             <td class="boldText">Khấu hao</td>
-                                            <td colspan="3" *ngIf="vattuEdit.donViKhauHao == 'Ngay'">{{vattuEdit.khauHao}} %/ Ngày</td>
-                                            <td colspan="3" *ngIf="vattuEdit.donViKhauHao == 'Thang'">{{vattuEdit.khauHao}} %/ Tháng</td>
-                                            <td colspan="3" *ngIf="vattuEdit.donViKhauHao == 'Nam'">{{vattuEdit.khauHao}} %/ Năm</td>
+                                            <td colspan="3" *ngIf="vattuEdit.donViKhauHao == 'Ngay'">{{vattuEdit.khauHao}}% /Ngày</td>
+                                            <td colspan="3" *ngIf="vattuEdit.donViKhauHao == 'Thang'">{{vattuEdit.khauHao}}% /Tháng</td>
+                                            <td colspan="3" *ngIf="vattuEdit.donViKhauHao == 'Nam'">{{vattuEdit.khauHao}}% /Năm</td>
                                         </tr>
                                         <tr>
-                                            <td colspan="8" class="headView">Hình ảnh và tài liệu vật tư</td>
+                                            <td colspan="8" class="headView">Thông tin vật tư</td>
                                         </tr>
                                         <tr>
-                                            <td class="boldText">Hình ảnh</td>
-                                            <td colspan="7">
-                                                <div *ngFor="let img of VTHAs" class="col-sm-2">
-                                                    <img class="img-responsive" [alt]="img.tenHinhAnh" [src]="img.urlHinhAnh" style="width:80px;border: 1px solid #ccc;height:80px;object-fit:contain;overflow:hidden" />
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="boldText">Tài liệu</td>
-                                            <td colspan="7">
-                                                <div *ngFor="let file of VTTLs" class="col-sm-3">
-                                                    <a class="file-responsive" href="{{file.urlTaiLieu}}" style="width:80px; overflow:hidden">{{file.tenTaiLieu}}</a>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                            <td colspan="8">
+                                                <kendo-tabstrip (tabSelect)="onTabSelect($event)">
+                                                    <kendo-tabstrip-tab [title]="'Vật tư con'" [selected]="true">
+                                                        <ng-template kendoTabContent>
+                                                            <table class='table'>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Mã Vật Tư</th>
+                                                                        <th>Tên Vật Tư</th>
+                                                                        <th>Model</th>
+                                                                        <th>Hãng sản xuất</th>
+                                                                        <th>Serial Number</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr *ngFor="let vtc of listVTC">
+                                                                        <td>{{vtc.maVatTu}}</td>
+                                                                        <td>{{vtc.tenVatTu}}</td>
+                                                                        <td>{{vtc.model}}</td>
+                                                                        <td>{{vtc.hangSanXuats.tenHangSanXuat}}</td>
+                                                                        <td>{{vtc.serialNumber}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </ng-template>
+                                                    </kendo-tabstrip-tab>
+                                                    <kendo-tabstrip-tab [title]="'Hình ảnh'">
+                                                        <ng-template kendoTabContent>
+                                                            <table class='table'>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Hình ảnh</th>
+                                                                        <th>Diễn giải</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr *ngFor="let img of VTHAs">
+                                                                        <td><img class="img-responsive" [alt]="img.tenHinhAnh" [src]="img.urlHinhAnh" style="height:50px;object-fit:contain;overflow:hidden" /></td>
+                                                                        <td colspan="7"><span style="display: inline-block; font-size: 12px;">{{img.dienGiai}}</span></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </ng-template>
+                                                    </kendo-tabstrip-tab>
+                                                    <kendo-tabstrip-tab [title]="'Tài liệu'">
+                                                        <ng-template kendoTabContent>
+                                                            <table class='table'>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Tên tài liệu</th>
+                                                                        <th>Diễn giải</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr *ngFor="let tl of VTTLs">
+                                                                        <td><a href="tl.urlTaiLieu">{{tl.tenTaiLieu}}</a></td>
+                                                                        <td colspan="7"><span style="display: inline-block; font-size: 12px;">{{tl.dienGiai}}</span></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </ng-template>
+                                                    </kendo-tabstrip-tab>
+                                                </kendo-tabstrip>
+                                            </td>                                           
+                                        </tr>                                        
                                         <tr>
                                             <td colspan="8" class="headView">Thông tin chỉnh sửa</td>
                                         </tr>
@@ -121,7 +171,6 @@
                         </div>
                     </div>
                 </div>
-                <vattu-info #vattuEditor [isGeneralEditor]="true"></vattu-info>
             </div>
         </div>
     </div>

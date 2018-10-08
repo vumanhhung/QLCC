@@ -54,30 +54,12 @@
                                        [limit]="limit"
                                        [columnMode]="'force'">
                         </ngx-datatable>
-                        <ng-template #descriptionTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <img [src]="row.urlHinhAnh" width="100" style="height: 100%" />
-                        </ng-template>
                         <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
+                            <a class="btn btn-func btn-success" href="javascript:;" (click)="viewHinhAnh(row)" title="Xem ảnh"><i class="fa fa-eye" aria-hidden="true"></i></a>
                             <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteVatTuHinhAnh(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </ng-template>
-                        <div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <p *ngIf="isNew" class="modal-title pull-left">
-                                            <i class="fa fa-plus"></i> Thêm mới hình ảnh
-                                        </p>
-                                        <p *ngIf="isEdit" class="modal-title pull-left">
-                                            <i class="fa fa-pencil-square-o"></i> Chỉnh sửa thông tin hình ảnh
-                                        </p>
-                                        <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <vattuhinhanh-info #vattuhinhanhEditor [isGeneralEditor]="true"></vattuhinhanh-info>
-                                </div>
-                            </div>
-                        </div>
+
+                        <vattuhinhanh-info #vattuhinhanhEditor [isGeneralEditor]="true"></vattuhinhanh-info>
                     </div>
                 </div>
             </div>

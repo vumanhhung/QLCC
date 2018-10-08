@@ -65,8 +65,9 @@ import { LoaiHangComponent } from './components/loaihang/loaihang.component';
 import { VatTuComponent } from './components/vattu/vattu.component';
 import { VatTuHinhAnhComponent } from './components/vattuhinhanh/vattuhinhanh.component';
 import { VatTuTaiLieuComponent } from './components/vattutailieu/vattutailieu.component';
-import { VatTuPhieuYeuCauComponent } from './components/vattuphieuyeucau/vattuphieuyeucau.component';
 import { VatTuYeuCauComponent } from './components/vattuyeucau/vattuyeucau.component';
+import { VatTuDiChuyenComponent } from './components/vattudichuyen/vattudichuyen.component';
+import { VatTuInfoComponent } from './components/vattu/vattu-info.component';
 
 @NgModule({
     imports: [
@@ -119,6 +120,11 @@ import { VatTuYeuCauComponent } from './components/vattuyeucau/vattuyeucau.compo
             { path: "vattuhinhanh", component: VatTuHinhAnhComponent, canActivate: [AuthGuard], data: { title: "Quản lý danh mục vật tư hình ảnh" } },
             { path: "vattuphieuyeucau", component: VatTuYeuCauComponent, canActivate: [AuthGuard], data: { title: "Quản lý yêu cầu vật tư" } },
             { path: "vattutailieu", component: VatTuTaiLieuComponent, canActivate: [AuthGuard], data: { title: "Quản lý danh mục vật tư tài liệu" } },
+            { path: "taisan", component: VatTuComponent, canActivate: [AuthGuard], data: { title: "Quản lý tài sản " } },
+            { path: "nhapkho", component: VatTuInfoComponent, canActivate: [AuthGuard], data: { title: "Thêm vật tư " } },
+            { path: "nhapkho/:tid", component: VatTuInfoComponent, canActivate: [AuthGuard], data: { title: "Sửa vật tư " } },
+            { path: "dexuat", component: VatTuYeuCauComponent, canActivate: [AuthGuard], data: { title: "Quản lý đề xuất " } },
+            { path: "xuatkho", component: VatTuDiChuyenComponent, canActivate: [AuthGuard], data: { title: "Quản lý xuất kho vật tư" } },
             { path: "hangsanxuat", component: HangSanXuatComponent, canActivate: [AuthGuard], data: { title: "Quản lý hãng sản xuất " } },
             { path: "phieuthulichsu/:matbangid", component: PhieuThuLichSuComponent, canActivate: [AuthGuard], data: { title: "Lịch sử thu phí gửi xe " } },
             { path: "settings", component: SettingsComponent, canActivate: [AuthGuard], data: { title: "Cấu hình" } },

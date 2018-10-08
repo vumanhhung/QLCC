@@ -16,3 +16,8 @@
     color: #048b8b;
     background: #ecf0f5
 }
+
+.table > thead > tr, .table > tfoot > tr {
+    background-color: #048b8b;
+    color: #fff;
+}

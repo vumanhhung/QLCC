@@ -44,6 +44,7 @@ export class VatTuDetailComponent implements OnInit {
     loaitiens: LoaiTien[] = [];
     NDTN: NguoiDungToaNha[] = [];
     vattuCha: VatTu[] = [];
+    listVTC: VatTu[] = [];
 
     vattuEdit: VatTu;
     sourcevattu: VatTu;
@@ -98,5 +99,9 @@ export class VatTuDetailComponent implements OnInit {
 
     closeModal() {
         this.editorModal1.hide();
+    }
+
+    onTabSelect(e) {
+        console.log(e);
     }
 }

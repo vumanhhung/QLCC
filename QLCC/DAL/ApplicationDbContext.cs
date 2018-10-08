@@ -83,6 +83,8 @@ namespace DAL
         public DbSet<VatTuTaiLieu> VatTuTaiLieus { get; set; }
         public DbSet<VatTuYeuCau> VatTuYeuCaus { get; set; }
         public DbSet<VatTuPhieuYeuCau> VatTuPhieuYeuCaus { get; set; }
+        public DbSet<VatTuPhieuDiChuyen> VatTuPhieuDiChuyens { get; set; }
+        public DbSet<VatTuDiChuyen> VatTuDiChuyens { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
@@ -175,6 +177,8 @@ namespace DAL
             builder.Entity<VatTuTaiLieu>().ToTable($"tbl_VatTuTaiLieu");
             builder.Entity<VatTuPhieuYeuCau>().ToTable($"tbl_VatTuPhieuYeuCau");
             builder.Entity<VatTuYeuCau>().ToTable($"tbl_VatTuYeuCau");
+            builder.Entity<VatTuDiChuyen>().ToTable($"tbl_VatTuDiChuyen");
+            builder.Entity<VatTuPhieuDiChuyen>().ToTable($"tbl_VatTuPhieuDiChuyen");
         }
 
         public override int SaveChanges()

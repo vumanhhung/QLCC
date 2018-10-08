@@ -22,6 +22,7 @@ import { DatePickerModule } from '@progress/kendo-angular-dateinputs';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { ExcelExportModule } from '@progress/kendo-angular-excel-export';
 import { ComboBoxModule } from '@progress/kendo-angular-dropdowns';
+import { LayoutModule } from '@progress/kendo-angular-layout';
 import { registerLocaleData } from '@angular/common';
 //import localeVn from '@progress/kendo-angular-intl/locales/vi';
 import localeVn from '@angular/common/locales/vi';
@@ -297,18 +298,21 @@ import { VatTuTaiLieuEndpoint } from "./services/vattutailieu-endpoint.service";
 import { VatTuTaiLieuService } from "./services/vattutailieu.service";
 import { AuthService } from "./services/auth.service";
 import { Utilities } from "./models/utilities";
-import { FormWizardModule } from 'angular-wizard-form';
 import { FileUploadEndpoint } from "./services/fileupload-endpoint.service";
 import { FileUploadService } from "./services/fileupload.service";
 import { VatTuDetailComponent } from "./components/vattu/vattu-detail.component";
-import { VatTuPhieuYeuCauComponent } from "./components/vattuphieuyeucau/vattuphieuyeucau.component";
-import { VatTuPhieuYeuCauInfoComponent } from "./components/vattuphieuyeucau/vattuphieuyeucau-info.component";
 import { VatTuPhieuYeuCauService } from "./services/vattuphieuyeucau.service";
 import { VatTuPhieuYeuCauEndpoint } from "./services/vattuphieuyeucau-endpoint.service";
 import { VatTuYeuCauService } from "./services/vattuyeucau.service";
 import { VatTuYeuCauEndpoint } from "./services/vattuyeucau-endpoint.service";
 import { VatTuYeuCauComponent } from "./components/vattuyeucau/vattuyeucau.component";
 import { VatTuYeuCauInfoComponent } from "./components/vattuyeucau/vattuyeucau-info.component";
+import { VatTuDiChuyenComponent } from "./components/vattudichuyen/vattudichuyen.component";
+import { VatTuDiChuyenInfoComponent } from "./components/vattudichuyen/vattudichuyen-info.component";
+import { VatTuDiChuyenService } from "./services/vattudichuyen.service";
+import { VatTuDiChuyenEndpoint } from "./services/vattudichuyen-endpoint.service";
+import { VatTuPhieuDiChuyenService } from "./services/vattuphieudichuyen.service";
+import { VatTuPhieuDiChuyenEndpoint } from "./services/vattuphieudichuyen-endpoint.service";
 
 @NgModule({
     imports: [
@@ -316,7 +320,7 @@ import { VatTuYeuCauInfoComponent } from "./components/vattuyeucau/vattuyeucau-i
         BrowserAnimationsModule,
         HttpClientModule,
         //HttpModule,
-        FormWizardModule,
+        LayoutModule,
         FormsModule,
         AppRoutingModule,
         UploadModule,
@@ -478,10 +482,10 @@ import { VatTuYeuCauInfoComponent } from "./components/vattuyeucau/vattuyeucau-i
         VatTuTaiLieuComponent,
         VatTuTaiLieuInfoComponent,
         VatTuDetailComponent,
-        VatTuPhieuYeuCauComponent,
-        VatTuPhieuYeuCauInfoComponent,
         VatTuYeuCauComponent,
-        VatTuYeuCauInfoComponent
+        VatTuYeuCauInfoComponent,
+        VatTuDiChuyenComponent,
+        VatTuDiChuyenInfoComponent
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'vi' },
@@ -592,6 +596,10 @@ import { VatTuYeuCauInfoComponent } from "./components/vattuyeucau/vattuyeucau-i
         VatTuPhieuYeuCauEndpoint,
         VatTuYeuCauService,
         VatTuYeuCauEndpoint,
+        VatTuDiChuyenService,
+        VatTuDiChuyenEndpoint,
+        VatTuPhieuDiChuyenService,
+        VatTuPhieuDiChuyenEndpoint,
         AuthService,
         Utilities
     ],

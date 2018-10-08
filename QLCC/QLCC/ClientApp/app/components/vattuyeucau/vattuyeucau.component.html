@@ -1,6 +1,6 @@
 ﻿
 <section class="content-header">
-    <h1>Quản lý VatTuYeuCau</h1>
+    <h1>Quản lý Đề Xuất</h1>
     <commonroad></commonroad>
 </section>
 <section class="content">
@@ -13,8 +13,10 @@
             </div>
             <div style="margin-bottom:1%;" align="right" class="col-sm-6">
                 <div class="row">
-                    <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newVatTuYeuCau()"><i class="fa fa-plus"></i></a>
-                    <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.Settings' | translate}}" (click)="configVatTuYeuCau"><i class="fa fa-cog"></i></a>
+                    <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newDeXuat()"><i class="fa fa-plus"></i></a>
+                    <a class="btn btn-success" data-toggle="tooltip" href="javascript://" title="Phê duyệt đề xuất" (click)="duyetDeXuat(selected)"><i class="fa fa-check"></i></a>
+                    <a class="btn btn-danger" data-toggle="tooltip" href="javascript://" title="Từ chối đề xuất" (click)="huyDeXuat(selected)"><i class="fa fa-close"></i></a>
+                    <!--<a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.Settings' | translate}}" (click)="configVatTuYeuCau"><i class="fa fa-cog"></i></a>-->
                 </div>
             </div>
 
@@ -24,6 +26,15 @@
                 <div class="box-body">
                     <div>
                         <div class="dataTables_length">
+                            <label>
+                                Trạng thái
+                                <select class="form-control input-sm" #drStatus (change)="SelectedStatusValue(drStatus.value)" [(ngModel)]="selectedGropup">
+                                    <option value="0">---Tất cả---</option>
+                                    <option value="1">Đã gửi đề xuất</option>
+                                    <option value="2">Đã được phê duyệt</option>
+                                    <option value="3">Không được phê duyệt</option>
+                                </select>
+                            </label>
                             <label>
                                 Hiển thị
                                 <select class="form-control input-sm" #drSelected (change)="SelectedValue(drSelected.value)">
@@ -36,7 +47,7 @@
                             </label>
                         </div>
                         <div class="DTTT_container">
-                            <a class="DTTT_button DTTT_button_print" title="{{'preferences.Print' | translate}}" tabindex="0">
+                            <a class="DTTT_button DTTT_button_print" (click)="printDiv(selected)" title="{{'preferences.Print' | translate}}" tabindex="0">
                                 <span>{{'preferences.Print' | translate}}</span>
                             </a>
                         </div>
@@ -49,17 +60,26 @@
                                        [footerHeight]="45"
                                        [columns]="columns"
                                        [limit]="limit"
-                                       [columnMode]="'force'">
+                                       (select)='onSelect($event)'
+                                       [columnMode]="'force'" 
+                                       [selectionType]="'checkbox'"
+                                       [selected]="selected">
                         </ngx-datatable>
+                        <ng-template ngx-datatable-header-template #checkAllTemplate let-value="value" let-allRowsSelected="allRowsSelected" let-selectFn="selectFn" style="text-align:center">
+                            <input type="checkbox" [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)" />
+                        </ng-template>
+                        <ng-template ngx-datatable-cell-template #checkTemplate let-value="value" let-isSelected="isSelected" let-onCheckboxChangeFn="onCheckboxChangeFn" style="text-align:center">
+                            <input type="checkbox" [checked]="isSelected" (change)="onCheckboxChangeFn($event)" />
+                        </ng-template>
                         <ng-template #descriptionTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <div *ngIf="row.trangThai == 1" class="status-use">Đã gửi đề xuất</div>
-                            <div *ngIf="row.trangThai == 2" class="status-none">Đã tiếp nhận</div>
-                            <div *ngIf="row.trangThai == 3" class="status-none">Đã được phê duyệt</div>
+                            <div *ngIf="row.trangThai == 1" class="wait-confirm">Đã gửi đề xuất</div>
+                            <div *ngIf="row.trangThai == 2" class="confirm">Đã được phê duyệt</div>
+                            <div *ngIf="row.trangThai == 3" class="unconfirm">Đã được phê duyệt</div>
                         </ng-template>
                         <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
                             <a class="btn btn-func btn-success" href="javascript:;" (click)="viewDeXuat(row)" title="Chi tiết"><i class="fa fa-eye"></i></a>
-                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editDeXuat(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                            <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDeXuat(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                            <a *ngIf="row.trangThai == 1" class="btn btn-func btn-primary" href="javascript:;" (click)="editDeXuat(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                            <a *ngIf="row.trangThai == 1" class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDeXuat(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </ng-template>
                         <vattuyeucau-info #vattuyeucauEditor [isGeneralEditor]="true"></vattuyeucau-info>
                     </div>

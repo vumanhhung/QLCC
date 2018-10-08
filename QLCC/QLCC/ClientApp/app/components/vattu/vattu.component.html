@@ -13,7 +13,7 @@
             </div>
             <div style="margin-bottom:1%;" align="right" class="col-sm-6">
                 <div class="row">
-                    <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="{{'preferences.addFlour' | translate}}" (click)="newVatTu()"><i class="fa fa-plus"></i></a>
+                    <a class="btn btn-primary" data-toggle="tooltip" href="javascript://" title="Thêm Vật Tư" (click)="newVatTu()"><i class="fa fa-plus"></i></a>
                     <a class="btn btn-primary menubar" href="javascript:;" tooltip="Danh mục">
                         <i class="fa fa-bars"></i>
                         <ul class="nav navbar-nav child-menu">
@@ -48,7 +48,7 @@
         </a>
     </div>-->
                         <div class="clearfix"></div>
-                        <ngx-datatable class="material colored-header sm table table-striped table-hover "
+                        <ngx-datatable #myTable class="material colored-header sm table table-striped table-hover "
                                        [loadingIndicator]="loadingIndicator"
                                        [rows]="rows"
                                        [rowHeight]="45"
@@ -57,18 +57,87 @@
                                        [columns]="columns"
                                        [limit]="limit"
                                        [columnMode]="'force'">
+                            <ngx-datatable-row-detail [rowHeight]="auto" #myDetailRow>
+                                <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                                    <div>
+                                        <h4>Thông tin vật tư con</h4>
+                                        <table class="tableChild" [@fadeInOut] style="margin-bottom:15px;">
+                                            <tr>
+                                                <th>Mã Vật Tư</th>
+                                                <th>Tên Vật Tư</th>
+                                                <th>Model</th>
+                                                <th>Hãng sản xuất</th>
+                                                <th>Serial Number</th>
+                                            </tr>
+                                            <tr *ngFor="let list of getVatTuCon(row)">
+                                                <td>{{ list.maVatTu }}</td>
+                                                <td>{{ list.tenVatTu }}</td>
+                                                <td>{{ list.model }}</td>
+                                                <td>{{ list.hangSanXuats.tenHangSanXuat }}</td>
+                                                <td>{{ list.serialNumber }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-row-detail>
+                            <ngx-datatable-column [width]="50"
+                                                  [resizeable]="true"
+                                                  [sortable]="false"
+                                                  [draggable]="false"
+                                                  [canAutoResize]="false" name="#">
+                                <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                                    <a href="javascript:void(0)"
+                                       [class.datatable-icon-right]="!expanded"
+                                       [class.datatable-icon-down]="expanded"
+                                       title="Expand/Collapse Row"
+                                       (click)="toggleExpandRow(row)" style="font-size:18px;">
+                                    </a>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Mã VT" style="width: 130px;">
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-expanded="expanded">
+                                    {{row.maVatTu}}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Tên VT">
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-expanded="expanded">
+                                    {{row.tenVatTu}}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Xuất xứ">
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-expanded="expanded">
+                                    {{row.quocTichs.tenNuoc}}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Nhà cung cấp">
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-expanded="expanded">
+                                    {{row.nhaCungCaps.tenNhaCungCap}}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Mã vạch NSX">
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-expanded="expanded">
+                                    {{row.maVachNSX}}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="SerialNumber">
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-expanded="expanded">
+                                    {{row.serialNumber}}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Giá VT">
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-expanded="expanded">
+                                    {{formatPrice(row.giaVatTu)}}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Chức năng">
+                                <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                                    <a class="btn btn-func btn-success" href="javascript:;" (click)="viewVatTu(row)" title="Chi tiết"><i class="fa fa-eye"></i></a>
+                                    <!--<a class="btn btn-func btn-success" href="javascript:;" (click)="download(row.vatTuId, row.tenVatTu)" title="Tải tài liệu"><i class="fa fa-download"></i></a>-->
+                                    <a class="btn btn-func btn-primary" href="javascript:;" (click)="editVatTu(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteVatTu(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                </ng-template>
+                            </ngx-datatable-column>
                         </ngx-datatable>
-                        <ng-template #priceTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <p>{{formatPrice(row.giaVatTu)}}</p>
-                        </ng-template>
-                        <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <a class="btn btn-func btn-success" href="javascript:;" (click)="viewVatTu(row)" title="Chi tiết"><i class="fa fa-eye"></i></a>
-                            <a class="btn btn-func btn-success" href="javascript:;" (click)="download(row.vatTuId, row.tenVatTu)" title="Tải tài liệu"><i class="fa fa-download"></i></a>
-                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editVatTu(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                            <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteVatTu(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                        </ng-template>
-
-                        <vattu-info #vattuEditor [isGeneralEditor]="true"></vattu-info>
                         <vattu-detail #vattuDetailEditor></vattu-detail>
                     </div>
                 </div>

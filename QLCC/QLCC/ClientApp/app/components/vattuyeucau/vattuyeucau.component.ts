@@ -34,7 +34,12 @@ export class VatTuYeuCauComponent implements OnInit, AfterViewInit {
     public formResetToggle = true;
     vattuyeucauEdit: VatTuYeuCau;
     sourcevattuyeucau: VatTuYeuCau;
+    selectedGropup: number = 0;
     editingRowName: { name: string };
+
+    selected: any[] = [];
+    selectedRemove: VatTuPhieuYeuCau[] = [];
+    listAll: VatTuYeuCau[] = [];
 
     quoctichs: QuocTich[] = [];
     phongbans: PhongBan[] = [];
@@ -59,6 +64,13 @@ export class VatTuYeuCauComponent implements OnInit, AfterViewInit {
 
     @ViewChild('vattuyeucauEditor')
     VatTuYeuCauEditor: VatTuYeuCauInfoComponent;
+
+    @ViewChild('checkTemplate')
+    checkTemplate: TemplateRef<any>;
+
+    @ViewChild('checkAllTemplate')
+    checkAllTemplate: TemplateRef<any>;
+
     constructor(private alertService: AlertService, private translationService: AppTranslationService,
         private vattuyeucauService: VatTuYeuCauService,
         private vattuphieuyeucauService: VatTuPhieuYeuCauService,
@@ -71,6 +83,7 @@ export class VatTuYeuCauComponent implements OnInit, AfterViewInit {
         let gT = (key: string) => this.translationService.getTranslation(key);
 
         this.columns = [
+            { headerTemplate: this.checkAllTemplate, width: 38, cellTemplate: this.checkTemplate, canAutoResize: false, sortable: false, draggable: false },
             { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
             { prop: 'phongbans.tenPhongBan', name: gT('Phòng Ban') },
             { prop: 'nguoiYeuCau', name: gT('Người Yêu Cầu') },
@@ -87,13 +100,12 @@ export class VatTuYeuCauComponent implements OnInit, AfterViewInit {
             });
         }
         this.loadAllNDTN();
-        this.loadData();
+        this.loadData(0);
     }
 
     getNguoiDungToaNha(list: NguoiDungToaNha[]) {
         if (list.length > 0) {
             this.objNDTN = list[0];
-            this.VatTuYeuCauEditor.VatTuPhieuYeuCauEdit.toaNhaId = this.objNDTN.toaNhaId;
             this.loadAllPhongBan(this.objNDTN.toaNhaId, this.objNDTN.cumToaNhaId);
         }
     }
@@ -128,7 +140,7 @@ export class VatTuYeuCauComponent implements OnInit, AfterViewInit {
     }
 
     addNewToList() {
-        this.loadData();
+        this.loadData(0);
         if (this.sourcevattuyeucau) {
             Object.assign(this.sourcevattuyeucau, this.vattuyeucauEdit);
             this.vattuyeucauEdit = null;
@@ -152,10 +164,20 @@ export class VatTuYeuCauComponent implements OnInit, AfterViewInit {
         }
     }
 
-    loadData() {
+    loadData(status) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.vattuphieuyeucauService.getAllVatTuPhieuYeuCau().subscribe(results => this.onDataLoadSuccessful(results), error => this.onDataLoadFailed(error));
+        this.vattuyeucauService.getAllVatTuYeuCau().subscribe(results => {
+            this.listAll = results
+        }, error => this.onDataLoadFailed(error))
+        this.vattuphieuyeucauService.getAllVatTuPhieuYeuCau().subscribe(results => {
+            if (status == 0) {
+                this.onDataLoadSuccessful(results)
+            } else {
+                var filter = results.filter(f => f.trangThai == status);
+                this.onDataLoadSuccessful(filter);
+            }            
+        }, error => this.onDataLoadFailed(error));
     }
 
     onDataLoadSuccessful(obj: VatTuPhieuYeuCau[]) {
@@ -185,6 +207,7 @@ export class VatTuYeuCauComponent implements OnInit, AfterViewInit {
         this.VatTuYeuCauEditor.NDTN = this.NDTN;
         this.VatTuYeuCauEditor.isEdit = false;
         this.VatTuYeuCauEditor.isViewDetail = false;
+        this.VatTuYeuCauEditor.toanhaID = this.objNDTN.toaNhaId;
         this.vattuyeucauEdit = this.VatTuYeuCauEditor.newDeXuat();
         this.VatTuYeuCauEditor.editorModal.show();
     }
@@ -237,6 +260,8 @@ export class VatTuYeuCauComponent implements OnInit, AfterViewInit {
         this.VatTuYeuCauEditor.NDTN = this.NDTN;
         this.VatTuYeuCauEditor.isEdit = true;
         this.VatTuYeuCauEditor.isViewDetail = false;
+        this.VatTuYeuCauEditor.toanhaID = this.objNDTN.toaNhaId;
+        this.VatTuYeuCauEditor.list = this.listAll.filter(o => o.phieuYeuCauVTId == row.phieuYeuCauVTId);
         this.vattuyeucauEdit = this.VatTuYeuCauEditor.editDeXuat(row);
         this.VatTuYeuCauEditor.editorModal.show();
     }
@@ -246,7 +271,85 @@ export class VatTuYeuCauComponent implements OnInit, AfterViewInit {
         this.VatTuYeuCauEditor.NDTN = this.NDTN;
         this.VatTuYeuCauEditor.isEdit = false;
         this.VatTuYeuCauEditor.isViewDetail = true;
+        this.VatTuYeuCauEditor.list = this.listAll.filter(o => o.phieuYeuCauVTId == row.phieuYeuCauVTId);
         this.vattuyeucauEdit = this.VatTuYeuCauEditor.editDeXuat(row);
         this.VatTuYeuCauEditor.editorModal.show();
+    }
+
+    SelectedStatusValue(status: number) {
+        this.loadData(status);
+    }
+
+    printDiv(selected: any[]) {
+        var myWindow = window.open('', '', 'width=200,height=100');
+        var date = new Date();
+        for (let item of selected) {
+            var itemVatTu = this.listAll.filter(o => o.phieuYeuCauVTId == item.phieuYeuCauVTId);
+            myWindow.document.write("<div style='font-size: 1em; padding: 4% 5%;; height:100%;'>");
+            myWindow.document.write("<div style='text-align: center;'>");
+            myWindow.document.write("<div style='font-weight: bold; font-size: 18px;'>CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ DỊCH VỤ ĐÔ THỊ VIỆT NAM VINASINCO</div>");
+            myWindow.document.write("</div><br/>");
+            myWindow.document.write("<div style='text-align: right; font-style: italic;'>");
+            myWindow.document.write("<div style='text-transform: uppercase; font-size: 14px;'>Ngày " + date.getDate() + " Tháng " + date.getMonth() + " Năm " + date.getFullYear() + "</div><br/>");
+            myWindow.document.write("</div>");
+            myWindow.document.write("<br/>");
+            myWindow.document.write("<div style='text-align: center; font-size: 20px; font-weight: bolder;'>PHIẾU YÊU CẦU VẬT TƯ</div>");
+            myWindow.document.write("<div style='float:left; width: 100%;'><h5>Người yêu cầu: " + item.nguoiYeuCau + "</h5>");
+            myWindow.document.write("<h5>Bộ phận: " + item.phongbans.tenPhongBan + "</h5>");            
+            myWindow.document.write("<h5>Đơn vị sử dụng: " + item.nguoiTiepNhan + "</h5>");
+            myWindow.document.write("<h5>Mục đích sử dụng: " + item.mucDichSuDung + "</h5>");
+            myWindow.document.write("<h5>Đề xuất vật tư theo bảng liệt kê đính kèm:</h5></div>");
+            myWindow.document.write("<br/><br/>");
+            myWindow.document.write("<div style='text-align: center; font-size: 16px; font-weight: bolder; margin-bottom: 15px;'>BẢNG LIỆT KÊ VẬT TƯ</div>");
+            myWindow.document.write("<table style='border-collapse: collapse;border: 1px solid black; text-align: center;' width='100%'>");
+            myWindow.document.write("<thead><tr><td style='border: 1px solid black; width: 25%'>Vật tư</td><td style='border: 1px solid black; width: 20%'>ĐVT</td><td style ='border: 1px solid black; width: 17%'>Xuất xứ</td><td style='border: 1px solid black; width: 13%'>Số lượng</td><td style ='border: 1px solid black; width: 25%'>Ghi chú</td></tr></thead>");
+            myWindow.document.write("<tbody>");
+            for (var vt of itemVatTu) {
+                myWindow.document.write("<tr><td style='border: 1px solid black;'>" + vt.vattus.tenVatTu + "</td><td style='border: 1px solid black;'>" + vt.vattus.donViTinhs.tenDonViTinh + "</td><td style='border: 1px solid black;'>" + vt.vattus.quocTichs.tenNuoc + "</td><td style='border: 1px solid black;'>" + vt.soLuong + "</td><td style='border: 1px solid black;'>" + vt.ghiChu + "</td></tr>");
+            }    
+            myWindow.document.write("</tbody>");
+            myWindow.document.write("</table>");
+            myWindow.document.write("<br/><br/><br/><br/>");
+            myWindow.document.write("<div style='display: inline-flex; width: 100%'>");
+            myWindow.document.write("<div style='font-weight: bold; width: 30%; text-align: center; margin-right: 5%;'><h4>Người đề nghị</h4><span>(Ký, họ tên)</span></div>");
+            myWindow.document.write("<div style='font-weight: bold; width: 30%; text-align: center; margin-right: 5%;'><h4>Kỹ sư / Đội Trưởng / Phòng kế toán - vật tư</h4></div>");
+            myWindow.document.write("<div style='font-weight: bold; width: 30%; text-align: center;'><h4>Giám đốc</h4></div>");
+            myWindow.document.write("</div>");            
+            myWindow.document.write("<hr/>");
+            myWindow.document.write("</div>");
+        }
+        myWindow.document.close();
+        myWindow.print();
+        myWindow.close();
+    }
+
+    duyetDeXuat(selected: VatTuPhieuYeuCau[]) {
+        for (let item of selected) {
+            item.trangThai = 2;
+            this.vattuphieuyeucauService.updateVatTuPhieuYeuCau(item.phieuYeuCauVTId, item).subscribe(response => {
+                this.alertService.showStickyMessage("Thành công", "Cập nhật trạng thái đề xuất thành công", MessageSeverity.success);
+                //this.loadData(0);
+            }, error => { });
+        }
+    }
+
+    huyDeXuat(selected: VatTuPhieuYeuCau[]) {
+        for (let item of selected) {
+            if (item.trangThai == 2) {
+                //this.selected.splice(this.selected.indexOf(item), 1);
+                this.alertService.showStickyMessage("Lỗi thực thi", "Đề xuất đã được phê duyệt không thể thay đổi trạng thái!", MessageSeverity.warn);
+            } else {
+                item.trangThai = 3;
+                this.vattuphieuyeucauService.updateVatTuPhieuYeuCau(item.phieuYeuCauVTId, item).subscribe(response => {
+                    this.alertService.showStickyMessage("Thành công", "Cập nhật trạng thái đề xuất thành công", MessageSeverity.success);
+                    //this.loadData(0);
+                }, error => { });
+            }
+        }
+    }
+
+    onSelect({ selected }) {
+        this.selected.splice(0, this.selected.length);
+        this.selected.push(...selected);
     }
 }

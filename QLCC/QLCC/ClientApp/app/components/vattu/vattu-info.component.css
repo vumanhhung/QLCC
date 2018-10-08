@@ -121,3 +121,7 @@
     top: unset;
     right: 10px;
 }
+
+select, input {
+    width: 100%;
+}

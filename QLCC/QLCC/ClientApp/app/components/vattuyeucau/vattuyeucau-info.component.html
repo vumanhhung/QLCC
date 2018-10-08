@@ -166,8 +166,8 @@
                 <div class="modal-header">
                     <p class="modal-title pull-left">
                         <i class="fa fa-eye"></i> Chi tiết vật tư - <span *ngIf="VatTuPhieuYeuCauEdit.trangThai == 1">Đã gửi đề xuất</span>
-                        <span *ngIf="VatTuPhieuYeuCauEdit.trangThai == 2">Đã tiếp nhận</span>
-                        <span *ngIf="VatTuPhieuYeuCauEdit.trangThai == 3">Đã được phê duyệt</span>
+                        <span *ngIf="VatTuPhieuYeuCauEdit.trangThai == 2">Đã được phê duyệt</span>
+                        <span *ngIf="VatTuPhieuYeuCauEdit.trangThai == 3">Không được phê duyệt</span>
                     </p>
                     <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
                         <span aria-hidden="true">&times;</span>
@@ -213,19 +213,6 @@
                                             <td colspan="1">{{ vtyc.soLuong }}</td>
                                             <td colspan="2">{{ vtyc.ghiChu }}</td>
                                         </tr>
-                                        <!--<tr>
-                                            <td colspan="8" class="headView">Thông tin chỉnh sửa</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="boldText">Ngày nhập</td>
-                                            <td>{{VatTuPhieuYeuCauEdit.ngayNhap | date: 'dd/MM/yyyy'}}</td>
-                                            <td class="boldText">Người nhập</td>
-                                            <td>{{VatTuPhieuYeuCauEdit.nguoiNhap}}</td>
-                                            <td class="boldText">Ngày sửa</td>
-                                            <td>{{VatTuPhieuYeuCauEdit.ngaySua | date: 'dd/MM/yyyy'}}</td>
-                                            <td class="boldText">Người sửa</td>
-                                            <td>{{VatTuPhieuYeuCauEdit.nguoiSua}}</td>
-                                        </tr>-->
                                     </tbody>
                                 </table>
                             </div>
@@ -235,9 +222,11 @@
                 </div>
                 <div class="modal-footer">
                     <div class="actionBtn-form-group">
-                        <div class="col-sm-7">
-                            <div class="pull-right">
-                                <button type="button" (click)="movetoEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                        <div class="row">
+                            <div style="text-align:center;">
+                                <button type="button" (click)="confirmDeXuat(VatTuPhieuYeuCauEdit)" *ngIf="VatTuPhieuYeuCauEdit.trangThai == 1 || VatTuPhieuYeuCauEdit.trangThai == 3" class="btn btn-success"><i class="fa fa-check"></i> Phê Duyệt</button> 
+                                <button type="button" (click)="unconfirmDeXuat(VatTuPhieuYeuCauEdit)" *ngIf="VatTuPhieuYeuCauEdit.trangThai == 1" class="btn btn-danger"><i class="fa fa-close"></i> Không Phê Duyệt</button> 
+                                <button type="button" *ngIf="VatTuPhieuYeuCauEdit.trangThai == 1" (click)="movetoEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
                                 <button type="button" (click)="closeModal()" class="btn btn-danger"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
                             </div>
                         </div>

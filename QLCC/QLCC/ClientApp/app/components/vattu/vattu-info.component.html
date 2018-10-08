@@ -1,40 +1,35 @@
-﻿<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div *ngIf="!isViewDetails" class="EditForm">
-                <div class="modal-header">
-                    <p *ngIf="isNew" class="modal-title pull-left">
-                        <i class="fa fa-plus"></i> Thêm mới vật tư
-                    </p>
-                    <p *ngIf="isEdit" class="modal-title pull-left">
-                        <i class="fa fa-pencil-square-o"></i> Chỉnh sửa thông tin vật tư
-                    </p>
-                    <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+﻿<section class="content-header">
+    <h1 *ngIf="!id">Thêm mới vật tư</h1>
+    <h1 *ngIf="id">Cập nhật thông tin vật tư - {{VatTuEdit.tenVatTu}}</h1>
+    <commonroad></commonroad>
+</section>
+<section class="content">
+    <div class="box box-info">
+        <div class="box-body">
+            <div class="row step clearfix">
+                <div class="col-md-12">
+                    <ul class="clearfix">
+                        <li [ngClass]="{'active': step1 || step2  || step3, 'item' : !step1}">
+                            <a href="javascript://">Bước 1: Thông tin vật tư</a>
+                        </li>
+                        <li>
+                            <i class="fa fa fa-chevron-right"></i>
+                        </li>
+                        <li [ngClass]="{'active': step2  || step3, 'item' : !step2  && !step3}">
+                            <a href="javascript://">Bước 2: Hình ảnh vật tư</a>
+                        </li>
+                        <li>
+                            <i class="fa fa fa-chevron-right"></i>
+                        </li>
+                        <li [ngClass]="{'active': step3, 'item' : !step3}">
+                            <a href="javascript://">Bước 3: Tài liệu vật tư</a>
+                        </li>
+                    </ul>
                 </div>
-                <div class="row step clearfix">
-                    <div class="col-sm-12">
-                        <ul class="clearfix">
-                            <li [ngClass]="{'active': step1 || step2  || step3, 'item' : !step1}">
-                                <a href="javascript://">Bước 1: Thông tin vật tư</a>
-                            </li>
-                            <li>
-                                <i class="fa fa fa-chevron-right"></i>
-                            </li>
-                            <li [ngClass]="{'active': step2  || step3, 'item' : !step2  && !step3}">
-                                <a href="javascript://">Bước 2: Hình ảnh vật tư</a>
-                            </li>
-                            <li>
-                                <i class="fa fa fa-chevron-right"></i>
-                            </li>
-                            <li [ngClass]="{'active': step3, 'item' : !step3}">
-                                <a href="javascript://">Bước 3: Tài liệu vật tư</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div *ngIf="step1">
+            </div>
+
+            <div class="tab-content row">
+                <div class="col-md-12 thongtin-tab" *ngIf="step1" style="padding: 0">
                     <form class="form-horizontal" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? saveStep1() :
 (!checkTen && showErrorAlert('Tên Vật Tư không được để trống', 'Vui lòng nhập Tên Vật Tư!'));
 (!ChkquocTich && showErrorAlert('Quốc tịch không được để trống', 'Vui lòng nhập Quốc tịch!'));
@@ -46,9 +41,9 @@
 (!ChkNDTN && showErrorAlert('Người quản lý không được để trống', 'Vui lòng nhập Người quản lý!'));
 (!ChkloaiTien && showErrorAlert('Loại tiền không được để trống', 'Vui lòng nhập Loại tiền!'));
 ">
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-sm-3" style="width: 23%">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="col-md-4">
                                     <label class="control-label" for="phongBanId-{{uniqueId}}">Phòng ban</label>
                                     <div class="control" [ngClass]="{'has-success': f.submitted && ChkphongBan, 'has-error' : f.submitted && !ChkphongBan}">
                                         <select name="phongBanId" [(ngModel)]="VatTuEdit.phongBanId" #phongBanId="ngModel" class="form-control" (change)="phongbanChk(phongBanId.value)">
@@ -63,7 +58,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-3" style="width: 23%">
+                                <div class="col-md-4">
                                     <label class="control-label" for="nguoiQuanLy-{{uniqueId}}">Người Quản Lý</label>
                                     <div class="control" [ngClass]="{'has-success': f.submitted && ChkNDTN, 'has-error' : f.submitted && !ChkNDTN}">
                                         <select name="nguoiQuanLy" #nguoiQuanLy="ngModel" class="form-control" [(ngModel)]="VatTuEdit.nguoiQuanLy" (change)="NDTNChk(nguoiQuanLy.value)">
@@ -78,34 +73,34 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-3" style="width: 24%">
+                                <div class="col-md-4">
                                     <label class="control-label" for="ngayLap-{{uniqueId}}">Ngày Lập</label>
                                     <div class="control">
                                         <kendo-datepicker [(value)]="valueNgayLap" [format]="'dd/MM/yyyy'" class="form-control" (valueChange)="ngayLapChange($event)"></kendo-datepicker>
                                     </div>
                                 </div>
-                                <div class="col-sm-3" style="width: 30%">
-                                    <label class="control-label" for="trangThai-{{uniqueId}}">Trạng thái</label>
-                                    <div class="clearfix"></div>
-                                    <div style="float: left;margin-right: 20px;margin-top: 10px">
-                                        <input type="radio" id="r_dang" [value]="1" name="trangThai" class="k-radio" [(ngModel)]="VatTuEdit.trangThai" #trangThai="ngModel" />
-                                        <label class="k-radio-label" for="r_dang">Đang sử dụng</label>
-                                    </div>
-                                    <div style="float: left;margin-top: 10px">
-                                        <input type="radio" id="r_dung" [value]="2" name="trangThai" class="k-radio" [(ngModel)]="VatTuEdit.trangThai" #trangThai="ngModel" />
-                                        <label class="k-radio-label" for="r_dung">Ngừng sử dụng</label>
-                                    </div>
-                                </div>
-
+                            </div>
+                            <div class="col-md-4">
+                                <label class="control-label" for="trangThai-{{uniqueId}}">Trạng thái</label>
                                 <div class="clearfix"></div>
+                                <div style="float: left;margin-right: 20px;margin-top: 10px">
+                                    <input type="radio" id="r_dang" [value]="1" name="trangThai" class="k-radio" [(ngModel)]="VatTuEdit.trangThai" #trangThai="ngModel" />
+                                    <label class="k-radio-label" for="r_dang">Đang sử dụng</label>
+                                </div>
+                                <div style="float: left;margin-top: 10px">
+                                    <input type="radio" id="r_dung" [value]="2" name="trangThai" class="k-radio" [(ngModel)]="VatTuEdit.trangThai" #trangThai="ngModel" />
+                                    <label class="k-radio-label" for="r_dung">Ngừng sử dụng</label>
+                                </div>
+                            </div>
 
-                                <div class="col-sm-3">
+                            <div class="col-md-6">
+                                <div class="col-md-6">
                                     <label class="control-label" for="maVatTu-{{uniqueId}}">Mã Vật Tư</label>
                                     <div class="control">
                                         <input autofocus type="text" class="form-control" name="maVatTu" [(ngModel)]="VatTuEdit.maVatTu" #maVatTu="ngModel" disabled />
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-md-6">
                                     <label class="control-label" for="tenVatTu-{{uniqueId}}">Tên Vật Tư</label>
                                     <div class="control" [ngClass]="{'has-success': f.submitted && checkTen, 'has-error' : f.submitted && !checkTen}">
                                         <input autofocus type="text" class="form-control" [ngClass]="{'valid-required ': checkTen, 'valid-not-required' : !checkTen}" name="tenVatTu" [(ngModel)]="VatTuEdit.tenVatTu" #tenVatTu="ngModel" (change)="tenChk(tenVatTu.value)" />
@@ -115,7 +110,9 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-6">
                                     <label class="control-label" for="loaiHangId-{{uniqueId}}">Loại Hàng</label>
                                     <div class="control" [ngClass]="{'has-success': f.submitted && ChkloaiHang, 'has-error' : f.submitted && !ChkloaiHang}">
                                         <select name="loaiHangId" #loaiHangId="ngModel" class="form-control" [(ngModel)]="VatTuEdit.loaiHangId" (change)="loaiHangChk(loaiHangId.value)">
@@ -130,21 +127,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
-                                    <label class="control-label" for="maVatTuCha-{{uniqueId}}">Vật Tư Cha</label>
-                                    <div class="control">
-                                        <select name="maVatTuCha" #maVatTuCha="ngModel" class="form-control" [(ngModel)]="VatTuEdit.maVatTuCha">
-                                            <option value="0">-- Chọn Vật Tư Cha --</option>
-                                            <option *ngFor="let o of vattuCha" value="{{o.vatTuId}}">
-                                                {{o.tenVatTu}}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="clearfix"></div>
-
-                                <div class="col-sm-3">
+                                <div class="col-md-6">
                                     <label class="control-label" for="quocTichId-{{uniqueId}}">Xuất xứ</label>
                                     <div class="control" [ngClass]="{'has-success': f.submitted && ChkquocTich, 'has-error' : f.submitted && !ChkquocTich}">
                                         <select name="quocTichId" #quocTichId="ngModel" class="form-control" [(ngModel)]="VatTuEdit.quocTichId" (change)="quocTichChk(quocTichId.value)">
@@ -159,7 +142,10 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="col-md-4">
                                     <label class="control-label" for="nhaCungCapId-{{uniqueId}}">Nhà Cung Cấp</label>
                                     <div class="control" [ngClass]="{'has-success': f.submitted && ChknhaCC, 'has-error' : f.submitted && !ChknhaCC}">
                                         <select name="nhaCungCapId" #nhaCungCapId="ngModel" class="form-control" [(ngModel)]="VatTuEdit.nhaCungCapId" (change)="nhaCungCapChk(nhaCungCapId.value)">
@@ -174,7 +160,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-md-4">
                                     <label class="control-label" for="hangSanXuatId-{{uniqueId}}">Hãng Sản Xuất</label>
                                     <div class="control" [ngClass]="{'has-success': f.submitted && ChkhangSX, 'has-error' : f.submitted && !ChkhangSX}">
                                         <select name="hangSanXuatId" #hangSanXuatId="ngModel" class="form-control" [(ngModel)]="VatTuEdit.hangSanXuatId" (change)="hangSanXuatChk(hangSanXuatId.value)">
@@ -189,62 +175,59 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-md-4">
                                     <label class="control-label" for="maVachNSX-{{uniqueId}}">Mã Vạch NSX</label>
                                     <div class="control">
                                         <input autofocus type="text" class="form-control" name="maVachNSX" [(ngModel)]="VatTuEdit.maVachNSX" #maVachNSX="ngModel" />
                                     </div>
                                 </div>
-
-                                <div class="clearfix"></div>
-
-                                <div class="col-sm-3" style="width: 20%;">
+                            </div>
+                            <div class="col-md-9">
+                                <div class="col-md-3">
                                     <label class="control-label" for="model-{{uniqueId}}">Model</label>
                                     <div class="control">
-                                        <input autofocus type="text" class="form-control" name="model" [(ngModel)]="VatTuEdit.model" #model="ngModel" />
+                                        <input autofocus style="width: 100%;" type="text" class="form-control" name="model" [(ngModel)]="VatTuEdit.model" #model="ngModel" />
                                     </div>
                                 </div>
-                                <div class="col-sm-3" style="width: 20%;">
+                                <div class="col-md-3">
                                     <label class="control-label" for="partNumber-{{uniqueId}}">PartNumber</label>
                                     <div class="control">
-                                        <input autofocus type="text" class="form-control" name="partNumber" [(ngModel)]="VatTuEdit.partNumber" #partNumber="ngModel" />
+                                        <input autofocus style="width: 100%;" type="text" class="form-control" name="partNumber" [(ngModel)]="VatTuEdit.partNumber" #partNumber="ngModel" />
                                     </div>
                                 </div>
-                                <div class="col-sm-4" style="width: 25%;">
+                                <div class="col-md-4">
                                     <label class="control-label" for="serialNumber-{{uniqueId}}">SerialNumber</label>
                                     <div class="control">
-                                        <input autofocus type="text" class="form-control" name="serialNumber" [(ngModel)]="VatTuEdit.serialNumber" #serialNumber="ngModel" />
+                                        <input autofocus style="width: 100%;" type="text" class="form-control" name="serialNumber" [(ngModel)]="VatTuEdit.serialNumber" #serialNumber="ngModel" />
                                     </div>
                                 </div>
-                                <div class="col-sm-2" style="width: 12%">
+                                <div class="col-md-2">
                                     <label class="control-label" for="namSD-{{uniqueId}}">Năm sử dụng</label>
                                     <div class="control" [ngClass]="{'has-success': f.submitted && namSD.valid, 'has-error' : f.submitted && !namSD.valid}">
-                                        <input autofocus type="number" min="1" class="form-control" name="namSD" [(ngModel)]="VatTuEdit.namSD" #namSD="ngModel" required (change)="namChange(namSD.value)" />
+                                        <input autofocus style="width: 100%;" type="number" min="1" class="form-control" name="namSD" [(ngModel)]="VatTuEdit.namSD" #namSD="ngModel" required (change)="namChange(namSD.value)" />
                                         <span *ngIf="showValidationErrors && f.submitted" class="feedback glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok': namSD.valid, 'glyphicon-remove' : !namSD.valid}"></span>
                                         <span *ngIf="showValidationErrors && f.submitted && !namSD.valid" class="errorMessage">
                                             Vui lòng nhập năm sử dụng!
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-3" style="width:23%;">
-                                    <label class="control-label" for="ngayHHBaoHanh-{{uniqueId}}">Hạn Bảo Hành</label>
-                                    <div class="control">
-                                        <kendo-datepicker [(value)]="valueBaoHanh" [format]="'dd/MM/yyyy'" class="form-control" (valueChange)="baoHanhChange($event)"></kendo-datepicker>
-                                    </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label" for="ngayHHBaoHanh-{{uniqueId}}">Hạn Bảo Hành</label>
+                                <div class="control">
+                                    <kendo-datepicker style="width: 93%;" [(value)]="valueBaoHanh" [format]="'dd/MM/yyyy'" class="form-control" (valueChange)="baoHanhChange($event)"></kendo-datepicker>
                                 </div>
+                            </div>
 
-                                <div class="clearfix"></div>
-
-                                <div class="col-sm-12">
-                                    <label class="control-label" for="thongSoKyThuat-{{uniqueId}}">Thông Số Kỹ Thuật</label>
-                                    <div class="control">
-                                        <input autofocus type="text" class="form-control" name="thongSoKyThuat" [(ngModel)]="VatTuEdit.thongSoKyThuat" #thongSoKyThuat="ngModel" />
-                                    </div>
+                            <div class="col-md-12" style="margin-left:15px;">
+                                <label class="control-label" for="thongSoKyThuat-{{uniqueId}}">Thông Số Kỹ Thuật</label>
+                                <div class="control" style="padding-right: 3%">
+                                    <input autofocus style="width: 100%;" type="text" class="form-control" name="thongSoKyThuat" [(ngModel)]="VatTuEdit.thongSoKyThuat" #thongSoKyThuat="ngModel" />
                                 </div>
+                            </div>
 
-                                <div class="clearfix"></div>
-
-                                <div class="col-sm-4" style="width:24%;">
+                            <div class="col-md-8">
+                                <div class="col-md-4">
                                     <label class="control-label" for="donViTinhId-{{uniqueId}}">Đơn vị tính</label>
                                     <div class="control" [ngClass]="{'has-success': f.submitted && ChkdonViTinh, 'has-error' : f.submitted && !ChkdonViTinh}">
                                         <select name="donViTinhId" [(ngModel)]="VatTuEdit.donViTinhId" #donViTinhId="ngModel" class="form-control" (change)="donViTinhChk(donViTinhId.value)">
@@ -259,7 +242,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-4" style="width:22%;">
+                                <div class="col-md-4">
                                     <label class="control-label" for="loaiTienId-{{uniqueId}}">Loại Tiền</label>
                                     <div class="control" [ngClass]="{'has-success': f.submitted && ChkloaiTien, 'has-error' : f.submitted && !ChkloaiTien}">
                                         <select name="loaiTienId" #loaiTienId="ngModel" class="form-control" [(ngModel)]="VatTuEdit.loaiTienId" (change)="loaitienChk(loaiTienId.value)">
@@ -274,24 +257,23 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-4" style="width:19%;">
+                                <div class="col-md-4">
                                     <label class="control-label" for="giaVattu-{{uniqueId}}">Giá Vật Tư</label>
                                     <div class="control">
-                                        <div style="display: flex; position: relative;">
-                                            <input OnlyNumber="true" autofocus type="text" class="form-control" name="giaVattu" [(ngModel)]="giaVattu" required (ngModelChange)="giaVatTuChange($event)" />
-                                        </div>
+                                        <span class="text-display">{{valueTien}}</span>
+                                        <input OnlyNumber="true" type="text" class="form-control" name="giaVattu" [(ngModel)]="giaVattu" required (ngModelChange)="giaVatTuChange($event)" />
                                     </div>
                                 </div>
-                                <div class="col-sm-3" style="width:15%;">
+                            </div>
+                            <div class="col-md-4">
+                                <div class="col-md-5">
                                     <label class="control-label" for="khauHao-{{uniqueId}}">Khấu Hao</label>
                                     <div class="control">
-                                        <div style="display: flex; position: relative;">
-                                            <input autofocus type="number" min="0" step="0.01" class="form-control" name="khauHao" [(ngModel)]="VatTuEdit.khauHao" #khauHao="ngModel" required />
-                                            <span style="position: absolute;top: 25%;right: 45%;transition: right 0.2s;">%</span>
-                                        </div>
+                                        <span class="text-display">%</span>
+                                        <input style="width: 100%" (focus)="focusFunction($event)" (focusout)="focusOutFunction($event)" (mouseenter)="onHovering($event)" (mouseleave)="onUnovering($event)" type="number" min="0" step="0.01" class="form-control" name="khauHao" [(ngModel)]="VatTuEdit.khauHao" #khauHao="ngModel" required />
                                     </div>
                                 </div>
-                                <div class="col-sm-3" style="width:20%;">
+                                <div class="col-md-7">
                                     <label class="control-label" for="donViKhauHao-{{uniqueId}}">Đơn vị Khấu Hao</label>
                                     <div class="control">
                                         <select name="donViKhauHao" #donViKhauHao="ngModel" class="form-control" [(ngModel)]="VatTuEdit.donViKhauHao" (change)="DVKHChk(donViKhauHao.value)">
@@ -302,17 +284,85 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="clearfix"></div>
-                                <div class="col-md-12">
-                                    <hr class="edit-last-separator-hr" />
+                            </div>
+
+                            <div class="col-sm-12" style="border: 1px solid #dedede; width: 94%; margin: 3%; padding: 10px;">
+                                <h1 style="width: 105px; margin-top: -20px; margin-left: 5px; background: white;font-size:14px">Thêm vật tư con</h1>
+                                <div class="col-sm-2" style="width: 18%;">
+                                    <label class="control-label" for="maVatTu-{{uniqueId}}">Mã Vật Tư</label>
+                                    <div class="control">
+                                        <input autofocus type="text" class="form-control" name="maVatTuCon" [(ngModel)]="VatTuConEdit.maVatTu" #maVatTuCon="ngModel" disabled />
+                                    </div>
                                 </div>
+                                <div class="col-sm-2">
+                                    <label class="control-label" for="tenVatTu-{{uniqueId}}">Tên Vật Tư</label>
+                                    <div class="control" [ngClass]="{'has-success': f.submitted && checkTenCon, 'has-error' : f.submitted && !checkTenCon}">
+                                        <input autofocus type="text" class="form-control" [ngClass]="{'valid-required ': checkTenCon, 'valid-not-required' : !checkTenCon}" name="tenVatTus" [(ngModel)]="VatTuConEdit.tenVatTu" #tenVatTus="ngModel" (change)="tenConChk(tenVatTus.value)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label" for="model-{{uniqueId}}">Model</label>
+                                    <div class="control">
+                                        <input autofocus style="width: 100%;" type="text" class="form-control" name="models" [(ngModel)]="VatTuConEdit.model" #models="ngModel" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-2" style="width: 18%;">
+                                    <label class="control-label" for="hangSanXuatId-{{uniqueId}}">Hãng Sản Xuất</label>
+                                    <div class="control" [ngClass]="{'has-success': f.submitted && ChkChangSX, 'has-error' : f.submitted && !ChkChangSX}">
+                                        <select name="hangSanXuatIds" #hangSanXuatIds="ngModel" class="form-control" [(ngModel)]="VatTuConEdit.hangSanXuatId" (change)="hangSanXuatConChk(hangSanXuatIds.value)">
+                                            <option value="0">-- Chọn HSX --</option>
+                                            <option *ngFor="let o of hangSX" value="{{o.hangSanXuatId}}">
+                                                {{o.tenHangSanXuat}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2" style="width: 20%;">
+                                    <label class="control-label" for="serialNumber-{{uniqueId}}">SerialNumber</label>
+                                    <div class="control">
+                                        <input autofocus style="width: 100%;" type="text" class="form-control" name="serialNumbers" [(ngModel)]="VatTuConEdit.serialNumber" #serialNumbers="ngModel" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-2" style="padding-top: 26px; width: 8%">
+                                    <button type="button" (click)="selectVTC(VatTuConEdit)" class="btn btn-primary"> Thêm</button>
+                                </div>
+                                <div class="box-body" style="margin-top: 8%;">
+                                    <table class='table' *ngIf="listVTC">
+                                        <thead>
+                                            <tr style="background-color:#048b8b;">
+                                                <th>Mã Vật Tư</th>
+                                                <th>Tên Vật Tư</th>
+                                                <th>Model</th>
+                                                <th>Hãng sản xuất</th>
+                                                <th>Serial Number</th>
+                                                <th>Chức năng</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let list of listVTC">
+                                                <td>{{ list.maVatTu }}</td>
+                                                <td>{{ list.tenVatTu }}</td>
+                                                <td>{{ list.model }}</td>
+                                                <td>{{ list.hangSanXuats.tenHangSanXuat }}</td>
+                                                <td>{{ list.serialNumber }}</td>
+                                                <td>
+                                                    <a class="btn btn-func btn-default" href="javascript:;" (click)="deleteVTC(list)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-md-12">
+                                <hr class="edit-last-separator-hr" />
                             </div>
                         </div>
                         <div class="modal-footer">
                             <div class="step-action">
                                 <div class="action Btn-form-group">
-                                    <div class="col-sm-12" style="text-align:center;">
-                                        <button type="button" (click)="cancel1()" class="btn btn-danger"><i class='fa fa fa-times'></i> Thoát</button>
+                                    <div class="col-md-12" style="text-align:center;">
+                                        <button type="button" (click)="cancel()" class="btn btn-danger"><i class='fa fa fa-times'></i> Thoát</button>
                                         <button type="submit" class="btn btn-primary"> Bước 2 <i class='fa fa-angle-double-right'></i></button>
                                     </div>
                                 </div>
@@ -320,7 +370,6 @@
                         </div>
                     </form>
                 </div>
-
                 <div class="hopdong-tab" *ngIf="step2">
                     <div class="modal-body">
                         <div class="row">
@@ -339,16 +388,6 @@
                                                       (complete)="complete2EventHandler($event)">
                                         </kendo-upload>
                                         <div class="clearfix"></div>
-                                        <!--<div *ngIf="isEdit" class="description-form-group col-sm-12" style="position:relative;z-index:1;margin-top:5px">
-                                            <div *ngFor="let img of VTHAs" class="col-sm-2 box-image">
-                                                <img id="img.vatTuHinhAnhId" class="img-responsive" [alt]="img.tenHinhAnh" [src]="img.urlHinhAnh" style="width:80px;border: 1px solid #ccc;border-radius: 100%;height:75px;object-fit:contain;overflow:hidden" />
-                                                <span id="img.vatTuHinhAnhId" (click)="clear2ImageData(img.vatTuHinhAnhId, img.urlHinhAnh)" tooltip="Xóa" class="glyphicon glyphicon-remove glyphicon-remove-image"></span>
-                                            </div>
-                                        </div>-->
-                                        <div *ngIf="!isUpload" style="display: flex;" class="errorMessage">
-                                            <span> Vui lòng chọn hình ảnh! </span>
-                                            <span class="feedback glyphicon glyphicon-remove form-control-feedback"></span>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -360,15 +399,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="height: auto;padding:5px 2% 2% 2%;">
-                            <!-- /.box-header -->
+                        <div style="padding-top: 10px;">
+                            <button type="submit" (click)="saveStep2()" class="btn btn-primary"> Lưu hình ảnh</button>
+                        </div>
+                        <div style="height: auto;padding-top:5px;">
                             <div class="box-body">
-                                <table class='table' *ngIf="list">
+                                <table class='table' *ngIf="listHA">
                                     <thead>
                                         <tr style="background-color:#048b8b;">
                                             <th>Hình ảnh</th>
                                             <th>Tên hình ảnh</th>
                                             <th>Diễn giải</th>
+                                            <th>Chức năng</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -377,7 +419,7 @@
                                             <td>{{ list.tenHinhAnh }}</td>
                                             <td>{{ list.dienGiai }}</td>
                                             <td>
-                                                <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteHinhAnh(list)" title="Xóa" *ngIf="list.soCuoi == max"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                <a class="btn btn-func btn-default" href="javascript:;" (click)="deleteHinhAnh(list)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -385,37 +427,6 @@
                             </div>
                         </div>
                     </div>
-                    <div style="height: auto;padding:5px 2% 2% 2%;">
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                        <table class='table' *ngIf="list">
-                            <thead>
-                                <tr  style="background-color:#048b8b;" >
-                                    <th>Tên định mức nước</th>
-                                    <th>Số đầu</th>
-                                    <th>Số cuối</th>
-                                    <th>Giá</th>
-                                    <th>Diễn giải</th>
-                                    <th>Chức năng</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let list of list">
-                                    <td>{{ list.tenDinhMucNuoc }}</td>
-                                    <td>{{ list.soDau }}</td>
-                                    <td *ngIf="list.soCuoi != null">{{ list.soCuoi }}</td>
-                                    <td *ngIf="list.soCuoi == null">trở lên</td>
-                                    <td>{{formatPrice(list.gia)}}</td>
-                                    <td>{{ list.dienGiai }}</td>
-                                    <td>
-                                        <a class="btn btn-func btn-primary" href="javascript:;" (click)="editDinhMucNuoc(list)" title="Sửa" *ngIf="list.soCuoi == max"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                        <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDinhMucNuoc(list)" title="Xóa" *ngIf="list.soCuoi == max"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
                     <div class="clearfix"></div>
                     <div class="modal-footer">
                         <div class="step-action">
@@ -423,13 +434,12 @@
                                 <div class="col-sm-12" style="text-align:center;">
                                     <button type="button" (click)="cancel()" class="btn btn-danger"><i class='fa fa fa-times'></i> Thoát</button>
                                     <button type="button" (click)="backStep1()" class="btn btn-danger"><i class='fa fa-angle-double-left'></i> Bước 1</button>
-                                    <button type="submit" (click)="saveStep2()" class="btn btn-primary"> Bước 3 <i class='fa fa-angle-double-right'></i></button>
+                                    <button type="submit" (click)="nextStep3()" class="btn btn-primary"> Bước 3 <i class='fa fa-angle-double-right'></i></button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="hopdong-tab" *ngIf="step3">
                     <div class="modal-body">
                         <div class="row">
@@ -447,16 +457,6 @@
                                                       (complete)="complete3EventHandler($event)">
                                         </kendo-upload>
                                         <div class="clearfix"></div>
-                                        <div *ngIf="isEdit" class="description-form-group col-sm-12" style="position:relative;z-index:1;margin-top:5px">
-                                            <div *ngFor="let file of VTTLs" class="col-sm-3 box-image">
-                                                <a id="file.vatTutaiLieuId" class="file-responsive" href="{{file.urlTaiLieu}}" style="width:80px; overflow:hidden; white-space: nowrap;">{{file.tenTaiLieu}}</a>
-                                                <span id="file.vatTutaiLieuId" (click)="clear3ImageData(file.vatTutaiLieuId, file.urlTaiLieu)" tooltip="Xóa" class="glyphicon glyphicon-remove glyphicon-remove-image"></span>
-                                            </div>
-                                        </div>
-                                        <div *ngIf="!isUploadFile" style="display: flex;" class="errorMessage">
-                                            <span> Vui lòng chọn tài liệu! </span>
-                                            <span class="feedback glyphicon glyphicon-remove form-control-feedback"></span>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -468,6 +468,31 @@
                                 </div>
                             </div>
                         </div>
+                        <div style="padding-top: 10px;">
+                            <button type="submit" (click)="saveStep3()" class="btn btn-primary"> Lưu hình ảnh</button>
+                        </div>
+                        <div style="height: auto;padding-top:5px;">
+                            <div class="box-body">
+                                <table class='table' *ngIf="listTL">
+                                    <thead>
+                                        <tr style="background-color:#048b8b;">
+                                            <th>Tên tài liệu</th>
+                                            <th>Diễn giải</th>
+                                            <th>Chức năng</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let list of listTL">
+                                            <td>{{ list.tenTaiLieu }}</td>
+                                            <td>{{ list.dienGiai }}</td>
+                                            <td>
+                                                <a class="btn btn-func btn-default" href="javascript:;" (click)="deleteTaiLieu(list)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                     <div class="clearfix"></div>
                     <div class="modal-footer">
@@ -476,7 +501,7 @@
                                 <div class="col-sm-12" style="text-align:center;">
                                     <button type="button" (click)="cancel()" class="btn btn-danger"><i class='fa fa fa-times'></i> Thoát</button>
                                     <button type="button" (click)="backStep2()" class="btn btn-danger"><i class='fa fa-angle-double-left'></i> Bước 2</button>
-                                    <button type="button" (click)="saveStep3()" class="btn btn-primary"><i class='fa fa fa-save'></i> Hoàn thành </button>
+                                    <button type="button" (click)="finish()" class="btn btn-primary"><i class='fa fa fa-save'></i> Hoàn thành </button>
                                 </div>
                             </div>
                         </div>
@@ -485,4 +510,4 @@
             </div>
         </div>
     </div>
-</div>
+</section>

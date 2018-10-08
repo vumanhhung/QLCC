@@ -34,7 +34,7 @@ namespace QLCC.Controllers
         [HttpGet]
         public IEnumerable<VatTuYeuCau> GetVatTuYeuCaus()
         {
-            return _context.VatTuYeuCaus.Include(r => r.vattus);
+            return _context.VatTuYeuCaus.Include(r => r.vattus).Include(r => r.vattus.donViTinhs).Include(r => r.vattus.quocTichs);
         }
         
         // GET: api/VatTuYeuCaus/5

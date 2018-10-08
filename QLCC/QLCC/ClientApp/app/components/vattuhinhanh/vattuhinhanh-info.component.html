@@ -1,60 +1,21 @@
-﻿<form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="VatTuHinhAnhInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
-      (!isUpload && showErrorAlert('Hình ảnh không được để trống', 'Vui lòng chọn hình ảnh!'));">
-    <div class="modal-body" style="height: auto; max-height: 1000px;">
-        <div class="row">
-            <div class="has-feedback col-sm-12">
-                <div class="has-feedback">
-                    <label class="control-label">Hình ảnh vật tư</label>
-                    <div class="control">
-                        <kendo-upload [autoUpload]="false"
-                                      [saveUrl]="uploadSaveUrl"
-                                      [removeUrl]="uploadRemoveUrl"
-                                      [restrictions]="uploadRestrictions"
-                                      (upload)="uploadEventHandler($event,'\image_vattu')"
-                                      (remove)="removeEventHandler($event,'\image_vattu')"
-                                      (select)="selectEventHandler($event)"
-                                      (clear)="clearEventHandler($event)"
-                                      (complete)="completeEventHandler($event)">
-                        </kendo-upload>
-                        <div class="clearfix"></div>
-                        <div *ngIf="isdisplayImage" class="description-form-group box-image" style="position:relative;z-index:1;width:100px;margin-top:5px">
-                            <img id="imgData" class="img-responsive" [alt]="altImageItem" [src]="imageData" style="width:80px;border: 1px solid #ccc;border-radius: 100%;height:75px;object-fit:contain;overflow:hidden" />
-                            <span id="{{vatTuHinhAnhId}}" (click)="clearImageData($event)" tooltip="Xóa" class="glyphicon glyphicon-remove glyphicon-remove-image"></span>
-                        </div>
-                        <span *ngIf="showValidationErrors && f.submitted" class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok ': isUpload, 'glyphicon-remove' : !isUpload}"></span>
-                        <span *ngIf="showValidationErrors && f.submitted && !isUpload" class="errorMessage">
-                            Vui lòng chọn hình ảnh!
-                        </span>
-                    </div>
-                </div>
+﻿<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
+    <div class="modal-dialog modal-lg" style="text-align: center;">
+        <div class="modal-content" style="display: inline-block">
+            <div class="modal-header">
+                <p class="modal-title pull-left">
+                    <i class="fa fa-eye"></i> Xem hình ảnh vật tư - {{VatTuHinhAnhEdit.tenHinhAnh}}
+                </p>
+                <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="clearfix"></div>
-            <div class="col-sm-12">
-                <label class="control-label" for="dienGiai-{{uniqueId}}">Diễn giải</label>
-                <div class="control">
-                    <input autofocus type="text" class="form-control" name="dienGiai" [(ngModel)]="VatTuHinhAnhEdit.dienGiai" #dienGiai="ngModel" />
-                </div>
+            <div class="modal-body"  style="min-width: 500px; max-width: 800px; max-height: 1000px;">
+                <img [src]="VatTuHinhAnhEdit.urlHinhAnh" />
             </div>
-            <div class="clearfix"></div>
-            <div class="col-md-12">
-                <hr class="edit-last-separator-hr" />
-            </div>
-            <div class="form-group actionBtn-form-group">
-                <div class="col-sm-7">
-                    <div class="pull-right">
-                        <button *ngIf="!isEditMode && isGeneralEditor" type="button" (click)="close()" class="btn btn-default"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
-                        <button *ngIf="!isEditMode && !isGeneralEditor" type="button" (click)="edit()" class="btn btn-default"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
-                        <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'users.editor.Cancel' | translate}}</button>
-                        <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving">
-                            <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('users.editor.Saving' | translate) : ('users.editor.Save' | translate)}}
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="clearfix"></div>
         </div>
     </div>
-</form>
+</div>
+
 
 
 

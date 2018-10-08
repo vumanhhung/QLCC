@@ -39,6 +39,8 @@ export class VatTuYeuCauInfoComponent implements OnInit {
     public changesFailedCallback: () => void;
     public changesCancelledCallback: () => void;
 
+    toanhaID: number = 0;
+
     vattuChk = false;
     phongbanChk = false;
     nycCHk = false;
@@ -145,6 +147,11 @@ export class VatTuYeuCauInfoComponent implements OnInit {
         }
     }
 
+    resetVatTu() {
+        this.VatTuYeuCauEdit.soLuong = 1;
+        this.VatTuYeuCauEdit.ghiChu = "";
+    }
+
     addListVatTu(id: number, soluong: number, ghichu: string) {
         if (id > 0) {
             var value = new VatTuYeuCau();
@@ -155,6 +162,7 @@ export class VatTuYeuCauInfoComponent implements OnInit {
             var checkExist = this.list.find(c => c.vattus.tenVatTu == value.vattus.tenVatTu);
             if(checkExist == null){
                 this.list.push(value);
+                this.resetVatTu();
             } else {
                 this.alertService.showStickyMessage("Cảnh báo", "Vật tư " + checkExist.vattus.tenVatTu + " đã tồn tại trong danh sách được đề xuất. Vui lòng chọn vật tư khác", MessageSeverity.warn);
             }            
@@ -169,8 +177,7 @@ export class VatTuYeuCauInfoComponent implements OnInit {
             this.list.splice(this.list.indexOf(value), 1);
         } else {
             var removed = this.list.splice(this.list.indexOf(value), 1);
-            console.log(removed[0]);
-            this.listRemoved.unshift(removed[0]);
+            this.listRemoved.push(removed[0]);
         }        
     }
     
@@ -192,6 +199,7 @@ export class VatTuYeuCauInfoComponent implements OnInit {
             this.isSaving = true;
             this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
             this.VatTuPhieuYeuCauEdit.trangThai = 1;
+            this.VatTuPhieuYeuCauEdit.toaNhaId = this.toanhaID;
             if (this.isNew) {
                 this.vtpycService.addnewVatTuPhieuYeuCau(this.VatTuPhieuYeuCauEdit).subscribe(results => {
                     for (var item of this.list) {
@@ -207,21 +215,55 @@ export class VatTuYeuCauInfoComponent implements OnInit {
             else {
                 this.vtpycService.updateVatTuPhieuYeuCau(this.VatTuPhieuYeuCauEdit.phieuYeuCauVTId, this.VatTuPhieuYeuCauEdit).subscribe(response => {
                     this.gvService.getByPhieuYeuCau(this.VatTuPhieuYeuCauEdit.phieuYeuCauVTId).subscribe(results => {
-                        if (this.list <= results) {
+                        this.VatTuYeuCauEdit.phieuYeuCauVTId = this.VatTuPhieuYeuCauEdit.phieuYeuCauVTId;
+                        if (this.list.length == results.length) {
                             for (var item of this.list) {
-                                this.gvService.updateVatTuYeuCau(item.yeuCauvatTuId, item).subscribe(response => this.saveVTYCSuccessHelper(), error => this.saveFailedHelper(error));
+                                this.VatTuYeuCauEdit.yeuCauvatTuId = item.yeuCauvatTuId;
+                                this.VatTuYeuCauEdit.vatTuId = item.vatTuId;
+                                this.VatTuYeuCauEdit.donViTinhId = item.vattus.donViTinhId;
+                                this.VatTuYeuCauEdit.quocTichId = item.vattus.quocTichId;
+                                this.VatTuYeuCauEdit.ghiChu = item.ghiChu;
+                                this.VatTuYeuCauEdit.soLuong = item.soLuong;
+                                this.gvService.updateVatTuYeuCau(this.VatTuYeuCauEdit.yeuCauvatTuId, this.VatTuYeuCauEdit).subscribe(response => this.saveVTYCSuccessHelper(), error => this.saveFailedHelper(error));
                             }
-                        } else {
+                        } else if (this.list.length > results.length) {
                             for (var i = 0; i < this.list.length; i++) {
                                 if (i - results.length >= 0) {
-                                    this.gvService.addnewVatTuYeuCau(this.list[i]).subscribe(result => this.saveVTYCSuccessHelper(result), error => this.saveFailedHelper(error));
+                                    this.VatTuYeuCauEdit.ghiChu = this.list[i].ghiChu;
+                                    this.VatTuYeuCauEdit.vatTuId = this.list[i].vatTuId;
+                                    this.VatTuYeuCauEdit.donViTinhId = this.list[i].vattus.donViTinhId;
+                                    this.VatTuYeuCauEdit.quocTichId = this.list[i].vattus.quocTichId;
+                                    this.VatTuYeuCauEdit.soLuong = this.list[i].soLuong;
+                                    this.gvService.addnewVatTuYeuCau(this.VatTuYeuCauEdit).subscribe(result => this.saveVTYCSuccessHelper(result), error => this.saveFailedHelper(error));
                                 } else {
-                                    this.gvService.updateVatTuYeuCau(this.list[i].yeuCauvatTuId, this.list[i]).subscribe(response => this.saveVTYCSuccessHelper(), error => this.saveFailedHelper(error));
+                                    this.VatTuYeuCauEdit.ghiChu = this.list[i].ghiChu;
+                                    this.VatTuYeuCauEdit.vatTuId = this.list[i].vatTuId;
+                                    this.VatTuYeuCauEdit.donViTinhId = this.list[i].vattus.donViTinhId;
+                                    this.VatTuYeuCauEdit.quocTichId = this.list[i].vattus.quocTichId;
+                                    this.VatTuYeuCauEdit.soLuong = this.list[i].soLuong;
+                                    this.gvService.updateVatTuYeuCau(this.VatTuYeuCauEdit.yeuCauvatTuId, this.VatTuYeuCauEdit).subscribe(response => this.saveVTYCSuccessHelper(), error => this.saveFailedHelper(error));
                                 }
                             }
+                        } else {
+                            for (var itemRemove of this.listRemoved) {
+                                this.gvService.deleteVatTuYeuCau(itemRemove.yeuCauvatTuId).subscribe(results => { alert("Success") }, error => { alert("Fail"); })
+                            }
+                            for (var item of this.list) {
+                                this.VatTuYeuCauEdit.yeuCauvatTuId = item.yeuCauvatTuId;
+                                this.VatTuYeuCauEdit.vatTuId = item.vatTuId;
+                                this.VatTuYeuCauEdit.donViTinhId = item.vattus.donViTinhId;
+                                this.VatTuYeuCauEdit.quocTichId = item.vattus.quocTichId;
+                                this.VatTuYeuCauEdit.ghiChu = item.ghiChu;
+                                this.VatTuYeuCauEdit.soLuong = item.soLuong;
+                                this.gvService.updateVatTuYeuCau(this.VatTuYeuCauEdit.yeuCauvatTuId, this.VatTuYeuCauEdit).subscribe(response => this.saveVTYCSuccessHelper(), error => this.saveFailedHelper(error));
+                            }
                         }
-                    }, error => this.saveFailedHelper(error));
-                }, error => this.saveFailedHelper(error));
+                    }, error => {
+                        this.saveFailedHelper(error)
+                        });
+                }, error => {
+                    this.saveFailedHelper(error)
+                });
                 
             }
         } else {
@@ -244,6 +286,7 @@ export class VatTuYeuCauInfoComponent implements OnInit {
         this.VatTuYeuCauEdit.soLuong = 1;
         this.VatTuPhieuYeuCauEdit.nguoiYeuCau = "0";
         this.VatTuPhieuYeuCauEdit.nguoiTiepNhan = "0";
+        this.VatTuPhieuYeuCauEdit.toaNhaId = this.toanhaID;
         this.list = [];
         this.edit();
         return this.VatTuYeuCauEdit;
@@ -305,9 +348,9 @@ export class VatTuYeuCauInfoComponent implements OnInit {
             this.isGeneralEditor = true;
             this.isNew = false;
             this.isEdit = true;
-            //this.editingRowName = obj.tenVatTuYeuCau;
+            console.log(this.list);
             this.VatTuYeuCauEdit.soLuong = 1;
-            this.gvService.getByPhieuYeuCau(obj.phieuYeuCauVTId).subscribe(results => this.list = results, error => { alert(error) });
+            this.VatTuPhieuYeuCauEdit.toaNhaId = this.toanhaID;
             this.VatTuPhieuYeuCauEdit = new VatTuPhieuYeuCau();
             Object.assign(this.VatTuPhieuYeuCauEdit, obj);
             Object.assign(this.VatTuPhieuYeuCauEdit, obj);
@@ -350,5 +393,15 @@ export class VatTuYeuCauInfoComponent implements OnInit {
     private movetoEditForm() {
         this.isViewDetail = false;
         this.isEdit = true;
+    }
+
+    confirmDeXuat(value: VatTuPhieuYeuCau) {
+        value.trangThai = 2;
+        this.vtpycService.updateVatTuPhieuYeuCau(value.phieuYeuCauVTId, value).subscribe(response => this.saveVTPYCSuccessHelper(), error => this.saveFailedHelper(error));
+    }
+
+    unconfirmDeXuat(value: VatTuPhieuYeuCau) {
+        value.trangThai = 3;
+        this.vtpycService.updateVatTuPhieuYeuCau(value.phieuYeuCauVTId, value).subscribe(response => this.saveVTPYCSuccessHelper(), error => this.saveFailedHelper(error));
     }
 }

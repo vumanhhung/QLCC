@@ -48,9 +48,6 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
     @ViewChild('vattuhinhanhEditor')
     VatTuHinhAnhEditor: VatTuHinhAnhInfoComponent;
 
-    @ViewChild('editorModal')
-    editorModal: ModalDirective;
-
     constructor(private alertService: AlertService, private translationService: AppTranslationService, private vattuService: VatTuService, private vattuhinhanhService: VatTuHinhAnhService, private fileuploadService: FileUploadService) {
     }
     
@@ -59,7 +56,6 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
 
         this.columns = [
             { prop: "index", name: '#', width: 40, cellTemplate: this.indexTemplate, canAutoResize: false },
-            { name: gT('Hình ảnh'), cellTemplate: this.descriptionTemplate },
             { prop: 'tenHinhAnh', name: gT('Tên hình ảnh') },
             { prop: 'dienGiai', name: gT('Diễn giải') },
             { name: gT('Chức năng'), width: 130, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
@@ -78,13 +74,13 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.VatTuHinhAnhEditor.changesSavedCallback = () => {
             this.addNewToList();
-            this.editorModal.hide();
+            this.VatTuHinhAnhEditor.editorModal.hide();
         };
 
         this.VatTuHinhAnhEditor.changesCancelledCallback = () => {
             this.vattuhinhanhEdit = null;
             this.sourcevattuhinhanh = null;
-            this.editorModal.hide();
+            this.VatTuHinhAnhEditor.editorModal.hide();
         };
     }
     
@@ -147,7 +143,7 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
         this.editingRowName = null;
         this.sourcevattuhinhanh = null;
         this.vattuhinhanhEdit = this.VatTuHinhAnhEditor.newVatTuHinhAnh();
-        this.editorModal.show();
+        this.VatTuHinhAnhEditor.editorModal.show();
     }
     
     SelectedValue(value: number) {
@@ -183,18 +179,12 @@ export class VatTuHinhAnhComponent implements OnInit, AfterViewInit {
         this.fileuploadService.deleteEachFileByPath(row.tenHinhAnh, row.urlHinhAnh.slice(1, 12)).subscribe(resulst => { this.loadData(0); }, error => { });
     }
 
-    editVatTuHinhAnh(row: VatTuHinhAnh) {
+    viewHinhAnh(row: VatTuHinhAnh) {
         this.editingRowName = { name: row.tenHinhAnh };
         this.sourcevattuhinhanh = row;
-        this.VatTuHinhAnhEditor.isEdit = true;
         this.vattuhinhanhEdit = this.VatTuHinhAnhEditor.editVatTuHinhAnh(row);
-        this.editorModal.show();
+        this.VatTuHinhAnhEditor.editorModal.show();
     }    
-
-    onEditorModalHidden() {
-        this.editingRowName = null;
-        this.VatTuHinhAnhEditor.resetForm(true);
-    }
 
     SelectedVattuValue(value: number) {
         this.loadData(value);

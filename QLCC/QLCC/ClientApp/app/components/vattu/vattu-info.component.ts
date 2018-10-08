@@ -355,7 +355,7 @@ export class VatTuInfoComponent implements OnInit {
             this.newVatTuCon(this.VatTuEdit.maVatTu);
         } else {
             this.alertService.showStickyMessage("Lỗi nhập liệu", "Vui lòng nhập đầy đủ các trường yêu cầu để lưu vật tư con !", MessageSeverity.error);
-        }        
+        }
     }
 
     deleteHinhAnh(row: VatTuHinhAnh) {
@@ -383,7 +383,7 @@ export class VatTuInfoComponent implements OnInit {
         } else {
             var removed = this.listVTC.splice(this.listVTC.indexOf(row), 1);
             this.listRemoved.push(removed[0]);
-        }  
+        }
     }
 
     private cancel() {
@@ -421,8 +421,7 @@ export class VatTuInfoComponent implements OnInit {
                     }
                 }, error => this.saveFailedHelper(error));
             }
-            else 
-            {
+            else {
                 this.gvService.updateVatTu(this.VatTuEdit.vatTuId, this.VatTuEdit).subscribe(response => {
                     if (response == "Exist") {
                         this.showErrorAlert("Lỗi nhập liệu", "Tên vật tư " + this.VatTuEdit.tenVatTu + " đã tồn tại trên hệ thống, vui lòng chọn tên khác");

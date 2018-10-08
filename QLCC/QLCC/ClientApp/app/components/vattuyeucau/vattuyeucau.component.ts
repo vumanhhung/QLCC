@@ -323,6 +323,7 @@ export class VatTuYeuCauComponent implements OnInit, AfterViewInit {
         myWindow.close();
     }
 
+<<<<<<< HEAD
     duyetDeXuat(selected: VatTuPhieuYeuCau[]) {
         for (let item of selected) {
             item.trangThai = 2;
@@ -348,6 +349,8 @@ export class VatTuYeuCauComponent implements OnInit, AfterViewInit {
         }
     }
 
+=======
+>>>>>>> f30f3881b323bd20f60e6de665e864fea9ec54ec
     onSelect({ selected }) {
         this.selected.splice(0, this.selected.length);
         this.selected.push(...selected);

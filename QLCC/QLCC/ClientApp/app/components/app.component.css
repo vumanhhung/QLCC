@@ -811,7 +811,7 @@ button.DTTT_button, div.DTTT_button, a.DTTT_button {
 }
 
 .status-none {
-    background: #ff6600;
+    background: #ff66008c;
     width: 100%;
     height: 30px;
     text-align: center;

@@ -1,2 +1,4 @@
-﻿body{
+﻿.errorMessage {
+    padding: 0;
+    color: #a94442;
 }

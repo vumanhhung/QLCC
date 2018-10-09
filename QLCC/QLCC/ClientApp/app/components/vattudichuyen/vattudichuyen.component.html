@@ -24,6 +24,14 @@
                     <div>
                         <div class="dataTables_length">
                             <label>
+                                Trạng thái
+                                <select class="form-control input-sm" #drStatus (change)="SelectedStatusValue(drStatus.value)" [(ngModel)]="selectedGropup">
+                                    <option value="0">---Tất cả---</option>
+                                    <option value="1">Chờ xác nhận xuất kho</option>
+                                    <option value="2">Đã xuất kho</option>
+                                </select>
+                            </label>
+                            <label>
                                 Hiển thị
                                 <select class="form-control input-sm" #drSelected (change)="SelectedValue(drSelected.value)">
                                     <option value="10">10</option>
@@ -40,7 +48,7 @@
                             </a>
                         </div>
                         <div class="clearfix"></div>
-                        <ngx-datatable class="material colored-header sm table table-striped table-hover "
+                        <ngx-datatable #myTable class="material colored-header sm table table-striped table-hover "
                                        [loadingIndicator]="loadingIndicator"
                                        [rows]="rows"
                                        [rowHeight]="45"
@@ -49,12 +57,77 @@
                                        [columns]="columns"
                                        [limit]="limit"
                                        [columnMode]="'force'">
+                            <!--<ngx-datatable-row-detail [rowHeight]="auto" #myDetailRow>
+                                <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                                    <div>
+                                        <h4>Thông tin vật tư con</h4>
+                                        <table class="tableChild" [@fadeInOut] style="margin-bottom:15px;">
+                                            <tr>
+                                                <th>Mã Vật Tư</th>
+                                                <th>Tên Vật Tư</th>
+                                                <th>Model</th>
+                                                <th>Hãng sản xuất</th>
+                                                <th>Serial Number</th>
+                                            </tr>
+                                            <tr *ngFor="let list of getVatTuCon(row)">
+                                                <td>{{ list.maVatTu }}</td>
+                                                <td>{{ list.tenVatTu }}</td>
+                                                <td>{{ list.model }}</td>
+                                                <td>{{ list.hangSanXuats.tenHangSanXuat }}</td>
+                                                <td>{{ list.serialNumber }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-row-detail>-->
+                            <ngx-datatable-column [width]="50"
+                                                  [resizeable]="true"
+                                                  [sortable]="false"
+                                                  [draggable]="false"
+                                                  [canAutoResize]="false" name="#">
+                                <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                                    <a href="javascript:void(0)"
+                                       [class.datatable-icon-right]="!expanded"
+                                       [class.datatable-icon-down]="expanded"
+                                       title="Expand/Collapse Row"
+                                       (click)="toggleExpandRow(row)" style="font-size:18px;">
+                                    </a>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Mục đích xuất" style="width: 130px;">
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-expanded="expanded">
+                                    {{row.noiDung}}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Đơn vị yêu cầu">
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-expanded="expanded">
+                                    
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Đơn vị nhận">
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-expanded="expanded">
+                                    
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Ngày yêu cầu">
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-expanded="expanded">
+                                    {{row.ngayYeuCau | date: "dd/MM/yyyy"}}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Trạng thái" style="width: 160px;">
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-expanded="expanded">
+                                    <div *ngIf="row.trangThai == 1" class="status-none">Chờ xác nhận xuất</div>
+                                    <div *ngIf="row.trangThai == 2" class="status-use">Đã xuất kho</div>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Chức năng">
+                                <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                                    <a class="btn btn-func btn-success" href="javascript:;" (click)="viewVatTu(row)" title="Chi tiết"><i class="fa fa-eye"></i></a>
+                                    <a class="btn btn-func btn-primary" href="javascript:;" (click)="editVatTuDiChuyen(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteVatTuDiChuyen(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                </ng-template>
+                            </ngx-datatable-column>
                         </ngx-datatable>
-                        <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
-                            <a class="btn btn-func btn-success" href="javascript:;" title="Chi tiết"><i class="fa fa-eye"></i></a>
-                            <a class="btn btn-func btn-primary" href="javascript:;" (click)="editVatTuDiChuyen(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                            <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteVatTuDiChuyen(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                        </ng-template>
 
                         <vattudichuyen-info #vattudichuyenEditor [isGeneralEditor]="true"></vattudichuyen-info>
                     </div>

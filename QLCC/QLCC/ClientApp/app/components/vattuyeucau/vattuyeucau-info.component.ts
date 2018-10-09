@@ -99,6 +99,7 @@ export class VatTuYeuCauInfoComponent implements OnInit {
             });
         }
     }
+
     loadVatTu() {
         this.alertService.startLoadingMessage();
         this.vattuService.getAllVatTu().subscribe(result => this.onDataLoadVatTuSuccessful(result), error => this.onCurrentUserDataLoadFailed(error));

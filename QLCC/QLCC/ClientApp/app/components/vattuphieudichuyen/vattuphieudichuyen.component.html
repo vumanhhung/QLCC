@@ -25,6 +25,14 @@
                     <div>
                         <div class="dataTables_length">
                             <label>
+                                Trạng thái
+                                <select class="form-control input-sm" #drStatus (change)="SelectedStatusValue(drStatus.value)" [(ngModel)]="selectedGropup">
+                                    <option value="0">---Tất cả---</option>
+                                    <option value="1">Chờ xác nhận xuất kho</option>
+                                    <option value="2">Đã xác nhận xuất kho</option>
+                                </select>
+                            </label>
+                            <label>
                                 Hiển thị
                                 <select class="form-control input-sm" #drSelected (change)="SelectedValue(drSelected.value)">
                                     <option value="10">10</option>

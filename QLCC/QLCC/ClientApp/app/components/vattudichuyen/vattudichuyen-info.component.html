@@ -1,7 +1,7 @@
 ﻿<div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1" [class.fullScreenModal]="isFullScreenModal">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div *ngIf="!isViewDetail" class="EditForm">
+            <div *ngIf="!isViewDetails" class="EditForm">
                 <form *ngIf="formResetToggle" [attr.autocomplete]="isGeneralEditor ? NaN : null" class="form-horizontal" name="VatTuDiChuyenInfoForm" #f="ngForm" novalidate (ngSubmit)="f.form.valid ? save() :
           (!CHKdonViQLTS && showErrorAlert('Đơn vị QLTS không được để trống', 'Vui lòng nhập Đơn vị QLTS!'));
 (!daiDienDVYC.valid && showErrorAlert('Đại diện ĐV Yêu Cầu không được để trống', 'Vui lòng nhập Đại diện ĐV Yêu Cầu!'));
@@ -12,7 +12,7 @@
 (!noiDung.valid && showErrorAlert('Nội dung không được để trống', 'Vui lòng nhập Nội dung!'));
 ">
                     <div class="modal-header">
-                        <p *ngIf="isNew" class="modal-title pull-left"><i class="fa fa-plus"></i> Tạo phiếu xuất vật tư</p>
+                        <p *ngIf="!isEdit" class="modal-title pull-left"><i class="fa fa-plus"></i> Tạo phiếu xuất vật tư</p>
                         <p *ngIf="isEdit" class="modal-title pull-left"><i class="fa fa-pencil-square-o"></i> Chỉnh sửa phiếu xuất vật tư</p>
                         <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
                             <span aria-hidden="true">&times;</span>
@@ -148,7 +148,7 @@
                                     <button type="button" (click)="addListVatTu(vattuSelected.vatTuId, soLuong.value, ghiChu.value)" class="btn btn-info"><i class='fa fa-list'></i> Chọn</button>
                                 </div>
                             </div>
-                            <div class="col-md-12" style="height: auto;padding-top:10px" *ngIf="listVT.length > 0">
+                            <div class="col-md-12" style="height: auto;padding-top:10px" *ngIf="listVT.length > 0 || listDC.length > 0">
                                 <!-- /.box-header -->
                                 <div class="box-body">
                                     <table class='table'>
@@ -162,8 +162,20 @@
                                                 <th>Chức năng</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody *ngIf="listVT.length > 0">
                                             <tr *ngFor="let vtyc of listVT">
+                                                <td>{{ vtyc.vattus.tenVatTu }}</td>
+                                                <td>{{ vtyc.vattus.donViTinhs.tenDonViTinh }}</td>
+                                                <td>{{ vtyc.vattus.quocTichs.tenNuoc }}</td>
+                                                <td>{{ vtyc.soLuong }}</td>
+                                                <td>{{ vtyc.ghiChu }}</td>
+                                                <td>
+                                                    <button type="button" (click)="deleteFromList(vtyc)" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody *ngIf="listDC.length > 0">
+                                            <tr *ngFor="let vtyc of listDC">
                                                 <td>{{ vtyc.vattus.tenVatTu }}</td>
                                                 <td>{{ vtyc.vattus.donViTinhs.tenDonViTinh }}</td>
                                                 <td>{{ vtyc.vattus.quocTichs.tenNuoc }}</td>
@@ -177,7 +189,7 @@
                                     </table>
                                 </div>
                             </div>
-                        </div>                        
+                        </div>
                         <div class="col-md-12">
                             <label class="col-md-12" for="noiDung-{{uniqueId}}">Nội dung</label>
                             <div class="control" [ngClass]="{'has-success': f.submitted && noiDung.valid, 'has-error' : f.submitted && !noiDung.valid}">
@@ -191,7 +203,7 @@
                         <div class="col-md-12">
                             <label class="col-md-12" for="ghiChu-{{uniqueId}}">Ghi chú</label>
                             <div class="control">
-                                <input autofocus type="text" class="form-control" name="ghiChu" [(ngModel)]="VatTuPhieuDiChuyenEdit.ghiChu" #ghiChu="ngModel"/>
+                                <input autofocus type="text" class="form-control" name="ghiChu" [(ngModel)]="VatTuPhieuDiChuyenEdit.ghiChu" #ghiChu="ngModel" />
                             </div>
                         </div>
                     </div>
@@ -213,56 +225,99 @@
                     <div class="clearfix"></div>
                 </form>
             </div>
-            <!--<div *ngIf="isViewDetail">
+            <div *ngIf="isViewDetails">
                 <div class="modal-header">
                     <p class="modal-title pull-left">
-                        <i class="fa fa-eye"></i> Chi tiết vật tư - <span *ngIf="VatTuPhieuYeuCauEdit.trangThai == 1">Đã gửi đề xuất</span>
-                        <span *ngIf="VatTuPhieuYeuCauEdit.trangThai == 2">Đã được phê duyệt</span>
-                        <span *ngIf="VatTuPhieuYeuCauEdit.trangThai == 3">Không được phê duyệt</span>
+                        <i class="fa fa-eye"></i> Chi tiết đề xuất - <span *ngIf="VatTuPhieuDiChuyenEdit.trangThai == 1">Chờ xác nhận xuất</span>
+                        <span *ngIf="VatTuPhieuDiChuyenEdit.trangThai == 2">Đã xuất kho</span>
                     </p>
                     <button type="button" class="close pull-right" title="Close" (click)="editorModal.hide()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
                     <div>
                         <form #f="ngForm">
                             <div>
                                 <table class="table table-bordered">
                                     <tbody>
                                         <tr>
-                                            <td colspan="8" class="headView">Thông tin chung</td>
+                                            <td colspan="8" class="headView">Thông tin phiếu xuất kho</td>
                                         </tr>
                                         <tr>
-                                            <td class="boldText">Bộ phận yêu cầu</td>
-                                            <td>{{VatTuPhieuYeuCauEdit.phongbans.tenPhongBan}}</td>
+                                            <td colspan="2" class="boldText">Đơn vị quản lí tài sản</td>
+                                            <td colspan="2">{{valueDVQLTS}}</td>
+                                            <td colspan="2" class="boldText">Ngày yêu cầu</td>
+                                            <td colspan="2">{{VatTuPhieuDiChuyenEdit.ngayYeuCau | date: "dd/MM/yyyy"}}</td>
+                                        </tr>
+                                        <tr>
                                             <td class="boldText">Người yêu cầu</td>
-                                            <td>{{VatTuPhieuYeuCauEdit.nguoiYeuCau}}</td>
-                                            <td class="boldText">Người tiếp nhận</td>
-                                            <td>{{VatTuPhieuYeuCauEdit.nguoiTiepNhan }}</td>
-                                            <td class="boldText">Người phê duyệt</td>
-                                            <td>{{VatTuPhieuYeuCauEdit.nguoiDuyet}}</td>
+                                            <td>{{VatTuPhieuDiChuyenEdit.nguoiYeuCau}}</td>
+                                            <td class="boldText">Đơn vị yêu cầu</td>
+                                            <td>{{valueDVYC}}</td>
+                                            <td colspan="2" class="boldText">Đại diện đơn vị yêu cầu</td>
+                                            <td colspan="2">{{VatTuPhieuDiChuyenEdit.daiDienDVYC}}</td>
                                         </tr>
                                         <tr>
-                                            <td class="boldText">Mục đích sử dụng</td>
-                                            <td colspan="7">{{VatTuPhieuYeuCauEdit.mucDichSuDung}}</td>
+                                            <td colspan="2" class="boldText">Đơn vị Nhận</td>
+                                            <td colspan="2">{{valueDVTN}}</td>
+                                            <td colspan="2" class="boldText">Đại diện đơn vị nhận</td>
+                                            <td colspan="2">{{VatTuPhieuDiChuyenEdit.daiDienDVN}}</td>
                                         </tr>
                                         <tr>
-                                            <td colspan="8" class="headView">Vật tư đề xuất</td>
+                                            <td class="boldText">Nội dung</td>
+                                            <td colspan="7">{{VatTuPhieuDiChuyenEdit.noiDung}}</td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" class="boldText">Vật tư</td>
-                                            <td colspan="1" class="boldText">Đơn vị tính</td>
-                                            <td colspan="2" class="boldText">Xuất xứ</td>
-                                            <td colspan="1" class="boldText">Số lượng</td>
                                             <td colspan="2" class="boldText">Ghi chú</td>
+                                            <td colspan="6">{{VatTuPhieuDiChuyenEdit.ghiChu}}</td>
                                         </tr>
-                                        <tr *ngFor="let vtyc of list">
-                                            <td colspan="2">{{ vtyc.vattus.tenVatTu }}</td>
-                                            <td colspan="1">{{ vtyc.vattus.donViTinhs.tenDonViTinh }}</td>
-                                            <td colspan="2">{{ vtyc.vattus.quocTichs.tenNuoc }}</td>
-                                            <td colspan="1">{{ vtyc.soLuong }}</td>
-                                            <td colspan="2">{{ vtyc.ghiChu }}</td>
+                                        <tr>
+                                            <td colspan="8" class="headView">Thông tin vật tư đề xuất</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="8" class="boldText">
+                                                <table class='table'>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Vật tư</th>
+                                                            <th>Đơn vị tính</th>
+                                                            <th>Xuất xứ</th>
+                                                            <th>Số lượng</th>
+                                                            <th>Ghi chú</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let vtc of listVT">
+                                                            <td>{{ vtc.vattus.tenVatTu }}</td>
+                                                            <td>{{ vtc.vattus.donViTinhs.tenDonViTinh }}</td>
+                                                            <td>{{ vtc.vattus.quocTichs.tenNuoc }}</td>
+                                                            <td>{{ vtc.soLuong }}</td>
+                                                            <td>{{ vtc.ghiChu }}</td>
+                                                        </tr>
+                                                        <tr *ngFor="let vtc of listDC">
+                                                            <td>{{ vtc.vattus.tenVatTu }}</td>
+                                                            <td>{{ vtc.vattus.donViTinhs.tenDonViTinh }}</td>
+                                                            <td>{{ vtc.vattus.quocTichs.tenNuoc }}</td>
+                                                            <td>{{ vtc.soLuong }}</td>
+                                                            <td>{{ vtc.ghiChu }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="8" class="headView">Thông tin chỉnh sửa</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="boldText">Ngày Nhập:</td>
+                                            <td>{{VatTuPhieuDiChuyenEdit.ngayNhap | date:'dd/MM/yyyy'}}</td>
+                                            <td class="boldText">Người Nhập:</td>
+                                            <td>{{VatTuPhieuDiChuyenEdit.nguoiNhap}}</td>
+                                            <td class="boldText">Ngày Sửa:</td>
+                                            <td>{{VatTuPhieuDiChuyenEdit.ngaySua | date: 'dd/MM/yyyy'}}</td>
+                                            <td class="boldText">Người Sửa:</td>
+                                            <td>{{VatTuPhieuDiChuyenEdit.nguoiSua}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -275,15 +330,14 @@
                     <div class="actionBtn-form-group">
                         <div class="row">
                             <div style="text-align:center;">
-                                <button type="button" (click)="confirmDeXuat(VatTuPhieuYeuCauEdit)" *ngIf="VatTuPhieuYeuCauEdit.trangThai == 1 || VatTuPhieuYeuCauEdit.trangThai == 3" class="btn btn-success"><i class="fa fa-check"></i> Phê Duyệt</button>
-                                <button type="button" (click)="unconfirmDeXuat(VatTuPhieuYeuCauEdit)" *ngIf="VatTuPhieuYeuCauEdit.trangThai == 1" class="btn btn-danger"><i class="fa fa-close"></i> Không Phê Duyệt</button>
-                                <button type="button" *ngIf="VatTuPhieuYeuCauEdit.trangThai == 1" (click)="movetoEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
+                                <button type="button" (click)="confirmXuatKho(VatTuPhieuDiChuyenEdit)" *ngIf="VatTuPhieuDiChuyenEdit.trangThai == 1 || VatTuPhieuDiChuyenEdit.trangThai == 3" class="btn btn-success"><i class="fa fa-check"></i> Xác nhận</button>
+                                <button type="button" *ngIf="VatTuPhieuDiChuyenEdit.trangThai == 1" (click)="movetoEditForm()" class="btn btn-primary"><i class='fa fa-edit'></i> {{'users.editor.Edit' | translate}}</button>
                                 <button type="button" (click)="closeModal()" class="btn btn-danger"><i class='fa fa-close'></i> {{'users.editor.Close' | translate}}</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>-->
+            </div>
         </div>
     </div>
 </div>

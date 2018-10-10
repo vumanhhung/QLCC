@@ -43,7 +43,7 @@
                             </label>
                         </div>
                         <div class="DTTT_container">
-                            <a class="DTTT_button DTTT_button_print" title="{{'preferences.Print' | translate}}" tabindex="0">
+                            <a class="DTTT_button DTTT_button_print" (click)="printDiv(selected)" title="{{'preferences.Print' | translate}}" tabindex="0">
                                 <span>{{'preferences.Print' | translate}}</span>
                             </a>
                         </div>
@@ -57,10 +57,10 @@
                                        [columns]="columns"
                                        [limit]="limit"
                                        [columnMode]="'force'">
-                            <!--<ngx-datatable-row-detail [rowHeight]="auto" #myDetailRow>
+                            <ngx-datatable-row-detail [rowHeight]="auto" #myDetailRow (toggle)="onDetailToggle($event)">
                                 <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
-                                    <div>
-                                        <h4>Thông tin vật tư con</h4>
+                                    <div *ngFor="let item of getVatTuCha(row)">
+                                        <h4>Thông tin vật tư con thuộc {{item.vattus.tenVatTu}}</h4>
                                         <table class="tableChild" [@fadeInOut] style="margin-bottom:15px;">
                                             <tr>
                                                 <th>Mã Vật Tư</th>
@@ -69,7 +69,7 @@
                                                 <th>Hãng sản xuất</th>
                                                 <th>Serial Number</th>
                                             </tr>
-                                            <tr *ngFor="let list of getVatTuCon(row)">
+                                            <tr *ngFor="let list of getVatTuCon(item.vattus)">
                                                 <td>{{ list.maVatTu }}</td>
                                                 <td>{{ list.tenVatTu }}</td>
                                                 <td>{{ list.model }}</td>
@@ -79,7 +79,15 @@
                                         </table>
                                     </div>
                                 </ng-template>
-                            </ngx-datatable-row-detail>-->
+                            </ngx-datatable-row-detail>
+                            <ngx-datatable-column>
+                                <ng-template ngx-datatable-header-template #checkAllTemplate let-value="value" let-allRowsSelected="allRowsSelected" let-selectFn="selectFn" style="text-align:center">
+                                    <input type="checkbox" [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)" />
+                                </ng-template>
+                                <ng-template ngx-datatable-cell-template #checkTemplate let-value="value" let-isSelected="isSelected" let-onCheckboxChangeFn="onCheckboxChangeFn" style="text-align:center">
+                                    <input type="checkbox" [checked]="isSelected" (change)="onCheckboxChangeFn($event)" />
+                                </ng-template>
+                            </ngx-datatable-column>
                             <ngx-datatable-column [width]="50"
                                                   [resizeable]="true"
                                                   [sortable]="false"
@@ -99,14 +107,14 @@
                                     {{row.noiDung}}
                                 </ng-template>
                             </ngx-datatable-column>
-                            <ngx-datatable-column name="Đơn vị yêu cầu">
+                            <ngx-datatable-column name="Đại diện yêu cầu">
                                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-expanded="expanded">
-                                    
+                                    {{row.daiDienDVYC}}
                                 </ng-template>
                             </ngx-datatable-column>
-                            <ngx-datatable-column name="Đơn vị nhận">
+                            <ngx-datatable-column name="Đại diện nhận">
                                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-expanded="expanded">
-                                    
+                                    {{row.daiDienDVN}}
                                 </ng-template>
                             </ngx-datatable-column>
                             <ngx-datatable-column name="Ngày yêu cầu">
@@ -122,9 +130,9 @@
                             </ngx-datatable-column>
                             <ngx-datatable-column name="Chức năng">
                                 <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
-                                    <a class="btn btn-func btn-success" href="javascript:;" (click)="viewVatTu(row)" title="Chi tiết"><i class="fa fa-eye"></i></a>
-                                    <a class="btn btn-func btn-primary" href="javascript:;" (click)="editVatTuDiChuyen(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                    <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteVatTuDiChuyen(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                    <a class="btn btn-func btn-success" href="javascript:;" (click)="viewVatTuDiChuyen(row)" title="Chi tiết"><i class="fa fa-eye"></i></a>
+                                    <a class="btn btn-func btn-primary" *ngIf="row.trangThai != 2" href="javascript:;" (click)="editVatTuDiChuyen(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <a class="btn btn-func btn-danger" *ngIf="row.trangThai != 2" href="javascript:;" (click)="deleteVatTuDiChuyen(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                                 </ng-template>
                             </ngx-datatable-column>
                         </ngx-datatable>

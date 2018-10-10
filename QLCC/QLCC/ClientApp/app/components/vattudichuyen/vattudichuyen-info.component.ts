@@ -25,6 +25,8 @@ import { VatTuService } from '../../services/vattu.service';
 export class VatTuDiChuyenInfoComponent implements OnInit {
     private isNew = false;
     private isSaving = false;
+    isEdit = false;
+    isViewDetails = false;
     private showValidationErrors: boolean = false;
     private uniqueId: string = Utilities.uniqueId();
     private VatTuDiChuyenEdit: VatTuDiChuyen = new VatTuDiChuyen();
@@ -41,10 +43,14 @@ export class VatTuDiChuyenInfoComponent implements OnInit {
     phongbans: PhongBan[] = [];
     NDTN: NguoiDungToaNha[] = [];
     listVT: VatTuYeuCau[] = [];
+    listDC: VatTuDiChuyen[] = [];
     public vattusFilter: VatTu[] = [];
     vattuSelected: VatTu = new VatTu();
     public listRemoved: VatTuYeuCau[] = [];
     vattuChk = false;
+    valueDVYC: string = "";
+    valueDVQLTS: string = "";
+    valueDVTN: string = "";
 
     CHKdonViQLTS: boolean = false;
     CHKdonViYC: boolean = false;
@@ -62,6 +68,8 @@ export class VatTuDiChuyenInfoComponent implements OnInit {
 
     @ViewChild('editorModal')
     editorModal: ModalDirective;
+
+    @ViewChild('myTable') table: any;
 
     constructor(private alertService: AlertService, private gvService: VatTuPhieuDiChuyenService,
         private vattuyeucauservice: VatTuYeuCauService, private vattuphieuyeucauservice: VatTuPhieuYeuCauService,
@@ -98,9 +106,10 @@ export class VatTuDiChuyenInfoComponent implements OnInit {
     }
 
     resetForm(replace = false) {
-
         if (!replace) {
             this.form.reset();
+            this.listVT = [];
+            this.listDC = [];
         }
         else {
             this.formResetToggle = false;
@@ -152,28 +161,86 @@ export class VatTuDiChuyenInfoComponent implements OnInit {
     private save() {
         this.isSaving = true;
         this.alertService.startLoadingMessage("Đang thực hiện lưu thay đổi...");
-        if (this.isNew) {
-            this.VatTuPhieuDiChuyenEdit.trangThai = 1;
-            this.VatTuPhieuDiChuyenEdit.ngayYeuCau = this.valueNgayYeuCau;
-            this.gvService.addnewVatTuPhieuDiChuyen(this.VatTuPhieuDiChuyenEdit).subscribe(results => {
-                for (let item of this.listVT) {
-                    this.VatTuDiChuyenEdit.phieuDiChuyenId = results.phieuDiChuyenId;
-                    this.VatTuDiChuyenEdit.soLuong = item.soLuong;
-                    this.VatTuDiChuyenEdit.donViTinhId = item.donViTinhId;
-                    this.VatTuDiChuyenEdit.ghiChu = item.ghiChu;
-                    this.VatTuDiChuyenEdit.quocTichId = item.quocTichId;
-                    //this.VatTuDiChuyenEdit.donvitinhs = item.vattus.donViTinhs;
-                    //this.VatTuDiChuyenEdit.quoctichs = item.vattus.quocTichs;
-                    this.VatTuDiChuyenEdit.vatTuId = item.vatTuId;
-                    //this.vattudichuyenservice.addnewVatTuDiChuyen(this.VatTuDiChuyenEdit).subscribe(results => { console.log(results); }, error => { });
-                }
-                this.saveSuccessHelper(results)
-            }, error => this.saveFailedHelper(error));
-        }
-        else {
-            this.VatTuPhieuDiChuyenEdit.trangThai = 1;
-            this.VatTuPhieuDiChuyenEdit.ngayYeuCau = this.valueNgayYeuCau;
-            this.gvService.updateVatTuPhieuDiChuyen(this.VatTuPhieuDiChuyenEdit.phieuDiChuyenId, this.VatTuPhieuDiChuyenEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
+        if (this.listVT.length > 0) {
+            if (this.isNew) {
+                this.VatTuPhieuDiChuyenEdit.trangThai = 1;
+                this.VatTuPhieuDiChuyenEdit.ngayYeuCau = this.valueNgayYeuCau;
+                this.gvService.addnewVatTuPhieuDiChuyen(this.VatTuPhieuDiChuyenEdit).subscribe(results => {
+                    for (let item of this.listVT) {
+                        this.VatTuDiChuyenEdit.phieuDiChuyenId = results.phieuDiChuyenId;
+                        this.VatTuDiChuyenEdit.soLuong = item.soLuong;
+                        this.VatTuDiChuyenEdit.donViTinhId = item.vattus.donViTinhId;
+                        this.VatTuDiChuyenEdit.ghiChu = item.ghiChu;
+                        this.VatTuDiChuyenEdit.quocTichId = item.vattus.quocTichId;
+                        this.VatTuDiChuyenEdit.vatTuId = item.vatTuId;
+                        this.vattudichuyenservice.addnewVatTuDiChuyen(this.VatTuDiChuyenEdit).subscribe(result => this.saveVTDCSuccessHelper(result), error => this.saveFailedHelper(error));
+                    }
+                    this.saveSuccessHelper(results)
+                }, error => this.saveFailedHelper(error));
+            }
+            else {
+                this.VatTuPhieuDiChuyenEdit.trangThai = 1;
+                this.VatTuPhieuDiChuyenEdit.ngayYeuCau = this.valueNgayYeuCau;
+                this.gvService.updateVatTuPhieuDiChuyen(this.VatTuPhieuDiChuyenEdit.phieuDiChuyenId, this.VatTuPhieuDiChuyenEdit).subscribe(response => {
+                    this.vattudichuyenservice.getByPhieuDiChuyen(this.VatTuPhieuDiChuyenEdit.phieuDiChuyenId).subscribe(results => {
+                        this.VatTuDiChuyenEdit.phieuDiChuyenId = this.VatTuPhieuDiChuyenEdit.phieuDiChuyenId;
+                        if (this.listVT.length == results.length) {
+                            for (let item of this.listVT) {
+                                this.VatTuDiChuyenEdit.phieuDiChuyenId = this.VatTuPhieuDiChuyenEdit.phieuDiChuyenId;
+                                this.VatTuDiChuyenEdit.soLuong = item.soLuong;
+                                this.VatTuDiChuyenEdit.donViTinhId = item.vattus.donViTinhId;
+                                this.VatTuDiChuyenEdit.ghiChu = item.ghiChu;
+                                this.VatTuDiChuyenEdit.quocTichId = item.vattus.quocTichId;
+                                this.VatTuDiChuyenEdit.vatTuId = item.vatTuId;
+                                this.vattudichuyenservice.updateVatTuDiChuyen(this.VatTuDiChuyenEdit.phieuDiChuyenId, this.VatTuDiChuyenEdit).subscribe(response => this.saveVTDCSuccessHelper(), error => this.saveFailedHelper(error));
+                            }
+                        } else if (this.listVT.length > results.length) {
+                            for (var i = 0; i < this.listVT.length; i++) {
+                                if (i - results.length >= 0) {
+                                    this.VatTuDiChuyenEdit.phieuDiChuyenId = this.VatTuPhieuDiChuyenEdit.phieuDiChuyenId;
+                                    this.VatTuDiChuyenEdit.soLuong = this.listVT[i].soLuong;
+                                    this.VatTuDiChuyenEdit.donViTinhId = this.listVT[i].vattus.donViTinhId;
+                                    this.VatTuDiChuyenEdit.ghiChu = this.listVT[i].ghiChu;
+                                    this.VatTuDiChuyenEdit.quocTichId = this.listVT[i].vattus.quocTichId;
+                                    this.VatTuDiChuyenEdit.vatTuId = this.listVT[i].vatTuId;
+                                    this.vattudichuyenservice.addnewVatTuDiChuyen(this.VatTuDiChuyenEdit).subscribe(result => this.saveVTDCSuccessHelper(result), error => this.saveFailedHelper(error));
+                                } else {
+                                    this.VatTuDiChuyenEdit.phieuDiChuyenId = this.VatTuPhieuDiChuyenEdit.phieuDiChuyenId;
+                                    this.VatTuDiChuyenEdit.soLuong = this.listVT[i].soLuong;
+                                    this.VatTuDiChuyenEdit.donViTinhId = this.listVT[i].vattus.donViTinhId;
+                                    this.VatTuDiChuyenEdit.ghiChu = this.listVT[i].ghiChu;
+                                    this.VatTuDiChuyenEdit.quocTichId = this.listVT[i].vattus.quocTichId;
+                                    this.VatTuDiChuyenEdit.vatTuId = this.listVT[i].vatTuId;
+                                    this.vattudichuyenservice.updateVatTuDiChuyen(this.VatTuDiChuyenEdit.phieuDiChuyenId, this.VatTuDiChuyenEdit).subscribe(response => this.saveVTDCSuccessHelper(), error => this.saveFailedHelper(error));
+                                }
+                            }
+                        } else {
+                            for (var itemRemove of this.listRemoved) {
+                                this.VatTuDiChuyenEdit.phieuDiChuyenId = this.VatTuPhieuDiChuyenEdit.phieuDiChuyenId;
+                                this.VatTuDiChuyenEdit.soLuong = this.listVT[i].soLuong;
+                                this.VatTuDiChuyenEdit.donViTinhId = this.listVT[i].vattus.donViTinhId;
+                                this.VatTuDiChuyenEdit.ghiChu = this.listVT[i].ghiChu;
+                                this.VatTuDiChuyenEdit.quocTichId = this.listVT[i].vattus.quocTichId;
+                                this.VatTuDiChuyenEdit.vatTuId = this.listVT[i].vatTuId;
+                                this.vattudichuyenservice.deleteVatTuDiChuyen(this.VatTuDiChuyenEdit.vatTuDiChuyenId).subscribe(results => { alert("Success") }, error => { alert("Fail"); })
+                            }
+                            for (var item of this.listVT) {
+                                this.VatTuDiChuyenEdit.phieuDiChuyenId = this.VatTuPhieuDiChuyenEdit.phieuDiChuyenId;
+                                this.VatTuDiChuyenEdit.soLuong = item.soLuong;
+                                this.VatTuDiChuyenEdit.donViTinhId = item.vattus.donViTinhId;
+                                this.VatTuDiChuyenEdit.ghiChu = item.ghiChu;
+                                this.VatTuDiChuyenEdit.quocTichId = item.vattus.quocTichId;
+                                this.VatTuDiChuyenEdit.vatTuId = item.vatTuId;
+                                this.vattudichuyenservice.updateVatTuDiChuyen(this.VatTuDiChuyenEdit.vatTuDiChuyenId, this.VatTuDiChuyenEdit).subscribe(response => this.saveVTDCSuccessHelper(), error => this.saveFailedHelper(error));
+                            }
+                        }
+                    })
+                    this.saveSuccessHelper()
+                }, error => this.saveFailedHelper(error));
+            }
+        } else {
+            this.alertService.showStickyMessage("Lỗi nhập liệu", "Vui lòng nhập phiếu xuất kho", MessageSeverity.error);
+            this.isSaving = false;
         }
     }
 
@@ -220,6 +287,28 @@ export class VatTuDiChuyenInfoComponent implements OnInit {
             this.changesSavedCallback();
     }
 
+    private saveVTDCSuccessHelper(obj?: VatTuDiChuyen) {
+        if (obj)
+            Object.assign(this.VatTuDiChuyenEdit, obj);
+
+        this.isSaving = false;
+        this.alertService.stopLoadingMessage();
+        this.showValidationErrors = false;
+        if (this.isGeneralEditor) {
+            if (this.isNew) {
+                this.alertService.showMessage("Thành công", `Thực hiện thêm mới thành công`, MessageSeverity.success);
+            }
+            else
+                this.alertService.showMessage("Thành công", `Thực hiện thay đổi thông tin thành công`, MessageSeverity.success);
+        }
+        this.VatTuDiChuyenEdit = new VatTuDiChuyen();
+        this.resetForm();
+        this.isEditMode = false;
+
+        if (this.changesSavedCallback)
+            this.changesSavedCallback();
+    }
+
     private saveFailedHelper(error: any) {
         this.isSaving = false;
         this.alertService.stopLoadingMessage();
@@ -242,10 +331,19 @@ export class VatTuDiChuyenInfoComponent implements OnInit {
             this.CHKdonViYC = true;
             this.CHKdonViNhan = true;
             this.dexuatCHK = true;
+            this.valueDVYC = this.phongbans.find(o => o.phongBanId == obj.donViYeuCau).tenPhongBan;
+            this.valueDVTN = this.phongbans.find(o => o.phongBanId == obj.donViNhan).tenPhongBan;
+            this.valueDVQLTS = this.phongbans.find(o => o.phongBanId == obj.donViQLTS).tenPhongBan;
             this.VatTuDiChuyenEdit.soLuong = 1;
-            this.vattuyeucauservice.getByPhieuYeuCau(obj.phieuYeuCauVTId).subscribe(result => {
-                    this.listVT = result;
+            if (obj.phieuYeuCauVTId > 0) {
+                this.vattuyeucauservice.getByPhieuYeuCau(obj.phieuYeuCauVTId).subscribe(results => {
+                    this.listVT = results;
                 })
+            } else {
+                this.vattudichuyenservice.getByPhieuDiChuyen(obj.phieuDiChuyenId).subscribe(result => {
+                    this.listDC = result;                    
+                })
+            }            
             this.VatTuPhieuDiChuyenEdit = new VatTuPhieuDiChuyen();
             Object.assign(this.VatTuPhieuDiChuyenEdit, obj);
             Object.assign(this.VatTuPhieuDiChuyenEdit, obj);
@@ -276,10 +374,15 @@ export class VatTuDiChuyenInfoComponent implements OnInit {
             this.changesSavedCallback();
     }
 
-
     onEditorModalHidden() {
         this.editingRowName = null;
         this.resetForm(true);
+    }
+
+    soluongChange(value: number) {
+        if (value < 1) {
+            this.alertService.showStickyMessage("Lỗi nhập liệu", "Vui lòng nhập số lượng > 0", MessageSeverity.error);
+        }
     }
 
     dexuatChange(value: number) {
@@ -338,5 +441,14 @@ export class VatTuDiChuyenInfoComponent implements OnInit {
             var removed = this.listVT.splice(this.listVT.indexOf(value), 1);
             this.listRemoved.push(removed[0]);
         }
+    }
+
+    closeModal() {
+        this.editorModal.hide();
+    }
+
+    confirmXuatKho(row: VatTuPhieuDiChuyen) {
+        row.trangThai = 2;
+        this.gvService.updateVatTuPhieuDiChuyen(row.phieuDiChuyenId, row).subscribe(results => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
     }
 }

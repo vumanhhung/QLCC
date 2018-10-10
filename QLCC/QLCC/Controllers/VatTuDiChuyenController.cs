@@ -132,7 +132,13 @@ namespace QLCC.Controllers
 
             return Ok(vattudichuyen);
         }
-        
+
+        [HttpGet("GetByPhieuDiChuyen/{id}")]
+        public IEnumerable<VatTuDiChuyen> GetByPhieuDiChuyen([FromRoute] int id)
+        {
+            return _context.VatTuDiChuyens.Include(r => r.quoctichs).Include(r => r.vattus).Include(r => r.vattuphieudichuyens).Include(r => r.donvitinhs).Where(r => r.PhieuDiChuyenId == id).ToList();
+        }
+
         private bool VatTuDiChuyenExists(int id)
         {                        
             return _context.VatTuDiChuyens.Any(e => e.VatTuDiChuyenId == id);

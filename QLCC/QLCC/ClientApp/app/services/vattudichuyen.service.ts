@@ -47,5 +47,8 @@ export class VatTuDiChuyenService {
     deleteVatTuDiChuyen(id: number) {
         return this.vattudichuyenEndpoint.deleteVatTuDiChuyen(id);
     }
-    
+
+    getByPhieuDiChuyen(id: number) {
+        return this.vattudichuyenEndpoint.getByPhieuDiChuyen<VatTuDiChuyen[]>(id);
+    }
 }

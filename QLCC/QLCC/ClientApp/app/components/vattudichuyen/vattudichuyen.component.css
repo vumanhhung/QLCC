@@ -1,2 +1,35 @@
-﻿body{
+﻿.tableChild {
+    font-size: 11px;
+    margin: 5px auto;
+    width: 100%;
+    background: #fff;
+}
+
+    .tableChild tr th, .tableChild tr td {
+        padding: 5px;
+        line-height: 1;
+        border-left: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+    }
+
+    .tableChild tr th {
+        border-top: 1px solid #ddd;
+    }
+
+
+    .tableChild tr td {
+    }
+
+        .tableChild tr td:last-child {
+            border-right: 1px solid #ddd
+        }
+
+    .tableChild tr th:last-child {
+        border-right: 1px solid #ddd
+    }
+
+h4 {
+    font-size: 16px;
+    margin: 0;
 }

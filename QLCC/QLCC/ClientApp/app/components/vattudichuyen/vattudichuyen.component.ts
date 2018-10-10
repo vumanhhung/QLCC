@@ -18,11 +18,13 @@ import { VatTuPhieuDiChuyen } from '../../models/vattuphieudichuyen.model';
 import { VatTuPhieuDiChuyenService } from '../../services/vattuphieudichuyen.service';
 import { VatTuService } from '../../services/vattu.service';
 import { VatTu } from '../../models/vattu.model';
+import { fadeInOut } from '../../services/animations';
 
 @Component({
     selector: "vattudichuyen",
     templateUrl: "./vattudichuyen.component.html",
-    styleUrls: ["./vattudichuyen.component.css"]
+    styleUrls: ["./vattudichuyen.component.css"],
+    animations: [fadeInOut]
 })
 
 export class VatTuDiChuyenComponent implements OnInit, AfterViewInit {
@@ -38,14 +40,18 @@ export class VatTuDiChuyenComponent implements OnInit, AfterViewInit {
     sourcevattuphieudichuyen: VatTuPhieuDiChuyen;
     editingRowName: { name: string };
 
+    selected: any[] = [];
     dexuats: VatTuPhieuYeuCau[] = [];
     phongbans: PhongBan[] = [];
     NDTNs: NguoiDungToaNha[] = [];
     vattusFilter: VatTu[] = [];
+    vattucha: VatTu[] = [];
+    vattuDC: VatTuDiChuyen[] = [];
     objNDTN: NguoiDungToaNha = new NguoiDungToaNha();
     selectedGropup: number = 0;
     dvyc: string = "";
     dvtn: string = "";
+    expanded: any = {};
 
     @ViewChild('f')
     private form;
@@ -72,19 +78,20 @@ export class VatTuDiChuyenComponent implements OnInit, AfterViewInit {
         private vattudichuyenService: VatTuDiChuyenService, private vattuphieudichuyenservice: VatTuPhieuDiChuyenService,
         private NDTNService: NguoiDungToaNhaService, private phongbanservice: PhongBanService) {
     }
-    
-    ngOnInit() {        
-        if (this.authService.currentUser) {            
+
+    ngOnInit() {
+        if (this.authService.currentUser) {
             var userId = this.authService.currentUser.id;
             var where = "NguoiDungId = '" + userId + "'";
             this.NDTNService.getItems(0, 1, where, "x").subscribe(result => this.getNguoiDungToaNha(result), error => {
                 this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất dữ liệu người dùng tòa nhà từ máy chủ.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
                     MessageSeverity.error, error);
-                });
-        }          
+            });
+        }
         this.loadAllDeXuat();
         this.loadVatTu();
-        this.loadData(0);  
+        this.loadAllDC();
+        this.loadData(0);
     }
 
     getNguoiDungToaNha(list: NguoiDungToaNha[]) {
@@ -118,6 +125,14 @@ export class VatTuDiChuyenComponent implements OnInit, AfterViewInit {
         this.NDTNs = obj;
     }
 
+    loadAllDC() {
+        this.vattudichuyenService.getAllVatTuDiChuyen().subscribe(results => this.onDataLoadDCSuccessful(results), error => this.onDataLoadFailed(error))
+    }
+
+    onDataLoadDCSuccessful(obj: VatTuDiChuyen[]) {
+        this.vattuDC = obj;
+    }
+
     loadVatTu() {
         this.alertService.startLoadingMessage();
         this.vattuservice.getAllVatTu().subscribe(result => this.onDataLoadVatTuSuccessful(result), error => this.onDataLoadFailed(error));
@@ -127,7 +142,7 @@ export class VatTuDiChuyenComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.vattusFilter = obj;
     }
-    
+
     ngAfterViewInit() {
         this.VatTuDiChuyenEditor.changesSavedCallback = () => {
             this.addNewToList();
@@ -140,7 +155,7 @@ export class VatTuDiChuyenComponent implements OnInit, AfterViewInit {
             this.VatTuDiChuyenEditor.editorModal.hide();
         };
     }
-    
+
     addNewToList() {
         this.loadData(0);
         if (this.sourcevattudichuyen) {
@@ -158,7 +173,7 @@ export class VatTuDiChuyenComponent implements OnInit, AfterViewInit {
                 if ((<any>u).index > maxIndex)
                     maxIndex = (<any>u).index;
             }
-            
+
             (<any>objVatTuPhieuDiChuyen).index = maxIndex + 1;
 
             this.rowsCache.splice(0, 0, objVatTuPhieuDiChuyen);
@@ -183,13 +198,13 @@ export class VatTuDiChuyenComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = false;
 
         obj.forEach((item, index, obj) => {
-            (<any>item).index = index + 1;
+            (<any>item).index = index + 1;            
         });
-        
+
         this.rowsCache = [...obj];
         this.rows = obj;
     }
-    
+
     onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
@@ -205,16 +220,18 @@ export class VatTuDiChuyenComponent implements OnInit, AfterViewInit {
         this.VatTuDiChuyenEditor.dexuats = this.dexuats;
         this.VatTuDiChuyenEditor.NDTN = this.NDTNs;
         this.VatTuDiChuyenEditor.vattusFilter = this.vattusFilter;
+        this.VatTuDiChuyenEditor.isViewDetails = false;
+        this.VatTuDiChuyenEditor.isEdit = false;
         this.vattudichuyenEdit = this.VatTuDiChuyenEditor.newVatTuDiChuyen();
         this.VatTuDiChuyenEditor.editorModal.show();
     }
-    
+
     SelectedValue(value: number) {
         this.limit = value;
     }
-    
+
     onSearchChanged(value: string) {
-        //this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false,r.vatTuDiChuyenId,r.phieuDiChuyenId,r.vatTuId,r.donViTinhId,r.quocTichId,r.soLuong,r.ghiChu,r.nguoiNhap,r.ngayNhap,r.nguoiSua,r.ngaySua));
+        this.rows = this.rowsCache.filter(r => Utilities.searchArray(value, false, r.noiDung, r.daiDienDVYC, r.daiDienDVN));
     }
 
     deleteVatTuDiChuyen(row: VatTuPhieuDiChuyen) {
@@ -224,21 +241,25 @@ export class VatTuDiChuyenComponent implements OnInit, AfterViewInit {
     deleteHelper(row: VatTuPhieuDiChuyen) {
         this.alertService.startLoadingMessage("Đang thực hiện xóa...");
         this.loadingIndicator = true;
-
-        this.vattudichuyenService.deleteVatTuDiChuyen(row.phieuDiChuyenId)
-            .subscribe(results => {
-                this.alertService.stopLoadingMessage();
-                this.loadingIndicator = false;
-                this.rowsCache = this.rowsCache.filter(item => item !== row)
-                this.rows = this.rows.filter(item => item !== row)
-                this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
-            },
-            error => {
-                this.alertService.stopLoadingMessage();
-                this.loadingIndicator = false;
-                this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
-                    MessageSeverity.error, error);
-            });
+        this.vattuphieudichuyenservice.deleteVatTuPhieuDiChuyen(row.phieuDiChuyenId).subscribe(result => {
+            this.alertService.stopLoadingMessage();
+            this.loadingIndicator = false;
+            this.vattudichuyenService.getByPhieuDiChuyen(row.phieuDiChuyenId)
+                .subscribe(results => {
+                    for (var item of results) {
+                        this.vattudichuyenService.deleteVatTuDiChuyen(item.vatTuDiChuyenId).subscribe();
+                        results = results.filter(i => i !== item);
+                    }
+                }, error => { });
+            this.rowsCache = this.rowsCache.filter(item => item !== row)
+            this.rows = this.rows.filter(item => item !== row)
+            this.alertService.showMessage("Thành công", `Thực hiện xóa thành công`, MessageSeverity.success);
+        }, error => {
+            this.alertService.stopLoadingMessage();
+            this.loadingIndicator = false;
+            this.alertService.showStickyMessage("Xóa lỗi", `Đã xảy ra lỗi khi xóa.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
+                MessageSeverity.error, error);
+        });
     }
 
     editVatTuDiChuyen(row: VatTuPhieuDiChuyen) {
@@ -247,15 +268,92 @@ export class VatTuDiChuyenComponent implements OnInit, AfterViewInit {
         this.VatTuDiChuyenEditor.dexuats = this.dexuats;
         this.VatTuDiChuyenEditor.NDTN = this.NDTNs;
         this.VatTuDiChuyenEditor.vattusFilter = this.vattusFilter;
+        this.VatTuDiChuyenEditor.isEdit = true;
+        this.VatTuDiChuyenEditor.isViewDetails = false;
         this.vattudichuyenEdit = this.VatTuDiChuyenEditor.editVatTuDiChuyen(row);
         this.VatTuDiChuyenEditor.editorModal.show();
-    }    
+    }
+
+    viewVatTuDiChuyen(row: VatTuPhieuDiChuyen) {
+        this.sourcevattuphieudichuyen = row;
+        this.VatTuDiChuyenEditor.phongbans = this.phongbans;
+        this.VatTuDiChuyenEditor.dexuats = this.dexuats;
+        this.VatTuDiChuyenEditor.NDTN = this.NDTNs;
+        this.VatTuDiChuyenEditor.vattusFilter = this.vattusFilter;
+        this.VatTuDiChuyenEditor.isViewDetails = true;
+        this.VatTuDiChuyenEditor.isEdit = false;
+        this.vattudichuyenEdit = this.VatTuDiChuyenEditor.editVatTuDiChuyen(row);
+        this.VatTuDiChuyenEditor.editorModal.show();
+    }
 
     SelectedStatusValue(status: number) {
         this.loadData(status);
     }
 
+    getVatTuCha(row: VatTuPhieuDiChuyen) {
+        var vtcha = this.vattuDC.filter(o => o.phieuDiChuyenId == row.phieuDiChuyenId);
+        return vtcha;
+    }
+
+    getVatTuCon(row: VatTu) {
+        var vt = this.vattusFilter.filter(o => o.maVatTuCha == row.vatTuId);
+        return vt;
+    }
+
     toggleExpandRow(row) {
         this.table.rowDetail.toggleExpandRow(row);
+    }
+
+    onDetailToggle(event) {
+        console.log('Detail Toggled', event);
+        console.log(this.expanded);
+    }
+
+    onSelect({ selected }) {
+        this.selected.splice(0, this.selected.length);
+        this.selected.push(...selected);
+    }
+
+    printDiv(selected: any[]) {
+        var myWindow = window.open('', '', 'width=200,height=100');
+        var date = new Date();
+        for (let item of selected) {
+            //var itemVatTu = this.listAll.filter(o => o.phieuYeuCauVTId == item.phieuYeuCauVTId);
+            myWindow.document.write("<div style='font-size: 1em; padding: 4% 5%;; height:100%;'>");
+            myWindow.document.write("<div style='text-align: center;'>");
+            myWindow.document.write("<div style='font-weight: bold; font-size: 18px;'>CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ DỊCH VỤ ĐÔ THỊ VIỆT NAM VINASINCO</div>");
+            myWindow.document.write("</div><br/>");
+            myWindow.document.write("<div style='text-align: right; font-style: italic;'>");
+            myWindow.document.write("<div style='text-transform: uppercase; font-size: 14px;'>Ngày " + date.getDate() + " Tháng " + date.getMonth() + " Năm " + date.getFullYear() + "</div><br/>");
+            myWindow.document.write("</div>");
+            myWindow.document.write("<br/>");
+            myWindow.document.write("<div style='text-align: center; font-size: 20px; font-weight: bolder;'>PHIẾU YÊU CẦU VẬT TƯ</div>");
+            myWindow.document.write("<div style='float:left; width: 100%;'><h5>Người yêu cầu: " + item.nguoiYeuCau + "</h5>");
+            myWindow.document.write("<h5>Bộ phận: " + item.phongbans.tenPhongBan + "</h5>");
+            myWindow.document.write("<h5>Đơn vị sử dụng: " + item.nguoiTiepNhan + "</h5>");
+            myWindow.document.write("<h5>Mục đích sử dụng: " + item.mucDichSuDung + "</h5>");
+            myWindow.document.write("<h5>Đề xuất vật tư theo bảng liệt kê đính kèm:</h5></div>");
+            myWindow.document.write("<br/><br/>");
+            myWindow.document.write("<div style='text-align: center; font-size: 16px; font-weight: bolder; margin-bottom: 15px;'>BẢNG LIỆT KÊ VẬT TƯ</div>");
+            myWindow.document.write("<table style='border-collapse: collapse;border: 1px solid black; text-align: center;' width='100%'>");
+            myWindow.document.write("<thead><tr><td style='border: 1px solid black; width: 25%'>Vật tư</td><td style='border: 1px solid black; width: 20%'>ĐVT</td><td style ='border: 1px solid black; width: 17%'>Xuất xứ</td><td style='border: 1px solid black; width: 13%'>Số lượng</td><td style ='border: 1px solid black; width: 25%'>Ghi chú</td></tr></thead>");
+            myWindow.document.write("<tbody>");
+            //for (var vt of itemVatTu) {
+            //    myWindow.document.write("<tr><td style='border: 1px solid black;'>" + vt.vattus.tenVatTu + "</td><td style='border: 1px solid black;'>" + vt.vattus.donViTinhs.tenDonViTinh + "</td><td style='border: 1px solid black;'>" + vt.vattus.quocTichs.tenNuoc + "</td><td style='border: 1px solid black;'>" + vt.soLuong + "</td><td style='border: 1px solid black;'>" + vt.ghiChu + "</td></tr>");
+            //}
+            myWindow.document.write("</tbody>");
+            myWindow.document.write("</table>");
+            myWindow.document.write("<br/><br/><br/><br/>");
+            myWindow.document.write("<div style='display: inline-flex; width: 100%'>");
+            myWindow.document.write("<div style='font-weight: bold; width: 30%; text-align: center; margin-right: 5%;'><h4>Người đề nghị</h4><span>(Ký, họ tên)</span></div>");
+            myWindow.document.write("<div style='font-weight: bold; width: 30%; text-align: center; margin-right: 5%;'><h4>Kỹ sư / Đội Trưởng / Phòng kế toán - vật tư</h4></div>");
+            myWindow.document.write("<div style='font-weight: bold; width: 30%; text-align: center;'><h4>Giám đốc</h4></div>");
+            myWindow.document.write("</div>");
+            myWindow.document.write("<hr/>");
+            myWindow.document.write("</div>");
+        }
+        myWindow.document.close();
+        myWindow.print();
+        myWindow.close();
     }
 }

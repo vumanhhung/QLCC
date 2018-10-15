@@ -33,6 +33,9 @@ import JSZipUtils from 'jszip-utils';
 import saveAs from 'save-as';
 import { Router } from '@angular/router';
 import { fadeInOut } from '../../services/animations';
+import { VatTuDiChuyenInfoComponent } from '../vattudichuyen/vattudichuyen-info.component';
+import { VatTuDiChuyenComponent } from '../vattudichuyen/vattudichuyen.component';
+import { VatTuDiChuyen } from '../../models/vattudichuyen.model';
 
 @Component({
     selector: "vattu",
@@ -86,6 +89,9 @@ export class VatTuComponent implements OnInit, AfterViewInit {
     @ViewChild('vattuDetailEditor')
     vattuDetailEditor: VatTuDetailComponent;
 
+    @ViewChild('vattudichuyenEditor')
+    vattuDiChuyenEditor: VatTuDiChuyenInfoComponent;
+
     @ViewChild('myTable') table: any;
 
     constructor(private alertService: AlertService, private translationService: AppTranslationService,
@@ -115,6 +121,7 @@ export class VatTuComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
+
     }
 
     addNewToList() {
@@ -273,5 +280,12 @@ export class VatTuComponent implements OnInit, AfterViewInit {
 
     toggleExpandRow(row) {
         this.table.rowDetail.toggleExpandRow(row);
+    }
+
+    createXuatKho(row: VatTu) {
+        this.vattuDiChuyenEditor.isEdit = false;
+        this.vattuDiChuyenEditor.isViewDetails = false;
+        this.vattuDiChuyenEditor.newVatTuDiChuyen(0, row.vatTuId);
+        this.vattuDiChuyenEditor.editorModal.show();        
     }
 }

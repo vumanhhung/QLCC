@@ -62,7 +62,7 @@
                                        [columns]="columns"
                                        [limit]="limit"
                                        (select)='onSelect($event)'
-                                       [columnMode]="'force'" 
+                                       [columnMode]="'force'"
                                        [selectionType]="'checkbox'"
                                        [selected]="selected">
                         </ngx-datatable>
@@ -79,10 +79,12 @@
                         </ng-template>
                         <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index" style="text-align:center">
                             <a class="btn btn-func btn-success" href="javascript:;" (click)="viewDeXuat(row)" title="Chi tiết"><i class="fa fa-eye"></i></a>
+                            <a *ngIf="row.trangThai == 2" class="btn btn-func btn-info" href="javascript:;" (click)="xuatPhieu(row)" title="Tạo phiếu xuất"><i class="fa fa-file-text" aria-hidden="true"></i></a>
                             <a *ngIf="row.trangThai == 1" class="btn btn-func btn-primary" href="javascript:;" (click)="editDeXuat(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                             <a *ngIf="row.trangThai == 1" class="btn btn-func btn-danger" href="javascript:;" (click)="deleteDeXuat(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </ng-template>
                         <vattuyeucau-info #vattuyeucauEditor [isGeneralEditor]="true"></vattuyeucau-info>
+                        <vattudichuyen-info #vattudichuyenEditor [isGeneralEditor]="true"></vattudichuyen-info>
                     </div>
                 </div>
             </div>

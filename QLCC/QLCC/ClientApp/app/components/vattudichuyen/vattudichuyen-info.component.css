@@ -9,3 +9,7 @@
     color: #048b8b;
     background: #ecf0f5
 }
+
+.has-feedback .form-control {
+    padding-right:0;
+}

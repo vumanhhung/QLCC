@@ -18,6 +18,7 @@ import { NguoiDungToaNhaService } from '../../services/nguoidungtoanha.service';
 import { AuthService } from '../../services/auth.service';
 import { VatTuPhieuYeuCauService } from '../../services/vattuphieuyeucau.service';
 import { VatTuPhieuYeuCau } from '../../models/vattuphieuyeucau.model';
+import { VatTuDiChuyenInfoComponent } from '../vattudichuyen/vattudichuyen-info.component';
 
 @Component({
     selector: "vattuyeucau",
@@ -64,6 +65,9 @@ export class VatTuYeuCauComponent implements OnInit, AfterViewInit {
 
     @ViewChild('vattuyeucauEditor')
     VatTuYeuCauEditor: VatTuYeuCauInfoComponent;
+
+    @ViewChild('vattudichuyenEditor')
+    VatTuDiChuyenEditor: VatTuDiChuyenInfoComponent;
 
     @ViewChild('checkTemplate')
     checkTemplate: TemplateRef<any>;
@@ -351,5 +355,12 @@ export class VatTuYeuCauComponent implements OnInit, AfterViewInit {
     onSelect({ selected }) {
         this.selected.splice(0, this.selected.length);
         this.selected.push(...selected);
+    }
+
+    xuatPhieu(row: VatTuYeuCau) {
+        this.VatTuDiChuyenEditor.isEdit = false;
+        this.VatTuDiChuyenEditor.isViewDetails = false;
+        this.VatTuDiChuyenEditor.newVatTuDiChuyen(row.phieuYeuCauVTId, 0);
+        this.VatTuDiChuyenEditor.editorModal.show();
     }
 }

@@ -42,11 +42,7 @@
                                 </select> bản ghi
                             </label>
                         </div>
-                        <!--<div class="DTTT_container">
-        <a class="DTTT_button DTTT_button_print" title="{{'preferences.Print' | translate}}" tabindex="0">
-            <span>{{'preferences.Print' | translate}}</span>
-        </a>
-    </div>-->
+
                         <div class="clearfix"></div>
                         <ngx-datatable #myTable class="material colored-header sm table table-striped table-hover "
                                        [loadingIndicator]="loadingIndicator"
@@ -132,13 +128,14 @@
                             <ngx-datatable-column name="Chức năng">
                                 <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
                                     <a class="btn btn-func btn-success" href="javascript:;" (click)="viewVatTu(row)" title="Chi tiết"><i class="fa fa-eye"></i></a>
-                                    <!--<a class="btn btn-func btn-success" href="javascript:;" (click)="download(row.vatTuId, row.tenVatTu)" title="Tải tài liệu"><i class="fa fa-download"></i></a>-->
+                                    <a class="btn btn-func btn-info" href="javascript:;" (click)="createXuatKho(row)" title="Tạo phiếu xuất"><i class="fa fa-file-text"></i></a>
                                     <a class="btn btn-func btn-primary" href="javascript:;" (click)="editVatTu(row)" title="Sửa"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                     <a class="btn btn-func btn-danger" href="javascript:;" (click)="deleteVatTu(row)" title="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                                 </ng-template>
                             </ngx-datatable-column>
                         </ngx-datatable>
                         <vattu-detail #vattuDetailEditor></vattu-detail>
+                        <vattudichuyen-info #vattudichuyenEditor [isGeneralEditor]="true"></vattudichuyen-info>
                     </div>
                 </div>
             </div>

@@ -18,6 +18,7 @@ import { VatTuPhieuDiChuyen } from '../../models/vattuphieudichuyen.model';
 import { VatTuPhieuDiChuyenService } from '../../services/vattuphieudichuyen.service';
 import { VatTuService } from '../../services/vattu.service';
 import { VatTu } from '../../models/vattu.model';
+import { DatePipe } from '@angular/common';
 import { fadeInOut } from '../../services/animations';
 
 @Component({
@@ -74,23 +75,13 @@ export class VatTuDiChuyenComponent implements OnInit, AfterViewInit {
     @ViewChild('myTable') table: any;
 
     constructor(private alertService: AlertService, private translationService: AppTranslationService, private authService: AuthService,
-        private vattuphieuyeucauservice: VatTuPhieuYeuCauService, private vattuservice: VatTuService,
+        private vattuphieuyeucauservice: VatTuPhieuYeuCauService, private vattuservice: VatTuService, private datePipe: DatePipe,
         private vattudichuyenService: VatTuDiChuyenService, private vattuphieudichuyenservice: VatTuPhieuDiChuyenService,
         private NDTNService: NguoiDungToaNhaService, private phongbanservice: PhongBanService) {
     }
 
     ngOnInit() {
-        if (this.authService.currentUser) {
-            var userId = this.authService.currentUser.id;
-            var where = "NguoiDungId = '" + userId + "'";
-            this.NDTNService.getItems(0, 1, where, "x").subscribe(result => this.getNguoiDungToaNha(result), error => {
-                this.alertService.showStickyMessage("Tải lỗi", `Không thể truy xuất dữ liệu người dùng tòa nhà từ máy chủ.\r\nLỗi: "${Utilities.getHttpResponseMessage(error)}"`,
-                    MessageSeverity.error, error);
-            });
-        }
-        this.loadAllDeXuat();
-        this.loadVatTu();
-        this.loadAllDC();
+        
         this.loadData(0);
     }
 
@@ -216,13 +207,9 @@ export class VatTuDiChuyenComponent implements OnInit, AfterViewInit {
     newVatTuDiChuyen() {
         this.editingRowName = null;
         this.sourcevattudichuyen = null;
-        this.VatTuDiChuyenEditor.phongbans = this.phongbans;
-        this.VatTuDiChuyenEditor.dexuats = this.dexuats;
-        this.VatTuDiChuyenEditor.NDTN = this.NDTNs;
-        this.VatTuDiChuyenEditor.vattusFilter = this.vattusFilter;
         this.VatTuDiChuyenEditor.isViewDetails = false;
         this.VatTuDiChuyenEditor.isEdit = false;
-        this.vattudichuyenEdit = this.VatTuDiChuyenEditor.newVatTuDiChuyen();
+        this.vattudichuyenEdit = this.VatTuDiChuyenEditor.newVatTuDiChuyen(0,0);
         this.VatTuDiChuyenEditor.editorModal.show();
     }
 
@@ -264,10 +251,6 @@ export class VatTuDiChuyenComponent implements OnInit, AfterViewInit {
 
     editVatTuDiChuyen(row: VatTuPhieuDiChuyen) {
         this.sourcevattuphieudichuyen = row;
-        this.VatTuDiChuyenEditor.phongbans = this.phongbans;
-        this.VatTuDiChuyenEditor.dexuats = this.dexuats;
-        this.VatTuDiChuyenEditor.NDTN = this.NDTNs;
-        this.VatTuDiChuyenEditor.vattusFilter = this.vattusFilter;
         this.VatTuDiChuyenEditor.isEdit = true;
         this.VatTuDiChuyenEditor.isViewDetails = false;
         this.vattudichuyenEdit = this.VatTuDiChuyenEditor.editVatTuDiChuyen(row);
@@ -276,10 +259,6 @@ export class VatTuDiChuyenComponent implements OnInit, AfterViewInit {
 
     viewVatTuDiChuyen(row: VatTuPhieuDiChuyen) {
         this.sourcevattuphieudichuyen = row;
-        this.VatTuDiChuyenEditor.phongbans = this.phongbans;
-        this.VatTuDiChuyenEditor.dexuats = this.dexuats;
-        this.VatTuDiChuyenEditor.NDTN = this.NDTNs;
-        this.VatTuDiChuyenEditor.vattusFilter = this.vattusFilter;
         this.VatTuDiChuyenEditor.isViewDetails = true;
         this.VatTuDiChuyenEditor.isEdit = false;
         this.vattudichuyenEdit = this.VatTuDiChuyenEditor.editVatTuDiChuyen(row);
@@ -316,38 +295,44 @@ export class VatTuDiChuyenComponent implements OnInit, AfterViewInit {
 
     printDiv(selected: any[]) {
         var myWindow = window.open('', '', 'width=200,height=100');
-        var date = new Date();
         for (let item of selected) {
-            //var itemVatTu = this.listAll.filter(o => o.phieuYeuCauVTId == item.phieuYeuCauVTId);
-            myWindow.document.write("<div style='font-size: 1em; padding: 4% 5%;; height:100%;'>");
+            var valueDVQLTS = this.phongbans.find(o => o.phongBanId == item.donViQLTS).tenPhongBan;
+            var valueDVYC = this.phongbans.find(o => o.phongBanId == item.donViYeuCau).tenPhongBan;
+            var valueDVTN = this.phongbans.find(o => o.phongBanId == item.donViNhan).tenPhongBan;
+            var itemVatTu = this.vattuDC.filter(o => o.phieuDiChuyenId == item.phieuDiChuyenId);
+            myWindow.document.write("<div style='font-size: 1em; height:100%;'>");
             myWindow.document.write("<div style='text-align: center;'>");
             myWindow.document.write("<div style='font-weight: bold; font-size: 18px;'>CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ DỊCH VỤ ĐÔ THỊ VIỆT NAM VINASINCO</div>");
             myWindow.document.write("</div><br/>");
             myWindow.document.write("<div style='text-align: right; font-style: italic;'>");
-            myWindow.document.write("<div style='text-transform: uppercase; font-size: 14px;'>Ngày " + date.getDate() + " Tháng " + date.getMonth() + " Năm " + date.getFullYear() + "</div><br/>");
+            myWindow.document.write("<div style='text-transform: uppercase; font-size: 14px;'>Ngày yêu cầu:  " + this.datePipe.transform(item.ngayYeuCau, 'dd/MM/yyyy') + "</div><br/>");
             myWindow.document.write("</div>");
             myWindow.document.write("<br/>");
-            myWindow.document.write("<div style='text-align: center; font-size: 20px; font-weight: bolder;'>PHIẾU YÊU CẦU VẬT TƯ</div>");
-            myWindow.document.write("<div style='float:left; width: 100%;'><h5>Người yêu cầu: " + item.nguoiYeuCau + "</h5>");
-            myWindow.document.write("<h5>Bộ phận: " + item.phongbans.tenPhongBan + "</h5>");
-            myWindow.document.write("<h5>Đơn vị sử dụng: " + item.nguoiTiepNhan + "</h5>");
-            myWindow.document.write("<h5>Mục đích sử dụng: " + item.mucDichSuDung + "</h5>");
-            myWindow.document.write("<h5>Đề xuất vật tư theo bảng liệt kê đính kèm:</h5></div>");
+            myWindow.document.write("<div style='text-align: center; font-size: 20px; font-weight: bolder;'>PHIẾU XUẤT KHO</div>");
+            myWindow.document.write("<div style='float:left; width: 100%;'><p><span style='font-weight: bold;'>Đơn vị quản lý tài sản: </span>" + valueDVQLTS + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;'>Người yêu cầu: </span>" + item.nguoiYeuCau + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;'>Đơn vị yêu cầu: </span>" + valueDVYC + " - " + "<span style='font-weight: bold;'>Đại diện yêu cầu: </span>" + item.daiDienDVYC + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;'>Đơn vị tiếp nhận: </span>" + valueDVTN + " - " + "<span style='font-weight: bold;'>Đại diện tiếp nhận: </span>" + item.daiDienDVN + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;'>Lí do xuất kho: </span>" + item.noiDung + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;'>Ghi chú: </span>" + item.ghiChu + "</p>");
+            myWindow.document.write("<p><span style='font-weight: bold;'>Đề xuất vật tư theo bảng liệt kê đính kèm: </span></p></div>");
             myWindow.document.write("<br/><br/>");
             myWindow.document.write("<div style='text-align: center; font-size: 16px; font-weight: bolder; margin-bottom: 15px;'>BẢNG LIỆT KÊ VẬT TƯ</div>");
             myWindow.document.write("<table style='border-collapse: collapse;border: 1px solid black; text-align: center;' width='100%'>");
             myWindow.document.write("<thead><tr><td style='border: 1px solid black; width: 25%'>Vật tư</td><td style='border: 1px solid black; width: 20%'>ĐVT</td><td style ='border: 1px solid black; width: 17%'>Xuất xứ</td><td style='border: 1px solid black; width: 13%'>Số lượng</td><td style ='border: 1px solid black; width: 25%'>Ghi chú</td></tr></thead>");
             myWindow.document.write("<tbody>");
-            //for (var vt of itemVatTu) {
-            //    myWindow.document.write("<tr><td style='border: 1px solid black;'>" + vt.vattus.tenVatTu + "</td><td style='border: 1px solid black;'>" + vt.vattus.donViTinhs.tenDonViTinh + "</td><td style='border: 1px solid black;'>" + vt.vattus.quocTichs.tenNuoc + "</td><td style='border: 1px solid black;'>" + vt.soLuong + "</td><td style='border: 1px solid black;'>" + vt.ghiChu + "</td></tr>");
-            //}
+            for (var vt of itemVatTu) {
+                myWindow.document.write("<tr><td style='border: 1px solid black;'>" + vt.vattus.tenVatTu + "</td><td style='border: 1px solid black;'>" + vt.vattus.donViTinhs.tenDonViTinh + "</td><td style='border: 1px solid black;'>" + vt.vattus.quocTichs.tenNuoc + "</td><td style='border: 1px solid black;'>" + vt.soLuong + "</td><td style='border: 1px solid black;'>" + vt.ghiChu + "</td></tr>");
+            }
             myWindow.document.write("</tbody>");
             myWindow.document.write("</table>");
             myWindow.document.write("<br/><br/><br/><br/>");
             myWindow.document.write("<div style='display: inline-flex; width: 100%'>");
-            myWindow.document.write("<div style='font-weight: bold; width: 30%; text-align: center; margin-right: 5%;'><h4>Người đề nghị</h4><span>(Ký, họ tên)</span></div>");
-            myWindow.document.write("<div style='font-weight: bold; width: 30%; text-align: center; margin-right: 5%;'><h4>Kỹ sư / Đội Trưởng / Phòng kế toán - vật tư</h4></div>");
-            myWindow.document.write("<div style='font-weight: bold; width: 30%; text-align: center;'><h4>Giám đốc</h4></div>");
+            myWindow.document.write("<div style='font-weight: bold; font-size: 12px; width: 15%; text-align: center; margin-right: 5%;'><h4>Người lập phiếu</h4><span>(Ký, họ tên)</span></div>");
+            myWindow.document.write("<div style='font-weight: bold; font-size: 12px; width: 15%; text-align: center; margin-right: 5%;'><h4>Người nhận hàng</h4><span>(Ký, họ tên)</span></div>");
+            myWindow.document.write("<div style='font-weight: bold; font-size: 12px; width: 15%; text-align: center; margin-right: 5%;'><h4>Thủ kho</h4><span>(Ký, họ tên)</span></div>");
+            myWindow.document.write("<div style='font-weight: bold; font-size: 12px; width: 15%; text-align: center; margin-right: 5%;'><h4>Bộ phận nhu cầu nhập</h4></div>");
+            myWindow.document.write("<div style='font-weight: bold; font-size: 12px; width: 20%; text-align: center;'><h4>Giám đốc</h4></div>");
             myWindow.document.write("</div>");
             myWindow.document.write("<hr/>");
             myWindow.document.write("</div>");
